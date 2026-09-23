@@ -72,6 +72,32 @@ describe('model attestation — which model actually answered', () => {
     }
   })
 
+  it('a host safety fallback is recorded, but nobody asked for it: cause host_fallback, still FAILs a pinned run', () => {
+    // shapes as Claude Code emits them (headless stream): system/init names the session model; the fallback is a system entry
+    const init = JSON.stringify({ type: 'system', subtype: 'init', model: 'claude-fable-5' })
+    const fallback = JSON.stringify({ type: 'system', subtype: 'model_refusal_fallback', trigger: 'refusal', scope: 'session', original_model: 'claude-fable-5', fallback_model: 'claude-opus-5', api_refusal_category: 'cyber' })
+    const a = attest(transcript(init, reply('claude-fable-5'), fallback, reply('claude-opus-5')))
+    expect(a.expected).toEqual(['claude-fable-5']) // no pin passed → the host's own session start is the pin
+    expect(a.switches).toEqual([expect.objectContaining({ from: 'claude-fable-5', to: 'claude-opus-5', announced: false, cause: 'host_fallback', host_reason: 'safety-refusal fallback (cyber)' })])
+    expect(a.outcome).toBe('FAIL')
+    expect(a.reasons.join(' ')).toMatch(/made by the host, not asked for \(safety-refusal fallback \(cyber\)\)/)
+    expect(a.reasons.join(' ')).toMatch(/taken from the host's own session start: claude-fable-5/)
+  })
+
+  it('a fallback before the first reply still explains the violation (the shape seen in a real headless run)', () => {
+    const init = JSON.stringify({ type: 'system', subtype: 'init', model: 'claude-fable-5' })
+    const fallback = JSON.stringify({ type: 'system', subtype: 'model_refusal_fallback', original_model: 'claude-fable-5', fallback_model: 'claude-opus-5', api_refusal_category: 'cyber' })
+    const a = attest(transcript(init, fallback, reply('claude-opus-5')))
+    expect(a).toMatchObject({ outcome: 'FAIL', switches: [], violation_count: 1, host_switches: [{ from: 'claude-fable-5', to: 'claude-opus-5' }] })
+    expect(a.reasons.join(' ')).toMatch(/the host itself switched models: claude-fable-5 → claude-opus-5 \(safety-refusal fallback \(cyber\)\)/)
+  })
+
+  it('switch causes: user_command vs host_fallback vs unrecorded', () => {
+    const fb = JSON.stringify({ type: 'system', subtype: 'model_refusal_fallback', original_model: 'a-1', fallback_model: 'b-1' })
+    const a = attest(transcript(reply('a-1'), modelCommand(), reply('b-1'), fb, reply('a-1'), reply('c-1')))
+    expect(a.switches.map((s) => s.cause)).toEqual(['user_command', 'host_fallback', 'unrecorded'])
+  })
+
   it('announced is not the same as allowed: an announced switch to an undeclared model still FAILs', () => {
     const a = attest(transcript(reply('claude-opus-4-8'), modelCommand(), reply('claude-sonnet-4-5')), { declared: 'claude-opus-4-8' })
     expect(a.outcome).toBe('FAIL')

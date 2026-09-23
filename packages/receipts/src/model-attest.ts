@@ -21,6 +21,10 @@
 export type ModelEvent =
   | { type: 'reply'; model: string | null | undefined; at?: string; id?: string }
   | { type: 'switch_requested'; at?: string }
+  /** the host itself switched models (e.g. Claude Code's safety-refusal fallback). Recorded, but nobody asked for it. */
+  | { type: 'host_switch'; reason: string; from?: string; to?: string; at?: string }
+  /** the model the host was asked to run at session start (e.g. a stream's system/init). Used as the pin when none is given. */
+  | { type: 'session_model'; model: string; at?: string }
 
 export interface AttestPolicy {
   /** the exact model id this run was declared to use */
@@ -31,7 +35,15 @@ export interface AttestPolicy {
   failOnSilentSwitch?: boolean
 }
 
-export interface SwitchEvent { from: string; to: string; at?: string; reply: number; announced: boolean }
+/**
+ * Why the model changed:
+ * - `user_command`: the user asked (/model). Announced.
+ * - `host_fallback`: the host switched on its own (e.g. after a safety refusal). Recorded, but nobody asked for it.
+ * - `unrecorded`: nothing in the record explains it.
+ * Only `user_command` counts as announced.
+ */
+export type SwitchCause = 'user_command' | 'host_fallback' | 'unrecorded'
+export interface SwitchEvent { from: string; to: string; at?: string; reply: number; announced: boolean; cause: SwitchCause; host_reason?: string }
 
 export interface ModelAttestation {
   outcome: 'PASS' | 'FAIL' | 'ABSTAIN'
@@ -46,6 +58,8 @@ export interface ModelAttestation {
   violation_count: number
   /** events with no usable model (missing, or a host placeholder such as Claude Code's "<synthetic>") */
   skipped: number
+  /** every model change the host itself recorded (e.g. a safety-refusal fallback), including one before the first reply */
+  host_switches: { reason: string; from?: string; to?: string; at?: string }[]
   expected: string[] | null
   reasons: string[]
 }
@@ -68,23 +82,34 @@ export function modelMatches(expected: string, resolved: string): boolean {
 const MAX_VIOLATIONS = 20
 
 export function attestModels(events: ModelEvent[], policy: AttestPolicy = {}): ModelAttestation {
-  const expected = policy.allowed?.length ? policy.allowed : policy.declared ? [policy.declared] : null
+  const sessionModel = events.find((e): e is Extract<ModelEvent, { type: 'session_model' }> => e.type === 'session_model')?.model
+  const fromHost = !policy.allowed?.length && !policy.declared && Boolean(sessionModel)
+  const expected = policy.allowed?.length ? policy.allowed : policy.declared ? [policy.declared] : sessionModel ? [sessionModel] : null
   const out: ModelAttestation = {
     outcome: 'PASS', models: {}, first: null, last: null, replies: 0, switches: [], violations: [], violation_count: 0,
-    skipped: 0, expected, reasons: [],
+    skipped: 0, host_switches: [], expected, reasons: [],
   }
   const floating = (expected ?? []).filter(isFloatingAlias)
   let pendingRequest = false
+  let pendingHost: string | null = null
   for (const e of events) {
     if (e.type === 'switch_requested') { pendingRequest = true; continue }
+    if (e.type === 'host_switch') {
+      pendingHost = e.reason
+      out.host_switches.push({ reason: e.reason, ...(e.from ? { from: e.from } : {}), ...(e.to ? { to: e.to } : {}), ...(e.at ? { at: e.at } : {}) })
+      continue
+    }
+    if (e.type === 'session_model') continue
     const m = typeof e.model === 'string' ? e.model.trim() : ''
     if (!m || PLACEHOLDER.test(m)) { out.skipped++; continue }
     const n = out.replies++
     out.models[m] = (out.models[m] ?? 0) + 1
     if (out.first === null) out.first = m
     if (out.last !== null && m !== out.last) {
-      out.switches.push({ from: out.last, to: m, ...(e.at ? { at: e.at } : {}), reply: n, announced: pendingRequest })
+      const cause: SwitchCause = pendingRequest ? 'user_command' : pendingHost ? 'host_fallback' : 'unrecorded'
+      out.switches.push({ from: out.last, to: m, ...(e.at ? { at: e.at } : {}), reply: n, announced: cause === 'user_command', cause, ...(cause === 'host_fallback' ? { host_reason: pendingHost! } : {}) })
       pendingRequest = false
+      pendingHost = null
     }
     out.last = m
     if (expected && !floating.length && !expected.some((x) => modelMatches(x, m))) {
@@ -112,8 +137,17 @@ export function attestModels(events: ModelEvent[], policy: AttestPolicy = {}): M
   }
   if (silent.length && policy.failOnSilentSwitch !== false) {
     out.outcome = 'FAIL'
-    out.reasons.push(`${silent.length} silent model switch${silent.length > 1 ? 'es' : ''} (nothing announced the change): ${silent.slice(0, 3).map((s) => `${s.from} → ${s.to}${s.at ? ` at ${s.at}` : ''}`).join('; ')}${silent.length > 3 ? '; …' : ''}`)
+    const host = silent.filter((s) => s.cause === 'host_fallback')
+    const bare = silent.filter((s) => s.cause === 'unrecorded')
+    const list = (ss: SwitchEvent[]) => `${ss.slice(0, 3).map((s) => `${s.from} → ${s.to}${s.at ? ` at ${s.at}` : ''}`).join('; ')}${ss.length > 3 ? '; …' : ''}`
+    if (host.length) out.reasons.push(`${host.length} model switch${host.length > 1 ? 'es' : ''} made by the host, not asked for (${[...new Set(host.map((s) => s.host_reason))].join(', ')}): ${list(host)}`)
+    if (bare.length) out.reasons.push(`${bare.length} silent model switch${bare.length > 1 ? 'es' : ''} (nothing announced the change): ${list(bare)}`)
   }
+  if (out.violation_count && out.host_switches.length && !out.switches.some((s) => s.cause === 'host_fallback')) {
+    // the host changed models before any reply on the old one, so there is no between-replies switch to explain it
+    out.reasons.push(`the host itself switched models: ${out.host_switches.map((h) => `${h.from ?? '?'} → ${h.to ?? '?'} (${h.reason})`).join('; ')}`)
+  }
+  if (fromHost && out.outcome !== 'ABSTAIN') out.reasons.push(`(expected model taken from the host's own session start: ${sessionModel})`)
   if (out.outcome === 'PASS') {
     const names = Object.keys(out.models)
     out.reasons.push(names.length === 1
@@ -161,6 +195,13 @@ export function eventsFromClaudeCodeTranscript(jsonl: string): ModelEvent[] {
     let j: Record<string, unknown>
     try { j = JSON.parse(line) } catch { continue }
     const msg = (j.message ?? {}) as Record<string, unknown>
+    const at = typeof j.timestamp === 'string' ? { at: j.timestamp } : {}
+    if (j.type === 'system' && j.subtype === 'init' && typeof j.model === 'string') { out.push({ type: 'session_model', model: j.model, ...at }); continue }
+    if (j.type === 'system' && j.subtype === 'model_refusal_fallback') {
+      const cat = typeof j.api_refusal_category === 'string' ? ` (${j.api_refusal_category})` : ''
+      out.push({ type: 'host_switch', reason: `safety-refusal fallback${cat}`, ...(typeof j.original_model === 'string' ? { from: j.original_model } : {}), ...(typeof j.fallback_model === 'string' ? { to: j.fallback_model } : {}), ...at })
+      continue
+    }
     const command = j.type === 'user' ? msg.content : j.type === 'system' && j.subtype === 'local_command' ? j.content : undefined
     if (command !== undefined) {
       if (typeof command === 'string' && MODEL_COMMAND.test(command)) out.push({ type: 'switch_requested', ...(typeof j.timestamp === 'string' ? { at: j.timestamp } : {}) })
