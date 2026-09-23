@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import {
-  extractClaims, checkClaims, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, claimsCli, auditTurns,
+  extractClaims, checkClaims, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, claimsCli, auditTurns, stopHook,
   handleMcpRequest, openLedger, memoryStore, rootedJsonReader, rootedTextReader, type Step,
 } from '../src/index.js'
 
@@ -199,5 +199,57 @@ describe('riposte-claims CLI and the MCP check_claims tool', () => {
     expect(call({ transcript: '../x.jsonl' }).isError).toBe(true)
     expect(ledger.entries().map((e) => e.kind)).toEqual(['claims_check', 'claims_check'])
     expect(ledger.verify()).toMatchObject({ ok: true })
+  })
+})
+
+describe('Stop hook (--hook)', () => {
+  const t = (...lines: (string | string[])[]) => lines.flat().join('\n') + '\n'
+  const files: Record<string, string> = {
+    'red.jsonl': t(prompt('go'), bash('npm test', VITEST_FAIL, true), say('All tests pass.')),
+    'green.jsonl': t(prompt('go'), bash('npm test', VITEST_OK), say('All 62 tests pass.')),
+    'bare.jsonl': t(prompt('go'), edit('src/a.ts'), say('Fixed — all tests pass.')),
+    'plain.jsonl': t(prompt('go'), say('Here is the plan.')),
+    'lagging.jsonl': t(prompt('go'), bash('npm test', VITEST_OK)), // final message not flushed to the transcript yet
+  }
+  const read = (p: string) => { const f = files[p]; if (f === undefined) throw new Error('ENOENT'); return f }
+  const hook = (transcript_path: string, extra: Record<string, unknown> = {}) => JSON.stringify({ hook_event_name: 'Stop', session_id: 's', transcript_path, stop_hook_active: false, ...extra })
+
+  it('sends a contradicted "done" back (exit 2) with the claim, the reason and the evidence', () => {
+    const d = stopHook(hook('red.jsonl'), read)
+    expect(d.code).toBe(2)
+    expect(d.stderr).toMatch(/"All tests pass\." — CONTRADICTED: the last test run reports 1 failing \[npm test/)
+    expect(d.stderr).toMatch(/Run the check now and report what it actually shows, or correct the claim/)
+  })
+
+  it('an unbacked claim is sent back too, unless --only-contradicted', () => {
+    expect(stopHook(hook('bare.jsonl'), read).code).toBe(2)
+    expect(stopHook(hook('bare.jsonl'), read, { onlyContradicted: true }).code).toBe(0)
+  })
+
+  it('lets the agent stop when the claims are backed, or when there is nothing to check', () => {
+    expect(stopHook(hook('green.jsonl'), read)).toMatchObject({ code: 0, stderr: '' })
+    expect(stopHook(hook('plain.jsonl'), read).code).toBe(0)
+  })
+
+  it('never bounces twice: a stop that was already sent back once goes through', () => {
+    expect(stopHook(hook('red.jsonl', { stop_hook_active: true }), read)).toMatchObject({ code: 0, skipped: expect.any(String) })
+  })
+
+  it('uses last_assistant_message when the transcript lags; evidence is the whole transcript', () => {
+    expect(stopHook(hook('lagging.jsonl', { last_assistant_message: 'All 62 tests pass.' }), read).code).toBe(0)
+    expect(stopHook(hook('lagging.jsonl', { last_assistant_message: 'All 99 tests pass.' }), read).code).toBe(2)
+    // when the message IS in the transcript, evidence stops where it starts
+    expect(stopHook(hook('red.jsonl', { last_assistant_message: 'All tests pass.' }), read).code).toBe(2)
+  })
+
+  it('our own failures never hold the agent hostage (exit 1, non-blocking)', () => {
+    expect(stopHook('not json', read).code).toBe(1)
+    expect(stopHook(JSON.stringify({ hook_event_name: 'Stop' }), read).code).toBe(1)
+    expect(stopHook(hook('missing.jsonl'), read).code).toBe(1)
+  })
+
+  it('claimsCli routes --hook the same way', () => {
+    expect(claimsCli(['--hook'], read, hook('red.jsonl')).code).toBe(2)
+    expect(claimsCli(['--hook', '--only-contradicted'], read, hook('bare.jsonl')).code).toBe(0)
   })
 })

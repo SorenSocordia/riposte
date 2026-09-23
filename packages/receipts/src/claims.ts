@@ -237,8 +237,15 @@ export function checkClaims(steps: Step[], finalIndex?: number): ClaimsResult {
   let start = end
   while (start > 0 && steps[start - 1]!.kind === 'assistant_text') start--
   const texts = steps.slice(start, end + 1) as Extract<Step, { kind: 'assistant_text' }>[]
-  const at = texts[texts.length - 1]!.at
-  const claims = extractClaims(texts.map((t) => t.text).join('\n')).map((c) => checkOne(c, steps, start))
+  return checkMessageClaims(texts.map((t) => t.text).join('\n'), steps, start, texts[texts.length - 1]!.at)
+}
+
+/**
+ * Check the claims in `text` against the evidence in `steps` before index `upTo` (default: all of them). For hosts that hand
+ * over the final message separately, e.g. a Stop hook's `last_assistant_message` when the transcript has not caught up yet.
+ */
+export function checkMessageClaims(text: string, steps: Step[], upTo = steps.length, at?: string): ClaimsResult {
+  const claims = extractClaims(text).map((c) => checkOne(c, steps, upTo))
   const base = at ? { final_message_at: at } : {}
   if (!claims.length) return { outcome: 'ABSTAIN', claims, ...base, reasons: ['no checkable completion claims in the final message'] }
   const contra = claims.filter((c) => c.status === 'CONTRADICTED')
@@ -247,6 +254,18 @@ export function checkClaims(steps: Step[], finalIndex?: number): ClaimsResult {
   if (contra.length) return { outcome: 'FAIL', claims, ...base, reasons }
   if (unsup.length) return { outcome: 'ABSTAIN', claims, ...base, reasons }
   return { outcome: 'PASS', claims, ...base, reasons: [`all ${claims.length} claim(s) are backed by this session's tool results`] }
+}
+
+/** The index where the final assistant message starts, if its text equals `text` (whitespace-insensitive); else -1. */
+export function findFinalMessage(steps: Step[], text: string): number {
+  let end = -1
+  for (let i = steps.length - 1; i >= 0; i--) if (steps[i]!.kind === 'assistant_text') { end = i; break }
+  if (end < 0) return -1
+  let start = end
+  while (start > 0 && steps[start - 1]!.kind === 'assistant_text') start--
+  const norm = (s: string) => s.replace(/\s+/g, ' ').trim()
+  const joined = (steps.slice(start, end + 1) as Extract<Step, { kind: 'assistant_text' }>[]).map((t) => t.text).join('\n')
+  return norm(joined) === norm(text) ? start : -1
 }
 
 /** Indices of every turn-final assistant text (the last assistant text before each user prompt, and at the end). */

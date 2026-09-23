@@ -39,6 +39,22 @@ riposte-claims ~/.claude/projects/<project>/<session>.jsonl --all-turns  # every
 ```
 Each claim comes back with its evidence: the command, when it ran, and the lines of output that decided it.
 
+### As a Claude Code Stop hook
+```json
+{ "hooks": { "Stop": [ { "hooks": [ { "type": "command",
+    "command": "node <path>/riposte/packages/receipts/dist/claims-cli.js --hook --ledger <path>/receipts.jsonl" } ] } ] } }
+```
+When the agent tries to finish with a claim its tools don't back, the hook sends it back **once** (exit 2) with the claim,
+the reason and the evidence: *"All 500 tests pass." — CONTRADICTED: claims 500, the last run shows 92 passing.* The agent then
+has to run the check or correct the claim.
+- **It never bounces twice.** A stop that was already sent back once goes through (`stop_hook_active`).
+- **It never holds the agent hostage.** If the hook itself fails (unreadable input), it exits 1, which the user sees and which
+  doesn't block.
+- **It uses `last_assistant_message` when the host provides it,** because the transcript can lag the final message.
+- **`--only-contradicted`** sends back only claims that are demonstrably false. Unbacked claims are then just recorded.
+- **`--ledger`** writes every checked stop to the hash-chained receipt ledger. It is signed if `RECEIPTS_KEY` points at an
+  Ed25519 PEM.
+
 ## Which model answered? (CLI)
 ```bash
 riposte-attest ~/.claude/projects/<project>/<session>.jsonl --declared claude-opus-4-8
