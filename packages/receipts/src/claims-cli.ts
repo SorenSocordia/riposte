@@ -15,12 +15,12 @@ const read = (p: string) => readFileSync(p, 'utf8')
 
 if (args.hook && !args.error && !args.help) {
   try {
-    const d = stopHook(readFileSync(0, 'utf8'), read, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly })
+    const d = stopHook(readFileSync(0, 'utf8'), read, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly, strict: args.strict })
     if (args.ledger && d.result?.claims.length) {
       try {
         const signingKey = process.env.RECEIPTS_KEY ? readFileSync(process.env.RECEIPTS_KEY, 'utf8') : undefined
         openLedger(fileStore(args.ledger), signingKey ? { signingKey } : {})
-          .append('claims_check', { source: 'stop_hook', mode: args.recordOnly ? 'record-only' : args.onlyContradicted ? 'only-contradicted' : 'block', blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result })
+          .append('claims_check', { source: 'stop_hook', mode: args.recordOnly ? 'record-only' : args.onlyContradicted ? 'only-contradicted' : 'block', strict: args.strict, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result })
       } catch (e) { process.stderr.write(`riposte-claims: ledger not written: ${(e as Error).message}\n`) }
     }
     process.stderr.write(d.stderr)

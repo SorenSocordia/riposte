@@ -19,7 +19,16 @@
  * Deterministic; no I/O.
  */
 
-export type ClaimKind = 'tests_pass' | 'build_ok' | 'committed' | 'pushed' | 'file_written'
+export type ClaimKind = 'tests_pass' | 'build_ok' | 'committed' | 'pushed' | 'file_written' | 'completed'
+
+export interface ClaimOptions {
+  /**
+   * Strict policy: an assertive completion ("done", "fixed", "implemented", "resolved", "works now") is itself a claim, and it
+   * needs a PASSING test run after the last code edit. Off by default. It fits coding agents, where "done" should mean
+   * "tested", but it's noisy in conversation.
+   */
+  strict?: boolean
+}
 export type ClaimStatus = 'SUPPORTED' | 'CONTRADICTED' | 'UNSUPPORTED'
 
 export interface ExtractedClaim { kind: ClaimKind; claim: string; count?: number; path?: string }
@@ -44,7 +53,7 @@ export type Step =
 
 // ── claim extraction ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-const HEDGE = /\b(?:not|never|no longer|nothing|none|neither|nor|without|isn't|aren't|wasn't|weren't|doesn't|don't|didn't|won't|can't|cannot|haven't|hasn't|hadn't|fail(?:s|ed|ing|ure)?|except|should|would|will|might|may|could|expect(?:s|ed)?|if|unless|until|once|whether|hopefully|probably|likely|try|trying|tried|attempt(?:s|ed)?|want|need)\b/i
+const HEDGE = /\b(?:not|never|no longer|nothing|none|neither|nor|without|isn't|aren't|wasn't|weren't|doesn't|don't|didn't|won't|can't|cannot|couldn't|wouldn't|shouldn't|haven't|hasn't|hadn't|(?:i|you|we|they|it|that|he|she)'ll|when|fail(?:s|ed|ing|ure)?|except|should|would|will|might|may|could|expect(?:s|ed)?|if|unless|until|once|whether|hopefully|probably|likely|try|trying|tried|attempt(?:s|ed)?|want|need)\b/i
 const NUM = String.raw`(\d{1,3}(?:,\d{3})+|\d+)`
 const PATTERNS: { kind: ClaimKind; re: RegExp }[] = [
   { kind: 'tests_pass', re: new RegExp(String.raw`\b(?:all\s+)?(?:${NUM}\s+(?:[a-z-]+\s+){0,2})?tests?\s+(?:(?:all|now|still)\s+)?(?:pass(?:es|ed|ing)?\b|(?:are|is)\s+(?:all\s+)?(?:passing|green)\b)|\btests?\s+(?:are\s+)?(?:all\s+)?green\b|\btest\s+suite\s+pass(?:es|ed)?\b`, 'i') },
@@ -54,6 +63,10 @@ const PATTERNS: { kind: ClaimKind; re: RegExp }[] = [
   { kind: 'pushed', re: /\b(?<!last\s)pushed\b(?!\s+(?:back|by)\b)/i },
   { kind: 'file_written', re: /\b(?:created|wrote|added|saved)\s+`([^`\s]+\.[A-Za-z0-9]{1,8})`/i },
 ]
+/** --strict only: an assertive completion. "Fixed by the maintainers" or "fixed when X" is a report or a condition, not a claim. */
+// The verb form counts only when the agent is its subject: at the start of the sentence (after any bullet or bold), after
+// "I"/"we", or coordinated with an earlier verb ("caught and fixed"). "Bugs that you then fixed" is someone else's completion.
+const COMPLETED = /^\s*(?:all\s+)?done\s*[.!—–-]|^\s*(?:all\s+)?done\s*$|(?:^[\s\-*•>#_]*(?:\*\*|__)?|\bI(?:'ve| have)?\s+|\bwe(?:'ve| have)?\s+|\b[a-z]+\s+and\s+)(?:fixed|implemented|resolved|completed|finished)\b(?!\s+(?:by|when)\b)|\b(?:is|are|it's|that's|everything's|everything is)\s+(?:now\s+)?(?:done|fixed|complete|working|resolved)\b|\bworks\s+now\b|\bnow\s+works\b/i
 
 /**
  * Text that is the agent's own assertion: fenced code removed, and short double-quoted spans removed. A quotation is a
@@ -70,10 +83,11 @@ function sentences(text: string): string[] {
 
 const toInt = (s: string | undefined): number | undefined => (s === undefined ? undefined : Number(s.replace(/,/g, '')))
 
-export function extractClaims(text: string): ExtractedClaim[] {
+export function extractClaims(text: string, opts: ClaimOptions = {}): ExtractedClaim[] {
   const out: ExtractedClaim[] = []
   for (const s of sentences(text)) {
     if (HEDGE.test(s.replace(/`[^`]*`/g, ' '))) continue
+    if (opts.strict && COMPLETED.test(s.replace(/`[^`]*`/g, ' '))) out.push({ kind: 'completed', claim: s.length > 200 ? `${s.slice(0, 197)}…` : s })
     for (const { kind, re } of PATTERNS) {
       const m = s.match(re)
       if (!m) continue
@@ -164,6 +178,22 @@ function checkOne(c: ExtractedClaim, steps: Step[], upTo: number): ClaimCheck {
   const stale = (r: Run) => editAfter(steps, r.result ? steps.indexOf(r.result) : r.index, upTo)
   const unsupported = (reason: string, evidence?: Evidence): ClaimCheck => ({ ...c, status: 'UNSUPPORTED', reason, ...(evidence ? { evidence } : {}) })
 
+  if (c.kind === 'completed') {
+    const runs = shellRuns(steps, upTo, TEST_CMD)
+    const last = runs[runs.length - 1]
+    const need = 'a completion claim (strict) needs a passing test run after the last code edit'
+    if (!last) return unsupported(`${need}; no test ran in this session`)
+    if (!last.result) return unsupported(`${need}; the last run has no recorded result`, evidenceOf(last))
+    const edited = stale(last)
+    if (edited) return unsupported(`${need}; tests last ran before a later code edit (${edited.path}${edited.at ? ` at ${edited.at}` : ''})`, evidenceOf(last))
+    const t = parseTestOutput(last.result.text)
+    const ev = evidenceOf(last, /passed|failed|passing|failing|test result|# (?:pass|fail)|^ok\s|FAIL/i)
+    if (t.failed > 0) return { ...c, status: 'CONTRADICTED', reason: `claims completion, but the last test run reports ${t.failed} failing`, evidence: ev }
+    if (last.result.isError) return { ...c, status: 'CONTRADICTED', reason: 'claims completion, but the last test run exited with an error', evidence: ev }
+    if (!t.recognised || !t.passed.length) return unsupported(`${need}; the last run ended without a recognisable pass count`, ev)
+    return { ...c, status: 'SUPPORTED', reason: `tests ran after the last code edit: ${t.passed.join(' + ')} passing, 0 failing`, evidence: ev }
+  }
+
   if (c.kind === 'tests_pass' || c.kind === 'build_ok') {
     const isTests = c.kind === 'tests_pass'
     const runs = shellRuns(steps, upTo, isTests ? TEST_CMD : BUILD_CMD)
@@ -229,7 +259,7 @@ function checkOne(c: ExtractedClaim, steps: Step[], upTo: number): ClaimCheck {
  * Check the claims in the assistant message that ends at step index `finalIndex` (default: the last assistant text).
  * Evidence is everything before that message.
  */
-export function checkClaims(steps: Step[], finalIndex?: number): ClaimsResult {
+export function checkClaims(steps: Step[], finalIndex?: number, opts: ClaimOptions = {}): ClaimsResult {
   let end = finalIndex ?? -1
   if (end < 0) for (let i = steps.length - 1; i >= 0; i--) if (steps[i]!.kind === 'assistant_text') { end = i; break }
   if (end < 0) return { outcome: 'ABSTAIN', claims: [], reasons: ['no assistant message to check'] }
@@ -237,15 +267,15 @@ export function checkClaims(steps: Step[], finalIndex?: number): ClaimsResult {
   let start = end
   while (start > 0 && steps[start - 1]!.kind === 'assistant_text') start--
   const texts = steps.slice(start, end + 1) as Extract<Step, { kind: 'assistant_text' }>[]
-  return checkMessageClaims(texts.map((t) => t.text).join('\n'), steps, start, texts[texts.length - 1]!.at)
+  return checkMessageClaims(texts.map((t) => t.text).join('\n'), steps, start, texts[texts.length - 1]!.at, opts)
 }
 
 /**
  * Check the claims in `text` against the evidence in `steps` before index `upTo` (default: all of them). For hosts that hand
  * over the final message separately, e.g. a Stop hook's `last_assistant_message` when the transcript has not caught up yet.
  */
-export function checkMessageClaims(text: string, steps: Step[], upTo = steps.length, at?: string): ClaimsResult {
-  const claims = extractClaims(text).map((c) => checkOne(c, steps, upTo))
+export function checkMessageClaims(text: string, steps: Step[], upTo = steps.length, at?: string, opts: ClaimOptions = {}): ClaimsResult {
+  const claims = extractClaims(text, opts).map((c) => checkOne(c, steps, upTo))
   const base = at ? { final_message_at: at } : {}
   if (!claims.length) return { outcome: 'ABSTAIN', claims, ...base, reasons: ['no checkable completion claims in the final message'] }
   const contra = claims.filter((c) => c.status === 'CONTRADICTED')

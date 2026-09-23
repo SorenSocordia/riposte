@@ -261,3 +261,44 @@ describe('Stop hook (--hook)', () => {
     expect(claimsCli(['--hook', '--only-contradicted'], read, hook('bare.jsonl')).code).toBe(0)
   })
 })
+
+describe('--strict: "done" means tested', () => {
+  const strict = { strict: true }
+  const checkS = (...lines: (string | string[])[]) => checkClaims(session(...lines), undefined, strict)
+
+  it('off by default: completion words are not claims unless strict', () => {
+    expect(extractClaims('Fixed the bug in the parser.')).toEqual([])
+    expect(extractClaims('Fixed the bug in the parser.', strict).map((c) => c.kind)).toEqual(['completed'])
+  })
+
+  it('recognises assertive completions, skips hedges and reports about others', () => {
+    for (const s of ['Done.', 'Done — the parser handles CRLF now.', 'I fixed the off-by-one.', 'Implemented the retry logic.', 'The issue is resolved.', "Everything's working now.", 'It works now.'])
+      expect(extractClaims(s, strict).some((c) => c.kind === 'completed'), s).toBe(true)
+    for (const s of ['It should be fixed now.', 'This might be done.', 'Fixed by the maintainers upstream.', 'Once this is resolved we can ship.', 'Not done yet.'])
+      expect(extractClaims(s, strict).some((c) => c.kind === 'completed'), s).toBe(false)
+  })
+
+  it('someone else\'s completion, or a future one, is not the agent\'s claim (found auditing a real session)', () => {
+    for (const s of ['I can see a fuzzer that caught real bugs that you then fixed.', "That's about 2.5 GB, and I'll be notified when it's done."])
+      expect(extractClaims(s, strict).some((c) => c.kind === 'completed'), s).toBe(false)
+    for (const s of ['- **Caught and fixed a real shipping bug.**', 'We have implemented the retry logic.'])
+      expect(extractClaims(s, strict).some((c) => c.kind === 'completed'), s).toBe(true)
+  })
+
+  it('SUPPORTED only with a passing test run after the last code edit', () => {
+    expect(checkS(edit('src/a.ts'), bash('npm test', VITEST_OK), say('Fixed.')).outcome).toBe('PASS')
+    const noRun = checkS(edit('src/a.ts'), say('Fixed.'))
+    expect(noRun.claims[0]).toMatchObject({ kind: 'completed', status: 'UNSUPPORTED', reason: expect.stringMatching(/no test ran in this session/) })
+    expect(checkS(bash('npm test', VITEST_OK), edit('src/a.ts'), say('Done.')).claims[0]!.reason).toMatch(/before a later code edit/)
+    expect(checkS(edit('src/a.ts'), bash('npm test', VITEST_FAIL, true), say('Implemented it.')).claims[0]).toMatchObject({ status: 'CONTRADICTED', reason: expect.stringMatching(/1 failing/) })
+  })
+
+  it('the strict hook sends a bare "Fixed." back; the default hook lets it through', () => {
+    const files: Record<string, string> = { 'fix.jsonl': [prompt('go'), ...edit('src/a.ts'), say('Fixed.')].join('\n') }
+    const read = (p: string) => files[p]!
+    const input = JSON.stringify({ hook_event_name: 'Stop', transcript_path: 'fix.jsonl', stop_hook_active: false })
+    expect(stopHook(input, read, { strict: true }).code).toBe(2)
+    expect(stopHook(input, read).code).toBe(0)
+    expect(claimsCli(['--hook', '--strict'], read, input).code).toBe(2)
+  })
+})

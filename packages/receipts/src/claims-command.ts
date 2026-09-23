@@ -10,14 +10,14 @@
  */
 import { checkClaims, checkMessageClaims, findFinalMessage, sessionFromClaudeCodeTranscript, turnEnds, type ClaimsResult } from './claims.js'
 
-export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns]  |  riposte-claims --hook [--only-contradicted | --record-only] [--ledger <file>]   (hook JSON on stdin)'
+export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns] [--strict]  |  riposte-claims --hook [--strict] [--only-contradicted | --record-only] [--ledger <file>]   (hook JSON on stdin)'
 const CODES = { PASS: 0, FAIL: 1, ABSTAIN: 2 } as const
 
-export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; recordOnly: boolean; ledger?: string; help?: boolean; error?: string }
+export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; recordOnly: boolean; strict: boolean; ledger?: string; help?: boolean; error?: string }
 export interface CliResult { code: number; out: string; err: string }
 
 export function parseClaimsArgs(argv: string[]): ClaimsArgs {
-  const out: ClaimsArgs = { allTurns: false, hook: false, onlyContradicted: false, recordOnly: false }
+  const out: ClaimsArgs = { allTurns: false, hook: false, onlyContradicted: false, recordOnly: false, strict: false }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!
     if (a === '--help' || a === '-h') out.help = true
@@ -25,6 +25,7 @@ export function parseClaimsArgs(argv: string[]): ClaimsArgs {
     else if (a === '--hook') out.hook = true
     else if (a === '--only-contradicted') out.onlyContradicted = true
     else if (a === '--record-only') out.recordOnly = true
+    else if (a === '--strict') out.strict = true
     else if (a === '--ledger') { const v = argv[++i]; if (!v || v.startsWith('--')) return { ...out, error: '--ledger needs a file' }; out.ledger = v }
     else if (a.startsWith('--')) return { ...out, error: `unknown option ${a}` }
     else if (out.path) return { ...out, error: 'one transcript at a time' }
@@ -43,12 +44,12 @@ export interface TurnAudit {
 }
 
 /** Audit every turn-ending message of a session (turns with no checkable claims are counted, not scored). */
-export function auditTurns(jsonl: string): TurnAudit {
+export function auditTurns(jsonl: string, opts: { strict?: boolean } = {}): TurnAudit {
   const steps = sessionFromClaudeCodeTranscript(jsonl)
   const ends = turnEnds(steps)
   const audit: TurnAudit = { turns: ends.length, turns_with_claims: 0, outcomes: { PASS: 0, FAIL: 0, ABSTAIN: 0 }, claims: { SUPPORTED: 0, CONTRADICTED: 0, UNSUPPORTED: 0 }, flagged: [] }
   for (const i of ends) {
-    const r = checkClaims(steps, i)
+    const r = checkClaims(steps, i, { strict: opts.strict === true })
     if (!r.claims.length) continue
     audit.turns_with_claims++
     audit.outcomes[r.outcome]++
@@ -66,6 +67,8 @@ export interface StopHookOptions {
   onlyContradicted?: boolean
   /** never send anything back and never fail: check, record (via --ledger), exit 0. For hosts where a turn must never be forced. */
   recordOnly?: boolean
+  /** strict policy: "done / fixed / implemented" needs a passing test run after the last code edit (see ClaimOptions) */
+  strict?: boolean
 }
 
 /**
@@ -89,10 +92,11 @@ export function stopHook(stdin: string, readFile: (path: string) => string, opts
   try { steps = sessionFromClaudeCodeTranscript(readFile(hook.transcript_path)) } catch (e) { return { code: fail, stderr: `riposte-claims --hook: cannot read the transcript: ${(e as Error).message}\n` } }
   const last = typeof hook.last_assistant_message === 'string' && hook.last_assistant_message.trim() ? hook.last_assistant_message : null
   let result: ClaimsResult
+  const policy = { strict: opts.strict === true }
   if (last) {
     const at = findFinalMessage(steps, last)
-    result = checkMessageClaims(last, steps, at >= 0 ? at : steps.length)
-  } else result = checkClaims(steps)
+    result = checkMessageClaims(last, steps, at >= 0 ? at : steps.length, undefined, policy)
+  } else result = checkClaims(steps, undefined, policy)
   const flagged = result.claims.filter((c) => c.status === 'CONTRADICTED' || (!opts.onlyContradicted && c.status === 'UNSUPPORTED'))
   if (!flagged.length) return { code: 0, stderr: '', result, wouldBlock: false }
   if (opts.recordOnly) return { code: 0, stderr: '', result, wouldBlock: true }
@@ -112,7 +116,7 @@ export function claimsCli(argv: string[], readFile: (path: string) => string, st
   const args = parseClaimsArgs(argv)
   if (args.help) return { code: 0, out: '', err: `${CLAIMS_USAGE}\n` }
   if (args.error) return { code: 3, out: '', err: `${args.error}\n${CLAIMS_USAGE}\n` }
-  if (args.hook) { const d = stopHook(stdin ?? '', readFile, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly }); return { code: d.code, out: '', err: d.stderr } }
+  if (args.hook) { const d = stopHook(stdin ?? '', readFile, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly, strict: args.strict }); return { code: d.code, out: '', err: d.stderr } }
   let path = args.path
   if (!path && stdin?.trim()) {
     try { const hook = JSON.parse(stdin) as { transcript_path?: unknown }; if (typeof hook.transcript_path === 'string') path = hook.transcript_path } catch { /* not hook JSON */ }
@@ -121,10 +125,10 @@ export function claimsCli(argv: string[], readFile: (path: string) => string, st
   let text: string
   try { text = readFile(path) } catch (e) { return { code: 3, out: '', err: `cannot read ${path}: ${(e as Error).message}\n` } }
   if (args.allTurns) {
-    const a = auditTurns(text)
+    const a = auditTurns(text, { strict: args.strict })
     const code = a.outcomes.FAIL ? 1 : a.outcomes.ABSTAIN ? 2 : a.outcomes.PASS ? 0 : 2
     return { code, out: `${JSON.stringify(a, null, 2)}\n`, err: `${a.turns} turns · ${a.turns_with_claims} with claims · ${a.claims.SUPPORTED} supported · ${a.claims.CONTRADICTED} contradicted · ${a.claims.UNSUPPORTED} unsupported\n` }
   }
-  const r = checkClaims(sessionFromClaudeCodeTranscript(text))
+  const r = checkClaims(sessionFromClaudeCodeTranscript(text), undefined, { strict: args.strict })
   return { code: CODES[r.outcome], out: `${JSON.stringify(r, null, 2)}\n`, err: `${r.outcome}: ${r.reasons.join(' · ')}\n` }
 }
