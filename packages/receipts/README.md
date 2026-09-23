@@ -52,6 +52,8 @@ has to run the check or correct the claim.
   doesn't block.
 - **It uses `last_assistant_message` when the host provides it,** because the transcript can lag the final message.
 - **`--only-contradicted`** sends back only claims that are demonstrably false. Unbacked claims are then just recorded.
+- **`--record-only`** never sends anything back and never fails. Every stop is checked and receipted, with `would_block` noting
+  what full mode would have done. Use it where a turn must never be forced, or to measure before you enforce.
 - **`--ledger`** writes every checked stop to the hash-chained receipt ledger. It is signed if `RECEIPTS_KEY` points at an
   Ed25519 PEM.
 
