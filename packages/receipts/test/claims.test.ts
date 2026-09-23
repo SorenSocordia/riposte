@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import {
-  extractClaims, checkClaims, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, claimsCli, auditTurns, stopHook,
+  extractClaims, checkClaims, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, claimsCli, auditTurns, stopHook, hookOptionsFromEnv,
   handleMcpRequest, openLedger, memoryStore, rootedJsonReader, rootedTextReader, type Step,
 } from '../src/index.js'
 
@@ -300,5 +300,20 @@ describe('--strict: "done" means tested', () => {
     expect(stopHook(input, read, { strict: true }).code).toBe(2)
     expect(stopHook(input, read).code).toBe(0)
     expect(claimsCli(['--hook', '--strict'], read, input).code).toBe(2)
+  })
+})
+
+describe('plugin configuration from the environment (--from-env)', () => {
+  it('defaults to record-only: an install measures before it ever enforces', () => {
+    expect(hookOptionsFromEnv({})).toMatchObject({ mode: 'record-only', opts: { recordOnly: true, onlyContradicted: false, strict: false }, problems: [] })
+  })
+  it('reads mode, strict and ledger', () => {
+    expect(hookOptionsFromEnv({ RIPOSTE_HOOK_MODE: 'block', RIPOSTE_STRICT: '1', RIPOSTE_LEDGER: ' /x/r.jsonl ' })).toMatchObject({ mode: 'block', opts: { recordOnly: false, onlyContradicted: false, strict: true }, ledger: '/x/r.jsonl' })
+    expect(hookOptionsFromEnv({ RIPOSTE_HOOK_MODE: 'Only-Contradicted' }).opts).toMatchObject({ onlyContradicted: true, recordOnly: false })
+  })
+  it('an unrecognised mode falls back to the safe one and says so — never guessed', () => {
+    const r = hookOptionsFromEnv({ RIPOSTE_HOOK_MODE: 'blok' })
+    expect(r.mode).toBe('record-only')
+    expect(r.problems[0]).toMatch(/is not one of record-only \| only-contradicted \| block; using record-only/)
   })
 })

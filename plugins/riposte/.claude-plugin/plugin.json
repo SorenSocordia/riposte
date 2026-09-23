@@ -1,0 +1,8 @@
+{
+  "name": "riposte",
+  "description": "Receipts for your agent: checks its closing claims against what its tools actually returned, attests which model answered, and keeps a tamper-evident ledger. Record-only by default.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Tucker Anderson"
+  }
+}

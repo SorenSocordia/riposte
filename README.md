@@ -35,6 +35,17 @@ way to fail, because a person looks at it. Coverage is always published next to 
 | [`packages/receipts`](packages/receipts) · `riposte-ai` | **The layer agents call.** `check_done` compares an agent's "done" with the real state. `ap_gate` compares a model's pay/hold decision with the deterministic three-way match and executes only when they agree. `check_claims` checks the claims an agent ends a turn with ("tests pass", "pushed") against what its tools actually returned. `model_attest` checks which model actually answered, reply by reply, against the one the run declared, and flags silent switches. It also includes a hash-chained, signed receipt ledger and option-order flip probes for typed decisions. Ships as an MCP server and a CLI. |
 | [`bench/ap`](bench/ap) | **The benchmark harness:** the frozen blind checker, the disclosed tuned checker, the audit of published model decisions, the stress generator, and every per-case result. |
 
+## Install in Claude Code (one plugin)
+
+```bash
+claude plugin marketplace add SorenSocordia/riposte
+claude plugin install riposte@riposte            # -s project or -s local to scope it to one project
+```
+
+It adds a Stop hook that checks the agent's closing claims against its own tool results, the MCP tools, and a receipt ledger.
+**It is record-only by default**: it measures and never forces a turn until you set `RIPOSTE_HOOK_MODE`. See
+[`plugins/riposte`](plugins/riposte).
+
 ## Quick start (from source; not yet on npm)
 
 ```bash

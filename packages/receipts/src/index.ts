@@ -57,5 +57,5 @@ export { handleRequest as handleMcpRequest, rootedJsonReader, rootedTextReader, 
 export { attestModels, modelGate, modelMatches, isFloatingAlias, eventsFromReplies, eventsFromClaudeCodeTranscript, type ModelEvent, type AttestPolicy, type ModelAttestation, type SwitchEvent, type ModelGateResult } from './model-attest.js'
 export { attestCli, parseAttestArgs, ATTEST_USAGE } from './attest-command.js'
 export { extractClaims, checkClaims, checkMessageClaims, findFinalMessage, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, type Step, type ClaimOptions, type ClaimKind, type ClaimStatus, type ClaimCheck, type ClaimsResult, type ExtractedClaim, type Evidence } from './claims.js'
-export { claimsCli, parseClaimsArgs, auditTurns, stopHook, CLAIMS_USAGE, type TurnAudit, type HookDecision } from './claims-command.js'
+export { claimsCli, parseClaimsArgs, auditTurns, stopHook, hookOptionsFromEnv, CLAIMS_USAGE, type TurnAudit, type HookDecision, type HookMode, type StopHookOptions } from './claims-command.js'
 export { ledgerCli, parseLedger, publicOf, LEDGER_USAGE } from './ledger-command.js'

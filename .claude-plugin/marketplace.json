@@ -1,0 +1,13 @@
+{
+  "name": "riposte",
+  "owner": {
+    "name": "Tucker Anderson"
+  },
+  "plugins": [
+    {
+      "name": "riposte",
+      "source": "./plugins/riposte",
+      "description": "Receipts for your agent: checks its closing claims against what its tools actually returned, attests which model answered, and keeps a tamper-evident ledger. Record-only by default."
+    }
+  ]
+}

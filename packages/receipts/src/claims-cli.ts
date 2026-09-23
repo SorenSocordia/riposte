@@ -3,9 +3,11 @@
  * Bin for `riposte-claims` — see ./claims-command.ts.
  *   --hook      Claude Code Stop hook: reads the hook JSON on stdin, exits 2 to send an unbacked "done" back once, else 0
  *   --ledger f  append every checked stop to a hash-chained receipt ledger (signed if RECEIPTS_KEY points at an Ed25519 PEM)
+ *   --from-env  take the hook mode / strict / ledger from RIPOSTE_HOOK_MODE, RIPOSTE_STRICT, RIPOSTE_LEDGER (for plugins);
+ *               --ledger then only supplies the default path
  */
 import { readFileSync } from 'node:fs'
-import { claimsCli, parseClaimsArgs, stopHook } from './claims-command.js'
+import { claimsCli, hookOptionsFromEnv, parseClaimsArgs, stopHook, type StopHookOptions } from './claims-command.js'
 import { openLedger } from './ledger.js'
 import { fileStore } from './file-store.js'
 
@@ -14,13 +16,23 @@ const args = parseClaimsArgs(argv)
 const read = (p: string) => readFileSync(p, 'utf8')
 
 if (args.hook && !args.error && !args.help) {
+  let opts: StopHookOptions = { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly, strict: args.strict }
+  let ledgerPath = args.ledger
+  let mode = args.recordOnly ? 'record-only' : args.onlyContradicted ? 'only-contradicted' : 'block'
+  if (args.fromEnv) {
+    const env = hookOptionsFromEnv(process.env)
+    opts = env.opts
+    mode = env.mode
+    ledgerPath = env.ledger ?? args.ledger
+    for (const p of env.problems) process.stderr.write(`riposte-claims: ${p}\n`)
+  }
   try {
-    const d = stopHook(readFileSync(0, 'utf8'), read, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly, strict: args.strict })
-    if (args.ledger && d.result?.claims.length) {
+    const d = stopHook(readFileSync(0, 'utf8'), read, opts)
+    if (ledgerPath && d.result?.claims.length) {
       try {
         const signingKey = process.env.RECEIPTS_KEY ? readFileSync(process.env.RECEIPTS_KEY, 'utf8') : undefined
-        openLedger(fileStore(args.ledger), signingKey ? { signingKey } : {})
-          .append('claims_check', { source: 'stop_hook', mode: args.recordOnly ? 'record-only' : args.onlyContradicted ? 'only-contradicted' : 'block', strict: args.strict, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result })
+        openLedger(fileStore(ledgerPath), signingKey ? { signingKey } : {})
+          .append('claims_check', { source: 'stop_hook', mode, strict: opts.strict === true, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result })
       } catch (e) { process.stderr.write(`riposte-claims: ledger not written: ${(e as Error).message}\n`) }
     }
     process.stderr.write(d.stderr)
@@ -28,7 +40,7 @@ if (args.hook && !args.error && !args.help) {
   } catch (e) {
     // record-only promises never to interrupt the host; otherwise this is a visible, non-blocking error
     process.stderr.write(`riposte-claims --hook: ${(e as Error).message}\n`)
-    process.exitCode = args.recordOnly ? 0 : 1
+    process.exitCode = opts.recordOnly ? 0 : 1
   }
 } else {
   const needStdin = !args.path && !process.stdin.isTTY

@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/bin/riposte-claims.mjs\" --hook --from-env --ledger \"${CLAUDE_PLUGIN_DATA}/receipts.jsonl\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

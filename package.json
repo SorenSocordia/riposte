@@ -20,13 +20,15 @@
     "test": "npm test -w riposte-verify && npm test -w riposte-ai",
     "bench:ap": "tsx bench/ap/bench.ts --run 1",
     "bench:ap:audit": "tsx bench/ap/audit.ts",
-    "bench:ap:stress": "tsx bench/ap/stress.ts --seed holdout1"
+    "bench:ap:stress": "tsx bench/ap/stress.ts --seed holdout1",
+    "build:plugin": "node scripts/build-plugin.mjs"
   },
   "devDependencies": {
     "@types/node": "^22",
     "tsx": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.17",
+    "esbuild": "^0.27.2"
   },
   "engines": {
     "node": ">=20"

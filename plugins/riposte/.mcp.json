@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "riposte": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/bin/riposte-mcp.mjs"],
+      "env": {
+        "RECEIPTS_ROOT": "${CLAUDE_PROJECT_DIR}",
+        "RECEIPTS_LEDGER": "${CLAUDE_PLUGIN_DATA}/receipts.jsonl"
+      }
+    }
+  }
+}

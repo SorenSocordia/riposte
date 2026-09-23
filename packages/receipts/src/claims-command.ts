@@ -13,7 +13,7 @@ import { checkClaims, checkMessageClaims, findFinalMessage, sessionFromClaudeCod
 export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns] [--strict]  |  riposte-claims --hook [--strict] [--only-contradicted | --record-only] [--ledger <file>]   (hook JSON on stdin)'
 const CODES = { PASS: 0, FAIL: 1, ABSTAIN: 2 } as const
 
-export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; recordOnly: boolean; strict: boolean; ledger?: string; help?: boolean; error?: string }
+export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; recordOnly: boolean; strict: boolean; fromEnv?: boolean; ledger?: string; help?: boolean; error?: string }
 export interface CliResult { code: number; out: string; err: string }
 
 export function parseClaimsArgs(argv: string[]): ClaimsArgs {
@@ -26,6 +26,7 @@ export function parseClaimsArgs(argv: string[]): ClaimsArgs {
     else if (a === '--only-contradicted') out.onlyContradicted = true
     else if (a === '--record-only') out.recordOnly = true
     else if (a === '--strict') out.strict = true
+    else if (a === '--from-env') out.fromEnv = true
     else if (a === '--ledger') { const v = argv[++i]; if (!v || v.startsWith('--')) return { ...out, error: '--ledger needs a file' }; out.ledger = v }
     else if (a.startsWith('--')) return { ...out, error: `unknown option ${a}` }
     else if (out.path) return { ...out, error: 'one transcript at a time' }
@@ -109,6 +110,30 @@ export function stopHook(stdin: string, readFile: (path: string) => string, opts
     stderr: `Before you finish: your final message makes ${flagged.length === 1 ? 'a claim' : 'claims'} this session's tool results don't back.\n${lines.join('\n')}\n` +
       'Run the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n',
   }
+}
+
+export type HookMode = 'record-only' | 'only-contradicted' | 'block'
+const MODES: readonly HookMode[] = ['record-only', 'only-contradicted', 'block']
+
+/**
+ * Hook configuration from the environment, so a plugin can be configured without editing it:
+ * - RIPOSTE_HOOK_MODE: record-only (default) | only-contradicted | block
+ * - RIPOSTE_STRICT: 1 or true
+ * - RIPOSTE_LEDGER: a file path
+ * The default is the one that never forces a turn. An unrecognised mode falls back to it and is reported, never guessed.
+ */
+export function hookOptionsFromEnv(env: Record<string, string | undefined>): { mode: HookMode; opts: StopHookOptions; ledger?: string; problems: string[] } {
+  const problems: string[] = []
+  const raw = (env.RIPOSTE_HOOK_MODE ?? '').trim().toLowerCase()
+  let mode: HookMode = 'record-only'
+  if (raw) {
+    if ((MODES as readonly string[]).includes(raw)) mode = raw as HookMode
+    else problems.push(`RIPOSTE_HOOK_MODE="${env.RIPOSTE_HOOK_MODE}" is not one of ${MODES.join(' | ')}; using record-only`)
+  }
+  const strict = /^(?:1|true|yes)$/i.test((env.RIPOSTE_STRICT ?? '').trim())
+  const opts: StopHookOptions = { recordOnly: mode === 'record-only', onlyContradicted: mode === 'only-contradicted', strict }
+  const ledger = env.RIPOSTE_LEDGER?.trim() || undefined
+  return { mode, opts, ...(ledger ? { ledger } : {}), problems }
 }
 
 /** `stdin` is consulted only when no path was given (Claude Code hooks pass {"transcript_path": …} on stdin). */
