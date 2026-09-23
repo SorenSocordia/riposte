@@ -1,0 +1,35 @@
+{
+  "name": "riposte",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Independent, deterministic verification for AI agent decisions and actions. PASS | FAIL | ABSTAIN, with replayable proofs and a signed receipt ledger.",
+  "author": "Tucker Anderson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SorenSocordia/riposte.git"
+  },
+  "homepage": "https://github.com/SorenSocordia/riposte#readme",
+  "type": "module",
+  "workspaces": [
+    "packages/verify",
+    "packages/receipts"
+  ],
+  "scripts": {
+    "build": "npm run build -w riposte-verify && npm run build -w riposte-ai",
+    "typecheck": "npm run typecheck -w riposte-verify && npm run typecheck -w riposte-ai",
+    "test": "npm test -w riposte-verify && npm test -w riposte-ai",
+    "bench:ap": "tsx bench/ap/bench.ts --run 1",
+    "bench:ap:audit": "tsx bench/ap/audit.ts",
+    "bench:ap:stress": "tsx bench/ap/stress.ts --seed holdout1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4",
+    "typescript": "^5",
+    "vitest": "^4.0.17"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0"
+}

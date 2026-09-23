@@ -1,0 +1,50 @@
+{
+  "name": "riposte-verify",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Deterministic post-extraction verification: recompute, quote-match, cross-reference. PASS | FAIL | INSUFFICIENT_DATA with per-claim provenance and replayable, signable proofs. Never guesses a verdict.",
+  "author": "Tucker Anderson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SorenSocordia/riposte.git",
+    "directory": "packages/verify"
+  },
+  "homepage": "https://github.com/SorenSocordia/riposte/tree/main/packages/verify",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "riposte-verify": "dist/cli.js",
+    "riposte-verify-mcp": "dist/mcp/stdio.js",
+    "riposte-verify-serve": "dist/http/serve.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "QUICKSTART.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:determinism": "vitest run test/determinism",
+    "mcp": "node dist/mcp/stdio.js",
+    "serve": "node dist/http/serve.js",
+    "demo": "tsx scripts/demo.ts"
+  },
+  "dependencies": {
+    "jsonpath-plus": "^10.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4",
+    "typescript": "^5",
+    "vitest": "^4.0.17"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0"
+}

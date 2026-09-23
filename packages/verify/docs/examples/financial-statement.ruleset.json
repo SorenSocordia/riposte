@@ -1,0 +1,52 @@
+{
+  "id": "financial-statement-core",
+  "version": "0.1.0",
+  "domain": "financial-statement",
+  "name": "Financial statement articulation — XBRL-US DQC-aligned identities (attribution: XBRL US Data Quality Committee, xbrl.us/data-quality; rules re-implemented, IDs cited)",
+  "tolerance": { "rel": 0.0003, "absCap": 2 },
+  "fields": {
+    "ASSETS":                 { "paths": ["assets", "total_assets", "Assets"] },
+    "LIABILITIES":            { "paths": ["liabilities", "total_liabilities", "Liabilities"] },
+    "EQUITY":                 { "paths": ["equity", "total_equity", "StockholdersEquity", "shareholders_equity"] },
+    "LIAB_AND_EQUITY":        { "paths": ["liabilities_and_equity", "LiabilitiesAndStockholdersEquity"] },
+    "CURRENT_ASSETS":         { "paths": ["current_assets", "AssetsCurrent"] },
+    "NONCURRENT_ASSETS":      { "paths": ["noncurrent_assets", "AssetsNoncurrent"] },
+    "CURRENT_LIABILITIES":    { "paths": ["current_liabilities", "LiabilitiesCurrent"] },
+    "NONCURRENT_LIABILITIES": { "paths": ["noncurrent_liabilities", "LiabilitiesNoncurrent"] },
+    "CASH_BS":                { "paths": ["cash", "cash_and_equivalents", "CashAndCashEquivalentsAtCarryingValue"] },
+
+    "REVENUE":                { "paths": ["revenue", "revenues", "Revenues", "net_sales"] },
+    "COGS":                   { "paths": ["cost_of_goods_sold", "cogs", "CostOfGoodsAndServicesSold", "cost_of_revenue"] },
+    "GROSS_PROFIT":           { "paths": ["gross_profit", "GrossProfit"] },
+    "OPEX":                   { "paths": ["operating_expenses", "OperatingExpenses"] },
+    "OPERATING_INCOME":       { "paths": ["operating_income", "OperatingIncomeLoss"] },
+    "PRETAX_INCOME":          { "paths": ["pretax_income", "income_before_tax", "IncomeLossFromContinuingOperationsBeforeIncomeTaxes"] },
+    "TAX":                    { "paths": ["income_tax_expense", "IncomeTaxExpenseBenefit", "tax"] },
+    "NET_INCOME":             { "paths": ["net_income", "NetIncomeLoss", "ProfitLoss", "net_earnings"] },
+    "OCI":                    { "paths": ["other_comprehensive_income", "OtherComprehensiveIncomeLossNetOfTax"] },
+    "COMPREHENSIVE_INCOME":   { "paths": ["comprehensive_income", "ComprehensiveIncomeNetOfTax"] },
+
+    "CFO":                    { "paths": ["cash_from_operations", "NetCashProvidedByUsedInOperatingActivities"] },
+    "CFI":                    { "paths": ["cash_from_investing", "NetCashProvidedByUsedInInvestingActivities"] },
+    "CFF":                    { "paths": ["cash_from_financing", "NetCashProvidedByUsedInFinancingActivities"] },
+    "NET_CASH_CHANGE":        { "paths": ["net_change_in_cash", "CashAndCashEquivalentsPeriodIncreaseDecrease"] },
+    "BEGINNING_CASH":         { "paths": ["beginning_cash", "cash_beginning_of_period"] },
+    "ENDING_CASH":            { "paths": ["ending_cash", "cash_end_of_period"] }
+  },
+  "checks": [
+    { "code": "BS_ACCOUNTING_EQUATION", "name": "DQC_0004: Assets = Liabilities + Equity", "field": "assets", "left": "ASSETS", "op": "=", "right": "LIABILITIES + EQUITY" },
+    { "code": "BS_LIAB_AND_EQUITY_TOTAL", "name": "DQC_0004: Assets = LiabilitiesAndStockholdersEquity", "field": "liabilities_and_equity", "left": "ASSETS", "op": "=", "right": "LIAB_AND_EQUITY" },
+    { "code": "BS_ASSET_SPLIT", "name": "DQC_0004: Assets = AssetsCurrent + AssetsNoncurrent", "field": "assets", "left": "ASSETS", "op": "=", "right": "CURRENT_ASSETS + NONCURRENT_ASSETS" },
+    { "code": "BS_LIABILITY_SPLIT", "name": "DQC_0004: Liabilities = LiabilitiesCurrent + LiabilitiesNoncurrent", "field": "liabilities", "left": "LIABILITIES", "op": "=", "right": "CURRENT_LIABILITIES + NONCURRENT_LIABILITIES" },
+
+    { "code": "IS_GROSS_PROFIT", "name": "Income-statement footing: GrossProfit = Revenue − COGS", "field": "gross_profit", "left": "GROSS_PROFIT", "op": "=", "right": "REVENUE - COGS" },
+    { "code": "IS_OPERATING_INCOME", "name": "Income-statement footing: OperatingIncome = GrossProfit − OpEx", "field": "operating_income", "left": "OPERATING_INCOME", "op": "=", "right": "GROSS_PROFIT - OPEX" },
+    { "code": "IS_NET_INCOME", "name": "Income-statement footing: NetIncome = PretaxIncome − Tax", "field": "net_income", "left": "NET_INCOME", "op": "=", "right": "PRETAX_INCOME - TAX" },
+    { "code": "IS_COMPREHENSIVE_INCOME", "name": "DQC_0004: ComprehensiveIncome = ProfitLoss + OCI", "field": "comprehensive_income", "left": "COMPREHENSIVE_INCOME", "op": "=", "right": "NET_INCOME + OCI" },
+
+    { "code": "CF_NET_CHANGE", "name": "Cash-flow footing: NetChange = CFO + CFI + CFF", "field": "net_change_in_cash", "left": "NET_CASH_CHANGE", "op": "=", "right": "CFO + CFI + CFF" },
+    { "code": "CF_ENDING_CASH", "name": "DQC_0057: EndingCash = BeginningCash + NetChange", "field": "ending_cash", "left": "ENDING_CASH", "op": "=", "right": "BEGINNING_CASH + NET_CASH_CHANGE" },
+
+    { "code": "XSTMT_CASH_ARTICULATION", "name": "DQC_0057: cash-flow ending cash = balance-sheet cash", "field": "cash", "left": "ENDING_CASH", "op": "=", "right": "CASH_BS" }
+  ]
+}

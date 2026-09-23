@@ -1,0 +1,26 @@
+Riposte
+Copyright 2026 Tucker Anderson
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This repository redistributes third-party data under its original licences:
+
+- Distil Labs, invoice-processing-pipeline (Apache-2.0)
+  https://github.com/distil-labs/invoice-processing-pipeline
+  data/invoice_cases.jsonl and benchmarking/results/decider/*.jsonl
+  -> bench/ap/data/distil/, packages/verify/data/real/D-ap-distil/,
+     packages/verify/docs/examples/ap-three-way.txt (case T001)
+  Licence copies: bench/ap/data/distil/LICENSE,
+                  packages/verify/data/real/D-ap-distil/LICENSE-distil-labs-Apache-2.0
+
+- naver-clova-ix/cord-v2, CORD: Consolidated Receipt Dataset (CC-BY-4.0)
+  https://huggingface.co/datasets/naver-clova-ix/cord-v2
+  -> packages/verify/data/real/A-invoices-receipts/ (ground-truth parses only; images omitted)
+
+- HFforLegal/case-law, "us" split (CC-BY-4.0; the underlying US court opinions are public-domain works)
+  https://huggingface.co/datasets/HFforLegal/case-law
+  -> packages/verify/data/real/B-legal-opinions/
+
+- AgamiAI/Indian-Bank-Statements, schema only (Apache-2.0)
+  https://huggingface.co/datasets/AgamiAI/Indian-Bank-Statements
+  -> packages/verify/data/real/C-bank-paystub/

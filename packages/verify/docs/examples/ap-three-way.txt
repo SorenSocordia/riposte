@@ -1,0 +1,35 @@
+INVOICE MESSAGE
+From: priya.nair@northwind.example
+Subject: Fwd: Aldine Janitorial invoice AJ-97466
+
+Can you process this one? Thanks.
+
+---------- Forwarded message ----------
+From: ar@aldinejan.com
+Subject: Aldine Janitorial invoice AJ-97466
+
+Hi Northwind AP team,
+
+Please find our invoice AJ-97466 against your order PO-49051:
+
+- 10 x GREASE CART 14OZ @ USD 7.45 = USD 74.50
+- 20 x FIRST AID KIT 50P @ USD 79.90 = USD 1,598.00
+- 10 x BUBBLE WRAP 300MM RL @ USD 26.30 = USD 263.00
+
+Total due: USD 1,935.50
+
+Reminder: our quote Q-2776 for USD 3,400.00 is valid until month end.
+
+Kind regards,
+Accounts Receivable, Aldine Janitorial
+
+PURCHASE ORDER (ERP)
+PO-49051 | Vendor: Aldine Janitorial | Freight: not allowed
+1. Machine grease cartridge 14 oz | qty 10 | unit USD 7.45
+2. First aid kit, 50 person | qty 20 | unit USD 79.90
+3. Bubble wrap roll 300 mm | qty 10 | unit USD 26.30
+
+GOODS RECEIPT (ERP) for PO-49051
+1. Machine grease cartridge 14 oz | received 7
+2. First aid kit, 50 person | received 20
+3. Bubble wrap roll 300 mm | received 10

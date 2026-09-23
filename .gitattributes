@@ -1,0 +1,8 @@
+* text=auto eol=lf
+# Byte-exact files: never let line-ending conversion touch them.
+# The blind checker is identified by its sha256 (d1ad333f…).
+bench/ap/threeway-v1.frozen.ts -text
+# Third-party data stays byte-identical to its source; results must cmp-equal a fresh re-run.
+packages/verify/data/** -text
+bench/ap/data/** -text
+bench/ap/results/** -text

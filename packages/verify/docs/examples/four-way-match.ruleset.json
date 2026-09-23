@@ -1,0 +1,19 @@
+{
+  "id": "procure-to-pay-4way",
+  "version": "0.0.1",
+  "domain": "reconciliation",
+  "name": "Procure-to-pay four-way match — PO ↔ invoice ↔ goods-receipt ↔ payment coherence",
+  "documents": ["po", "invoice", "receipt", "payment"],
+  "tolerance": { "rel": 0.0003, "absCap": 0.01 },
+  "fields": {
+    "PO_AMOUNT":      { "doc": "po",      "paths": ["approved_amount", "total", "amount"] },
+    "INV_TOTAL":      { "doc": "invoice", "paths": ["payable_amount", "total", "amount_due", "PayableAmount"] },
+    "RECEIPT_AMOUNT": { "doc": "receipt", "paths": ["received_amount", "total", "goods_value"] },
+    "PAY_AMOUNT":     { "doc": "payment", "paths": ["amount", "paid_amount", "InstdAmt"] }
+  },
+  "checks": [
+    { "code": "INV_WITHIN_PO",    "name": "invoice total does not exceed the approved PO amount", "field": "invoice.total", "left": "INV_TOTAL", "op": "<=", "right": "PO_AMOUNT" },
+    { "code": "RECEIPT_TIES_INV", "name": "goods-receipt value equals the invoiced total",         "field": "receipt.total", "left": "RECEIPT_AMOUNT", "op": "=", "right": "INV_TOTAL" },
+    { "code": "PAYMENT_TIES_INV", "name": "payment amount equals the invoiced total",               "field": "payment.amount", "left": "PAY_AMOUNT", "op": "=", "right": "INV_TOTAL" }
+  ]
+}

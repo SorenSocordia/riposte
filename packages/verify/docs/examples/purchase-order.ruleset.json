@@ -1,0 +1,23 @@
+{
+  "id": "purchase-order",
+  "version": "0.0.1",
+  "domain": "purchase-order",
+  "lineArrayKeys": ["items", "line_items"],
+  "fields": {
+    "LINE_QTY":    { "paths": ["qty", "quantity", "cantidad", "menge", "数量"], "kind": "quantity", "line": true },
+    "LINE_PRICE":  { "paths": ["unit_price", "price", "precio", "einzelpreis", "单价"], "kind": "amount", "line": true },
+    "LINE_AMOUNT": { "paths": ["amount", "total", "importe", "betrag", "金额"], "kind": "amount", "line": true },
+    "SUBTOTAL":    { "paths": ["subtotal", "totals.subtotal", "zwischensumme", "小计"] },
+    "TAX":         { "paths": ["tax", "totals.tax", "impuesto", "mwst", "税"] },
+    "TOTAL":       { "paths": ["total", "totals.total", "amount_due", "gesamtbetrag", "合计"] }
+  },
+  "computed": {
+    "LINE_SUM": "sum(LINE_AMOUNT)",
+    "EXPECTED_TOTAL": "SUBTOTAL + TAX"
+  },
+  "checks": [
+    { "code": "SUM_INT",   "field": "subtotal", "left": "LINE_SUM", "op": "=", "right": "SUBTOTAL" },
+    { "code": "TOTAL_INT", "field": "total",    "left": "TOTAL",    "op": "=", "right": "EXPECTED_TOTAL" },
+    { "code": "MATH_INT",  "field": "amount", "scope": "line", "left": "LINE_AMOUNT", "op": "=", "right": "LINE_QTY * LINE_PRICE" }
+  ]
+}

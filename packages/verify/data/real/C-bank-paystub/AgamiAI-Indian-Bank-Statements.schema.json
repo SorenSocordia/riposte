@@ -1,0 +1,12 @@
+{
+  "source_dataset": "AgamiAI/Indian-Bank-Statements",
+  "source_url": "https://huggingface.co/datasets/AgamiAI/Indian-Bank-Statements",
+  "license": "apache-2.0",
+  "note": "SYNTHETIC Indian business bank statements. HF dataset-viewer currently FAILS to serve rows (parquet schema cast error), so no live row could be fetched via the rows API. The transaction schema below was recovered verbatim from the viewer's own error message and confirms the numeric fields needed for balance-continuity / footing checks. Pull with load_dataset or by reading the parquet directly.",
+  "transaction_struct_fields": [
+    "transaction_id (string)", "date (string)", "value_date (string)",
+    "txn_posted_date (string)", "cheque_no (string)", "description (string)",
+    "cr_dr (string)", "transaction_amount (double)",
+    "available_balance (double)  <-- running balance", "branch_code (string)", "failed (bool)"
+  ]
+}
