@@ -140,12 +140,18 @@ export function eventsFromReplies(replies: { model?: string | null; created_at?:
   return replies.map((r) => ({ type: 'reply', model: r.model, ...(r.created_at ? { at: r.created_at } : {}), ...(r.id ? { id: r.id } : {}) }))
 }
 
-const MODEL_COMMAND = /<command-name>\/?model<\/command-name>/
+/** The user's `/model` command, as the host records it: the entry's text STARTS with the command tag. */
+const MODEL_COMMAND = /^\s*<command-name>\/?model<\/command-name>/
 
 /**
  * A Claude Code session transcript (JSONL). Assistant entries carry the resolved model in `message.model`; one reply can span
- * several entries (one per content block) sharing `message.id`, so replies are de-duplicated by id. A user `/model` command
- * becomes a `switch_requested` event. Only the model, id, timestamp and command tag are read — never message content.
+ * several entries (one per content block) sharing `message.id`, so replies are de-duplicated by id.
+ *
+ * A `/model` command becomes a `switch_requested` event. The host records it in one of two shapes (both seen in real
+ * transcripts): a user entry whose content is a STRING beginning with the command tag, or a `system` entry of subtype
+ * `local_command` whose top-level `content` begins with it. Nothing else counts. In particular, tool results and text blocks
+ * that merely contain the tag do not count, because an agent controls what its tools print and must not be able to announce
+ * its own switch. Only the model, id, timestamp and the command entry are read, never message content.
  */
 export function eventsFromClaudeCodeTranscript(jsonl: string): ModelEvent[] {
   const out: ModelEvent[] = []
@@ -155,10 +161,9 @@ export function eventsFromClaudeCodeTranscript(jsonl: string): ModelEvent[] {
     let j: Record<string, unknown>
     try { j = JSON.parse(line) } catch { continue }
     const msg = (j.message ?? {}) as Record<string, unknown>
-    if (j.type === 'user') {
-      const c = msg.content
-      const text = typeof c === 'string' ? c : Array.isArray(c) ? c.map((x) => (x && typeof x === 'object' && typeof (x as { text?: unknown }).text === 'string' ? (x as { text: string }).text : '')).join('') : ''
-      if (MODEL_COMMAND.test(text)) out.push({ type: 'switch_requested', ...(typeof j.timestamp === 'string' ? { at: j.timestamp } : {}) })
+    const command = j.type === 'user' ? msg.content : j.type === 'system' && j.subtype === 'local_command' ? j.content : undefined
+    if (command !== undefined) {
+      if (typeof command === 'string' && MODEL_COMMAND.test(command)) out.push({ type: 'switch_requested', ...(typeof j.timestamp === 'string' ? { at: j.timestamp } : {}) })
       continue
     }
     if (j.type !== 'assistant') continue

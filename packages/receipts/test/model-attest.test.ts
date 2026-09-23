@@ -50,6 +50,28 @@ describe('model attestation — which model actually answered', () => {
     expect(a.reasons[0]).toMatch(/every change was announced and every model was expected/)
   })
 
+  it('the host also records /model as a system local_command entry — that announces too', () => {
+    const sys = JSON.stringify({ type: 'system', subtype: 'local_command', timestamp: '2026-09-23T10:00:00Z', content: '<command-name>/model</command-name>\n            <command-message>model</command-message>\n            <command-args></command-args>' })
+    const a = attest(transcript(reply('m-1'), sys, reply('m-2')))
+    expect(a.switches[0]!.announced).toBe(true)
+    expect(a.outcome).toBe('PASS')
+  })
+
+  it('an agent cannot announce its own switch: the tag inside tool output or mid-text is not a command', () => {
+    const tag = '<command-name>/model</command-name>'
+    const spoofs = [
+      JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 't1', content: tag }] } }),
+      JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: tag }] } }),
+      user(`please note: ${tag}`),
+      JSON.stringify({ type: 'system', subtype: 'informational', content: tag }),
+    ]
+    for (const spoof of spoofs) {
+      const a = attest(transcript(reply('m-1'), spoof, reply('m-2')))
+      expect(a.switches[0]!.announced).toBe(false)
+      expect(a.outcome).toBe('FAIL')
+    }
+  })
+
   it('announced is not the same as allowed: an announced switch to an undeclared model still FAILs', () => {
     const a = attest(transcript(reply('claude-opus-4-8'), modelCommand(), reply('claude-sonnet-4-5')), { declared: 'claude-opus-4-8' })
     expect(a.outcome).toBe('FAIL')
