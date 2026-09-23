@@ -15,7 +15,8 @@
   "types": "dist/index.d.ts",
   "bin": {
     "riposte-mcp": "dist/stdio.js",
-    "riposte-attest": "dist/attest-cli.js"
+    "riposte-attest": "dist/attest-cli.js",
+    "riposte-claims": "dist/claims-cli.js"
   },
   "files": [
     "dist",

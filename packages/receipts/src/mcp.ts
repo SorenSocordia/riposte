@@ -4,6 +4,7 @@
  *   check_done      an agent's "done" claim vs the real state (JSON files under RECEIPTS_ROOT only)
  *   ap_gate         a model's pay/hold decision vs the deterministic AP checker — only agreement executes
  *   model_attest    which model actually answered, reply by reply (from the host's record), vs the declared model
+ *   check_claims    a session's closing claims ("tests pass", "pushed"…) vs what its own tools actually returned
  *   ledger_verify   verify the whole receipt ledger (hash chain + signatures) with no trust in us
  * Every check_done / ap_gate / model_attest result is appended to the hash-chained ledger (RECEIPTS_LEDGER, default ./receipts.jsonl),
  * signed when RECEIPTS_KEY points at an Ed25519 private key (PEM).
@@ -18,6 +19,8 @@ import { apGate } from './ap-gate.js'
 import { checkDone, type DoneClaim, type StateReader } from './done.js'
 import { openLedger, type Ledger } from './ledger.js'
 import { attestModels, eventsFromClaudeCodeTranscript, eventsFromReplies, type AttestPolicy, type ModelEvent } from './model-attest.js'
+import { checkClaims, sessionFromClaudeCodeTranscript } from './claims.js'
+import { auditTurns } from './claims-command.js'
 
 export const PROTOCOL_VERSION = '2025-06-18'
 export const SERVER_INFO = { name: 'receipts', version: '0.0.1' } as const
@@ -84,6 +87,23 @@ export const TOOLS = [
         allowed: { type: 'array', items: { type: 'string' }, description: 'Or: every acceptable exact model id.' },
         fail_on_silent_switch: { type: 'boolean', description: 'FAIL on an unannounced model change (default true).' },
       },
+    },
+  },
+  {
+    name: 'check_claims',
+    description:
+      'Check the completion claims in a session\'s final message ("all tests pass", "the build is clean", "committed", "pushed", ' +
+      '"created `x`") against what the session\'s own tools actually returned. Give a Claude Code transcript (JSONL, path ' +
+      'relative to the workspace root). PASS = every claim is backed by the latest relevant tool result; FAIL = a claim is ' +
+      'contradicted (a failing test run, a rejected push, a different count); ABSTAIN = a claim has no backing (never ran, ran ' +
+      'before a later code edit) or there is nothing checkable. Set all_turns to audit every turn. Writes a receipt.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        transcript: { type: 'string', description: 'Claude Code session transcript (.jsonl), relative to the workspace root.' },
+        all_turns: { type: 'boolean', description: 'Audit every turn-ending message instead of only the final one.' },
+      },
+      required: ['transcript'],
     },
   },
   {
@@ -161,6 +181,20 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
     const a = attestModels(events, policy)
     const entry = deps.ledger.append('model_attest', { source, ...a })
     return toolResult({ ...a, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
+  }
+  if (name === 'check_claims') {
+    if (typeof args.transcript !== 'string') throw new Error('check_claims requires "transcript"')
+    if (!deps.readText) throw new Error('this server cannot read transcripts (no text reader configured)')
+    const text = deps.readText(args.transcript)
+    const source = `transcript:${args.transcript}`
+    if (args.all_turns === true) {
+      const a = auditTurns(text)
+      const entry = deps.ledger.append('claims_check', { source, all_turns: true, ...a })
+      return toolResult({ ...a, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
+    }
+    const r = checkClaims(sessionFromClaudeCodeTranscript(text))
+    const entry = deps.ledger.append('claims_check', { source, ...r })
+    return toolResult({ ...r, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
   if (name === 'ledger_verify') return toolResult(deps.ledger.verify())
   throw new Error(`unknown tool: ${name}`)
