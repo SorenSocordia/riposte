@@ -10,20 +10,21 @@
  */
 import { checkClaims, checkMessageClaims, findFinalMessage, sessionFromClaudeCodeTranscript, turnEnds, type ClaimsResult } from './claims.js'
 
-export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns]  |  riposte-claims --hook [--only-contradicted] [--ledger <file>]   (hook JSON on stdin)'
+export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns]  |  riposte-claims --hook [--only-contradicted | --record-only] [--ledger <file>]   (hook JSON on stdin)'
 const CODES = { PASS: 0, FAIL: 1, ABSTAIN: 2 } as const
 
-export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; ledger?: string; help?: boolean; error?: string }
+export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; recordOnly: boolean; ledger?: string; help?: boolean; error?: string }
 export interface CliResult { code: number; out: string; err: string }
 
 export function parseClaimsArgs(argv: string[]): ClaimsArgs {
-  const out: ClaimsArgs = { allTurns: false, hook: false, onlyContradicted: false }
+  const out: ClaimsArgs = { allTurns: false, hook: false, onlyContradicted: false, recordOnly: false }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!
     if (a === '--help' || a === '-h') out.help = true
     else if (a === '--all-turns') out.allTurns = true
     else if (a === '--hook') out.hook = true
     else if (a === '--only-contradicted') out.onlyContradicted = true
+    else if (a === '--record-only') out.recordOnly = true
     else if (a === '--ledger') { const v = argv[++i]; if (!v || v.startsWith('--')) return { ...out, error: '--ledger needs a file' }; out.ledger = v }
     else if (a.startsWith('--')) return { ...out, error: `unknown option ${a}` }
     else if (out.path) return { ...out, error: 'one transcript at a time' }
@@ -59,7 +60,13 @@ export function auditTurns(jsonl: string): TurnAudit {
   return audit
 }
 
-export interface HookDecision { code: 0 | 1 | 2; stderr: string; result?: ClaimsResult; skipped?: string }
+export interface HookDecision { code: 0 | 1 | 2; stderr: string; result?: ClaimsResult; skipped?: string; wouldBlock?: boolean }
+export interface StopHookOptions {
+  /** send back only claims that are demonstrably false; unbacked ones are just recorded */
+  onlyContradicted?: boolean
+  /** never send anything back and never fail: check, record (via --ledger), exit 0. For hosts where a turn must never be forced. */
+  recordOnly?: boolean
+}
 
 /**
  * Stop-hook mode (Claude Code: exit 2 blocks stopping and hands stderr back to the agent; exit 0 lets it stop; any other
@@ -72,13 +79,14 @@ export interface HookDecision { code: 0 | 1 | 2; stderr: string; result?: Claims
  *   transcript up to that message, or all of it if the message is not in the transcript yet.
  * - Our own failure (unreadable input) → 1: visible to the user, never holds the agent hostage.
  */
-export function stopHook(stdin: string, readFile: (path: string) => string, opts: { onlyContradicted?: boolean } = {}): HookDecision {
+export function stopHook(stdin: string, readFile: (path: string) => string, opts: StopHookOptions = {}): HookDecision {
+  const fail = opts.recordOnly ? 0 : 1 // record-only never fails loudly: a broken check must not interrupt the host
   let hook: { transcript_path?: unknown; stop_hook_active?: unknown; last_assistant_message?: unknown }
-  try { hook = JSON.parse(stdin) } catch { return { code: 1, stderr: 'riposte-claims --hook: stdin is not hook JSON\n' } }
+  try { hook = JSON.parse(stdin) } catch { return { code: fail, stderr: 'riposte-claims --hook: stdin is not hook JSON\n' } }
   if (hook.stop_hook_active === true) return { code: 0, stderr: '', skipped: 'this stop was already sent back once' }
-  if (typeof hook.transcript_path !== 'string') return { code: 1, stderr: 'riposte-claims --hook: no transcript_path in the hook input\n' }
+  if (typeof hook.transcript_path !== 'string') return { code: fail, stderr: 'riposte-claims --hook: no transcript_path in the hook input\n' }
   let steps
-  try { steps = sessionFromClaudeCodeTranscript(readFile(hook.transcript_path)) } catch (e) { return { code: 1, stderr: `riposte-claims --hook: cannot read the transcript: ${(e as Error).message}\n` } }
+  try { steps = sessionFromClaudeCodeTranscript(readFile(hook.transcript_path)) } catch (e) { return { code: fail, stderr: `riposte-claims --hook: cannot read the transcript: ${(e as Error).message}\n` } }
   const last = typeof hook.last_assistant_message === 'string' && hook.last_assistant_message.trim() ? hook.last_assistant_message : null
   let result: ClaimsResult
   if (last) {
@@ -86,13 +94,14 @@ export function stopHook(stdin: string, readFile: (path: string) => string, opts
     result = checkMessageClaims(last, steps, at >= 0 ? at : steps.length)
   } else result = checkClaims(steps)
   const flagged = result.claims.filter((c) => c.status === 'CONTRADICTED' || (!opts.onlyContradicted && c.status === 'UNSUPPORTED'))
-  if (!flagged.length) return { code: 0, stderr: '', result }
+  if (!flagged.length) return { code: 0, stderr: '', result, wouldBlock: false }
+  if (opts.recordOnly) return { code: 0, stderr: '', result, wouldBlock: true }
   const lines = flagged.map((c) => {
     const ev = c.evidence ? ` [${c.evidence.command ? c.evidence.command.slice(0, 60) : c.evidence.tool}${c.evidence.at ? ` @ ${c.evidence.at}` : ''}]` : ''
     return `• "${c.claim.length > 120 ? `${c.claim.slice(0, 117)}…` : c.claim}" — ${c.status}: ${c.reason}${ev}`
   })
   return {
-    code: 2, result,
+    code: 2, result, wouldBlock: true,
     stderr: `Before you finish: your final message makes ${flagged.length === 1 ? 'a claim' : 'claims'} this session's tool results don't back.\n${lines.join('\n')}\n` +
       'Run the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n',
   }
@@ -103,7 +112,7 @@ export function claimsCli(argv: string[], readFile: (path: string) => string, st
   const args = parseClaimsArgs(argv)
   if (args.help) return { code: 0, out: '', err: `${CLAIMS_USAGE}\n` }
   if (args.error) return { code: 3, out: '', err: `${args.error}\n${CLAIMS_USAGE}\n` }
-  if (args.hook) { const d = stopHook(stdin ?? '', readFile, { onlyContradicted: args.onlyContradicted }); return { code: d.code, out: '', err: d.stderr } }
+  if (args.hook) { const d = stopHook(stdin ?? '', readFile, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly }); return { code: d.code, out: '', err: d.stderr } }
   let path = args.path
   if (!path && stdin?.trim()) {
     try { const hook = JSON.parse(stdin) as { transcript_path?: unknown }; if (typeof hook.transcript_path === 'string') path = hook.transcript_path } catch { /* not hook JSON */ }

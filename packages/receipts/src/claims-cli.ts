@@ -14,15 +14,22 @@ const args = parseClaimsArgs(argv)
 const read = (p: string) => readFileSync(p, 'utf8')
 
 if (args.hook && !args.error && !args.help) {
-  const d = stopHook(readFileSync(0, 'utf8'), read, { onlyContradicted: args.onlyContradicted })
-  if (args.ledger && d.result?.claims.length) {
-    try {
-      const signingKey = process.env.RECEIPTS_KEY ? readFileSync(process.env.RECEIPTS_KEY, 'utf8') : undefined
-      openLedger(fileStore(args.ledger), signingKey ? { signingKey } : {}).append('claims_check', { source: 'stop_hook', blocked: d.code === 2, ...d.result })
-    } catch (e) { process.stderr.write(`riposte-claims: ledger not written: ${(e as Error).message}\n`) }
+  try {
+    const d = stopHook(readFileSync(0, 'utf8'), read, { onlyContradicted: args.onlyContradicted, recordOnly: args.recordOnly })
+    if (args.ledger && d.result?.claims.length) {
+      try {
+        const signingKey = process.env.RECEIPTS_KEY ? readFileSync(process.env.RECEIPTS_KEY, 'utf8') : undefined
+        openLedger(fileStore(args.ledger), signingKey ? { signingKey } : {})
+          .append('claims_check', { source: 'stop_hook', mode: args.recordOnly ? 'record-only' : args.onlyContradicted ? 'only-contradicted' : 'block', blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result })
+      } catch (e) { process.stderr.write(`riposte-claims: ledger not written: ${(e as Error).message}\n`) }
+    }
+    process.stderr.write(d.stderr)
+    process.exitCode = d.code
+  } catch (e) {
+    // record-only promises never to interrupt the host; otherwise this is a visible, non-blocking error
+    process.stderr.write(`riposte-claims --hook: ${(e as Error).message}\n`)
+    process.exitCode = args.recordOnly ? 0 : 1
   }
-  process.stderr.write(d.stderr)
-  process.exitCode = d.code
 } else {
   const needStdin = !args.path && !process.stdin.isTTY
   const r = claimsCli(argv, read, needStdin ? readFileSync(0, 'utf8') : undefined)

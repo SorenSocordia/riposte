@@ -248,6 +248,14 @@ describe('Stop hook (--hook)', () => {
     expect(stopHook(hook('missing.jsonl'), read).code).toBe(1)
   })
 
+  it('--record-only never sends anything back and never fails — it only records what it would have done', () => {
+    expect(stopHook(hook('red.jsonl'), read, { recordOnly: true })).toMatchObject({ code: 0, stderr: '', wouldBlock: true, result: { outcome: 'FAIL' } })
+    expect(stopHook(hook('green.jsonl'), read, { recordOnly: true })).toMatchObject({ code: 0, wouldBlock: false })
+    expect(stopHook('not json', read, { recordOnly: true }).code).toBe(0)
+    expect(stopHook(hook('missing.jsonl'), read, { recordOnly: true }).code).toBe(0)
+    expect(claimsCli(['--hook', '--record-only'], read, hook('red.jsonl'))).toMatchObject({ code: 0, err: '' })
+  })
+
   it('claimsCli routes --hook the same way', () => {
     expect(claimsCli(['--hook'], read, hook('red.jsonl')).code).toBe(2)
     expect(claimsCli(['--hook', '--only-contradicted'], read, hook('bare.jsonl')).code).toBe(0)
