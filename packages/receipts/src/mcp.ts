@@ -17,7 +17,7 @@ import { resolve, relative, isAbsolute } from 'node:path'
 import { splitApLayout, type ApDocuments } from 'riposte-verify'
 import { apGate } from './ap-gate.js'
 import { checkDone, type DoneClaim, type StateReader } from './done.js'
-import { openLedger, type Ledger } from './ledger.js'
+import { openLedger, type Ledger, type ChainPolicy } from './ledger.js'
 import { attestModels, eventsFromClaudeCodeTranscript, eventsFromReplies, type AttestPolicy, type ModelEvent } from './model-attest.js'
 import { checkClaims, sessionFromClaudeCodeTranscript } from './claims.js'
 import { auditTurns } from './claims-command.js'
@@ -108,8 +108,18 @@ export const TOOLS = [
   },
   {
     name: 'ledger_verify',
-    description: 'Verify the entire receipt ledger: every entry chained to the previous one and (if signed) signed by the key holder. Anyone can run this — no trust in us required.',
-    inputSchema: { type: 'object', properties: {} },
+    description:
+      'Verify the entire receipt ledger: every entry chained to the previous one, and (if signed) signed. Anyone can run ' +
+      'this, with no trust in us. A chain alone cannot detect a whole-file rewrite, so pin a trust anchor: the expected ' +
+      'public key, require_signed, and/or a head hash recorded earlier. Reports who signed (key fingerprints).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        public_key: { type: 'string', description: 'PEM (SPKI) of the only key allowed to have signed entries.' },
+        require_signed: { type: 'boolean', description: 'Fail on any unsigned entry.' },
+        head: { type: 'string', description: 'A hash recorded earlier; the chain must still contain it.' },
+      },
+    },
   },
 ] as const
 
@@ -196,7 +206,13 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
     const entry = deps.ledger.append('claims_check', { source, ...r })
     return toolResult({ ...r, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
-  if (name === 'ledger_verify') return toolResult(deps.ledger.verify())
+  if (name === 'ledger_verify') {
+    const policy: ChainPolicy = {}
+    if (typeof args.public_key === 'string') policy.publicKey = args.public_key
+    if (args.require_signed === true) policy.requireSigned = true
+    if (typeof args.head === 'string') policy.head = args.head
+    return toolResult(deps.ledger.verify(policy))
+  }
   throw new Error(`unknown tool: ${name}`)
 }
 

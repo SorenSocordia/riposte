@@ -13,7 +13,7 @@ Built on [`riposte-verify`](../verify), which provides the deterministic checks 
 | `checkClaims` / MCP `check_claims` / `riposte-claims` | Checks the **prose** claims an agent ends a turn with ("all 62 tests pass", "the build is clean", "committed", "pushed", "created `x`") against what its own tools actually returned in the session. Only the latest relevant result counts, and a later code edit makes it stale. A claim is SUPPORTED, CONTRADICTED (a failing run, a rejected push, a different count) or UNSUPPORTED (never ran). Hedged, negated and quoted sentences are skipped, so it never puts words in the agent's mouth. `--all-turns` audits a whole session. |
 | `apGate` / MCP `ap_gate` | Compares a model's pay/hold decision with a deterministic three-way match (invoice ↔ PO ↔ goods receipt). It returns EXECUTE only when they agree; otherwise REVIEW, with the reason. |
 | `attestModels` / MCP `model_attest` / `riposte-attest` | Checks which model **actually** answered, reply by reply, using the model id the host recorded (never what the model says about itself), against the model the run declared. It lists every switch as announced (the user asked for it) or silent. FAIL if any reply came from another model or the model changed with nothing announcing it. ABSTAIN if the declared id is a floating alias like `opus` or `…-latest`, because nothing can be attested against an alias. `modelGate` is the per-reply runtime version. |
-| `openLedger` / MCP `ledger_verify` | An append-only, hash-chained receipt ledger (JSONL), optionally signed with Ed25519. It detects edits, deletions and reordering. |
+| `openLedger` / MCP `ledger_verify` / `riposte-ledger` | An append-only, hash-chained receipt ledger (JSONL), optionally signed with Ed25519. It detects edits, deletions and reordering **inside** the file. Detecting a **whole-file rewrite** takes a trust anchor: the expected signing key, required signatures, or a head hash you recorded earlier. The report always lists who signed. |
 | `guard` / `gate` / `flipProbe` | For typed decisions (`/v1/systemone`-style: choice, `noul` probability, score). It recomputes what can be recomputed, abstains on the rest, and probes whether the answer flips when only the order of the options changes. |
 
 ## Measured (public data, reproducible — see [`../verify/docs/BENCHMARK-AP.md`](../verify/docs/BENCHMARK-AP.md))
@@ -29,6 +29,18 @@ Built on [`riposte-verify`](../verify), which provides the deterministic checks 
 ```
 It works in any MCP host. `check_done` reads only inside `RECEIPTS_ROOT`, and refuses absolute paths and `..` escapes. The
 ledger defaults to `<RECEIPTS_ROOT>/receipts.jsonl`; set `RECEIPTS_LEDGER` to put it elsewhere.
+
+## Verify a ledger without trusting anyone (CLI)
+```bash
+riposte-ledger fingerprint signing-key.pem                  # the public key + fingerprint to publish or pin
+riposte-ledger verify receipts.jsonl --key issuer.pub.pem --require-signed --head <hash you recorded earlier>
+riposte-ledger summary receipts.jsonl                       # counts by kind, time range, head, signers
+# from a source checkout: node packages/receipts/dist/ledger-cli.js …   · exit 0 ok · 1 broken · 3 usage
+```
+A hash chain proves the file is internally consistent. It does **not** prove that nobody rewrote all of it and re-signed it
+with their own key. `verify` says so when you give it no anchor, and it always lists which keys signed. Pin the issuer's key,
+require signatures, or check against a head hash you recorded (for example, one published daily), and a rewrite fails at the
+first forged entry.
 
 ## Is "done" true? (CLI)
 ```bash

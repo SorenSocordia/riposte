@@ -5,7 +5,7 @@
  * it. Signed entries additionally prove WHO issued them. Storage is injectable (in-memory by default; a JSONL file for the
  * CLI/plugins) so it runs anywhere and tests with no disk.
  */
-import { createPrivateKey, createPublicKey, sign as edSign, verify as edVerify } from 'node:crypto'
+import { createHash, createPrivateKey, createPublicKey, sign as edSign, verify as edVerify } from 'node:crypto'
 import { canonicalize, sha256 } from 'riposte-verify'
 
 export type ReceiptKind = 'decision' | 'ap_gate' | 'done_check' | 'claims_check' | 'model_attest' | 'model_switch' | 'compaction' | 'note'
@@ -36,10 +36,36 @@ const entryHash = (e: Pick<LedgerEntry, 'seq' | 'kind' | 'at' | 'body' | 'prev_h
 export interface Ledger {
   append(kind: ReceiptKind, body: unknown): LedgerEntry
   entries(): LedgerEntry[]
-  verify(): ChainCheck
+  verify(policy?: ChainPolicy): ChainCheck
 }
 
-export interface ChainCheck { ok: boolean; length: number; head: string; broken_at?: number; reason?: string }
+export interface ChainCheck {
+  ok: boolean
+  length: number
+  head: string
+  broken_at?: number
+  reason?: string
+  /** entries carrying a (verified) signature, and entries carrying none */
+  signed: number
+  unsigned: number
+  /** fingerprints of every key that signed an entry. More than one means mixed signers, worth a look even when ok. */
+  signers: string[]
+}
+
+/**
+ * Trust anchors. A hash chain alone proves only that the file is internally consistent. Anyone who rewrites the WHOLE file
+ * can recompute every hash, and re-sign every entry with their own key. To detect that, pin at least one of these:
+ * - `publicKey`: every signature must come from this key (PEM, SPKI)
+ * - `requireSigned`: no unsigned entries (so signatures cannot simply be stripped)
+ * - `head`: a hash you recorded earlier (e.g. published). The chain must still contain it, so it grew rather than being rewritten.
+ */
+export interface ChainPolicy { publicKey?: string; requireSigned?: boolean; head?: string }
+
+/** A short, stable id for a public key: sha256 of its DER (SPKI) encoding, first 16 hex characters. */
+export function keyFingerprint(publicKeyPem: string): string {
+  const der = createPublicKey(publicKeyPem).export({ type: 'spki', format: 'der' })
+  return createHash('sha256').update(der).digest('hex').slice(0, 16)
+}
 
 export function openLedger(store: LedgerStore = memoryStore(), opts: { signingKey?: string; now?: () => Date } = {}): Ledger {
   const now = opts.now ?? (() => new Date())
@@ -58,24 +84,49 @@ export function openLedger(store: LedgerStore = memoryStore(), opts: { signingKe
       return entry
     },
     entries: () => store.load(),
-    verify: () => verifyChain(store.load()),
+    verify: (policy) => verifyChain(store.load(), policy),
   }
 }
 
-/** Verify a chain with nothing but sha256 + the embedded public keys. */
-export function verifyChain(entries: LedgerEntry[]): ChainCheck {
+/**
+ * Verify a chain with nothing but sha256 and the public keys: order, links, hashes and signatures. With a ChainPolicy it also
+ * checks WHO signed, and against a previously recorded head. Without one, a full rewrite by someone else can still verify.
+ */
+export function verifyChain(entries: LedgerEntry[], policy: ChainPolicy = {}): ChainCheck {
   let prev = GENESIS
+  let signed = 0
+  let unsigned = 0
+  const signers = new Set<string>()
+  let expected: string | null = null
+  if (policy.publicKey) {
+    try { expected = keyFingerprint(policy.publicKey) } catch { return { ok: false, length: entries.length, head: prev, reason: 'the expected public key could not be read', signed, unsigned, signers: [] } }
+  }
+  const fail = (i: number, reason: string): ChainCheck => ({ ok: false, length: entries.length, head: prev, broken_at: i, reason, signed, unsigned, signers: [...signers] })
+  let anchored = !policy.head
   for (let i = 0; i < entries.length; i++) {
     const e = entries[i]!
-    if (e.seq !== i) return { ok: false, length: entries.length, head: prev, broken_at: i, reason: `entry ${i} has seq ${e.seq} (reordered or removed entries)` }
-    if (e.prev_hash !== prev) return { ok: false, length: entries.length, head: prev, broken_at: i, reason: `entry ${i} does not follow entry ${i - 1} (chain broken)` }
-    if (entryHash(e) !== e.hash) return { ok: false, length: entries.length, head: prev, broken_at: i, reason: `entry ${i} was altered after it was written` }
+    if (e.seq !== i) return fail(i, `entry ${i} has seq ${e.seq} (reordered or removed entries)`)
+    if (e.prev_hash !== prev) return fail(i, `entry ${i} does not follow entry ${i - 1} (chain broken)`)
+    if (entryHash(e) !== e.hash) return fail(i, `entry ${i} was altered after it was written`)
     if (e.signature) {
       let ok = false
-      try { ok = edVerify(null, Buffer.from(e.hash, 'utf8'), createPublicKey(e.signature.public_key), Buffer.from(e.signature.sig, 'base64')) } catch { ok = false }
-      if (!ok) return { ok: false, length: entries.length, head: prev, broken_at: i, reason: `entry ${i} signature does not verify` }
+      let fp = ''
+      try {
+        ok = edVerify(null, Buffer.from(e.hash, 'utf8'), createPublicKey(e.signature.public_key), Buffer.from(e.signature.sig, 'base64'))
+        fp = keyFingerprint(e.signature.public_key)
+      } catch { ok = false }
+      if (!ok) return fail(i, `entry ${i} signature does not verify`)
+      signers.add(fp)
+      signed++
+      if (expected && fp !== expected) return fail(i, `entry ${i} is signed by key ${fp}, not the expected ${expected} (re-signed by someone else?)`)
+    } else {
+      unsigned++
+      if (policy.requireSigned) return fail(i, `entry ${i} is not signed (signatures required)`)
     }
+    if (policy.head && e.hash === policy.head) anchored = true
     prev = e.hash
   }
-  return { ok: true, length: entries.length, head: prev }
+  const base = { length: entries.length, head: prev, signed, unsigned, signers: [...signers] }
+  if (!anchored) return { ok: false, ...base, reason: `the anchored hash ${policy.head!.slice(0, 16)}… is not in this chain (rewritten or truncated since it was recorded)` }
+  return { ok: true, ...base }
 }

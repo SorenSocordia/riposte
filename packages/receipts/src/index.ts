@@ -14,7 +14,7 @@ import type { SystemOneRequest, SystemOneResponse, Transport } from './systemone
 export * from './systemone.js'
 export { apGate, type ApGateResult, type ApAction } from './ap-gate.js'
 export { checkDone, type DoneClaim, type DoneResult, type DoneOutcome, type Expectation, type ExpectationResult, type StateReader } from './done.js'
-export { openLedger, verifyChain, memoryStore, type Ledger, type LedgerEntry, type LedgerStore, type ChainCheck, type ReceiptKind } from './ledger.js'
+export { openLedger, verifyChain, memoryStore, keyFingerprint, type Ledger, type LedgerEntry, type LedgerStore, type ChainCheck, type ChainPolicy, type ReceiptKind } from './ledger.js'
 export { orderSchedule, reorder } from './permute.js'
 export { flipProbe, type FlipOptions, type FlipResult } from './flip.js'
 export { gate, type GateChecks, type GatePolicy, type GateResult, type GateOutcome } from './gate.js'
@@ -58,3 +58,4 @@ export { attestModels, modelGate, modelMatches, isFloatingAlias, eventsFromRepli
 export { attestCli, parseAttestArgs, ATTEST_USAGE } from './attest-command.js'
 export { extractClaims, checkClaims, checkMessageClaims, findFinalMessage, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, type Step, type ClaimOptions, type ClaimKind, type ClaimStatus, type ClaimCheck, type ClaimsResult, type ExtractedClaim, type Evidence } from './claims.js'
 export { claimsCli, parseClaimsArgs, auditTurns, stopHook, CLAIMS_USAGE, type TurnAudit, type HookDecision } from './claims-command.js'
+export { ledgerCli, parseLedger, publicOf, LEDGER_USAGE } from './ledger-command.js'
