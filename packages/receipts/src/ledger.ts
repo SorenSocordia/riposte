@@ -8,7 +8,7 @@
 import { createPrivateKey, createPublicKey, sign as edSign, verify as edVerify } from 'node:crypto'
 import { canonicalize, sha256 } from 'riposte-verify'
 
-export type ReceiptKind = 'decision' | 'ap_gate' | 'done_check' | 'model_switch' | 'compaction' | 'note'
+export type ReceiptKind = 'decision' | 'ap_gate' | 'done_check' | 'model_attest' | 'model_switch' | 'compaction' | 'note'
 
 export interface LedgerEntry {
   seq: number

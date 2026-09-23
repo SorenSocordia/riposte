@@ -24,7 +24,7 @@ describe('Receipts MCP server', () => {
     const init = handleMcpRequest({ jsonrpc: '2.0', id: 0, method: 'initialize', params: {} }, deps) as { result: { serverInfo: { name: string } } }
     expect(init.result.serverInfo.name).toBe('receipts')
     const list = handleMcpRequest({ jsonrpc: '2.0', id: 1, method: 'tools/list' }, deps) as { result: { tools: { name: string }[] } }
-    expect(list.result.tools.map((t) => t.name)).toEqual(['check_done', 'ap_gate', 'ledger_verify'])
+    expect(list.result.tools.map((t) => t.name)).toEqual(['check_done', 'ap_gate', 'model_attest', 'ledger_verify'])
   })
 
   it('check_done: a true claim PASSes and is receipted (signed)', () => {

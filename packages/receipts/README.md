@@ -11,6 +11,7 @@ Built on [`riposte-verify`](../verify), which provides the deterministic checks 
 |---|---|
 | `checkDone` / MCP `check_done` | Compares an agent's "done" claim with the **real** state (JSON files). PASS means verified. FAIL means the claim is untrue, and it shows what is actually there. ABSTAIN means it couldn't check, so the claim is not accepted. |
 | `apGate` / MCP `ap_gate` | Compares a model's pay/hold decision with a deterministic three-way match (invoice ↔ PO ↔ goods receipt). It returns EXECUTE only when they agree; otherwise REVIEW, with the reason. |
+| `attestModels` / MCP `model_attest` / `riposte-attest` | Checks which model **actually** answered, reply by reply, using the model id the host recorded (never what the model says about itself), against the model the run declared. It lists every switch as announced (the user asked for it) or silent. FAIL if any reply came from another model or the model changed with nothing announcing it. ABSTAIN if the declared id is a floating alias like `opus` or `…-latest`, because nothing can be attested against an alias. `modelGate` is the per-reply runtime version. |
 | `openLedger` / MCP `ledger_verify` | An append-only, hash-chained receipt ledger (JSONL), optionally signed with Ed25519. It detects edits, deletions and reordering. |
 | `guard` / `gate` / `flipProbe` | For typed decisions (`/v1/systemone`-style: choice, `noul` probability, score). It recomputes what can be recomputed, abstains on the rest, and probes whether the answer flips when only the order of the options changes. |
 
@@ -27,6 +28,15 @@ Built on [`riposte-verify`](../verify), which provides the deterministic checks 
 ```
 It works in any MCP host. `check_done` reads only inside `RECEIPTS_ROOT`, and refuses absolute paths and `..` escapes. The
 ledger defaults to `<RECEIPTS_ROOT>/receipts.jsonl`; set `RECEIPTS_LEDGER` to put it elsewhere.
+
+## Which model answered? (CLI)
+```bash
+riposte-attest ~/.claude/projects/<project>/<session>.jsonl --declared claude-opus-4-8
+# from a source checkout: node packages/receipts/dist/attest-cli.js <transcript> --declared <id>
+# exit 0 PASS · 1 FAIL · 2 ABSTAIN — JSON on stdout: models, every switch (announced or silent), the replies that broke the pin
+```
+With no path, it reads a Claude Code hook's `{"transcript_path": …}` from stdin. It reads only the model, id, timestamp and
+`/model` command fields of the transcript, never message content.
 
 ## Honest scope
 - Deterministic checks decide only what can be recomputed. Everything else ABSTAINS for a person. Coverage is published

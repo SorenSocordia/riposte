@@ -3,8 +3,9 @@
  *
  *   check_done      an agent's "done" claim vs the real state (JSON files under RECEIPTS_ROOT only)
  *   ap_gate         a model's pay/hold decision vs the deterministic AP checker — only agreement executes
+ *   model_attest    which model actually answered, reply by reply (from the host's record), vs the declared model
  *   ledger_verify   verify the whole receipt ledger (hash chain + signatures) with no trust in us
- * Every check_done / ap_gate result is appended to the hash-chained ledger (RECEIPTS_LEDGER, default ./receipts.jsonl),
+ * Every check_done / ap_gate / model_attest result is appended to the hash-chained ledger (RECEIPTS_LEDGER, default ./receipts.jsonl),
  * signed when RECEIPTS_KEY points at an Ed25519 private key (PEM).
  *
  * Dependency-free JSON-RPC 2.0 (same shape as verify's MCP server). `handleRequest` is pure but for the ledger store and the
@@ -16,6 +17,7 @@ import { splitApLayout, type ApDocuments } from 'riposte-verify'
 import { apGate } from './ap-gate.js'
 import { checkDone, type DoneClaim, type StateReader } from './done.js'
 import { openLedger, type Ledger } from './ledger.js'
+import { attestModels, eventsFromClaudeCodeTranscript, eventsFromReplies, type AttestPolicy, type ModelEvent } from './model-attest.js'
 
 export const PROTOCOL_VERSION = '2025-06-18'
 export const SERVER_INFO = { name: 'receipts', version: '0.0.1' } as const
@@ -66,24 +68,57 @@ export const TOOLS = [
     },
   },
   {
+    name: 'model_attest',
+    description:
+      'Attest which model ACTUALLY answered, reply by reply, from what the host recorded (never from what a model says about ' +
+      'itself). Give a Claude Code transcript (JSONL, path relative to the workspace root) or a list of API replies, plus the ' +
+      'declared model id. PASS = every reply came from the declared model and no switch was silent; FAIL = a reply came from ' +
+      'another model or the model changed with nothing announcing it; ABSTAIN = nothing to attest (no model recorded, or the ' +
+      'declared id is a floating alias like "opus"). Every switch is listed. Writes a receipt.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        transcript: { type: 'string', description: 'Claude Code session transcript (.jsonl), relative to the workspace root.' },
+        replies: { type: 'array', items: { type: 'object', properties: { model: { type: 'string' }, created_at: { type: 'string' }, id: { type: 'string' } } }, description: 'Or: API replies in order, each with the `model` the provider returned.' },
+        declared: { type: 'string', description: 'The exact model id the run was declared to use.' },
+        allowed: { type: 'array', items: { type: 'string' }, description: 'Or: every acceptable exact model id.' },
+        fail_on_silent_switch: { type: 'boolean', description: 'FAIL on an unannounced model change (default true).' },
+      },
+    },
+  },
+  {
     name: 'ledger_verify',
     description: 'Verify the entire receipt ledger: every entry chained to the previous one and (if signed) signed by the key holder. Anyone can run this — no trust in us required.',
     inputSchema: { type: 'object', properties: {} },
   },
 ] as const
 
-export interface ServerDeps { ledger: Ledger; read: StateReader }
+export interface ServerDeps {
+  ledger: Ledger
+  read: StateReader
+  /** raw text under the workspace root (for transcripts); absent → tools that need it return a tool error */
+  readText?: (source: string) => string
+}
 
-/** A reader confined to `root`: refuses absolute paths and anything that escapes the root. */
+/** Resolve `source` inside `root`, refusing absolute paths and anything that escapes the root. */
+function rootedPath(base: string, source: string): string {
+  if (isAbsolute(source)) throw new Error('absolute paths are not allowed; use a path relative to the workspace root')
+  const full = resolve(base, source)
+  const rel = relative(base, full)
+  if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('path escapes the workspace root')
+  return full
+}
+
+/** A JSON reader confined to `root`: refuses absolute paths and anything that escapes the root. */
 export function rootedJsonReader(root: string): StateReader {
   const base = resolve(root)
-  return (source) => {
-    if (isAbsolute(source)) throw new Error('absolute paths are not allowed; use a path relative to the workspace root')
-    const full = resolve(base, source)
-    const rel = relative(base, full)
-    if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('path escapes the workspace root')
-    return JSON.parse(readFileSync(full, 'utf8'))
-  }
+  return (source) => JSON.parse(readFileSync(rootedPath(base, source), 'utf8'))
+}
+
+/** A text reader confined to `root` (same rules as rootedJsonReader). */
+export function rootedTextReader(root: string): (source: string) => string {
+  const base = resolve(root)
+  return (source) => readFileSync(rootedPath(base, source), 'utf8')
 }
 
 const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x)
@@ -107,6 +142,25 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
     const summary = { action: g.action, effect: g.effect, model_decision: g.model_decision, checker_decision: g.checker_decision, reason: g.reason, grounding: g.check.grounding, verdict_id: g.check.verdict.verdict_id }
     const entry = deps.ledger.append('ap_gate', summary)
     return toolResult({ ...summary, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
+  }
+  if (name === 'model_attest') {
+    let events: ModelEvent[]
+    let source: string
+    if (typeof args.transcript === 'string') {
+      if (!deps.readText) throw new Error('this server cannot read transcripts (no text reader configured)')
+      events = eventsFromClaudeCodeTranscript(deps.readText(args.transcript))
+      source = `transcript:${args.transcript}`
+    } else if (Array.isArray(args.replies)) {
+      events = eventsFromReplies(args.replies as { model?: string | null; created_at?: string; id?: string }[])
+      source = 'replies'
+    } else throw new Error('model_attest requires "transcript" or "replies"')
+    const policy: AttestPolicy = {}
+    if (typeof args.declared === 'string') policy.declared = args.declared
+    if (Array.isArray(args.allowed)) policy.allowed = args.allowed.filter((x): x is string => typeof x === 'string')
+    if (typeof args.fail_on_silent_switch === 'boolean') policy.failOnSilentSwitch = args.fail_on_silent_switch
+    const a = attestModels(events, policy)
+    const entry = deps.ledger.append('model_attest', { source, ...a })
+    return toolResult({ ...a, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
   if (name === 'ledger_verify') return toolResult(deps.ledger.verify())
   throw new Error(`unknown tool: ${name}`)

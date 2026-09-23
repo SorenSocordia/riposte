@@ -53,4 +53,6 @@ export async function guard(transport: Transport, request: SystemOneRequest, pol
   return out
 }
 export { fileStore } from './file-store.js'
-export { handleRequest as handleMcpRequest, rootedJsonReader, TOOLS as MCP_TOOLS } from './mcp.js'
+export { handleRequest as handleMcpRequest, rootedJsonReader, rootedTextReader, TOOLS as MCP_TOOLS } from './mcp.js'
+export { attestModels, modelGate, modelMatches, isFloatingAlias, eventsFromReplies, eventsFromClaudeCodeTranscript, type ModelEvent, type AttestPolicy, type ModelAttestation, type SwitchEvent, type ModelGateResult } from './model-attest.js'
+export { attestCli, parseAttestArgs, ATTEST_USAGE } from './attest-command.js'
