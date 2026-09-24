@@ -7,15 +7,27 @@
  *   const { ruleset } = compileRuleset(report)                        // → verify(doc, { ruleset })
  */
 
-import type { CaseTable, MineCase } from './types.js'
+import type { CaseTable, MineCase, MineOptions, MineReport, MineSchema } from './types.js'
+import { mine } from './miner.js'
+import { compileRuleset, type CompiledRuleset, type CompileOptions } from './compile.js'
 
 export { mine, resolveMineOptions, validateCaseTable, MINE_VERSION } from './miner.js'
-export { buildGrammar, validateSchema, violated, renderTerm, DEFAULT_T_GRID, DEFAULT_EPS, type PreparedCase } from './grammar.js'
+export { buildGrammar, constSpec, validateSchema, violated, renderTerm, DEFAULT_T_GRID, DEFAULT_EPS, type PreparedCase } from './grammar.js'
+export { learnConst, type LearnedConst, type LearnConstResult } from './threshold.js'
 export { tally, learnT, judgeConsistency, judgeGrounding, judgeNovelty, allowedApproved, type Tally, type GroundingGates, type NoveltyInput, type NoveltyDecision } from './judges.js'
 export { hypergeomAllHolds, hypergeomUpperTail, groundingP } from './stats.js'
 export { compileRuleset, caseToExtraction, type CompiledRuleset, type CompileOptions } from './compile.js'
 export { apCasesToTable, AP_MINE_SCHEMA, type DistilApCase } from './ap.js'
 export type * from './types.js'
+
+/**
+ * Mine and compile in one call (the MCP `mine_rules` tool and `POST /v1/mine`). Pure and deterministic. The report's
+ * candles are PROPOSALS: the compiled ruleset enforces them only once a human adopts it.
+ */
+export function mineRules(table: CaseTable, schema: MineSchema, options: MineOptions = {}, compile: CompileOptions = {}): { report: MineReport; compiled: CompiledRuleset } {
+  const report = mine(table, schema, options)
+  return { report, compiled: compileRuleset(report, compile) }
+}
 
 /** Parse JSON Lines (blank lines skipped). A bad line throws with its 1-based line number. */
 export function parseJsonl(text: string): unknown[] {

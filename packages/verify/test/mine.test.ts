@@ -557,7 +557,7 @@ describe('verify mine (CLI)', () => {
 
   it('parseMineArgs is a pure parser', () => {
     expect(parseMineArgs(['c.jsonl', '--ap', '--schema', 's.json', '--max-approved-violation-rate', '0.1', '--ruleset-out', 'o.json', '-x'])).toEqual({
-      file: 'c.jsonl', ap: true, schema: 's.json', rate: '0.1', rulesetOut: 'o.json', help: false, unknown: ['-x'],
+      file: 'c.jsonl', ap: true, schema: 's.json', rate: '0.1', rulesetOut: 'o.json', thresholds: false, help: false, unknown: ['-x'],
     })
   })
 })

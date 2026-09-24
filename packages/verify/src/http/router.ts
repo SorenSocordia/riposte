@@ -15,6 +15,8 @@ import { isDeclarativeRuleset } from '../declarative/types.js'
 import { lintRuleset } from '../declarative/lint.js'
 import { measureRuleset, type LabeledCase } from '../declarative/measure.js'
 import { verifyAgainstSource } from '../textmatch/index.js'
+import { mineRules, caseTableFromRows } from '../mine/index.js'
+import type { MineOptions, MineSchema } from '../mine/types.js'
 import { ENGINE_VERSION } from '../version.js'
 import { OPENAPI } from './openapi.js'
 
@@ -74,6 +76,14 @@ export function route(req: HttpRequest): HttpResponse {
         const quotes = Array.isArray(b.quotes) ? (b.quotes as Parameters<typeof verifyAgainstSource>[1]) : []
         const values = Array.isArray(b.values) ? (b.values as Parameters<typeof verifyAgainstSource>[2]) : []
         return ok(verifyAgainstSource(b.source_text, quotes, values))
+      }
+      case '/v1/mine': {
+        if (!Array.isArray(b.cases)) return bad('a "cases" array of { id, label, fields, lines? } is required')
+        if (!isObj(b.schema)) return bad('a "schema" object { approve, fields, lines? } is required')
+        const opts: MineOptions = {}
+        if (typeof b.max_approved_violation_rate === 'number') opts.maxApprovedViolationRate = b.max_approved_violation_rate
+        if (b.thresholds === true) opts.thresholds = true
+        return ok(mineRules(caseTableFromRows(b.cases), b.schema as unknown as MineSchema, opts, typeof b.ruleset_id === 'string' ? { id: b.ruleset_id } : {}))
       }
       default:
         return notFound()

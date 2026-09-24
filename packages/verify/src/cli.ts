@@ -71,6 +71,7 @@ verify mine <cases.jsonl> --schema <schema.json>   mine candidate rules from lab
   --max-approved-violation-rate <r>     tolerate approved exceptions (default 0 = none)
   --ruleset-out <file>                  also write the compiled ruleset (enforce: verify <doc> --ruleset <file>)
   --ruleset-id <id>                     id of the compiled ruleset (default "mined")
+  --thresholds                          also learn a constant per numeric document field (X <= c, X >= c)
 
 Exit: 0 PASS/ok · 1 FAIL/not-ok · 2 INSUFFICIENT_DATA · 3 error`
 
@@ -168,13 +169,15 @@ export interface MineArgs {
   rate?: string
   rulesetOut?: string
   rulesetId?: string
+  /** --thresholds: add the C family (learned constants per numeric document field) */
+  thresholds: boolean
   help: boolean
   /** flags `verify mine` does not know. A typo must not silently mine with defaults. */
   unknown: string[]
 }
 
 export function parseMineArgs(argv: string[]): MineArgs {
-  const a: MineArgs = { ap: false, help: false, unknown: [] }
+  const a: MineArgs = { ap: false, thresholds: false, help: false, unknown: [] }
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i] as string
     switch (t) {
@@ -184,6 +187,7 @@ export function parseMineArgs(argv: string[]): MineArgs {
       case '--max-approved-violation-rate': a.rate = argv[++i]; break
       case '--ruleset-out': a.rulesetOut = argv[++i]; break
       case '--ruleset-id': a.rulesetId = argv[++i]; break
+      case '--thresholds': a.thresholds = true; break
       default: if (t.startsWith('-') && t !== '-') a.unknown.push(t); else a.file = t
     }
   }
@@ -195,12 +199,12 @@ export function parseMineArgs(argv: string[]): MineArgs {
  * With `ap`, each line is a Distil-style AP case, turned into the case table by the AP adapter (schema defaults to the
  * AP schema). Otherwise each line is a case-table row `{ id, label, fields, lines? }` and a schema is required.
  */
-export function mineFromJsonl(text: string, opts: { schema?: MineSchema; ap?: boolean; maxApprovedViolationRate?: number; rulesetId?: string }): { report: MineReport; compiled: CompiledRuleset } {
+export function mineFromJsonl(text: string, opts: { schema?: MineSchema; ap?: boolean; maxApprovedViolationRate?: number; thresholds?: boolean; rulesetId?: string }): { report: MineReport; compiled: CompiledRuleset } {
   const rows = parseJsonl(text)
   const table = opts.ap ? apCasesToTable(rows as DistilApCase[]) : caseTableFromRows(rows)
   const schema = opts.schema ?? (opts.ap ? AP_MINE_SCHEMA : undefined)
   if (!schema) throw new Error('a schema is required (or use the AP adapter)')
-  const report = mine(table, schema, opts.maxApprovedViolationRate !== undefined ? { maxApprovedViolationRate: opts.maxApprovedViolationRate } : {})
+  const report = mine(table, schema, { ...(opts.maxApprovedViolationRate !== undefined ? { maxApprovedViolationRate: opts.maxApprovedViolationRate } : {}), ...(opts.thresholds ? { thresholds: true } : {}) })
   return { report, compiled: compileRuleset(report, opts.rulesetId !== undefined ? { id: opts.rulesetId } : {}) }
 }
 
@@ -221,7 +225,7 @@ function runMine(argv: string[], io: CliIO): number {
   } catch (e) { io.err(`error reading input: ${(e as Error).message}\n`); return 3 }
   let out: { report: MineReport; compiled: CompiledRuleset }
   try {
-    out = mineFromJsonl(text, { ap: a.ap, ...(schema ? { schema } : {}), ...(rate !== undefined ? { maxApprovedViolationRate: rate } : {}), ...(a.rulesetId !== undefined ? { rulesetId: a.rulesetId } : {}) })
+    out = mineFromJsonl(text, { ap: a.ap, ...(schema ? { schema } : {}), ...(rate !== undefined ? { maxApprovedViolationRate: rate } : {}), ...(a.thresholds ? { thresholds: true } : {}), ...(a.rulesetId !== undefined ? { rulesetId: a.rulesetId } : {}) })
   } catch (e) { io.err(`verify mine: ${(e as Error).message}\n`); return 3 }
   if (a.rulesetOut) {
     try { writeFileSync(a.rulesetOut, `${JSON.stringify(out.compiled.ruleset, null, 2)}\n`) } catch (e) { io.err(`error writing ruleset: ${(e as Error).message}\n`); return 3 }

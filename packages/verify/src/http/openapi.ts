@@ -78,6 +78,13 @@ export const OPENAPI = {
         responses: { '200': { description: 'accuracy (fp/fn/abstain + measured_on hash), metrics, and per-case rows.' }, '400': { description: 'Bad request.' } },
       },
     },
+    '/v1/mine': {
+      post: {
+        summary: 'Propose the rules behind labelled decisions (rule mining): candles with exact p-values, the morgue, and a compiled declarative ruleset.',
+        requestBody: jsonBody(['cases', 'schema'], { cases: { type: 'array', items: { type: 'object', required: ['id', 'label', 'fields'] } }, schema: { type: 'object', required: ['approve', 'fields'] }, max_approved_violation_rate: { type: 'number' }, thresholds: { type: 'boolean' }, ruleset_id: { type: 'string' } }),
+        responses: { '200': { description: '{ report, compiled }: candles (proposals for a human), morgue, explained holds, and the compiled ruleset.' }, '400': { description: 'Bad request (including a malformed case table or schema).' } },
+      },
+    },
     '/v1/ledger/stats': { get: { summary: '(managed tier) Verdict counts + real-world overturn rate for the caller’s tenant.', responses: { '200': { description: 'LedgerStats.' }, '401': { description: 'Unauthorized.' } } } },
     '/v1/ledger/report': { get: { summary: '(managed tier) The tenant book-of-record report (Markdown): volume, overturn, calibration, tamper-evidence.', responses: { '200': { description: 'tenant_id + markdown.' }, '401': { description: 'Unauthorized.' } } } },
     '/v1/ledger/calibration': { get: { summary: '(managed tier) Per-rule human-overturn calibration + the flagged review queue.', responses: { '200': { description: 'CalibrationReport.' }, '401': { description: 'Unauthorized.' } } } },

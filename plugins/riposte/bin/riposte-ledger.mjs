@@ -307,40 +307,40 @@ function parseCjkNumeral(input) {
     break;
   }
   if (!hasCjk) return null;
-  let total = 0, section = 0, num2 = 0;
+  let total = 0, section = 0, num4 = 0;
   let lastBig = Infinity, lastSmall = Infinity;
   for (const ch of s) {
     if (ch >= "0" && ch <= "9") {
-      num2 = num2 * 10 + (ch.charCodeAt(0) - 48);
+      num4 = num4 * 10 + (ch.charCodeAt(0) - 48);
       continue;
     }
     if (ch in CJK_DIGIT) {
-      num2 = num2 * 10 + CJK_DIGIT[ch];
+      num4 = num4 * 10 + CJK_DIGIT[ch];
       continue;
     }
     if (ch in CJK_SMALL) {
       const u = CJK_SMALL[ch];
       if (u >= lastSmall) return null;
       lastSmall = u;
-      section += (num2 === 0 ? 1 : num2) * u;
-      num2 = 0;
+      section += (num4 === 0 ? 1 : num4) * u;
+      num4 = 0;
       continue;
     }
     if (ch in CJK_BIG) {
       const b = CJK_BIG[ch];
       if (b >= lastBig) return null;
       lastBig = b;
-      section += num2;
+      section += num4;
       if (section === 0) return null;
       total += section * b;
       section = 0;
-      num2 = 0;
+      num4 = 0;
       lastSmall = Infinity;
       continue;
     }
     return null;
   }
-  section += num2;
+  section += num4;
   total += section;
   return Number.isFinite(total) ? total : null;
 }
@@ -881,16 +881,16 @@ var Jsep = class _Jsep {
    * @param {string} expr a string with the passed in express
    * @returns Jsep
    */
-  constructor(expr) {
-    this.expr = expr;
+  constructor(expr2) {
+    this.expr = expr2;
     this.index = 0;
   }
   /**
    * static top-level parser
    * @returns {jsep.Expression}
    */
-  static parse(expr) {
-    return new _Jsep(expr).parse();
+  static parse(expr2) {
+    return new _Jsep(expr2).parse();
   }
   /**
    * Get the longest key length of any object
@@ -1563,7 +1563,7 @@ Object.assign(Jsep, {
 });
 Jsep.max_unop_len = Jsep.getMaxKeyLen(Jsep.unary_ops);
 Jsep.max_binop_len = Jsep.getMaxKeyLen(Jsep.binary_ops);
-var jsep = (expr) => new Jsep(expr).parse();
+var jsep = (expr2) => new Jsep(expr2).parse();
 var stdClassProps = Object.getOwnPropertyNames(class Test {
 });
 Object.getOwnPropertyNames(Jsep).filter((prop) => !stdClassProps.includes(prop) && jsep[prop] === void 0).forEach((m) => {
@@ -1793,8 +1793,8 @@ var SafeEval = {
       if (ast.body[i].type === "Identifier" && ["var", "let", "const"].includes(ast.body[i].name) && ast.body[i + 1] && ast.body[i + 1].type === "AssignmentExpression") {
         i += 1;
       }
-      const expr = ast.body[i];
-      last = SafeEval.evalAst(expr, subs);
+      const expr2 = ast.body[i];
+      last = SafeEval.evalAst(expr2, subs);
     }
     return last;
   },
@@ -1872,8 +1872,8 @@ var SafeScript = class {
   /**
    * @param {string} expr Expression to evaluate
    */
-  constructor(expr) {
-    this.code = expr;
+  constructor(expr2) {
+    this.code = expr2;
     this.ast = jsep(this.code);
   }
   /**
@@ -1907,10 +1907,10 @@ var NewError = class extends Error {
     this.name = "NewError";
   }
 };
-function JSONPath(opts, expr, obj, callback, otherTypeCallback) {
+function JSONPath(opts, expr2, obj, callback, otherTypeCallback) {
   if (!(this instanceof JSONPath)) {
     try {
-      return new JSONPath(opts, expr, obj, callback, otherTypeCallback);
+      return new JSONPath(opts, expr2, obj, callback, otherTypeCallback);
     } catch (e) {
       if (!e.avoidNew) {
         throw e;
@@ -1921,14 +1921,14 @@ function JSONPath(opts, expr, obj, callback, otherTypeCallback) {
   if (typeof opts === "string") {
     otherTypeCallback = callback;
     callback = obj;
-    obj = expr;
-    expr = opts;
+    obj = expr2;
+    expr2 = opts;
     opts = null;
   }
   const optObj = opts && typeof opts === "object";
   opts = opts || {};
   this.json = opts.json || obj;
-  this.path = opts.path || expr;
+  this.path = opts.path || expr2;
   this.resultType = opts.resultType || "value";
   this.flatten = opts.flatten || false;
   this.wrap = Object.hasOwn(opts, "wrap") ? opts.wrap : true;
@@ -1943,7 +1943,7 @@ function JSONPath(opts, expr, obj, callback, otherTypeCallback) {
   };
   if (opts.autostart !== false) {
     const args = {
-      path: optObj ? opts.path : expr
+      path: optObj ? opts.path : expr2
     };
     if (!optObj) {
       args.json = obj;
@@ -1957,7 +1957,7 @@ function JSONPath(opts, expr, obj, callback, otherTypeCallback) {
     return ret;
   }
 }
-JSONPath.prototype.evaluate = function(expr, json, callback, otherTypeCallback) {
+JSONPath.prototype.evaluate = function(expr2, json, callback, otherTypeCallback) {
   let currParent = this.parent, currParentProperty = this.parentProperty;
   let {
     flatten,
@@ -1969,37 +1969,37 @@ JSONPath.prototype.evaluate = function(expr, json, callback, otherTypeCallback) 
   callback = callback || this.callback;
   this.currOtherTypeCallback = otherTypeCallback || this.otherTypeCallback;
   json = json || this.json;
-  expr = expr || this.path;
-  if (expr && typeof expr === "object" && !Array.isArray(expr)) {
-    if (!expr.path && expr.path !== "") {
+  expr2 = expr2 || this.path;
+  if (expr2 && typeof expr2 === "object" && !Array.isArray(expr2)) {
+    if (!expr2.path && expr2.path !== "") {
       throw new TypeError('You must supply a "path" property when providing an object argument to JSONPath.evaluate().');
     }
-    if (!Object.hasOwn(expr, "json")) {
+    if (!Object.hasOwn(expr2, "json")) {
       throw new TypeError('You must supply a "json" property when providing an object argument to JSONPath.evaluate().');
     }
     ({
       json
-    } = expr);
-    flatten = Object.hasOwn(expr, "flatten") ? expr.flatten : flatten;
-    this.currResultType = Object.hasOwn(expr, "resultType") ? expr.resultType : this.currResultType;
-    this.currSandbox = Object.hasOwn(expr, "sandbox") ? expr.sandbox : this.currSandbox;
-    wrap = Object.hasOwn(expr, "wrap") ? expr.wrap : wrap;
-    this.currEval = Object.hasOwn(expr, "eval") ? expr.eval : this.currEval;
-    callback = Object.hasOwn(expr, "callback") ? expr.callback : callback;
-    this.currOtherTypeCallback = Object.hasOwn(expr, "otherTypeCallback") ? expr.otherTypeCallback : this.currOtherTypeCallback;
-    currParent = Object.hasOwn(expr, "parent") ? expr.parent : currParent;
-    currParentProperty = Object.hasOwn(expr, "parentProperty") ? expr.parentProperty : currParentProperty;
-    expr = expr.path;
+    } = expr2);
+    flatten = Object.hasOwn(expr2, "flatten") ? expr2.flatten : flatten;
+    this.currResultType = Object.hasOwn(expr2, "resultType") ? expr2.resultType : this.currResultType;
+    this.currSandbox = Object.hasOwn(expr2, "sandbox") ? expr2.sandbox : this.currSandbox;
+    wrap = Object.hasOwn(expr2, "wrap") ? expr2.wrap : wrap;
+    this.currEval = Object.hasOwn(expr2, "eval") ? expr2.eval : this.currEval;
+    callback = Object.hasOwn(expr2, "callback") ? expr2.callback : callback;
+    this.currOtherTypeCallback = Object.hasOwn(expr2, "otherTypeCallback") ? expr2.otherTypeCallback : this.currOtherTypeCallback;
+    currParent = Object.hasOwn(expr2, "parent") ? expr2.parent : currParent;
+    currParentProperty = Object.hasOwn(expr2, "parentProperty") ? expr2.parentProperty : currParentProperty;
+    expr2 = expr2.path;
   }
   currParent = currParent || null;
   currParentProperty = currParentProperty || null;
-  if (Array.isArray(expr)) {
-    expr = JSONPath.toPathString(expr);
+  if (Array.isArray(expr2)) {
+    expr2 = JSONPath.toPathString(expr2);
   }
-  if (!expr && expr !== "" || !json) {
+  if (!expr2 && expr2 !== "" || !json) {
     return void 0;
   }
-  const exprList = JSONPath.toPathArray(expr);
+  const exprList = JSONPath.toPathArray(expr2);
   if (exprList[0] === "$" && exprList.length > 1) {
     exprList.shift();
   }
@@ -2051,9 +2051,9 @@ JSONPath.prototype._handleCallback = function(fullRetObj, callback, type) {
     callback(preferredOutput, type, fullRetObj);
   }
 };
-JSONPath.prototype._trace = function(expr, val, path, parent, parentPropName, callback, hasArrExpr, literalPriority) {
+JSONPath.prototype._trace = function(expr2, val, path, parent, parentPropName, callback, hasArrExpr, literalPriority) {
   let retObj;
-  if (!expr.length) {
+  if (!expr2.length) {
     retObj = {
       path,
       value: val,
@@ -2064,7 +2064,7 @@ JSONPath.prototype._trace = function(expr, val, path, parent, parentPropName, ca
     this._handleCallback(retObj, callback, "value");
     return retObj;
   }
-  const loc = expr[0], x = expr.slice(1);
+  const loc = expr2[0], x = expr2.slice(1);
   const ret = [];
   function addRet(elems) {
     if (Array.isArray(elems)) {
@@ -2085,7 +2085,7 @@ JSONPath.prototype._trace = function(expr, val, path, parent, parentPropName, ca
     addRet(this._trace(x, val, path, parent, parentPropName, callback, hasArrExpr));
     this._walk(val, (m) => {
       if (typeof val[m] === "object") {
-        addRet(this._trace(expr.slice(), val[m], push(path, m), val, m, callback, true));
+        addRet(this._trace(expr2.slice(), val[m], push(path, m), val, m, callback, true));
       }
     });
   } else if (loc === "^") {
@@ -2242,7 +2242,7 @@ JSONPath.prototype._walk = function(val, f) {
     });
   }
 };
-JSONPath.prototype._slice = function(loc, expr, val, path, parent, parentPropName, callback) {
+JSONPath.prototype._slice = function(loc, expr2, val, path, parent, parentPropName, callback) {
   if (!Array.isArray(val)) {
     return void 0;
   }
@@ -2252,7 +2252,7 @@ JSONPath.prototype._slice = function(loc, expr, val, path, parent, parentPropNam
   end = end < 0 ? Math.max(0, end + len) : Math.min(len, end);
   const ret = [];
   for (let i = start; i < end; i += step) {
-    const tmp = this._trace(unshift(i, expr), val, path, parent, parentPropName, callback, true);
+    const tmp = this._trace(unshift(i, expr2), val, path, parent, parentPropName, callback, true);
     tmp.forEach((t) => {
       ret.push(t);
     });
@@ -2320,15 +2320,15 @@ JSONPath.toPointer = function(pointer) {
   }
   return p;
 };
-JSONPath.toPathArray = function(expr) {
+JSONPath.toPathArray = function(expr2) {
   const {
     cache
   } = JSONPath;
-  if (cache[expr]) {
-    return cache[expr].concat();
+  if (cache[expr2]) {
+    return cache[expr2].concat();
   }
   const subx = [];
-  const normalized = expr.replaceAll(/@(?:null|boolean|number|string|integer|undefined|nonFinite|scalar|array|object|function|other)\(\)/gu, ";$&;").replaceAll(/[['](\??\(.*?\))[\]'](?!.\])/gu, function($0, $1) {
+  const normalized = expr2.replaceAll(/@(?:null|boolean|number|string|integer|undefined|nonFinite|scalar|array|object|function|other)\(\)/gu, ";$&;").replaceAll(/[['](\??\(.*?\))[\]'](?!.\])/gu, function($0, $1) {
     return "[#" + (subx.push($1) - 1) + "]";
   }).replaceAll(/\[['"]([^'\]]*)['"]\]/gu, function($0, prop) {
     return "['" + prop.replaceAll(".", "%@%").replaceAll("~", "%%@@%%") + "']";
@@ -2339,8 +2339,8 @@ JSONPath.toPathArray = function(expr) {
     const match = exp.match(/#(\d+)/u);
     return !match || !match[1] ? exp : subx[match[1]];
   });
-  cache[expr] = exprList;
-  return cache[expr].concat();
+  cache[expr2] = exprList;
+  return cache[expr2].concat();
 };
 JSONPath.prototype.safeVm = {
   Script: SafeScript
@@ -6642,6 +6642,11 @@ function tokenize(s) {
     if (/[A-Za-z_]/.test(c)) {
       let j = i;
       while (j < s.length && /[A-Za-z0-9_]/.test(s[j])) j++;
+      if (s[j] === "?") {
+        toks.push({ t: "id", v: s.slice(i, j), opt: true });
+        i = j + 1;
+        continue;
+      }
       toks.push({ t: "id", v: s.slice(i, j) });
       i = j;
       continue;
@@ -6665,8 +6670,8 @@ function tokenize(s) {
   }
   return toks;
 }
-function evalExpr(expr, env) {
-  const toks = tokenize(expr);
+function evalExpr(expr2, env) {
+  const toks = tokenize(expr2);
   let p = 0;
   const peek = () => toks[p];
   const next = () => toks[p++];
@@ -6715,10 +6720,12 @@ function evalExpr(expr, env) {
     if (tk.t === "id") {
       next();
       if (peek()?.t === "lp") {
+        if (tk.opt) throw new Error(`'?' marks an optional role; it cannot follow the function name '${tk.v}'`);
         next();
         if (tk.v === "sum") {
           const arg = peek();
           if (!arg || arg.t !== "id") throw new Error("sum() expects a role name");
+          if (arg.opt) throw new Error("sum() takes a role name without '?'");
           next();
           expect("rp");
           return env.sum(arg.v);
@@ -6730,6 +6737,7 @@ function evalExpr(expr, env) {
         }
         throw new Error(`unknown function '${tk.v}'`);
       }
+      if (tk.opt) return env.vars[tk.v] ?? 0;
       return env.vars[tk.v];
     }
     throw new Error(`unexpected token '${tk.v}'`);
@@ -6742,13 +6750,56 @@ function evalExpr(expr, env) {
   if (p !== toks.length) throw new Error("trailing tokens in expression");
   return result;
 }
-function referencedRoles(expr) {
+function referencedRoles(expr2) {
   const out = /* @__PURE__ */ new Set();
-  for (const t of tokenize(expr)) if (t.t === "id" && t.v !== "sum" && t.v !== "abs") out.add(t.v);
+  for (const t of tokenize(expr2)) if (t.t === "id" && t.v !== "sum" && t.v !== "abs") out.add(t.v);
   return [...out];
+}
+function roleRefs(...exprs) {
+  const all = /* @__PURE__ */ new Set(), req = /* @__PURE__ */ new Set();
+  for (const e of exprs) for (const t of tokenize(e)) {
+    if (t.t !== "id" || t.v === "sum" || t.v === "abs") continue;
+    all.add(t.v);
+    if (!t.opt) req.add(t.v);
+  }
+  const list = [...all];
+  return { all: list, required: list.filter((r2) => req.has(r2)), optional: list.filter((r2) => !req.has(r2)) };
 }
 
 // packages/verify/src/declarative/evaluate.ts
+var ROUNDING_UNITS = [1e6, 1e5, 1e3, 1];
+function inferReportingUnit(values) {
+  if (values.length === 0) return void 0;
+  return ROUNDING_UNITS.find((u) => values.every((v) => Number.isFinite(v) && Math.abs(v) % u === 0));
+}
+function roundingTolerance(values, rel, absCap, floor) {
+  const n = values.length;
+  const maxAbs = values.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
+  const unit = inferReportingUnit(values);
+  const relTerm = round4(absCap > 0 ? Math.min(rel * maxAbs, absCap) : rel * maxAbs);
+  return { tol: Math.max(floor, relTerm, (unit ?? 0) * n), unit, n, maxAbs };
+}
+function conditionHolds(l, op, r2, tol) {
+  switch (op) {
+    case "=":
+      return Math.abs(l - r2) <= tol;
+    case "!=":
+      return Math.abs(l - r2) > tol;
+    case "<":
+      return l < r2 - tol;
+    case "<=":
+      return l <= r2 + tol;
+    case ">":
+      return l > r2 + tol;
+    case ">=":
+      return l >= r2 - tol;
+    default:
+      return false;
+  }
+}
+var isDefaulted = (b) => !!b && b.status === "ok" && !!b.path && b.path.startsWith("default(");
+var isAmountField = (f) => !!f && (f.kind === void 0 || f.kind === "amount");
+var statusOf = (b) => !b ? "missing" : b.status === "ok" ? isDefaulted(b) ? "defaulted" : "ok" : b.status;
 function getPath(obj, path) {
   const parts = path.replace(/\[(\d+)\]/g, ".$1").split(".").filter(Boolean);
   let cur = obj;
@@ -6769,19 +6820,19 @@ function normBool(raw) {
   return null;
 }
 function normIdentifiers(raw) {
-  const one = (x) => {
+  const one2 = (x) => {
     if (typeof x === "number" && Number.isFinite(x)) return String(x);
     if (typeof x !== "string") return void 0;
     const n = x.replace(/\s+/g, "").toUpperCase();
     return n.length ? n : null;
   };
   if (!Array.isArray(raw)) {
-    const n = one(raw);
+    const n = one2(raw);
     return typeof n === "string" ? [n] : null;
   }
   const out = [];
   for (const x of raw) {
-    const n = one(x);
+    const n = one2(x);
     if (n === void 0) return null;
     if (n !== null && !out.includes(n)) out.push(n);
   }
@@ -6856,20 +6907,88 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
   }
   const docEnv = { vars: docVars, sum: sumRole };
   const policy = options.tolerance ?? ruleset.tolerance ?? { rel: 3e-4, absCap: 0 };
+  const roundingDefault = options.tolerance?.rounding ?? ruleset.tolerance?.rounding ?? "none";
   const claims = [];
-  const runCheck = (chk, env, prefix, gatherEvidence, missingOf) => {
-    const claim_id = `${prefix}.${chk.code}`;
-    const roles = [.../* @__PURE__ */ new Set([...referencedRoles(chk.left), ...referencedRoles(chk.right)])];
-    const base = { claim_id, kind: "RECOMPUTE", tier: "DETERMINISTIC", field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code };
-    const insuff = missingOf(roles);
-    if (insuff) {
-      claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency: insuff, locked: false, explanation: `${chk.code}: ${insuff.detail}` });
-      return;
+  const inferred = /* @__PURE__ */ new Set();
+  const fieldSpec = (r2) => Object.prototype.hasOwnProperty.call(ruleset.fields, r2) ? ruleset.fields[r2] : void 0;
+  const guardInsufficiency = (chk, env, scope) => {
+    const unless = chk.abstain_unless_all_present ?? [];
+    if (unless.length) {
+      const bad2 = unless.filter((r2) => scope.status(r2) === "unparseable");
+      if (bad2.length) return { reason: "UNPARSEABLE", detail: `guard abstain_unless_all_present: ${bad2.join(", ")} present but unparseable`, missing: bad2 };
+      const absent = unless.filter((r2) => scope.status(r2) !== "ok");
+      if (absent.length) return { reason: "FIELD_MISSING", detail: `guard abstain_unless_all_present: ${absent.join(", ")} not reported`, missing: absent };
     }
+    for (const r2 of chk.abstain_if_present ?? []) {
+      const s = scope.status(r2);
+      if (s === "ok" || s === "unparseable") {
+        const w = scope.where(r2);
+        return { reason: "OUT_OF_RULESET_SCOPE", detail: `guard abstain_if_present: ${r2} is reported${w ? ` (${w})` : ""}; the identity does not model it` };
+      }
+    }
+    for (const c of chk.abstain_if ?? []) {
+      let l, r2;
+      try {
+        const unp = roleRefs(c.left, c.right).all.filter((x) => scope.status(x) === "unparseable");
+        if (unp.length) return { reason: "UNPARSEABLE", detail: `guard abstain_if: ${unp.join(", ")} present but unparseable, so "${c.left} ${c.op} ${c.right}" cannot be evaluated`, missing: unp };
+        l = evalExpr(c.left, env);
+        r2 = evalExpr(c.right, env);
+      } catch (e) {
+        return { reason: "OUT_OF_RULESET_SCOPE", detail: `guard abstain_if: expression error: ${e.message}` };
+      }
+      if (l === void 0 || r2 === void 0) continue;
+      if (conditionHolds(l, c.op, r2, c.tol ?? 0)) return { reason: "OUT_OF_RULESET_SCOPE", detail: `guard abstain_if: ${c.left} ${c.op} ${c.right} holds (${round4(l)} vs ${round4(r2)})` };
+    }
+    return null;
+  };
+  const runCheck = (chk, env, prefix, gatherEvidence, missingOf, scope) => {
+    const claim_id = `${prefix}.${chk.code}`;
+    const base = { claim_id, kind: "RECOMPUTE", tier: "DETERMINISTIC", field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code };
+    const abstain = (insufficiency) => {
+      claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` });
+    };
+    const forms = [{ left: chk.left, right: chk.right }, ...chk.alternatives ?? []];
+    const multi = forms.length > 1;
+    const blockedBy = (refs2) => {
+      const m = missingOf(refs2.required);
+      if (m) return m;
+      for (const o of refs2.optional) if (scope.status(o) === "unparseable") return { reason: "UNPARSEABLE", detail: `optional ${o} is present but could not be parsed as a number`, missing: [o] };
+      return null;
+    };
+    let k = -1;
+    let refs = roleRefs(forms[0].left, forms[0].right);
+    const blocks = [];
+    for (let i = 0; i < forms.length; i++) {
+      const r2 = i === 0 ? refs : roleRefs(forms[i].left, forms[i].right);
+      const why = blockedBy(r2);
+      if (!why) {
+        k = i;
+        refs = r2;
+        break;
+      }
+      blocks.push({ refs: r2, why });
+    }
+    if (k < 0) {
+      if (!multi) return abstain(blocks[0].why);
+      const unp = blocks.find((b) => b.why.reason === "UNPARSEABLE");
+      if (unp) return abstain(unp.why);
+      const lacks = blocks.map((b) => b.refs.required.filter((x) => {
+        const s = scope.status(x);
+        return s !== "ok" && s !== "defaulted";
+      }));
+      return abstain({ reason: "FIELD_MISSING", detail: `no form of ${chk.code} has all its required operands (${lacks.map((l, i) => `form ${i + 1} lacks ${l.join(", ") || blocks[i].why.detail}`).join("; ")})`, missing: [...new Set(lacks.flat())] });
+    }
+    const form = forms[k];
+    const roles = refs.all;
+    if (refs.required.length === 0 && refs.optional.length > 0 && !refs.optional.some((o) => scope.status(o) === "ok")) {
+      return abstain({ reason: "FIELD_MISSING", detail: `none of the operands of ${chk.code} is reported (all are optional)`, missing: refs.optional });
+    }
+    const g = guardInsufficiency(chk, env, scope);
+    if (g) return abstain(g);
     let left, right;
     try {
-      left = evalExpr(chk.left, env);
-      right = evalExpr(chk.right, env);
+      left = evalExpr(form.left, env);
+      right = evalExpr(form.right, env);
     } catch (e) {
       claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency: { reason: "OUT_OF_RULESET_SCOPE", detail: `expression error: ${e.message}` }, locked: false, explanation: `${chk.code}: bad expression` });
       return;
@@ -6878,31 +6997,42 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
       claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency: { reason: "FIELD_MISSING", detail: `a value needed by ${chk.code} was absent`, missing: roles }, locked: false, explanation: `${chk.code}: operand absent` });
       return;
     }
-    const tol = chk.tol ?? 0.01;
+    const infer = (chk.rounding ?? roundingDefault) === "infer";
+    const rt = infer ? roundingTolerance(scope.amounts(roles), policy.rel, policy.absCap, chk.tol ?? 0.01) : void 0;
+    const tol = rt ? rt.tol : chk.tol ?? 0.01;
     let passed;
     if (chk.op === "=") passed = Math.abs(left - right) <= tol;
     else if (chk.op === "<=") passed = left <= right + tol;
     else if (chk.op === ">=") passed = left >= right - tol;
     else passed = Math.abs(left - right) > tol;
     const evidence = gatherEvidence(roles);
-    claims.push({
+    const absentOptional = refs.optional.filter((o) => scope.status(o) !== "ok");
+    const notes = [
+      ...multi ? [`Form ${k + 1} of ${forms.length}.`] : [],
+      ...absentOptional.length ? [`Optional terms not reported (counted as 0): ${absentOptional.join(", ")}.`] : [],
+      ...rt ? [`Rounding-aware tolerance ${round4(rt.tol)} = max(${round4(policy.rel * 100)}% of the largest operand ${round4(rt.maxAbs)}, unit ${rt.unit ?? "none"} \xD7 ${rt.n} operands${policy.absCap > 0 ? `; relative term capped at ${policy.absCap}` : ""}, floor ${chk.tol ?? 0.01})${passed && left !== right && chk.op === "=" ? ": the difference is treated as rounding, not error" : ""}.`] : []
+    ];
+    const claim = {
       ...base,
       outcome: passed ? "PASS" : "FAIL",
       asserted: round4(left),
-      computation: { formula: `${chk.left} ${chk.op} ${chk.right}`, operands: { left: round4(left), right: round4(right) }, result: round4(right), tolerance: { abs: tol } },
+      computation: { formula: `${form.left} ${chk.op} ${form.right}`, operands: { left: round4(left), right: round4(right) }, result: round4(right), tolerance: rt ? { abs: round4(rt.tol), rel: policy.rel } : { abs: tol } },
       evidence,
       locked: !passed,
-      explanation: `${chk.field ?? chk.code}: ${round4(left)} ${chk.op} ${round4(right)} \u2014 ${passed ? "holds" : "does not hold"}.`,
+      explanation: `${chk.field ?? chk.code}: ${round4(left)} ${chk.op} ${round4(right)} \u2014 ${passed ? "holds" : "does not hold"}.${notes.length ? ` ${notes.join(" ")}` : ""}`,
       ...passed ? {} : { variance: round4(left - right) }
-    });
+    };
+    claims.push(claim);
+    if (rt) inferred.add(claim);
   };
-  const runIdentifierCheck = (chk, prefix, scope, lookup) => {
+  const runIdentifierCheck = (chk, prefix, scope, lookup, env, info) => {
     const base = { claim_id: `${prefix}.${chk.code}`, kind: "CROSS_REFERENCE", tier: "DETERMINISTIC", field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code };
     const abstain = (insufficiency) => {
       claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` });
     };
     const L = String(chk.left ?? "").trim(), R = String(chk.right ?? "").trim();
     if (chk.op !== "=" && chk.op !== "!=") return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: `identifier checks support only = and != (got ${chk.op})` });
+    if (chk.alternatives !== void 0 || chk.rounding !== void 0) return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: "alternatives and rounding apply to numeric checks only, not to an identifier check" });
     for (const r2 of [L, R]) {
       const f = Object.prototype.hasOwnProperty.call(ruleset.fields, r2) ? ruleset.fields[r2] : void 0;
       if (!f || f.kind !== "identifier" || !!f.line !== (scope === "line")) return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: `"${r2}" is not a ${scope}-level 'identifier' field (an identifier check names two identifier fields)` });
@@ -6910,6 +7040,8 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
     const bl = lookup(L), br = lookup(R);
     for (const [r2, b] of [[L, bl], [R, br]]) if (b?.status === "unparseable") return abstain({ reason: "UNPARSEABLE", detail: `${r2} is present but is not an identifier or a list of identifiers`, missing: [r2] });
     for (const [r2, b] of [[L, bl], [R, br]]) if (!b || b.status !== "ok" || !b.ids) return abstain({ reason: "FIELD_MISSING", detail: `${r2} not present`, missing: [r2] });
+    const g = guardInsufficiency(chk, env, info);
+    if (g) return abstain(g);
     const li = bl.ids, ri = br.ids;
     const same = li.length === ri.length && li.every((x) => ri.includes(x));
     const passed = chk.op === "=" ? same : !same;
@@ -6970,19 +7102,64 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
     }
     return out;
   };
+  const docScope = {
+    status: (r2) => {
+      if (boundDoc.has(r2)) return statusOf(boundDoc.get(r2));
+      if (computedFormula.has(r2)) return docVars[r2] === void 0 ? "missing" : "ok";
+      if (lineRoleNames.has(r2)) {
+        for (const m of boundLines) if (m.get(r2)?.status === "unparseable") return "unparseable";
+        return sumRole(r2) === void 0 ? "missing" : "ok";
+      }
+      return "missing";
+    },
+    where: (r2) => boundDoc.get(r2)?.path ?? computedFormula.get(r2),
+    amounts: (roles) => {
+      const out = [];
+      const seen = /* @__PURE__ */ new Set();
+      const walk = (r2) => {
+        if (seen.has(r2)) return;
+        seen.add(r2);
+        const f = fieldSpec(r2);
+        if (f && !f.line) {
+          const b = boundDoc.get(r2);
+          if (isAmountField(f) && b?.status === "ok" && b.value !== void 0 && !isDefaulted(b)) out.push(b.value);
+          return;
+        }
+        if (f && f.line) {
+          if (isAmountField(f)) for (const m of boundLines) {
+            const b = m.get(r2);
+            if (b?.status === "ok" && b.value !== void 0 && !isDefaulted(b)) out.push(b.value);
+          }
+          return;
+        }
+        const formula = computedFormula.get(r2);
+        if (formula !== void 0 && docVars[r2] !== void 0) for (const x of referencedRoles(formula)) walk(x);
+      };
+      for (const r2 of roles) walk(r2);
+      return out;
+    }
+  };
+  const lineScope = (m) => ({
+    status: (r2) => statusOf(m.get(r2)),
+    where: (r2) => m.get(r2)?.path,
+    amounts: (roles) => roles.flatMap((r2) => {
+      const b = m.get(r2);
+      return isAmountField(fieldSpec(r2)) && b?.status === "ok" && b.value !== void 0 && !isDefaulted(b) ? [b.value] : [];
+    })
+  });
   for (const chk of ruleset.checks.filter((c) => (c.scope ?? "document") === "document")) {
-    if (chk.compare === "identifier") runIdentifierCheck(chk, "document", "document", (r2) => boundDoc.get(r2));
-    else runCheck(chk, docEnv, "document", docEvidence, docMissing);
+    if (chk.compare === "identifier") runIdentifierCheck(chk, "document", "document", (r2) => boundDoc.get(r2), docEnv, docScope);
+    else runCheck(chk, docEnv, "document", docEvidence, docMissing, docScope);
   }
   ruleset.checks.filter((c) => c.scope === "line").forEach((chk) => {
     boundLines.forEach((m, i) => {
-      if (chk.compare === "identifier") {
-        runIdentifierCheck(chk, `line[${i}]`, "line", (r2) => m.get(r2));
-        return;
-      }
       const lineVars = {};
       for (const [role, b] of m) lineVars[role] = b.status === "ok" ? b.value : void 0;
       const env = { vars: lineVars, sum: () => void 0 };
+      if (chk.compare === "identifier") {
+        runIdentifierCheck(chk, `line[${i}]`, "line", (r2) => m.get(r2), env, lineScope(m));
+        return;
+      }
       const missing = (roles) => {
         for (const r2 of roles) {
           const b = m.get(r2);
@@ -7002,10 +7179,10 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
         }
         return out;
       };
-      runCheck(chk, env, `line[${i}]`, ev, missing);
+      runCheck(chk, env, `line[${i}]`, ev, missing, lineScope(m));
     });
   });
-  applyTolerancePolicy(claims, policy);
+  applyTolerancePolicy(inferred.size ? claims.filter((c) => !inferred.has(c)) : claims, policy);
   let pass = 0, fail = 0, ins = 0;
   for (const c of claims) c.outcome === "PASS" ? pass++ : c.outcome === "FAIL" ? fail++ : ins++;
   const coverage = { claims_total: claims.length, claims_checked: pass + fail, claims_pass: pass, claims_fail: fail, claims_insufficient: ins };
@@ -7573,6 +7750,16 @@ function verifyCitations(citations, sources = {}, options = {}) {
 var VALID_KINDS = /* @__PURE__ */ new Set(["amount", "rate", "quantity", "string", "bool", "identifier"]);
 var VALID_OPS = /* @__PURE__ */ new Set(["=", "<=", ">=", "!="]);
 var VALID_COMPARE = /* @__PURE__ */ new Set(["number", "identifier"]);
+var VALID_GUARD_OPS = /* @__PURE__ */ new Set(["=", "!=", "<", "<=", ">", ">="]);
+var VALID_ROUNDING = /* @__PURE__ */ new Set(["none", "infer"]);
+var safeRefs = (expr2) => {
+  if (typeof expr2 !== "string") return [];
+  try {
+    return referencedRoles(expr2);
+  } catch {
+    return [];
+  }
+};
 function lintRuleset(rs) {
   const errors = [];
   const warnings = [];
@@ -7591,10 +7778,10 @@ function lintRuleset(rs) {
   const computedRoles = new Set(Object.keys(computed2));
   const allRoles = /* @__PURE__ */ new Set([...docRoles, ...lineRoles, ...computedRoles]);
   const identifierRoles = new Set(Object.keys(fields).filter((k) => fields[k].kind === "identifier"));
-  const noIdentifierArithmetic = (expr, where) => {
-    if (typeof expr !== "string") return;
+  const noIdentifierArithmetic = (expr2, where) => {
+    if (typeof expr2 !== "string") return;
     try {
-      for (const ref of referencedRoles(expr)) if (identifierRoles.has(ref)) errors.push(`${where}: identifier field "${ref}" cannot be used in arithmetic (use a check with compare: "identifier")`);
+      for (const ref of referencedRoles(expr2)) if (identifierRoles.has(ref)) errors.push(`${where}: identifier field "${ref}" cannot be used in arithmetic (use a check with compare: "identifier")`);
     } catch {
     }
   };
@@ -7604,24 +7791,100 @@ function lintRuleset(rs) {
   }
   for (const r2 of computedRoles) if (fields[r2]) errors.push(`"${r2}" is both a field and a computed role \u2014 names must be unique`);
   const dummy = { vars: Object.fromEntries([...allRoles].map((r2) => [r2, 1])), sum: (r2) => lineRoles.has(r2) ? 1 : void 0 };
-  const parse = (expr, where) => {
-    if (typeof expr !== "string" || expr.trim() === "") {
+  const parse = (expr2, where) => {
+    if (typeof expr2 !== "string" || expr2.trim() === "") {
       errors.push(`${where}: expression must be a non-empty string`);
       return;
     }
     try {
-      evalExpr(expr, dummy);
+      evalExpr(expr2, dummy);
     } catch (e) {
       errors.push(`${where}: ${e.message}`);
       return;
     }
-    for (const ref of referencedRoles(expr)) if (!allRoles.has(ref)) errors.push(`${where}: references unknown role "${ref}"`);
+    for (const ref of referencedRoles(expr2)) if (!allRoles.has(ref)) errors.push(`${where}: references unknown role "${ref}"`);
   };
   for (const [role, formula] of Object.entries(computed2)) {
     parse(formula, `computed "${role}"`);
     noIdentifierArithmetic(formula, `computed "${role}"`);
   }
+  const tolRounding = R.tolerance?.rounding;
+  if (tolRounding !== void 0 && !VALID_ROUNDING.has(tolRounding)) errors.push(`tolerance.rounding: invalid value "${String(tolRounding)}" (none | infer)`);
   const usedRoles = /* @__PURE__ */ new Set();
+  const checkSide = (expr2, where, err, scope) => {
+    parse(expr2, where);
+    noIdentifierArithmetic(expr2, where);
+    if (typeof expr2 !== "string") return;
+    for (const ref of safeRefs(expr2)) {
+      usedRoles.add(ref);
+      if (!allRoles.has(ref)) continue;
+      if (scope === "line") {
+        if (docRoles.has(ref)) errors.push(`${err}: line-scope check references document field "${ref}" (only line fields are visible per line)`);
+        if (computedRoles.has(ref)) errors.push(`${err}: line-scope check references computed role "${ref}" (computed roles are document-scope)`);
+        if (/\bsum\s*\(/.test(expr2)) errors.push(`${err}: sum() is not available in a line-scope check`);
+      } else {
+        if (lineRoles.has(ref) && !new RegExp(`\\bsum\\s*\\(\\s*${ref}\\s*\\)`).test(expr2)) {
+          errors.push(`${err}: document-scope check uses per-line field "${ref}" directly \u2014 wrap it as sum(${ref})`);
+        }
+      }
+    }
+  };
+  const checkNewOptions = (c, where, scope, isIdentifier) => {
+    if (c.rounding !== void 0) {
+      if (isIdentifier) errors.push(`${where}: "rounding" applies to numeric checks only`);
+      else if (!VALID_ROUNDING.has(c.rounding)) errors.push(`${where}: invalid rounding "${String(c.rounding)}" (none | infer)`);
+    }
+    if (c.alternatives !== void 0) {
+      if (isIdentifier) errors.push(`${where}: "alternatives" apply to numeric checks only`);
+      else if (!Array.isArray(c.alternatives) || c.alternatives.length === 0) errors.push(`${where}: "alternatives" must be a non-empty array of { left, right }`);
+      else c.alternatives.forEach((a, j) => {
+        const aw = `${where}.alternatives[${j}]`;
+        if (!a || typeof a !== "object") {
+          errors.push(`${aw}: must be an object { left, right }`);
+          return;
+        }
+        for (const side of ["left", "right"]) checkSide(a[side], `${aw}."${side}"`, aw, scope);
+      });
+    }
+    for (const key of ["abstain_unless_all_present", "abstain_if_present"]) {
+      const list = c[key];
+      if (list === void 0) continue;
+      if (!Array.isArray(list) || list.length === 0 || list.some((x) => typeof x !== "string")) {
+        errors.push(`${where}: "${key}" must be a non-empty array of role names`);
+        continue;
+      }
+      for (const r2 of list) {
+        usedRoles.add(r2);
+        if (!allRoles.has(r2)) errors.push(`${where}."${key}": unknown role "${r2}"`);
+        else if (scope === "line" && !lineRoles.has(r2)) errors.push(`${where}."${key}": a line-scope check can only name line fields ("${r2}" is not one)`);
+        else if (scope === "document" && lineRoles.has(r2)) errors.push(`${where}."${key}": a document-scope check cannot name the per-line field "${r2}"`);
+      }
+    }
+    if (c.abstain_if !== void 0) {
+      if (!Array.isArray(c.abstain_if) || c.abstain_if.length === 0) errors.push(`${where}: "abstain_if" must be a non-empty array of { left, op, right }`);
+      else c.abstain_if.forEach((g, j) => {
+        const gw = `${where}.abstain_if[${j}]`;
+        if (!g || typeof g !== "object") {
+          errors.push(`${gw}: must be an object { left, op, right }`);
+          return;
+        }
+        if (!VALID_GUARD_OPS.has(g.op)) errors.push(`${gw}: invalid op "${String(g.op)}" (= != < <= > >=)`);
+        if (g.tol !== void 0 && !(typeof g.tol === "number" && g.tol >= 0)) errors.push(`${gw}: "tol" must be a number >= 0`);
+        for (const side of ["left", "right"]) checkSide(g[side], `${gw}."${side}"`, gw, scope);
+      });
+    }
+    if (!isIdentifier) {
+      const forms = [{ left: c.left, right: c.right }, ...Array.isArray(c.alternatives) ? c.alternatives : []];
+      forms.forEach((f, j) => {
+        if (!f || typeof f.left !== "string" || typeof f.right !== "string") return;
+        try {
+          const r2 = roleRefs(f.left, f.right);
+          if (r2.required.length === 0 && r2.optional.length > 0) warnings.push(`${where}${j ? `.alternatives[${j - 1}]` : ""}: every operand is optional (${r2.optional.join(", ")}); the form abstains when none of them is reported`);
+        } catch {
+        }
+      });
+    }
+  };
   R.checks.forEach((c, i) => {
     const where = `check[${i}]${c.code ? ` (${c.code})` : ""}`;
     if (typeof c.code !== "string" || c.code.length === 0) errors.push(`${where}: missing "code"`);
@@ -7640,30 +7903,14 @@ function lintRuleset(rs) {
         if (!f || f.kind !== "identifier") errors.push(`${where}."${side}": an identifier check must name an 'identifier' field (got "${name}")`);
         else if (!!f.line !== (scope === "line")) errors.push(`${where}."${side}": "${name}" is a ${f.line ? "line" : "document"} field but the check is ${scope}-scope`);
       }
+      checkNewOptions(c, where, scope, true);
       return;
     }
-    for (const side of ["left", "right"]) {
-      const expr = c[side];
-      parse(expr, `${where}."${side}"`);
-      noIdentifierArithmetic(expr, `${where}."${side}"`);
-      if (typeof expr !== "string") continue;
-      for (const ref of referencedRoles(expr)) {
-        usedRoles.add(ref);
-        if (!allRoles.has(ref)) continue;
-        if (scope === "line") {
-          if (docRoles.has(ref)) errors.push(`${where}: line-scope check references document field "${ref}" (only line fields are visible per line)`);
-          if (computedRoles.has(ref)) errors.push(`${where}: line-scope check references computed role "${ref}" (computed roles are document-scope)`);
-          if (/\bsum\s*\(/.test(expr)) errors.push(`${where}: sum() is not available in a line-scope check`);
-        } else {
-          if (lineRoles.has(ref) && !new RegExp(`\\bsum\\s*\\(\\s*${ref}\\s*\\)`).test(expr)) {
-            errors.push(`${where}: document-scope check uses per-line field "${ref}" directly \u2014 wrap it as sum(${ref})`);
-          }
-        }
-      }
-    }
+    for (const side of ["left", "right"]) checkSide(c[side], `${where}."${side}"`, where, scope);
+    checkNewOptions(c, where, scope, false);
   });
   const referencedByComputed = /* @__PURE__ */ new Set();
-  for (const formula of Object.values(computed2)) for (const r2 of referencedRoles(formula)) referencedByComputed.add(r2);
+  for (const formula of Object.values(computed2)) for (const r2 of safeRefs(formula)) referencedByComputed.add(r2);
   for (const r2 of allRoles) if (!usedRoles.has(r2) && !referencedByComputed.has(r2)) warnings.push(`role "${r2}" is defined but never used in a check`);
   return { ok: errors.length === 0, errors, warnings };
 }
@@ -7708,6 +7955,679 @@ function measureRuleset(ruleset, cases) {
 
 // packages/verify/src/ledger/chain.ts
 var GENESIS = sha256("verify-ledger:genesis:v1");
+
+// packages/verify/src/mine/grammar.ts
+var DEFAULT_T_GRID = [0, 5e-3, 0.01, 0.02, 0.03, 0.05, 0.1];
+var DEFAULT_EPS = { qty: 1e-9, money: 5e-3 };
+var IDENT = /^[A-Za-z_][A-Za-z0-9_]*$/;
+var RESERVED = /* @__PURE__ */ new Set(["sum", "abs", "line_items"]);
+var TYPES = /* @__PURE__ */ new Set(["qty", "money", "bool", "id", "ids"]);
+function validateSchema(schema) {
+  if (!schema || typeof schema !== "object") throw new Error("schema must be an object");
+  const approve = Array.isArray(schema.approve) ? schema.approve : [schema.approve];
+  if (!approve.length || !approve.every((a) => typeof a === "string" && a.length > 0)) throw new Error("schema.approve must be a non-empty label string (or array of them)");
+  if (!schema.fields || typeof schema.fields !== "object" || Array.isArray(schema.fields)) throw new Error("schema.fields must be an object");
+  const seen = /* @__PURE__ */ new Set();
+  const check = (name, f, where) => {
+    if (!IDENT.test(name) || RESERVED.has(name)) throw new Error(`schema ${where} field "${name}": names must be identifiers ([A-Za-z_][A-Za-z0-9_]*) and not sum/abs/line_items`);
+    if (seen.has(name)) throw new Error(`schema field "${name}" is declared twice (document and line names share one namespace)`);
+    seen.add(name);
+    if (!f || !TYPES.has(f.type)) throw new Error(`schema ${where} field "${name}": type must be one of qty, money, bool, id, ids`);
+    if (f.role !== void 0) {
+      const ok2 = where === "line" ? f.type === "money" && (f.role === "price" || f.role === "amount") : f.type === "money" && (f.role === "total" || f.role === "extra");
+      if (!ok2) throw new Error(`schema ${where} field "${name}": role "${f.role}" is not valid here (line money: price|amount; document money: total|extra)`);
+    }
+    if (f.eps !== void 0 && !(typeof f.eps === "number" && Number.isFinite(f.eps) && f.eps >= 0)) throw new Error(`schema field "${name}": eps must be a finite number >= 0`);
+  };
+  for (const [n, f] of Object.entries(schema.fields)) check(n, f, "document");
+  for (const [n, f] of Object.entries(schema.lines ?? {})) check(n, f, "line");
+}
+function constSpec(field, dir, c) {
+  return dir === "high" ? { scope: "document", form: "rel", op: "<=", left: { field }, right: { const: c }, eps: 0 } : { scope: "document", form: "rel", op: "<=", left: { const: c }, right: { field }, eps: 0 };
+}
+var approveLabels = (schema) => new Set(Array.isArray(schema.approve) ? schema.approve : [schema.approve]);
+var epsOf = (f) => f.eps ?? (f.type === "qty" ? DEFAULT_EPS.qty : DEFAULT_EPS.money);
+var dimOf = (f) => f.dim ?? (f.type === "money" && f.role ? `money:${f.role}` : f.type);
+var isNumeric = (f) => f.type === "qty" || f.type === "money";
+function renderTerm(t) {
+  if ("field" in t) return t.field;
+  if ("sum" in t) return `sum(${t.sum})`;
+  if ("sumProduct" in t) return `sum(${t.sumProduct[0]}*${t.sumProduct[1]})`;
+  if ("const" in t) return String(t.const);
+  if ("plus" in t) return `${renderTerm(t.plus[0])} + ${renderTerm(t.plus[1])}`;
+  return `${t.gated}*[${t.negate ? "not " : ""}${t.by}]`;
+}
+function buildGrammar(schema, tGrid = DEFAULT_T_GRID, opts = {}) {
+  validateSchema(schema);
+  const lines = Object.entries(schema.lines ?? {});
+  const docs = Object.entries(schema.fields);
+  const out = [];
+  const dims = /* @__PURE__ */ new Map();
+  for (const [n, f] of lines) if (isNumeric(f)) {
+    const d2 = dimOf(f);
+    if (!dims.has(d2)) dims.set(d2, []);
+    dims.get(d2).push([n, f]);
+  }
+  const ordered = [];
+  const unordered = [];
+  for (const fs of dims.values()) {
+    for (const [x, fx] of fs) for (const [y, fy] of fs) if (x !== y) ordered.push({ x, y, eps: Math.max(epsOf(fx), epsOf(fy)) });
+    fs.forEach(([x, fx], i) => {
+      for (const [y, fy] of fs.slice(i + 1)) unordered.push({ x, y, eps: Math.max(epsOf(fx), epsOf(fy)) });
+    });
+  }
+  for (const { x, y, eps } of ordered) out.push({ id: `L1 ${x} <= ${y}`, family: "L1", spec: { scope: "line", form: "le", x, y, eps } });
+  for (const { x, y, eps } of unordered) out.push({ id: `L2 ${x} = ${y}`, family: "L2", spec: { scope: "line", form: "eq", x, y, eps } });
+  for (const { x, y, eps } of ordered) out.push({ id: `L3 ${x} <= ${y}*(1+t)`, family: "L3", spec: { scope: "line", form: "le_tol", x, y, eps }, tGrid: [...tGrid] });
+  const sources = [];
+  for (const [, f] of lines) {
+    const s = f.source ?? "";
+    if (!sources.includes(s)) sources.push(s);
+  }
+  const of = (s, pred) => lines.filter(([, f]) => (f.source ?? "") === s && pred(f)).map(([n]) => n);
+  const qtyOf = (s) => of(s, (f) => f.type === "qty");
+  const priceOf = (s) => of(s, (f) => f.type === "money" && f.role === "price");
+  const amountOf = (s) => of(s, (f) => f.type === "money" && f.role === "amount");
+  for (const [a, fa] of lines) {
+    if (!(fa.type === "money" && fa.role === "amount")) continue;
+    const s = fa.source ?? "";
+    for (const q of qtyOf(s)) for (const p of priceOf(s)) out.push({ id: `L4 ${a} = ${q}*${p}`, family: "L4", spec: { scope: "line", form: "product", a, q, p, eps: epsOf(fa) } });
+  }
+  const lineValue = /* @__PURE__ */ new Map();
+  for (const s of sources) {
+    const amounts = amountOf(s);
+    const terms = amounts.length ? amounts.map((a) => ({ sum: a })) : qtyOf(s).flatMap((q) => priceOf(s).map((p) => ({ sumProduct: [q, p] })));
+    if (terms.length) lineValue.set(s, terms);
+  }
+  const totals = docs.filter(([, f]) => f.type === "money" && f.role === "total");
+  const extras = docs.filter(([, f]) => f.type === "money" && f.role === "extra");
+  const bools = docs.filter(([, f]) => f.type === "bool").map(([n]) => n);
+  const d = (left, op, right, eps) => ({ id: `D ${renderTerm(left)} ${op} ${renderTerm(right)}`, family: "D", spec: { scope: "document", form: "rel", op, left, right, eps } });
+  const own = (src) => lineValue.get(src) ?? [];
+  const others = (src) => [...lineValue.entries()].filter(([s]) => s !== src).flatMap(([, t]) => t);
+  for (const [T, fT] of totals) {
+    const src = fT.source ?? "";
+    const e = epsOf(fT);
+    for (const S of own(src)) {
+      out.push(d({ field: T }, "=", S, e));
+      for (const [F] of extras) out.push(d({ field: T }, "=", { plus: [S, { field: F }] }, e));
+      for (const [F] of extras) for (const b of bools) out.push(d({ field: T }, "=", { plus: [S, { gated: F, by: b }] }, e));
+    }
+    for (const P of others(src)) {
+      out.push(d({ field: T }, "<=", P, e));
+      out.push(d({ field: T }, "=", P, e));
+    }
+  }
+  for (const [F, fF] of extras) {
+    out.push(d({ field: F }, "<=", { const: 0 }, epsOf(fF)));
+    for (const b of bools) out.push(d({ gated: F, by: b, negate: true }, "<=", { const: 0 }, epsOf(fF)));
+  }
+  const ownSrcs = [...new Set(totals.map(([, f]) => f.source ?? ""))];
+  for (const src of ownSrcs) {
+    const e = Math.max(...totals.filter(([, f]) => (f.source ?? "") === src).map(([, f]) => epsOf(f)));
+    for (const S of own(src)) for (const P of others(src)) out.push(d(S, "<=", P, e));
+  }
+  const idsF = docs.filter(([, f]) => f.type === "ids").map(([n]) => n);
+  const idF = docs.filter(([, f]) => f.type === "id").map(([n]) => n);
+  for (const list of idsF) for (const id of idF) out.push({ id: `I1 ${list} cites exactly one id = ${id}`, family: "I1", spec: { scope: "document", form: "ids_one", list, id } });
+  idF.forEach((x, i) => {
+    for (const y of idF.slice(i + 1)) out.push({ id: `I2 ${x} = ${y}`, family: "I2", spec: { scope: "document", form: "id_eq", x, y } });
+  });
+  if (opts.thresholds) {
+    for (const [X, f] of docs) {
+      if (!isNumeric(f)) continue;
+      out.push({ id: `C ${X} <= c`, family: "C", spec: constSpec(X, "high", 0), learnConst: { field: X, dir: "high" } });
+      out.push({ id: `C ${X} >= c`, family: "C", spec: constSpec(X, "low", 0), learnConst: { field: X, dir: "low" } });
+    }
+  }
+  return out;
+}
+var num2 = (v) => typeof v === "number" && Number.isFinite(v) ? v : null;
+var bool = (v) => v === true || v === 1 ? true : v === false || v === 0 ? false : null;
+var normId = (s) => s.replace(/\s+/g, "").toUpperCase();
+var one = (v) => {
+  if (typeof v === "number" && Number.isFinite(v)) return String(v);
+  if (typeof v !== "string") return null;
+  const n = normId(v);
+  return n.length ? n : null;
+};
+var idSet = (v) => {
+  if (typeof v === "string" || typeof v === "number") {
+    const n = one(v);
+    return n === null ? null : /* @__PURE__ */ new Set([n]);
+  }
+  if (!Array.isArray(v)) return null;
+  const out = /* @__PURE__ */ new Set();
+  for (const x of v) {
+    if (typeof x !== "string" && typeof x !== "number") return null;
+    const n = one(x);
+    if (n !== null) out.add(n);
+  }
+  return out;
+};
+function valueOk(type, v) {
+  if (type === "qty" || type === "money") return num2(v) !== null;
+  if (type === "bool") return bool(v) !== null;
+  if (type === "id") return one(v) !== null;
+  return idSet(v) !== null;
+}
+function evalTerm(t, c) {
+  if ("field" in t) return num2(c.fields[t.field]);
+  if ("const" in t) return t.const;
+  if ("sum" in t || "sumProduct" in t) {
+    if (!c.lines) return null;
+    let acc = 0;
+    for (const l of c.lines) {
+      if ("sum" in t) {
+        const v = num2(l[t.sum]);
+        if (v === null) return null;
+        acc = acc + v;
+      } else {
+        const q = num2(l[t.sumProduct[0]]), p = num2(l[t.sumProduct[1]]);
+        if (q === null || p === null) return null;
+        acc = acc + q * p;
+      }
+    }
+    return acc;
+  }
+  if ("plus" in t) {
+    const a = evalTerm(t.plus[0], c), b = evalTerm(t.plus[1], c);
+    return a === null || b === null ? null : a + b;
+  }
+  const g = bool(c.fields[t.by]), f = num2(c.fields[t.gated]);
+  if (g === null || f === null) return null;
+  return (t.negate ? !g : g) ? f : 0;
+}
+function anyLine(c, f) {
+  if (!c.lines) return null;
+  let undecided = false;
+  for (const l of c.lines) {
+    const r2 = f(l);
+    if (r2 === true) return true;
+    if (r2 === null) undecided = true;
+  }
+  return undecided ? null : false;
+}
+function violated(spec, c, t = 0) {
+  switch (spec.form) {
+    case "le":
+      return anyLine(c, (l) => {
+        const x = num2(l[spec.x]), y = num2(l[spec.y]);
+        return x === null || y === null ? null : x > y + spec.eps;
+      });
+    case "eq":
+      return anyLine(c, (l) => {
+        const x = num2(l[spec.x]), y = num2(l[spec.y]);
+        return x === null || y === null ? null : Math.abs(x - y) > spec.eps;
+      });
+    case "le_tol":
+      return anyLine(c, (l) => {
+        const x = num2(l[spec.x]), y = num2(l[spec.y]);
+        return x === null || y === null ? null : x > y * (1 + t) + spec.eps;
+      });
+    case "product":
+      return anyLine(c, (l) => {
+        const a = num2(l[spec.a]), q = num2(l[spec.q]), p = num2(l[spec.p]);
+        return a === null || q === null || p === null ? null : Math.abs(a - q * p) > spec.eps;
+      });
+    case "rel": {
+      const L = evalTerm(spec.left, c), R = evalTerm(spec.right, c);
+      if (L === null || R === null) return null;
+      return spec.op === "=" ? Math.abs(L - R) > spec.eps : L > R + spec.eps;
+    }
+    case "ids_one": {
+      const s = idSet(c.fields[spec.list]), id = one(c.fields[spec.id]);
+      if (s === null || id === null) return null;
+      return !(s.size === 1 && s.has(id));
+    }
+    case "id_eq": {
+      const x = one(c.fields[spec.x]), y = one(c.fields[spec.y]);
+      return x === null || y === null ? null : x !== y;
+    }
+  }
+}
+function worstRatio(spec, c) {
+  if (!c.lines) return null;
+  let worst = null;
+  for (const l of c.lines) {
+    const x = num2(l[spec.x]), y = num2(l[spec.y]);
+    if (x === null || y === null) continue;
+    const r2 = y > 0 ? x / y - 1 : x > y + spec.eps ? Infinity : null;
+    if (r2 !== null && (worst === null || r2 > worst)) worst = r2;
+  }
+  return worst;
+}
+
+// packages/verify/src/mine/stats.ts
+function hypergeomAllHolds(N, H, k) {
+  let p = 1;
+  for (let i = 0; i < k; i++) p *= (H - i) / (N - i);
+  return p;
+}
+var logFact = [0];
+function lf(n) {
+  for (let i = logFact.length; i <= n; i++) logFact.push(logFact[i - 1] + Math.log(i));
+  return logFact[n];
+}
+function logChoose(n, r2) {
+  return lf(n) - lf(r2) - lf(n - r2);
+}
+function hypergeomUpperTail(N, H, k, h) {
+  if (![N, H, k, h].every(Number.isInteger) || N < 0 || H < 0 || H > N || k < 0 || k > N) {
+    throw new RangeError(`hypergeomUpperTail: invalid arguments N=${N} H=${H} k=${k} h=${h}`);
+  }
+  const lo = Math.max(0, k - (N - H));
+  const hi = Math.min(k, H);
+  if (h <= lo) return 1;
+  if (h > hi) return 0;
+  const denom = logChoose(N, k);
+  let s = 0;
+  for (let x = h; x <= hi; x++) s += Math.exp(logChoose(H, x) + logChoose(N - H, k - x) - denom);
+  return Math.min(1, s);
+}
+function groundingP(N, H, k, h) {
+  return h === k ? hypergeomAllHolds(N, H, k) : hypergeomUpperTail(N, H, k, h);
+}
+
+// packages/verify/src/mine/judges.ts
+function tally(spec, cases, t = 0) {
+  const out = { decidable: 0, decidableHolds: 0, violators: [], holdViolators: [], approved: 0 };
+  for (const c of cases) {
+    const v = violated(spec, c, t);
+    if (v === null) continue;
+    out.decidable++;
+    if (c.hold) out.decidableHolds++;
+    if (!v) continue;
+    out.violators.push(c.id);
+    if (c.hold) out.holdViolators.push(c.id);
+    else out.approved++;
+  }
+  return out;
+}
+var allowedApproved = (rate, nApproved) => Math.floor(rate * nApproved + 1e-9);
+function judgeConsistency(t, rate) {
+  const nA = t.decidable - t.decidableHolds;
+  if (t.approved <= allowedApproved(rate, nA)) return { ok: true };
+  return { ok: false, detail: rate > 0 ? `${t.approved} approved case(s) violate it (${t.approved}/${nA} > max rate ${rate})` : `${t.approved} approved case(s) violate it` };
+}
+function learnT(spec, cases, grid, rate) {
+  return grid.find((tt) => judgeConsistency(tally(spec, cases, tt), rate).ok);
+}
+function judgeGrounding(t, g) {
+  const k = t.violators.length, h = t.holdViolators.length;
+  if (k === 0) return { fate: "VOID", p: 1, detail: t.decidable === 0 ? "no case could evaluate it (values missing)" : "no case violates it (always true here)" };
+  const p = groundingP(t.decidable, t.decidableHolds, k, h);
+  if (h < g.minHoldViolators || p > g.maxP) {
+    const detail = t.approved === 0 ? `k=${k}, p=${p.toExponential(2)} (gate k>=${g.minHoldViolators}, p<=${g.maxP})` : `k=${k} (${h} holds, ${t.approved} approved), p=${p.toExponential(2)} (gate holds>=${g.minHoldViolators}, p<=${g.maxP})`;
+    return { fate: "BASE_RATE", p, detail };
+  }
+  return { fate: "GROUNDED", p, detail: "" };
+}
+function judgeNovelty(grounded, minNewHolds) {
+  const order = [...grounded].sort((a, b) => b.holdViolators.length - a.holdViolators.length || a.index - b.index);
+  const covered = /* @__PURE__ */ new Set();
+  const accepted = [];
+  const decisions = [];
+  for (const j of order) {
+    const fresh = j.holdViolators.filter((v) => !covered.has(v));
+    if (fresh.length >= minNewHolds) {
+      decisions.push({ index: j.index, fate: "CANDLE", detail: `explains ${fresh.length} new hold(s)`, newHolds: fresh.length });
+      accepted.push(j);
+      for (const v of j.holdViolators) covered.add(v);
+    } else {
+      const by = accepted.map((a) => ({ a, o: j.holdViolators.filter((v) => a.holdViolators.includes(v)).length })).sort((x, y) => y.o - x.o)[0];
+      decisions.push({ index: j.index, fate: "REDUNDANT", detail: `only ${fresh.length} new hold(s); covered by ${by?.a.id ?? "-"}`, newHolds: fresh.length });
+    }
+  }
+  return { decisions, covered };
+}
+
+// packages/verify/src/mine/threshold.ts
+var num3 = (v) => typeof v === "number" && Number.isFinite(v) ? v : null;
+function learnConst(field, dir, cases, rate) {
+  const at = /* @__PURE__ */ new Map();
+  let H = 0, A = 0;
+  for (const c2 of cases) {
+    const x = num3(c2.fields[field]);
+    if (x === null) continue;
+    const e = at.get(x) ?? { h: 0, a: 0 };
+    at.set(x, e);
+    if (c2.hold) {
+      e.h++;
+      H++;
+    } else {
+      e.a++;
+      A++;
+    }
+  }
+  const vals = [...at.keys()].sort((a, b) => a - b);
+  if (vals.length < 2) return { ok: false, fate: "VOID", detail: vals.length ? "fewer than two distinct values: no cut to learn" : "no case could evaluate it (values missing)" };
+  const m = allowedApproved(rate, A);
+  const n = vals.length;
+  const hBelow = [0], aBelow = [0];
+  for (let i = 0; i < n; i++) {
+    const e = at.get(vals[i]);
+    hBelow.push(hBelow[i] + e.h);
+    aBelow.push(aBelow[i] + e.a);
+  }
+  let best = null;
+  for (let j = 1; j < n; j++) {
+    const approved = dir === "high" ? A - aBelow[j] : aBelow[j];
+    if (approved > m) continue;
+    const missed = dir === "high" ? hBelow[j] : H - hBelow[j];
+    const err = missed + approved;
+    if (!best || err < best.err || err === best.err && approved < best.approved) best = { j, err, approved, missed };
+  }
+  if (!best) return { ok: false, fate: "INCONSISTENT", detail: rate > 0 ? `every cut makes more than ${m} approved case(s) violate it (rate ${rate})` : "approved cases violate it at every cut" };
+  const lo = vals[best.j - 1], hi = vals[best.j];
+  const mid = lo + (hi - lo) / 2;
+  const c = lo < mid && mid < hi ? mid : dir === "high" ? lo : hi;
+  return { ok: true, learned: { c, lo, hi, approved: best.approved, missed: best.missed } };
+}
+
+// packages/verify/src/mine/miner.ts
+var MINE_VERSION = "0.1.0";
+var byId = (a, b) => a < b ? -1 : a > b ? 1 : 0;
+var sortIds = (ids) => [...ids].sort(byId);
+function resolveMineOptions(o = {}) {
+  const r2 = {
+    minHoldViolators: o.minHoldViolators ?? 5,
+    maxP: o.maxP ?? 0.01,
+    minNewHolds: o.minNewHolds ?? 3,
+    tGrid: [...new Set(o.tGrid ?? DEFAULT_T_GRID)].sort((a, b) => a - b),
+    maxApprovedViolationRate: o.maxApprovedViolationRate ?? 0,
+    strictAlpha: o.strictAlpha ?? 0.05,
+    thresholds: o.thresholds ?? false
+  };
+  if (!Number.isInteger(r2.minHoldViolators) || r2.minHoldViolators < 1) throw new Error("minHoldViolators must be an integer >= 1");
+  if (!Number.isInteger(r2.minNewHolds) || r2.minNewHolds < 1) throw new Error("minNewHolds must be an integer >= 1");
+  if (!(r2.maxP > 0 && r2.maxP <= 1)) throw new Error("maxP must be in (0, 1]");
+  if (!(r2.strictAlpha > 0 && r2.strictAlpha <= 1)) throw new Error("strictAlpha must be in (0, 1]");
+  if (!(r2.maxApprovedViolationRate >= 0 && r2.maxApprovedViolationRate < 1)) throw new Error("maxApprovedViolationRate must be in [0, 1)");
+  if (!r2.tGrid.length || !r2.tGrid.every((t) => Number.isFinite(t) && t >= 0)) throw new Error("tGrid must be a non-empty list of finite numbers >= 0");
+  return r2;
+}
+function validateCaseTable(table) {
+  if (!table || !Array.isArray(table.cases)) throw new Error("case table must be { cases: [...] }");
+  const seen = /* @__PURE__ */ new Set();
+  table.cases.forEach((c, i) => {
+    const where = `case[${i}]`;
+    if (!c || typeof c !== "object") throw new Error(`${where}: must be an object`);
+    if (typeof c.id !== "string" || !c.id.length) throw new Error(`${where}: "id" must be a non-empty string`);
+    if (seen.has(c.id)) throw new Error(`${where}: duplicate id "${c.id}"`);
+    seen.add(c.id);
+    if (typeof c.label !== "string") throw new Error(`${where} (${c.id}): "label" must be a string`);
+    if (!c.fields || typeof c.fields !== "object" || Array.isArray(c.fields)) throw new Error(`${where} (${c.id}): "fields" must be an object`);
+    if (c.lines !== void 0 && (!Array.isArray(c.lines) || !c.lines.every((l) => l && typeof l === "object" && !Array.isArray(l)))) throw new Error(`${where} (${c.id}): "lines" must be an array of objects`);
+  });
+}
+function supportedInterval(spec, cases, rate, nApproved) {
+  const approvedR = cases.filter((c) => !c.hold).map((c) => worstRatio(spec, c)).filter((r2) => r2 !== null).sort((a, b) => b - a);
+  const lo = approvedR[allowedApproved(rate, nApproved)] ?? null;
+  const heldAbove = cases.filter((c) => c.hold).map((c) => worstRatio(spec, c)).filter((r2) => r2 !== null && (lo === null || r2 > lo + 1e-9));
+  const hi = heldAbove.length ? Math.min(...heldAbove) : null;
+  const fin = (x) => x === null || !Number.isFinite(x) ? null : x;
+  return { lo: fin(lo), hi: fin(hi) };
+}
+function mine(table, schema, options = {}) {
+  validateSchema(schema);
+  validateCaseTable(table);
+  const opts = resolveMineOptions(options);
+  const approve = approveLabels(schema);
+  const cases = table.cases.map((c) => ({ id: c.id, label: c.label, hold: !approve.has(c.label), fields: c.fields, lines: Array.isArray(c.lines) ? c.lines : null }));
+  const grammar = buildGrammar(schema, opts.tGrid, { thresholds: opts.thresholds });
+  const variants = grammar.reduce((a, g) => a + (g.tGrid?.length ?? 1), 0);
+  const strictGate = opts.strictAlpha / variants;
+  const rate = opts.maxApprovedViolationRate;
+  const rows = [];
+  for (const g of grammar) {
+    let t;
+    let spec = g.spec;
+    let learned;
+    if (g.learnConst) {
+      const r2 = learnConst(g.learnConst.field, g.learnConst.dir, cases, rate);
+      if (!r2.ok) {
+        const at = tally(g.spec, cases);
+        rows.push({ grounded: false, holdViolators: [], j: {
+          id: g.id,
+          family: g.family,
+          spec: g.spec,
+          fate: r2.fate,
+          detail: r2.detail,
+          k: 0,
+          holds: 0,
+          approved: 0,
+          decidable: at.decidable,
+          decidable_holds: at.decidableHolds,
+          p: 1,
+          strict: false,
+          violators: []
+        } });
+        continue;
+      }
+      learned = r2.learned;
+      spec = constSpec(g.learnConst.field, g.learnConst.dir, learned.c);
+    }
+    if (g.tGrid) {
+      t = learnT(g.spec, cases, g.tGrid, rate);
+      if (t === void 0) {
+        const at = tally(g.spec, cases, g.tGrid[g.tGrid.length - 1]);
+        rows.push({ grounded: false, holdViolators: [], j: {
+          id: g.id,
+          family: g.family,
+          spec: g.spec,
+          fate: "INCONSISTENT",
+          detail: rate > 0 ? `the approved-violation limit (rate ${rate}) is exceeded at every t in the grid` : "approved cases violate it at every t in the grid",
+          k: 0,
+          holds: 0,
+          approved: 0,
+          decidable: at.decidable,
+          decidable_holds: at.decidableHolds,
+          p: 1,
+          strict: false,
+          violators: []
+        } });
+        continue;
+      }
+    }
+    const tl = tally(spec, cases, t ?? 0);
+    const base = {
+      id: g.id,
+      family: g.family,
+      spec,
+      ...t !== void 0 ? { t } : {},
+      ...learned ? { c: learned.c } : {},
+      k: tl.violators.length,
+      holds: tl.holdViolators.length,
+      approved: tl.approved,
+      decidable: tl.decidable,
+      decidable_holds: tl.decidableHolds,
+      violators: sortIds(tl.violators)
+    };
+    const cons = judgeConsistency(tl, rate);
+    const interval = learned ? { lo: learned.lo, hi: learned.hi } : void 0;
+    if (!cons.ok) {
+      rows.push({ grounded: false, holdViolators: tl.holdViolators, j: { ...base, fate: "INCONSISTENT", detail: cons.detail, p: 1, strict: false } });
+      continue;
+    }
+    const gr = judgeGrounding(tl, opts);
+    const grounded = gr.fate === "GROUNDED";
+    rows.push({ grounded, holdViolators: tl.holdViolators, ...interval ? { interval } : {}, j: { ...base, fate: grounded ? "REDUNDANT" : gr.fate, detail: gr.detail, p: gr.p, strict: grounded && gr.p <= strictGate } });
+  }
+  const { decisions, covered } = judgeNovelty(
+    rows.map((r2, index2) => ({ index: index2, id: r2.j.id, holdViolators: r2.holdViolators, grounded: r2.grounded })).filter((r2) => r2.grounded),
+    opts.minNewHolds
+  );
+  const candles = [];
+  const constInterval = /* @__PURE__ */ new Map();
+  for (const d of decisions) {
+    const j = rows[d.index].j;
+    const iv = rows[d.index].interval;
+    if (iv) constInterval.set(j, iv);
+    j.fate = d.fate;
+    j.detail = d.detail;
+    j.new_holds = d.newHolds;
+    if (d.fate === "CANDLE") candles.push(j);
+  }
+  const labelOf = new Map(cases.map((c) => [c.id, c.label]));
+  for (const c of candles) {
+    const m = {};
+    for (const v of c.violators) {
+      const l = labelOf.get(v);
+      m[l] = (m[l] ?? 0) + 1;
+    }
+    c.violator_labels = Object.fromEntries(Object.keys(m).sort(byId).map((k) => [k, m[k]]));
+    if (c.spec.form === "le_tol") c.interval = supportedInterval(c.spec, cases, rate, c.decidable - c.decidable_holds);
+    const iv = constInterval.get(c);
+    if (iv) c.interval = iv;
+  }
+  const holdIds = cases.filter((c) => c.hold).map((c) => c.id);
+  const missing = {};
+  for (const [n, f] of Object.entries(schema.fields)) {
+    const k = cases.filter((c) => !valueOk(f.type, c.fields[n])).length;
+    if (k) missing[n] = k;
+  }
+  for (const [n, f] of Object.entries(schema.lines ?? {})) {
+    const k = cases.filter((c) => !c.lines || c.lines.some((l) => !valueOk(f.type, l[n]))).length;
+    if (k) missing[n] = k;
+  }
+  const subcent = (v) => typeof v === "number" && Number.isFinite(v) && Math.abs(Math.round(v * 100) - v * 100) > 1e-6;
+  const subcent_money_fields = [
+    ...Object.entries(schema.fields).filter(([n, f]) => f.type === "money" && cases.some((c) => subcent(c.fields[n]))).map(([n]) => n),
+    ...Object.entries(schema.lines ?? {}).filter(([n, f]) => f.type === "money" && cases.some((c) => (c.lines ?? []).some((l) => subcent(l[n])))).map(([n]) => n)
+  ];
+  return {
+    engine: "riposte-mine",
+    mine_version: MINE_VERSION,
+    engine_version: ENGINE_VERSION,
+    options: opts,
+    schema,
+    data: {
+      cases: cases.length,
+      holds: holdIds.length,
+      approves: cases.length - holdIds.length,
+      table_hash: hashOf(table),
+      excluded: table.excluded ?? [],
+      missing,
+      subcent_money_fields
+    },
+    grammar: { forms: grammar.length, variants, strict_gate: strictGate },
+    candles,
+    morgue: rows.map((r2) => r2.j).filter((j) => j.fate !== "CANDLE"),
+    explained: { holds: holdIds.filter((id) => covered.has(id)).length, of: holdIds.length, unexplained: sortIds(holdIds.filter((id) => !covered.has(id))) }
+  };
+}
+
+// packages/verify/src/mine/compile.ts
+var NotExpressible = class extends Error {
+};
+function literal(x) {
+  const s = String(x);
+  if (!/^[0-9]+(\.[0-9]+)?$/.test(s)) throw new NotExpressible(`the constant ${s} cannot be written as a plain decimal literal in the expression language`);
+  return s;
+}
+function expr(t, used) {
+  if ("field" in t) {
+    used.add(t.field);
+    return t.field;
+  }
+  if ("sum" in t) {
+    used.add(t.sum);
+    return `sum(${t.sum})`;
+  }
+  if ("sumProduct" in t) throw new NotExpressible(`sum(${t.sumProduct[0]}*${t.sumProduct[1]}) is a sum of a per-line product; declarative sum() takes one role and there are no line-level computed roles`);
+  if ("const" in t) return literal(t.const);
+  if ("plus" in t) return `${expr(t.plus[0], used)} + ${expr(t.plus[1], used)}`;
+  used.add(t.gated);
+  used.add(t.by);
+  return t.negate ? `${t.gated} * (1 - ${t.by})` : `${t.gated} * ${t.by}`;
+}
+function toCheck(spec, t, code, name, used) {
+  switch (spec.form) {
+    case "le":
+      used.add(spec.x);
+      used.add(spec.y);
+      return { code, name, scope: "line", left: spec.x, op: "<=", right: spec.y, tol: spec.eps, field: spec.x };
+    case "eq":
+      used.add(spec.x);
+      used.add(spec.y);
+      return { code, name, scope: "line", left: spec.x, op: "=", right: spec.y, tol: spec.eps, field: spec.x };
+    case "le_tol": {
+      if (t === void 0) throw new NotExpressible("no learned tolerance");
+      const right = `${spec.y} * (1 + ${literal(t)})`;
+      used.add(spec.x);
+      used.add(spec.y);
+      return { code, name, scope: "line", left: spec.x, op: "<=", right, tol: spec.eps, field: spec.x };
+    }
+    case "product":
+      used.add(spec.a);
+      used.add(spec.q);
+      used.add(spec.p);
+      return { code, name, scope: "line", left: spec.a, op: "=", right: `${spec.q} * ${spec.p}`, tol: spec.eps, field: spec.a };
+    case "rel": {
+      const local = /* @__PURE__ */ new Set();
+      const left = expr(spec.left, local), right = expr(spec.right, local);
+      for (const u of local) used.add(u);
+      const field = "field" in spec.left ? spec.left.field : "gated" in spec.left ? spec.left.gated : void 0;
+      return { code, name, left, op: spec.op, right, tol: spec.eps, ...field ? { field } : {} };
+    }
+    case "ids_one":
+      used.add(spec.list);
+      used.add(spec.id);
+      return { code, name, compare: "identifier", left: spec.list, op: "=", right: spec.id, field: spec.list };
+    case "id_eq":
+      used.add(spec.x);
+      used.add(spec.y);
+      return { code, name, compare: "identifier", left: spec.x, op: "=", right: spec.y, field: spec.x };
+  }
+}
+var KIND = { qty: "quantity", money: "amount", bool: "bool", id: "identifier", ids: "identifier" };
+function compileRuleset(report, options = {}) {
+  const checks = [];
+  const map = [];
+  const not_expressible = [];
+  const used = /* @__PURE__ */ new Set();
+  report.candles.forEach((c) => {
+    const code = `M${map.length + 1}`;
+    const local = /* @__PURE__ */ new Set();
+    try {
+      checks.push(toCheck(c.spec, c.t, code, c.id, local));
+      for (const u of local) used.add(u);
+      map.push({ code, candle: c.id });
+    } catch (e) {
+      if (!(e instanceof NotExpressible)) throw e;
+      not_expressible.push({ candle: c.id, reason: e.message });
+    }
+  });
+  const fields = {};
+  for (const [n, f] of Object.entries(report.schema.fields)) if (used.has(n)) fields[n] = { paths: [n], kind: KIND[f.type] };
+  for (const [n, f] of Object.entries(report.schema.lines ?? {})) if (used.has(n)) fields[n] = { paths: [n], kind: KIND[f.type], line: true };
+  const ruleset = {
+    id: options.id ?? "mined",
+    version: options.version ?? "0.1.0",
+    name: options.name ?? `Mined ruleset (${report.candles.length} candle(s); riposte-mine ${report.mine_version}; table ${report.data.table_hash.slice(0, 12)})`,
+    domain: "mined",
+    lineArrayKeys: ["line_items"],
+    fields,
+    checks,
+    tolerance: { rel: 0, absCap: 0 }
+  };
+  const warnings = [];
+  const subcent = report.data.subcent_money_fields.filter((f) => used.has(f));
+  if (subcent.length) warnings.push(`money field(s) ${subcent.join(", ")} hold sub-cent values; the engine's amount normaliser rounds to cents, so the enforced ruleset may disagree with the miner on them`);
+  if (!checks.length) warnings.push("no candle compiled: the ruleset has no checks and every verdict will be INSUFFICIENT_DATA");
+  if (not_expressible.length) warnings.push(`${not_expressible.length} candle(s) could not be expressed; the ruleset under-enforces (a PASS does not mean those rules hold)`);
+  return { ruleset, checks: map, not_expressible, complete: not_expressible.length === 0, lint: lintRuleset(ruleset), warnings };
+}
+
+// packages/verify/src/mine/index.ts
+function mineRules(table, schema, options = {}, compile = {}) {
+  const report = mine(table, schema, options);
+  return { report, compiled: compileRuleset(report, compile) };
+}
+function caseTableFromRows(rows) {
+  return { cases: rows.map((r2) => r2 && typeof r2 === "object" && typeof r2.id === "number" ? { ...r2, id: String(r2.id) } : r2) };
+}
 
 // packages/verify/src/http/openapi.ts
 var verdictRef = { type: "object", description: "The Verdict proof object \u2014 see docs/VERDICT-SCHEMA-v0.md." };
@@ -7781,6 +8701,13 @@ var OPENAPI = {
         responses: { "200": { description: "accuracy (fp/fn/abstain + measured_on hash), metrics, and per-case rows." }, "400": { description: "Bad request." } }
       }
     },
+    "/v1/mine": {
+      post: {
+        summary: "Propose the rules behind labelled decisions (rule mining): candles with exact p-values, the morgue, and a compiled declarative ruleset.",
+        requestBody: jsonBody(["cases", "schema"], { cases: { type: "array", items: { type: "object", required: ["id", "label", "fields"] } }, schema: { type: "object", required: ["approve", "fields"] }, max_approved_violation_rate: { type: "number" }, thresholds: { type: "boolean" }, ruleset_id: { type: "string" } }),
+        responses: { "200": { description: "{ report, compiled }: candles (proposals for a human), morgue, explained holds, and the compiled ruleset." }, "400": { description: "Bad request (including a malformed case table or schema)." } }
+      }
+    },
     "/v1/ledger/stats": { get: { summary: "(managed tier) Verdict counts + real-world overturn rate for the caller\u2019s tenant.", responses: { "200": { description: "LedgerStats." }, "401": { description: "Unauthorized." } } } },
     "/v1/ledger/report": { get: { summary: "(managed tier) The tenant book-of-record report (Markdown): volume, overturn, calibration, tamper-evidence.", responses: { "200": { description: "tenant_id + markdown." }, "401": { description: "Unauthorized." } } } },
     "/v1/ledger/calibration": { get: { summary: "(managed tier) Per-rule human-overturn calibration + the flagged review queue.", responses: { "200": { description: "CalibrationReport." }, "401": { description: "Unauthorized." } } } }
@@ -7835,6 +8762,14 @@ function route(req) {
         const quotes = Array.isArray(b.quotes) ? b.quotes : [];
         const values = Array.isArray(b.values) ? b.values : [];
         return ok(verifyAgainstSource(b.source_text, quotes, values));
+      }
+      case "/v1/mine": {
+        if (!Array.isArray(b.cases)) return bad('a "cases" array of { id, label, fields, lines? } is required');
+        if (!isObj(b.schema)) return bad('a "schema" object { approve, fields, lines? } is required');
+        const opts = {};
+        if (typeof b.max_approved_violation_rate === "number") opts.maxApprovedViolationRate = b.max_approved_violation_rate;
+        if (b.thresholds === true) opts.thresholds = true;
+        return ok(mineRules(caseTableFromRows(b.cases), b.schema, opts, typeof b.ruleset_id === "string" ? { id: b.ruleset_id } : {}));
       }
       default:
         return notFound();

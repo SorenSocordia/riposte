@@ -1,0 +1,422 @@
+{
+  "quarter": "2026q1",
+  "data_dir": ".\\data",
+  "tuning_set": "YES. v0.2 was designed from the 2026q1 audit of v0.1 (ADDENDUM-V02.md). v0.2 numbers on this quarter are NOT evidence of anything; the only honest test is the held-out quarter.",
+  "prereg_sha256": "dfb646fba4c0303b40f28a32b22f59bf501de7c316c06090e55409edced4832d",
+  "addendum_sha256": "777bfc2803993340f0e4a722ea9dd94b451c8896b7cb51e843c01067bb5d3550",
+  "data_zip_sha256": "d18c01c615da8f5cd46273b0dacaeee5b1163f4089171da0f84153a5f3c362f6",
+  "rulesets": {
+    "v01": "financial-statement-core@0.1.0",
+    "v01_file_sha256": "a91f2f36ff4279f3c8d1830e9708c558d2fb28e0697ac79f95c7480a12faa4bd",
+    "v02": "financial-statement-core@0.2.0",
+    "v02_file_sha256": "0943170455e34c3152eceb1758cef7b6856b4eaf349f49bbc535370132bb735d"
+  },
+  "v02_tags_extracted": 38,
+  "filings_10k": 4262,
+  "num_rows_scanned": 3690955,
+  "num_rows_kept": 213457,
+  "v01_regression_vs_blind_results": {
+    "compared": 4262,
+    "mismatched_filings": 0,
+    "mismatches": []
+  },
+  "per_check": {
+    "BS_ACCOUNTING_EQUATION": {
+      "v01": {
+        "PASS": 2310,
+        "FAIL": 1164,
+        "INSUFFICIENT_DATA": 788,
+        "flag_rate": 0.3351
+      },
+      "v02": {
+        "PASS": 3480,
+        "FAIL": 167,
+        "INSUFFICIENT_DATA": 615,
+        "flag_rate": 0.0458
+      },
+      "flag_rate_change": -0.8633,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9987,
+        "pass_count_ratio": 1.5065
+      },
+      "transitions_v01_to_v02": {
+        "FAIL>PASS": 1007,
+        "PASS>PASS": 2307,
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 615,
+        "INSUFFICIENT_DATA>PASS": 166,
+        "FAIL>FAIL": 157,
+        "INSUFFICIENT_DATA>FAIL": 7,
+        "PASS>FAIL": 3
+      },
+      "v02_abstain_reasons": {
+        "no applicable form (required operands absent)": 615
+      },
+      "v02_forms_decided": {
+        "ASSETS = LIABILITIES + EQUITY_INCL_NCI + TEMP_EQUITY_PARENT? + REDEEMABLE_NCI?": 1127,
+        "ASSETS = LIABILITIES + EQUITY + NCI? + TEMP_EQUITY_PARENT? + REDEEMABLE_NCI?": 2452,
+        "ASSETS = LIABILITIES + EQUITY_INCL_NCI + TEMP_EQUITY_TOTAL": 50,
+        "ASSETS = LIABILITIES + EQUITY + NCI? + TEMP_EQUITY_TOTAL": 18
+      }
+    },
+    "BS_LIAB_AND_EQUITY_TOTAL": {
+      "v01": {
+        "PASS": 4117,
+        "FAIL": 1,
+        "INSUFFICIENT_DATA": 144,
+        "flag_rate": 0.0002
+      },
+      "v02": {
+        "PASS": 4118,
+        "FAIL": 0,
+        "INSUFFICIENT_DATA": 144,
+        "flag_rate": 0
+      },
+      "flag_rate_change": -1,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 1,
+        "pass_count_ratio": 1.0002
+      },
+      "transitions_v01_to_v02": {
+        "PASS>PASS": 4117,
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 144,
+        "FAIL>PASS": 1
+      },
+      "v02_abstain_reasons": {
+        "FIELD_MISSING": 144
+      },
+      "v02_forms_decided": {
+        "ASSETS = LIAB_AND_EQUITY": 4118
+      }
+    },
+    "BS_ASSET_SPLIT": {
+      "v01": {
+        "PASS": 277,
+        "FAIL": 3,
+        "INSUFFICIENT_DATA": 3982,
+        "flag_rate": 0.0107
+      },
+      "v02": {
+        "PASS": 279,
+        "FAIL": 1,
+        "INSUFFICIENT_DATA": 3982,
+        "flag_rate": 0.0036
+      },
+      "flag_rate_change": -0.6636,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 1,
+        "pass_count_ratio": 1.0072
+      },
+      "transitions_v01_to_v02": {
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 3982,
+        "PASS>PASS": 277,
+        "FAIL>PASS": 2,
+        "FAIL>FAIL": 1
+      },
+      "v02_abstain_reasons": {
+        "FIELD_MISSING": 3982
+      },
+      "v02_forms_decided": {
+        "ASSETS = CURRENT_ASSETS + NONCURRENT_ASSETS": 280
+      }
+    },
+    "BS_LIABILITY_SPLIT": {
+      "v01": {
+        "PASS": 322,
+        "FAIL": 2,
+        "INSUFFICIENT_DATA": 3938,
+        "flag_rate": 0.0062
+      },
+      "v02": {
+        "PASS": 324,
+        "FAIL": 0,
+        "INSUFFICIENT_DATA": 3938,
+        "flag_rate": 0
+      },
+      "flag_rate_change": -1,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 1,
+        "pass_count_ratio": 1.0062
+      },
+      "transitions_v01_to_v02": {
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 3938,
+        "PASS>PASS": 322,
+        "FAIL>PASS": 2
+      },
+      "v02_abstain_reasons": {
+        "FIELD_MISSING": 3938
+      },
+      "v02_forms_decided": {
+        "LIABILITIES = CURRENT_LIABILITIES + NONCURRENT_LIABILITIES": 324
+      }
+    },
+    "IS_GROSS_PROFIT": {
+      "v01": {
+        "PASS": 1102,
+        "FAIL": 13,
+        "INSUFFICIENT_DATA": 3147,
+        "flag_rate": 0.0117
+      },
+      "v02": {
+        "PASS": 1071,
+        "FAIL": 9,
+        "INSUFFICIENT_DATA": 3182,
+        "flag_rate": 0.0083
+      },
+      "flag_rate_change": -0.2906,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9682,
+        "pass_count_ratio": 0.9719
+      },
+      "transitions_v01_to_v02": {
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 3147,
+        "PASS>PASS": 1067,
+        "PASS>INSUFFICIENT_DATA": 35,
+        "FAIL>FAIL": 9,
+        "FAIL>PASS": 4
+      },
+      "v02_abstain_reasons": {
+        "FIELD_MISSING": 3147,
+        "guard abstain_if_present(COGS_AMORTIZATION)": 25,
+        "guard abstain_if(REVENUES_TAG != REVENUE_CONTRACT_TAG)": 10
+      },
+      "v02_forms_decided": {
+        "GROSS_PROFIT = REVENUE - COGS": 1080
+      }
+    },
+    "IS_OPERATING_INCOME": {
+      "v01": {
+        "PASS": 733,
+        "FAIL": 21,
+        "INSUFFICIENT_DATA": 3508,
+        "flag_rate": 0.0279
+      },
+      "v02": {
+        "PASS": 690,
+        "FAIL": 17,
+        "INSUFFICIENT_DATA": 3555,
+        "flag_rate": 0.024
+      },
+      "flag_rate_change": -0.1398,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9386,
+        "pass_count_ratio": 0.9413
+      },
+      "transitions_v01_to_v02": {
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 3508,
+        "PASS>PASS": 688,
+        "FAIL>FAIL": 17,
+        "PASS>INSUFFICIENT_DATA": 45,
+        "FAIL>INSUFFICIENT_DATA": 2,
+        "FAIL>PASS": 2
+      },
+      "v02_abstain_reasons": {
+        "FIELD_MISSING": 3508,
+        "guard abstain_if_present(OTHER_OPERATING)": 47
+      },
+      "v02_forms_decided": {
+        "OPERATING_INCOME = GROSS_PROFIT - OPEX": 707
+      }
+    },
+    "IS_NET_INCOME": {
+      "v01": {
+        "PASS": 2485,
+        "FAIL": 368,
+        "INSUFFICIENT_DATA": 1409,
+        "flag_rate": 0.129
+      },
+      "v02": {
+        "PASS": 2799,
+        "FAIL": 54,
+        "INSUFFICIENT_DATA": 1409,
+        "flag_rate": 0.0189
+      },
+      "flag_rate_change": -0.8535,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9972,
+        "pass_count_ratio": 1.1264
+      },
+      "transitions_v01_to_v02": {
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 1409,
+        "PASS>PASS": 2478,
+        "FAIL>PASS": 321,
+        "FAIL>FAIL": 47,
+        "PASS>FAIL": 7
+      },
+      "v02_abstain_reasons": {
+        "no applicable form (required operands absent)": 1409
+      },
+      "v02_forms_decided": {
+        "NET_INCOME_PARENT = PRETAX_INCL_EMI - TAX + DISCOPS_INCOME_PARENT?": 1301,
+        "PROFIT_LOSS = PRETAX_EXCL_EMI - TAX + EQUITY_METHOD_INCOME? + DISCOPS_INCOME?": 130,
+        "PROFIT_LOSS = PRETAX_INCL_EMI - TAX + DISCOPS_INCOME?": 1373,
+        "NET_INCOME_PARENT = PRETAX_EXCL_EMI - TAX + EQUITY_METHOD_INCOME? + DISCOPS_INCOME_PARENT?": 49
+      }
+    },
+    "IS_COMPREHENSIVE_INCOME": {
+      "v01": {
+        "PASS": 1138,
+        "FAIL": 58,
+        "INSUFFICIENT_DATA": 3066,
+        "flag_rate": 0.0485
+      },
+      "v02": {
+        "PASS": 1926,
+        "FAIL": 46,
+        "INSUFFICIENT_DATA": 2290,
+        "flag_rate": 0.0233
+      },
+      "flag_rate_change": -0.5196,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9649,
+        "pass_count_ratio": 1.6924
+      },
+      "transitions_v01_to_v02": {
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 2254,
+        "INSUFFICIENT_DATA>PASS": 790,
+        "PASS>PASS": 1098,
+        "PASS>INSUFFICIENT_DATA": 33,
+        "FAIL>PASS": 38,
+        "INSUFFICIENT_DATA>FAIL": 22,
+        "PASS>FAIL": 7,
+        "FAIL>FAIL": 17,
+        "FAIL>INSUFFICIENT_DATA": 3
+      },
+      "v02_abstain_reasons": {
+        "no applicable form (required operands absent)": 2290
+      },
+      "v02_forms_decided": {
+        "CI_PARENT = NET_INCOME_PARENT + OCI_PARENT": 1311,
+        "CI_INCL_NCI = PROFIT_LOSS + OCI": 661
+      }
+    },
+    "CF_NET_CHANGE": {
+      "v01": {
+        "PASS": 1598,
+        "FAIL": 1329,
+        "INSUFFICIENT_DATA": 1335,
+        "flag_rate": 0.454
+      },
+      "v02": {
+        "PASS": 2846,
+        "FAIL": 81,
+        "INSUFFICIENT_DATA": 1335,
+        "flag_rate": 0.0277
+      },
+      "flag_rate_change": -0.939,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9862,
+        "pass_count_ratio": 1.781
+      },
+      "transitions_v01_to_v02": {
+        "PASS>PASS": 1576,
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 1335,
+        "FAIL>PASS": 1270,
+        "PASS>FAIL": 22,
+        "FAIL>FAIL": 59
+      },
+      "v02_abstain_reasons": {
+        "no applicable form (required operands absent)": 1335
+      },
+      "v02_forms_decided": {
+        "NET_CASH_CHANGE = CFO + CFI + CFF + FX_EFFECT? + DISCOPS_CFO? + DISCOPS_CFI? + DISCOPS_CFF?": 2918,
+        "NET_CASH_CHANGE = CFO + CFI + CFF + FX_EFFECT? + DISCOPS_CASH_TOTAL": 9
+      }
+    },
+    "CF_ENDING_CASH": {
+      "v01": {
+        "PASS": 2407,
+        "FAIL": 66,
+        "INSUFFICIENT_DATA": 1789,
+        "flag_rate": 0.0267
+      },
+      "v02": {
+        "PASS": 2418,
+        "FAIL": 45,
+        "INSUFFICIENT_DATA": 1799,
+        "flag_rate": 0.0183
+      },
+      "flag_rate_change": -0.3146,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.9975,
+        "pass_count_ratio": 1.0046
+      },
+      "transitions_v01_to_v02": {
+        "PASS>PASS": 2401,
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 1789,
+        "FAIL>PASS": 17,
+        "FAIL>INSUFFICIENT_DATA": 4,
+        "FAIL>FAIL": 45,
+        "PASS>INSUFFICIENT_DATA": 6
+      },
+      "v02_abstain_reasons": {
+        "FIELD_MISSING": 1789,
+        "guard abstain_if(BEGINNING_CASH_LAG_DAYS < 350)": 7,
+        "guard abstain_if(BEGINNING_CASH_LAG_DAYS > 380)": 3
+      },
+      "v02_forms_decided": {
+        "ENDING_CASH = BEGINNING_CASH + NET_CASH_CHANGE": 2463
+      }
+    },
+    "XSTMT_CASH_ARTICULATION": {
+      "v01": {
+        "PASS": 1293,
+        "FAIL": 1259,
+        "INSUFFICIENT_DATA": 1710,
+        "flag_rate": 0.4933
+      },
+      "v02": {
+        "PASS": 932,
+        "FAIL": 113,
+        "INSUFFICIENT_DATA": 3217,
+        "flag_rate": 0.1081
+      },
+      "flag_rate_change": -0.7809,
+      "v01_pass_kept_by_v02": {
+        "same_filing_still_pass": 0.0363,
+        "pass_count_ratio": 0.7208
+      },
+      "transitions_v01_to_v02": {
+        "FAIL>FAIL": 95,
+        "INSUFFICIENT_DATA>INSUFFICIENT_DATA": 1710,
+        "PASS>INSUFFICIENT_DATA": 1228,
+        "FAIL>PASS": 885,
+        "FAIL>INSUFFICIENT_DATA": 279,
+        "PASS>PASS": 47,
+        "PASS>FAIL": 18
+      },
+      "v02_abstain_reasons": {
+        "no applicable form (required operands absent)": 3217
+      },
+      "v02_forms_decided": {
+        "ENDING_CASH = CASH_BS + RESTRICTED_CASH_TOTAL": 533,
+        "ENDING_CASH = CASH_BS + RESTRICTED_CASH_CURRENT + RESTRICTED_CASH_NONCURRENT?": 376,
+        "ENDING_CASH = CASH_BS + RESTRICTED_CASH_NONCURRENT": 136
+      }
+    }
+  },
+  "pass_bar_coverage_checks": {
+    "BS_LIAB_AND_EQUITY_TOTAL": {
+      "same_filing_still_pass": 1,
+      "pass_count_ratio": 1.0002
+    },
+    "IS_GROSS_PROFIT": {
+      "same_filing_still_pass": 0.9682,
+      "pass_count_ratio": 0.9719
+    },
+    "CF_ENDING_CASH": {
+      "same_filing_still_pass": 0.9975,
+      "pass_count_ratio": 1.0046
+    }
+  },
+  "structural_checks_flag_rate_change": {
+    "BS_ACCOUNTING_EQUATION": -0.8633,
+    "CF_NET_CHANGE": -0.939,
+    "XSTMT_CASH_ARTICULATION": -0.7809
+  },
+  "interpretation_diagnostics": {
+    "emi_reported_with_pretax_incl_emi_decided": 384,
+    "xstmt_no_restricted_component_but_ending_equals_bs_cash": 1228,
+    "cf_net_change_fail_with_discops_term": 59,
+    "cf_net_change_fail_that_would_hold_without_discops_term": 55
+  }
+}

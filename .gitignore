@@ -4,4 +4,9 @@ coverage/
 *.log
 .env
 *.pem
+bench/sec/data/
+bench/sec/*.jsonl
+bench/sec/*.json
+bench/sec/*.txt
+bench/sec/*.tsv
 .export-stamp

@@ -1,0 +1,135 @@
+{
+  "_note": "Hand classification of the rows the automated operationalisation left UNEXPLAINED (audit-results.auto.jsonl + audit-assist output). Evidence = the filing's own facts at the same context. 'U' = not resolved within the audit budget (the EDGAR filing was not hand-read). Reported both ways (conservative = false alarm, optimistic = correct flag).",
+  "0001213900-26-036390|BS_ACCOUNTING_EQUATION": [
+    "T3",
+    "SPAC: gap = AssetsHeldInTrustNoncurrent (258,227,025) = the Class A shares subject to redemption, i.e. temporary equity outside StockholdersEquity"
+  ],
+  "0000922224-26-000008|BS_ASSET_SPLIT": [
+    "T2",
+    "AssetsNoncurrent is tagged on a subtotal that excludes PropertyPlantAndEquipmentNet (gap = PP&E, 36.132bn): a wrong-element tagging error, so the filed data is inconsistent"
+  ],
+  "0001654954-26-003102|CF_ENDING_CASH": [
+    "T3",
+    "gap = EffectOfExchangeRateOnCash… (38,700): the reported net change excludes the FX effect"
+  ],
+  "0001104659-26-022286|CF_ENDING_CASH": [
+    "T4",
+    "gap = RestrictedCashPeriodIncreaseDecreaseTotal (209.572m): our map paired a net change excluding restricted cash with totals including it"
+  ],
+  "0001193125-26-091861|CF_ENDING_CASH": [
+    "T3",
+    "gap = EffectOfForeignExchangeRateOnCash… (11,000): FX effect"
+  ],
+  "0001618756-26-000017|CF_ENDING_CASH": [
+    "T3",
+    "gap = the cash change of a disposal group / discontinued operations (66m)"
+  ],
+  "0001398344-26-005654|CF_ENDING_CASH": [
+    "T3",
+    "gap = EffectOfExchangeRateOnCash… (-122,000): FX effect"
+  ],
+  "0001692115-26-000062|CF_NET_CHANGE": [
+    "T3",
+    "gap = FX effect including the disposal group (-127,000)"
+  ],
+  "0001683168-26-002503|IS_COMPREHENSIVE_INCOME": [
+    "U",
+    "gap = preferred stock accretion (453,334): comprehensive income appears to be presented after accretion. Could be element misuse (T2) or a presentation choice (T3); not resolved"
+  ],
+  "0001580808-26-000014|IS_COMPREHENSIVE_INCOME": [
+    "U",
+    "gap ≈ an OCI component (unrealised holding gain 367,000, within one rounding unit): the tagged OCI total may be a subtotal. Not resolved"
+  ],
+  "0001493152-26-014015|IS_GROSS_PROFIT": [
+    "T4",
+    "gap = crypto revenue (RevenueOnDigitalAssets 1,812,352) included in gross profit but not in the revenue tag our map picked"
+  ],
+  "0001642380-26-000004|IS_GROSS_PROFIT": [
+    "T3",
+    "gap = amortisation of acquired intangibles in cost of revenue (7,000): COGS is presented excluding amortisation"
+  ],
+  "0001213900-26-023889|IS_GROSS_PROFIT": [
+    "T3",
+    "gap = amortisation of intangibles (13.872m): COGS is presented excluding amortisation"
+  ],
+  "0001031203-26-000064|IS_GROSS_PROFIT": [
+    "T3",
+    "ROUNDING: values are multiples of 100,000 (reported in tenths of a million); gap = one unit"
+  ],
+  "0001628280-26-022047|IS_NET_INCOME": [
+    "T3",
+    "gap = income tax on the sale of real estate (23.333m), presented outside IncomeTaxExpenseBenefit"
+  ],
+  "0000075288-26-000026|IS_OPERATING_INCOME": [
+    "T3",
+    "gap = RoyaltiesAndOtherOperatingIncome (15.779m), outside OperatingExpenses"
+  ],
+  "0001062993-26-001584|IS_OPERATING_INCOME": [
+    "T3",
+    "gap = ProductRoyaltyIncome (381,757), outside OperatingExpenses"
+  ],
+  "0001554855-26-000467|IS_OPERATING_INCOME": [
+    "T3",
+    "gap = RevenueNotFromContractWithCustomerOther (403,624), outside gross profit and OperatingExpenses"
+  ],
+  "0001628280-26-018264|IS_OPERATING_INCOME": [
+    "T3",
+    "gap = SubsidyIncome (3.142m), outside OperatingExpenses"
+  ],
+  "0001493152-26-014261|IS_OPERATING_INCOME": [
+    "T3",
+    "gap = StakingRevenueNet (6,805,009), outside gross profit"
+  ],
+  "0001493152-26-008465|IS_OPERATING_INCOME": [
+    "T3",
+    "gap = OtherOperatingIncomeLoss (5.641m), outside OperatingExpenses"
+  ],
+  "0000876883-26-000010|BS_ACCOUNTING_EQUATION": [
+    "U",
+    "gap 42.942m; no single reported line matches (likely noncontrolling / redeemable interests under a custom tag). Not resolved"
+  ],
+  "0001628280-26-008665|BS_ACCOUNTING_EQUATION": [
+    "U",
+    "gap 1.1837bn; no single line matches (likely redeemable non-controlling interests). Not resolved"
+  ],
+  "0001171843-26-001908|CF_ENDING_CASH": [
+    "U",
+    "gap 8.773m; no single line matches (a beginning-cash period pick is suspect). Not resolved"
+  ],
+  "0000837465-26-000010|CF_ENDING_CASH": [
+    "U",
+    "gap 5.0m; no single line matches. Not resolved"
+  ],
+  "0001393726-26-000009|CF_ENDING_CASH": [
+    "U",
+    "gap 30.24m; the beginning cash we picked (544,000) is implausibly small: a likely T4 period pick. Not resolved"
+  ],
+  "0001628280-26-009059|CF_ENDING_CASH": [
+    "U",
+    "gap -34m; no single line matches. Not resolved"
+  ],
+  "0001539838-26-000010|IS_COMPREHENSIVE_INCOME": [
+    "U",
+    "gap 116m; no single line matches (likely NCI). Not resolved"
+  ],
+  "0001587523-26-000005|IS_GROSS_PROFIT": [
+    "U",
+    "gap -4.4m; no single line matches. Not resolved"
+  ],
+  "0001628280-26-012920|IS_OPERATING_INCOME": [
+    "U",
+    "gap 15.437m; no single line matches. Not resolved"
+  ],
+  "0001193125-26-074976|IS_OPERATING_INCOME": [
+    "U",
+    "gap 9.65m; the nearest line (an FX cash effect, 9.63m) is a coincidence, not an explanation. Not resolved"
+  ],
+  "0001628280-26-022376|IS_OPERATING_INCOME": [
+    "U",
+    "gap -4.032m; no single line matches. Not resolved"
+  ],
+  "0001193125-26-105064|IS_OPERATING_INCOME": [
+    "U",
+    "gap 1.583m; no single line matches. Not resolved"
+  ]
+}

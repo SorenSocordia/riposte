@@ -52,7 +52,47 @@ export interface DeclCheck {
    * is the negation. Only '=' and '!=' are valid. The claim is a CROSS_REFERENCE.
    */
   compare?: 'number' | 'identifier'
+
+  // ── Added 2026-09-24 (additive: a check that uses none of these behaves exactly as before) ─────────────────────────
+  /**
+   * Fallback FORMS of the same identity, tried in order after the primary `left`/`right`. The first form whose REQUIRED
+   * operands (roles written without `?`) are all present is the one evaluated; `op`, `tol`, guards and rounding are
+   * shared. Use it to pair concepts consistently (e.g. comprehensive income including NCI with ProfitLoss, else the
+   * parent's with NetIncomeLoss) or to prefer a reported total over the sum of its parts. Forms are chosen by what is
+   * PRESENT, never by which one passes. If no form is applicable the check abstains (FIELD_MISSING, naming what each
+   * form lacks). Numeric checks only.
+   */
+  alternatives?: { left: string; right: string }[]
+  /** Abstain (OUT_OF_RULESET_SCOPE) when ANY of these roles is reported, i.e. an item the identity does not model is present. */
+  abstain_if_present?: string[]
+  /** Abstain (FIELD_MISSING, or UNPARSEABLE) unless EVERY one of these roles is reported. */
+  abstain_unless_all_present?: string[]
+  /** Abstain (OUT_OF_RULESET_SCOPE) when ANY condition holds. A condition whose required operands are absent does not fire. */
+  abstain_if?: DeclCondition[]
+  /** Per-check override of the ruleset's `tolerance.rounding` ('infer' | 'none'). Numeric checks only. */
+  rounding?: RoundingMode
 }
+
+/** A guard condition: `left op right`, compared exactly unless `tol` is given. */
+export interface DeclCondition {
+  left: string
+  op: '=' | '!=' | '<' | '<=' | '>' | '>='
+  right: string
+  /** Absolute tolerance for the comparison. Default 0 (exact). */
+  tol?: number
+}
+
+/**
+ * 'none' (default) = the existing policy: the check's `tol` floor, plus the relative band applied by `applyTolerancePolicy`.
+ * 'infer' (added 2026-09-24) = rounding-aware: per check and document, the reporting unit U is the largest of
+ * {1, 1 000, 100 000, 1 000 000} that divides every operand, and the tolerance is
+ *   max(tol floor, rel × the largest |operand|, U × the number of operands)
+ * where "operands" are the amount-kind values the evaluated form actually uses as reported (optional terms that are
+ * absent, `default` values, and bool/rate/quantity fields are not operands; computed roles are expanded into theirs; a
+ * `sum(ROLE)` contributes every line's value). If no candidate unit divides every operand (e.g. amounts with cents), the
+ * unit term is 0. `absCap`, if > 0, caps the relative term only. The relative band is NOT applied a second time.
+ */
+export type RoundingMode = 'none' | 'infer'
 
 export interface DeclarativeRuleset {
   id: string
@@ -67,8 +107,11 @@ export interface DeclarativeRuleset {
   computed?: Record<string, string>
   /** The checks. */
   checks: DeclCheck[]
-  /** Rounding-tolerance policy (relative band + optional absolute cap). Default { rel: 0.0003, absCap: 0 }. */
-  tolerance?: { rel: number; absCap: number }
+  /**
+   * Rounding-tolerance policy (relative band + optional absolute cap). Default { rel: 0.0003, absCap: 0 }.
+   * `rounding: 'infer'` (added 2026-09-24) switches every numeric check to the rounding-aware tolerance (see RoundingMode).
+   */
+  tolerance?: { rel: number; absCap: number; rounding?: RoundingMode }
 }
 
 /** A value is a declarative ruleset if it declares fields + checks and does NOT carry the built-in ruleset's compute(). */

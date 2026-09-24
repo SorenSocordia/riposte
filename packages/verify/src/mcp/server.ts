@@ -19,6 +19,8 @@ import { verifyInvoiceMatch, splitApLayout, type ApDocuments } from '../ap/index
 import { verifyDeclarative } from '../declarative/evaluate.js'
 import { isDeclarativeRuleset, type DeclarativeRuleset } from '../declarative/types.js'
 import { verifyAgainstSource } from '../textmatch/index.js'
+import { mineRules, caseTableFromRows } from '../mine/index.js'
+import type { MineOptions, MineSchema } from '../mine/types.js'
 import { ENGINE_VERSION } from '../version.js'
 
 export const PROTOCOL_VERSION = '2025-06-18'
@@ -187,6 +189,26 @@ const TOOLS = [
       required: ['extraction', 'ruleset'],
     },
   },
+  {
+    name: 'mine_rules',
+    description:
+      'Propose the rules behind a set of labelled decisions (rule mining). Give it cases {id, label, fields, lines?} and a ' +
+      'schema {approve, fields, lines?} that types each field and says which label means APPROVE. It returns CANDLES: ' +
+      'candidate rules that explain the non-approved cases, each with its exact grounding p-value. It returns the MORGUE: ' +
+      'every rejected candidate and why it died. It returns a compiled declarative ruleset that verify_declared can enforce. ' +
+      'Deterministic, no model. Candles are proposals for a human to ratify, never rules on their own.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        cases: { type: 'array', items: { type: 'object', required: ['id', 'label', 'fields'], properties: { id: { type: 'string' }, label: { type: 'string' }, fields: { type: 'object' }, lines: { type: 'array', items: { type: 'object' } } } } },
+        schema: { type: 'object', required: ['approve', 'fields'], properties: { approve: {}, fields: { type: 'object' }, lines: { type: 'object' } } },
+        max_approved_violation_rate: { type: 'number', description: 'Tolerate this fraction of approved exceptions per rule (default 0).' },
+        thresholds: { type: 'boolean', description: 'Also learn a constant per numeric document field (X <= c, X >= c). Default false.' },
+        ruleset_id: { type: 'string', description: 'Id for the compiled ruleset (default "mined").' },
+      },
+      required: ['cases', 'schema'],
+    },
+  },
 ] as const
 
 function ok(id: JsonRpcResponse['id'], result: unknown): JsonRpcResponse {
@@ -235,6 +257,14 @@ function callTool(name: string, args: unknown): unknown {
     if (!docs) throw new Error('verify_invoice_match requires {invoice, purchase_order, goods_receipt} strings or a {layout} string with the three ERP section markers')
     const policy = typeof args.price_tolerance === 'number' ? { price_tolerance: args.price_tolerance } : undefined
     return toolResult(verifyInvoiceMatch(docs, policy ? { policy } : {}))
+  }
+  if (name === 'mine_rules') {
+    if (!Array.isArray(args.cases)) throw new Error('mine_rules requires a "cases" array')
+    if (!isObj(args.schema)) throw new Error('mine_rules requires a "schema" object')
+    const opts: MineOptions = {}
+    if (typeof args.max_approved_violation_rate === 'number') opts.maxApprovedViolationRate = args.max_approved_violation_rate
+    if (args.thresholds === true) opts.thresholds = true
+    return toolResult(mineRules(caseTableFromRows(args.cases), args.schema as unknown as MineSchema, opts, typeof args.ruleset_id === 'string' ? { id: args.ruleset_id } : {}))
   }
   if (name === 'verify_declared') {
     if (!isObj(args.extraction)) throw new Error('verify_declared requires an "extraction" object')

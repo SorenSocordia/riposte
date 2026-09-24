@@ -13,8 +13,9 @@
 
 import { hashOf } from '../verdict/canonical.js'
 import { ENGINE_VERSION } from '../version.js'
-import { approveLabels, buildGrammar, DEFAULT_T_GRID, validateSchema, valueOk, worstRatio, type PreparedCase } from './grammar.js'
+import { approveLabels, buildGrammar, constSpec, DEFAULT_T_GRID, validateSchema, valueOk, worstRatio, type PreparedCase } from './grammar.js'
 import { allowedApproved, judgeConsistency, judgeGrounding, judgeNovelty, learnT, tally } from './judges.js'
+import { learnConst } from './threshold.js'
 import type { CaseTable, JudgedCandidate, LineComparisonSpec, MineOptions, MineReport, MineSchema, ResolvedMineOptions } from './types.js'
 
 export const MINE_VERSION = '0.1.0'
@@ -30,6 +31,7 @@ export function resolveMineOptions(o: MineOptions = {}): ResolvedMineOptions {
     tGrid: [...new Set(o.tGrid ?? DEFAULT_T_GRID)].sort((a, b) => a - b),
     maxApprovedViolationRate: o.maxApprovedViolationRate ?? 0,
     strictAlpha: o.strictAlpha ?? 0.05,
+    thresholds: o.thresholds ?? false,
   }
   if (!Number.isInteger(r.minHoldViolators) || r.minHoldViolators < 1) throw new Error('minHoldViolators must be an integer >= 1')
   if (!Number.isInteger(r.minNewHolds) || r.minNewHolds < 1) throw new Error('minNewHolds must be an integer >= 1')
@@ -71,16 +73,29 @@ export function mine(table: CaseTable, schema: MineSchema, options: MineOptions 
   const opts = resolveMineOptions(options)
   const approve = approveLabels(schema)
   const cases: PreparedCase[] = table.cases.map((c) => ({ id: c.id, label: c.label, hold: !approve.has(c.label), fields: c.fields, lines: Array.isArray(c.lines) ? c.lines : null }))
-  const grammar = buildGrammar(schema, opts.tGrid)
+  const grammar = buildGrammar(schema, opts.tGrid, { thresholds: opts.thresholds })
   const variants = grammar.reduce((a, g) => a + (g.tGrid?.length ?? 1), 0)
   const strictGate = opts.strictAlpha / variants
   const rate = opts.maxApprovedViolationRate
 
   // ── judges 1 + 2, per candidate in grammar order ──
   // `rows[i]` is grammar candidate i. A GROUNDED candidate's fate is provisional until judge 3 settles it (CANDLE | REDUNDANT).
-  const rows: { j: JudgedCandidate; holdViolators: string[]; grounded: boolean }[] = []
+  const rows: { j: JudgedCandidate; holdViolators: string[]; grounded: boolean; interval?: { lo: number; hi: number } }[] = []
   for (const g of grammar) {
     let t: number | undefined
+    let spec = g.spec
+    let learned: { c: number; lo: number; hi: number } | undefined
+    if (g.learnConst) {
+      const r = learnConst(g.learnConst.field, g.learnConst.dir, cases, rate)
+      if (!r.ok) {
+        const at = tally(g.spec, cases)
+        rows.push({ grounded: false, holdViolators: [], j: { id: g.id, family: g.family, spec: g.spec, fate: r.fate, detail: r.detail,
+          k: 0, holds: 0, approved: 0, decidable: at.decidable, decidable_holds: at.decidableHolds, p: 1, strict: false, violators: [] } })
+        continue
+      }
+      learned = r.learned
+      spec = constSpec(g.learnConst.field, g.learnConst.dir, learned.c)
+    }
     if (g.tGrid) {
       t = learnT(g.spec, cases, g.tGrid, rate)
       if (t === undefined) {
@@ -91,17 +106,18 @@ export function mine(table: CaseTable, schema: MineSchema, options: MineOptions 
         continue
       }
     }
-    const tl = tally(g.spec, cases, t ?? 0)
+    const tl = tally(spec, cases, t ?? 0)
     const base = {
-      id: g.id, family: g.family, spec: g.spec, ...(t !== undefined ? { t } : {}),
+      id: g.id, family: g.family, spec, ...(t !== undefined ? { t } : {}), ...(learned ? { c: learned.c } : {}),
       k: tl.violators.length, holds: tl.holdViolators.length, approved: tl.approved, decidable: tl.decidable, decidable_holds: tl.decidableHolds,
       violators: sortIds(tl.violators),
     }
     const cons = judgeConsistency(tl, rate)
+    const interval = learned ? { lo: learned.lo, hi: learned.hi } : undefined
     if (!cons.ok) { rows.push({ grounded: false, holdViolators: tl.holdViolators, j: { ...base, fate: 'INCONSISTENT', detail: cons.detail, p: 1, strict: false } }); continue }
     const gr = judgeGrounding(tl, opts)
     const grounded = gr.fate === 'GROUNDED'
-    rows.push({ grounded, holdViolators: tl.holdViolators, j: { ...base, fate: grounded ? 'REDUNDANT' : (gr.fate as 'VOID' | 'BASE_RATE'), detail: gr.detail, p: gr.p, strict: grounded && gr.p <= strictGate } })
+    rows.push({ grounded, holdViolators: tl.holdViolators, ...(interval ? { interval } : {}), j: { ...base, fate: grounded ? 'REDUNDANT' : (gr.fate as 'VOID' | 'BASE_RATE'), detail: gr.detail, p: gr.p, strict: grounded && gr.p <= strictGate } })
   }
 
   // ── judge 3, novelty over the grounded ──
@@ -110,8 +126,11 @@ export function mine(table: CaseTable, schema: MineSchema, options: MineOptions 
     opts.minNewHolds,
   )
   const candles: JudgedCandidate[] = []
+  const constInterval = new Map<JudgedCandidate, { lo: number; hi: number }>()
   for (const d of decisions) {
     const j = rows[d.index]!.j
+    const iv = rows[d.index]!.interval
+    if (iv) constInterval.set(j, iv)
     j.fate = d.fate
     j.detail = d.detail
     j.new_holds = d.newHolds
@@ -125,6 +144,8 @@ export function mine(table: CaseTable, schema: MineSchema, options: MineOptions 
     for (const v of c.violators) { const l = labelOf.get(v)!; m[l] = (m[l] ?? 0) + 1 }
     c.violator_labels = Object.fromEntries(Object.keys(m).sort(byId).map((k) => [k, m[k]!]))
     if (c.spec.form === 'le_tol') c.interval = supportedInterval(c.spec, cases, rate, c.decidable - c.decidable_holds)
+    const iv = constInterval.get(c)
+    if (iv) c.interval = iv
   }
 
   const holdIds = cases.filter((c) => c.hold).map((c) => c.id)

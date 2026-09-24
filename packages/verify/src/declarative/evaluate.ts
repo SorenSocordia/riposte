@@ -3,6 +3,20 @@
  * built-in rulesets. Enum-free; reuses the normalizer (universal digit folding included), the tolerance policy, and the
  * canonical hash. Honesty rules hold: a missing field abstains (FIELD_MISSING); an unparseable one abstains (UNPARSEABLE);
  * within-tolerance is rounding, not error; nothing is ever guessed.
+ *
+ * Added 2026-09-24 (additive; a ruleset that uses none of them produces byte-identical verdicts, pinned by
+ * test/declarative-golden.test.ts):
+ *  - OPTIONAL TERMS `ROLE?`: counts as 0 when absent. A check decides when its REQUIRED operands are present; a required
+ *    operand absent → FIELD_MISSING as before; an optional one present but unparseable → UNPARSEABLE (never read as 0);
+ *    a form whose operands are ALL optional and none is reported abstains (nothing was reported to check).
+ *  - CHECK ALTERNATIVES `alternatives: [{left, right}]`: ordered fallback forms; the first whose required operands are
+ *    all present is evaluated (chosen by presence, never by outcome).
+ *  - ABSTAIN GUARDS `abstain_unless_all_present`, `abstain_if_present`, `abstain_if`: evaluated after the form is chosen
+ *    (so a check that was already going to abstain for a missing field keeps that reason), before the comparison.
+ *  - ROUNDING-AWARE TOLERANCE `tolerance.rounding: 'infer'` (or per check `rounding`): per check and document, the
+ *    reporting unit U = the largest of {1, 1 000, 100 000, 1 000 000} dividing every operand, and
+ *    tolerance = max(tol floor, rel × largest |operand|, U × number of operands). Operands = the reported amount-kind
+ *    values the chosen form uses (see RoundingMode in types.ts). Such claims skip the separate relative-band pass.
  */
 
 import { normalizeAmount, normalizeQuantity, normalizeRate } from '../binding/forensic-normalizer.js'
@@ -12,11 +26,60 @@ import { round4 } from '../verdict/from-report.js'
 import type { ClaimVerdict, Coverage, DeclaredAccuracy, Evidence, Insufficiency, Outcome, Value, Verdict } from '../verdict/schema.js'
 import { attachDeclaredAccuracy } from '../verdict/accuracy.js'
 import { ENGINE_VERSION, SCHEMA_VERSION } from '../version.js'
-import { evalExpr, referencedRoles, type Env } from './expr.js'
-import type { DeclarativeRuleset, DeclCheck, DeclField } from './types.js'
+import { evalExpr, referencedRoles, roleRefs, type Env } from './expr.js'
+import type { DeclarativeRuleset, DeclCheck, DeclCondition, DeclField, RoundingMode } from './types.js'
 
 export type Json = Record<string, unknown>
-export interface VerifyDeclarativeOptions { producer?: string; now?: () => Date; tolerance?: { rel: number; absCap: number }; declared_accuracy?: DeclaredAccuracy }
+export interface VerifyDeclarativeOptions { producer?: string; now?: () => Date; tolerance?: { rel: number; absCap: number; rounding?: RoundingMode }; declared_accuracy?: DeclaredAccuracy }
+
+/** Candidate reporting units for rounding inference, largest first (the addendum's set). */
+export const ROUNDING_UNITS = [1_000_000, 100_000, 1_000, 1] as const
+
+/**
+ * The reporting unit of a set of reported values: the largest candidate unit that divides every one of them, or
+ * undefined when there are no values or none divides them all (e.g. amounts with cents).
+ */
+export function inferReportingUnit(values: readonly number[]): number | undefined {
+  if (values.length === 0) return undefined
+  return ROUNDING_UNITS.find(u => values.every(v => Number.isFinite(v) && Math.abs(v) % u === 0))
+}
+
+/** Rounding-aware tolerance: max(floor, rel × largest |operand| (capped by absCap if > 0), U × number of operands). */
+export function roundingTolerance(values: readonly number[], rel: number, absCap: number, floor: number): { tol: number; unit: number | undefined; n: number; maxAbs: number } {
+  const n = values.length
+  const maxAbs = values.reduce((m, v) => Math.max(m, Math.abs(v)), 0)
+  const unit = inferReportingUnit(values)
+  // round4: 0.0003 × 20e9 is 5999999.999999999 in floating point; a boundary gap must not flip on that artefact.
+  const relTerm = round4(absCap > 0 ? Math.min(rel * maxAbs, absCap) : rel * maxAbs)
+  return { tol: Math.max(floor, relTerm, (unit ?? 0) * n), unit, n, maxAbs }
+}
+
+/** A guard condition's comparison (exact unless tol > 0). */
+function conditionHolds(l: number, op: DeclCondition['op'], r: number, tol: number): boolean {
+  switch (op) {
+    case '=': return Math.abs(l - r) <= tol
+    case '!=': return Math.abs(l - r) > tol
+    case '<': return l < r - tol
+    case '<=': return l <= r + tol
+    case '>': return l > r + tol
+    case '>=': return l >= r - tol
+    default: return false
+  }
+}
+
+/** What a scope (the document, or one line) knows about a role — for optional terms, guards and rounding. */
+interface ScopeInfo {
+  /** 'ok' = reported; 'defaulted' = absent but bound at the field's `default`; 'missing'; 'unparseable'. */
+  status: (role: string) => 'ok' | 'defaulted' | 'missing' | 'unparseable'
+  /** Where a reported role was found (for guard explanations). */
+  where: (role: string) => string | undefined
+  /** The reported amount-kind values behind these roles (computed roles expanded; sum() → every line's value). */
+  amounts: (roles: string[]) => number[]
+}
+
+const isDefaulted = (b: Bound | undefined): boolean => !!b && b.status === 'ok' && !!b.path && b.path.startsWith('default(')
+const isAmountField = (f: DeclField | undefined): boolean => !!f && (f.kind === undefined || f.kind === 'amount')
+const statusOf = (b: Bound | undefined): 'ok' | 'defaulted' | 'missing' | 'unparseable' => (!b ? 'missing' : b.status === 'ok' ? (isDefaulted(b) ? 'defaulted' : 'ok') : b.status)
 
 interface Bound {
   status: 'ok' | 'missing' | 'unparseable'
@@ -149,42 +212,120 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
   const docEnv: Env = { vars: docVars, sum: sumRole }
 
   const policy = options.tolerance ?? ruleset.tolerance ?? { rel: 0.0003, absCap: 0 }
+  const roundingDefault: RoundingMode = options.tolerance?.rounding ?? ruleset.tolerance?.rounding ?? 'none'
   const claims: ClaimVerdict[] = []
+  /** Claims decided under rounding inference: their tolerance is final, so the relative-band pass skips them. */
+  const inferred = new Set<ClaimVerdict>()
+  const fieldSpec = (r: string): DeclField | undefined => (Object.prototype.hasOwnProperty.call(ruleset.fields, r) ? ruleset.fields[r] : undefined)
+
+  // ---- abstain guards (shared by numeric and identifier checks). null = no guard fires.
+  const guardInsufficiency = (chk: DeclCheck, env: Env, scope: ScopeInfo): Insufficiency | null => {
+    const unless = chk.abstain_unless_all_present ?? []
+    if (unless.length) {
+      const bad = unless.filter(r => scope.status(r) === 'unparseable')
+      if (bad.length) return { reason: 'UNPARSEABLE', detail: `guard abstain_unless_all_present: ${bad.join(', ')} present but unparseable`, missing: bad }
+      const absent = unless.filter(r => scope.status(r) !== 'ok')
+      if (absent.length) return { reason: 'FIELD_MISSING', detail: `guard abstain_unless_all_present: ${absent.join(', ')} not reported`, missing: absent }
+    }
+    for (const r of chk.abstain_if_present ?? []) {
+      const s = scope.status(r)
+      if (s === 'ok' || s === 'unparseable') { const w = scope.where(r); return { reason: 'OUT_OF_RULESET_SCOPE', detail: `guard abstain_if_present: ${r} is reported${w ? ` (${w})` : ''}; the identity does not model it` } }
+    }
+    for (const c of chk.abstain_if ?? []) {
+      let l: number | undefined, r: number | undefined
+      try {
+        const unp = roleRefs(c.left, c.right).all.filter(x => scope.status(x) === 'unparseable')
+        if (unp.length) return { reason: 'UNPARSEABLE', detail: `guard abstain_if: ${unp.join(', ')} present but unparseable, so "${c.left} ${c.op} ${c.right}" cannot be evaluated`, missing: unp }
+        l = evalExpr(c.left, env); r = evalExpr(c.right, env)
+      } catch (e) { return { reason: 'OUT_OF_RULESET_SCOPE', detail: `guard abstain_if: expression error: ${(e as Error).message}` } }
+      if (l === undefined || r === undefined) continue // an operand is absent: the condition cannot hold
+      if (conditionHolds(l, c.op, r, c.tol ?? 0)) return { reason: 'OUT_OF_RULESET_SCOPE', detail: `guard abstain_if: ${c.left} ${c.op} ${c.right} holds (${round4(l)} vs ${round4(r)})` }
+    }
+    return null
+  }
 
   // ---- helper to build one check claim given an env, an evidence-gatherer, and a claim-id prefix
-  const runCheck = (chk: DeclCheck, env: Env, prefix: string, gatherEvidence: (roles: string[]) => Evidence[], missingOf: (roles: string[]) => Insufficiency | null): void => {
+  const runCheck = (chk: DeclCheck, env: Env, prefix: string, gatherEvidence: (roles: string[]) => Evidence[], missingOf: (roles: string[]) => Insufficiency | null, scope: ScopeInfo): void => {
     const claim_id = `${prefix}.${chk.code}`
-    const roles = [...new Set([...referencedRoles(chk.left), ...referencedRoles(chk.right)])]
     const base = { claim_id, kind: 'RECOMPUTE' as const, tier: 'DETERMINISTIC' as const, field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code }
-    const insuff = missingOf(roles)
-    if (insuff) { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency: insuff, locked: false, explanation: `${chk.code}: ${insuff.detail}` }); return }
+    const abstain = (insufficiency: Insufficiency): void => { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` }) }
 
+    // 1. The form to evaluate: the primary left/right, else the first alternative whose REQUIRED operands are present.
+    //    With no alternatives and no `?`, this is exactly the old single missing-operand test.
+    const forms = [{ left: chk.left, right: chk.right }, ...(chk.alternatives ?? [])]
+    const multi = forms.length > 1
+    const blockedBy = (refs: ReturnType<typeof roleRefs>): Insufficiency | null => {
+      const m = missingOf(refs.required)
+      if (m) return m
+      for (const o of refs.optional) if (scope.status(o) === 'unparseable') return { reason: 'UNPARSEABLE', detail: `optional ${o} is present but could not be parsed as a number`, missing: [o] }
+      return null
+    }
+    let k = -1
+    let refs = roleRefs(forms[0]!.left, forms[0]!.right)
+    const blocks: { refs: ReturnType<typeof roleRefs>; why: Insufficiency }[] = []
+    for (let i = 0; i < forms.length; i++) {
+      const r = i === 0 ? refs : roleRefs(forms[i]!.left, forms[i]!.right)
+      const why = blockedBy(r)
+      if (!why) { k = i; refs = r; break }
+      blocks.push({ refs: r, why })
+    }
+    if (k < 0) {
+      if (!multi) return abstain(blocks[0]!.why)
+      const unp = blocks.find(b => b.why.reason === 'UNPARSEABLE')
+      if (unp) return abstain(unp.why)
+      const lacks = blocks.map(b => b.refs.required.filter(x => { const s = scope.status(x); return s !== 'ok' && s !== 'defaulted' }))
+      return abstain({ reason: 'FIELD_MISSING', detail: `no form of ${chk.code} has all its required operands (${lacks.map((l, i) => `form ${i + 1} lacks ${l.join(', ') || blocks[i]!.why.detail}`).join('; ')})`, missing: [...new Set(lacks.flat())] })
+    }
+    const form = forms[k]!
+    const roles = refs.all
+    // A form made only of optional terms, none of them reported, has nothing to check.
+    if (refs.required.length === 0 && refs.optional.length > 0 && !refs.optional.some(o => scope.status(o) === 'ok')) {
+      return abstain({ reason: 'FIELD_MISSING', detail: `none of the operands of ${chk.code} is reported (all are optional)`, missing: refs.optional })
+    }
+
+    // 2. Abstain guards.
+    const g = guardInsufficiency(chk, env, scope)
+    if (g) return abstain(g)
+
+    // 3. Evaluate.
     let left: number | undefined, right: number | undefined
-    try { left = evalExpr(chk.left, env); right = evalExpr(chk.right, env) }
+    try { left = evalExpr(form.left, env); right = evalExpr(form.right, env) }
     catch (e) { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency: { reason: 'OUT_OF_RULESET_SCOPE', detail: `expression error: ${(e as Error).message}` }, locked: false, explanation: `${chk.code}: bad expression` }); return }
     if (left === undefined || right === undefined) { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency: { reason: 'FIELD_MISSING', detail: `a value needed by ${chk.code} was absent`, missing: roles }, locked: false, explanation: `${chk.code}: operand absent` }); return }
 
-    const tol = chk.tol ?? 0.01
+    // 4. Tolerance: the check's own floor, or the rounding-aware tolerance.
+    const infer = (chk.rounding ?? roundingDefault) === 'infer'
+    const rt = infer ? roundingTolerance(scope.amounts(roles), policy.rel, policy.absCap, chk.tol ?? 0.01) : undefined
+    const tol = rt ? rt.tol : chk.tol ?? 0.01
     let passed: boolean
     if (chk.op === '=') passed = Math.abs(left - right) <= tol
     else if (chk.op === '<=') passed = left <= right + tol
     else if (chk.op === '>=') passed = left >= right - tol
     else passed = Math.abs(left - right) > tol // !=
     const evidence = gatherEvidence(roles)
-    claims.push({
+    const absentOptional = refs.optional.filter(o => scope.status(o) !== 'ok')
+    const notes = [
+      ...(multi ? [`Form ${k + 1} of ${forms.length}.`] : []),
+      ...(absentOptional.length ? [`Optional terms not reported (counted as 0): ${absentOptional.join(', ')}.`] : []),
+      ...(rt ? [`Rounding-aware tolerance ${round4(rt.tol)} = max(${round4(policy.rel * 100)}% of the largest operand ${round4(rt.maxAbs)}, unit ${rt.unit ?? 'none'} × ${rt.n} operands${policy.absCap > 0 ? `; relative term capped at ${policy.absCap}` : ''}, floor ${chk.tol ?? 0.01})${passed && left !== right && chk.op === '=' ? ': the difference is treated as rounding, not error' : ''}.`] : []),
+    ]
+    const claim: ClaimVerdict = {
       ...base, outcome: passed ? 'PASS' : 'FAIL', asserted: round4(left),
-      computation: { formula: `${chk.left} ${chk.op} ${chk.right}`, operands: { left: round4(left), right: round4(right) }, result: round4(right), tolerance: { abs: tol } },
-      evidence, locked: !passed, explanation: `${chk.field ?? chk.code}: ${round4(left)} ${chk.op} ${round4(right)} — ${passed ? 'holds' : 'does not hold'}.`,
+      computation: { formula: `${form.left} ${chk.op} ${form.right}`, operands: { left: round4(left), right: round4(right) }, result: round4(right), tolerance: rt ? { abs: round4(rt.tol), rel: policy.rel } : { abs: tol } },
+      evidence, locked: !passed, explanation: `${chk.field ?? chk.code}: ${round4(left)} ${chk.op} ${round4(right)} — ${passed ? 'holds' : 'does not hold'}.${notes.length ? ` ${notes.join(' ')}` : ''}`,
       ...(passed ? {} : { variance: round4(left - right) }),
-    })
+    }
+    claims.push(claim)
+    if (rt) inferred.add(claim)
   }
 
   // ---- an identifier check (compare: 'identifier'): two NAMED identifier fields, compared as normalised id sets
-  const runIdentifierCheck = (chk: DeclCheck, prefix: string, scope: 'document' | 'line', lookup: (role: string) => Bound | undefined): void => {
+  const runIdentifierCheck = (chk: DeclCheck, prefix: string, scope: 'document' | 'line', lookup: (role: string) => Bound | undefined, env: Env, info: ScopeInfo): void => {
     const base = { claim_id: `${prefix}.${chk.code}`, kind: 'CROSS_REFERENCE' as const, tier: 'DETERMINISTIC' as const, field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code }
     const abstain = (insufficiency: Insufficiency): void => { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` }) }
     const L = String(chk.left ?? '').trim(), R = String(chk.right ?? '').trim()
     if (chk.op !== '=' && chk.op !== '!=') return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: `identifier checks support only = and != (got ${chk.op})` })
+    if (chk.alternatives !== undefined || chk.rounding !== undefined) return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: 'alternatives and rounding apply to numeric checks only, not to an identifier check' })
     for (const r of [L, R]) {
       const f = Object.prototype.hasOwnProperty.call(ruleset.fields, r) ? ruleset.fields[r] : undefined
       if (!f || f.kind !== 'identifier' || !!f.line !== (scope === 'line')) return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: `"${r}" is not a ${scope}-level 'identifier' field (an identifier check names two identifier fields)` })
@@ -192,6 +333,8 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
     const bl = lookup(L), br = lookup(R)
     for (const [r, b] of [[L, bl], [R, br]] as const) if (b?.status === 'unparseable') return abstain({ reason: 'UNPARSEABLE', detail: `${r} is present but is not an identifier or a list of identifiers`, missing: [r] })
     for (const [r, b] of [[L, bl], [R, br]] as const) if (!b || b.status !== 'ok' || !b.ids) return abstain({ reason: 'FIELD_MISSING', detail: `${r} not present`, missing: [r] })
+    const g = guardInsufficiency(chk, env, info)
+    if (g) return abstain(g)
     const li = bl!.ids!, ri = br!.ids!
     const same = li.length === ri.length && li.every(x => ri.includes(x))
     const passed = chk.op === '=' ? same : !same
@@ -236,29 +379,64 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
     }
     return out
   }
+  // What the document scope knows about a role (optional terms, guards, rounding operands).
+  const docScope: ScopeInfo = {
+    status: r => {
+      if (boundDoc.has(r)) return statusOf(boundDoc.get(r))
+      if (computedFormula.has(r)) return docVars[r] === undefined ? 'missing' : 'ok'
+      if (lineRoleNames.has(r)) {
+        for (const m of boundLines) if (m.get(r)?.status === 'unparseable') return 'unparseable'
+        return sumRole(r) === undefined ? 'missing' : 'ok'
+      }
+      return 'missing'
+    },
+    where: r => boundDoc.get(r)?.path ?? computedFormula.get(r),
+    amounts: roles => {
+      const out: number[] = []
+      const seen = new Set<string>()
+      const walk = (r: string): void => {
+        if (seen.has(r)) return
+        seen.add(r)
+        const f = fieldSpec(r)
+        if (f && !f.line) { const b = boundDoc.get(r); if (isAmountField(f) && b?.status === 'ok' && b.value !== undefined && !isDefaulted(b)) out.push(b.value); return }
+        if (f && f.line) { if (isAmountField(f)) for (const m of boundLines) { const b = m.get(r); if (b?.status === 'ok' && b.value !== undefined && !isDefaulted(b)) out.push(b.value) } return }
+        const formula = computedFormula.get(r)
+        if (formula !== undefined && docVars[r] !== undefined) for (const x of referencedRoles(formula)) walk(x)
+      }
+      for (const r of roles) walk(r)
+      return out
+    },
+  }
+  const lineScope = (m: Map<string, Bound>): ScopeInfo => ({
+    status: r => statusOf(m.get(r)),
+    where: r => m.get(r)?.path,
+    amounts: roles => roles.flatMap(r => { const b = m.get(r); return isAmountField(fieldSpec(r)) && b?.status === 'ok' && b.value !== undefined && !isDefaulted(b) ? [b.value] : [] }),
+  })
+
   for (const chk of ruleset.checks.filter(c => (c.scope ?? 'document') === 'document')) {
-    if (chk.compare === 'identifier') runIdentifierCheck(chk, 'document', 'document', r => boundDoc.get(r))
-    else runCheck(chk, docEnv, 'document', docEvidence, docMissing)
+    if (chk.compare === 'identifier') runIdentifierCheck(chk, 'document', 'document', r => boundDoc.get(r), docEnv, docScope)
+    else runCheck(chk, docEnv, 'document', docEvidence, docMissing, docScope)
   }
 
   // ---- line-scope checks
   ruleset.checks.filter(c => c.scope === 'line').forEach(chk => {
     boundLines.forEach((m, i) => {
-      if (chk.compare === 'identifier') { runIdentifierCheck(chk, `line[${i}]`, 'line', r => m.get(r)); return }
       const lineVars: Record<string, number | undefined> = {}
       for (const [role, b] of m) lineVars[role] = b.status === 'ok' ? b.value : undefined
       const env: Env = { vars: lineVars, sum: () => undefined }
+      if (chk.compare === 'identifier') { runIdentifierCheck(chk, `line[${i}]`, 'line', r => m.get(r), env, lineScope(m)); return }
       const missing = (roles: string[]): Insufficiency | null => {
         for (const r of roles) { const b = m.get(r); if (b?.status === 'unparseable') return { reason: 'UNPARSEABLE', detail: `${r} present but unparseable on line ${i}`, missing: [r] } }
         for (const r of roles) { const b = m.get(r); if (!b || b.status === 'missing') return { reason: 'FIELD_MISSING', detail: `${r} not present on line ${i}`, missing: [r] } }
         return null
       }
       const ev = (roles: string[]): Evidence[] => { const out: Evidence[] = []; for (const r of roles) { const e = fieldEvidence(r, m.get(r) ?? { status: 'missing', confidence: 0 }); if (e) out.push(e) } return out }
-      runCheck(chk, env, `line[${i}]`, ev, missing)
+      runCheck(chk, env, `line[${i}]`, ev, missing, lineScope(m))
     })
   })
 
-  applyTolerancePolicy(claims, policy)
+  // The relative band applies to every numeric claim EXCEPT those decided under rounding inference (already final).
+  applyTolerancePolicy(inferred.size ? claims.filter(c => !inferred.has(c)) : claims, policy)
 
   let pass = 0, fail = 0, ins = 0
   for (const c of claims) c.outcome === 'PASS' ? pass++ : c.outcome === 'FAIL' ? fail++ : ins++

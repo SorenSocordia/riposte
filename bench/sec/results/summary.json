@@ -1,0 +1,76 @@
+{
+  "prereg_sha256": "dfb646fba4c0303b40f28a32b22f59bf501de7c316c06090e55409edced4832d",
+  "data_zip_sha256": "d18c01c615da8f5cd46273b0dacaeee5b1163f4089171da0f84153a5f3c362f6",
+  "ruleset": "financial-statement-core@0.1.0",
+  "filings_10k": 4262,
+  "num_rows_scanned": 3690955,
+  "num_rows_kept": 187169,
+  "per_check": {
+    "BS_ACCOUNTING_EQUATION": {
+      "PASS": 2310,
+      "FAIL": 1164,
+      "INSUFFICIENT_DATA": 788,
+      "flag_rate": 0.3351
+    },
+    "BS_LIAB_AND_EQUITY_TOTAL": {
+      "PASS": 4117,
+      "FAIL": 1,
+      "INSUFFICIENT_DATA": 144,
+      "flag_rate": 0.0002
+    },
+    "BS_ASSET_SPLIT": {
+      "PASS": 277,
+      "FAIL": 3,
+      "INSUFFICIENT_DATA": 3982,
+      "flag_rate": 0.0107
+    },
+    "BS_LIABILITY_SPLIT": {
+      "PASS": 322,
+      "FAIL": 2,
+      "INSUFFICIENT_DATA": 3938,
+      "flag_rate": 0.0062
+    },
+    "IS_GROSS_PROFIT": {
+      "PASS": 1102,
+      "FAIL": 13,
+      "INSUFFICIENT_DATA": 3147,
+      "flag_rate": 0.0117
+    },
+    "IS_OPERATING_INCOME": {
+      "PASS": 733,
+      "FAIL": 21,
+      "INSUFFICIENT_DATA": 3508,
+      "flag_rate": 0.0279
+    },
+    "IS_NET_INCOME": {
+      "PASS": 2485,
+      "FAIL": 368,
+      "INSUFFICIENT_DATA": 1409,
+      "flag_rate": 0.129
+    },
+    "IS_COMPREHENSIVE_INCOME": {
+      "PASS": 1138,
+      "FAIL": 58,
+      "INSUFFICIENT_DATA": 3066,
+      "flag_rate": 0.0485
+    },
+    "CF_NET_CHANGE": {
+      "PASS": 1598,
+      "FAIL": 1329,
+      "INSUFFICIENT_DATA": 1335,
+      "flag_rate": 0.454
+    },
+    "CF_ENDING_CASH": {
+      "PASS": 2407,
+      "FAIL": 66,
+      "INSUFFICIENT_DATA": 1789,
+      "flag_rate": 0.0267
+    },
+    "XSTMT_CASH_ARTICULATION": {
+      "PASS": 1293,
+      "FAIL": 1259,
+      "INSUFFICIENT_DATA": 1710,
+      "flag_rate": 0.4933
+    }
+  }
+}

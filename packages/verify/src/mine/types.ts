@@ -91,6 +91,11 @@ export interface MineOptions {
   maxApprovedViolationRate?: number
   /** Reported only, never gating: the family-wise strict gate is strictAlpha / (number of variants). Default 0.05. */
   strictAlpha?: number
+  /**
+   * Add the C family: a learned constant per numeric document field, in both directions (`X <= c`: large X means HOLD;
+   * `X >= c`: small X means HOLD). Default false, so the AP grammar stays the prototype's exactly.
+   */
+  thresholds?: boolean
 }
 
 export interface ResolvedMineOptions {
@@ -100,6 +105,7 @@ export interface ResolvedMineOptions {
   tGrid: number[]
   maxApprovedViolationRate: number
   strictAlpha: number
+  thresholds: boolean
 }
 
 // ── the grammar's candidate shapes (JSON; the compiler reads these) ─────────────────────────────────────────────────
@@ -130,7 +136,7 @@ export type CandidateSpec =
   /** I2: two identifier fields are equal (normalised) */
   | { scope: 'document'; form: 'id_eq'; x: string; y: string }
 
-export type Family = 'L1' | 'L2' | 'L3' | 'L4' | 'D' | 'I1' | 'I2'
+export type Family = 'L1' | 'L2' | 'L3' | 'L4' | 'D' | 'I1' | 'I2' | 'C'
 
 export interface Candidate {
   id: string
@@ -138,6 +144,11 @@ export interface Candidate {
   spec: CandidateSpec
   /** present for L3: the grid t is learned from */
   tGrid?: number[]
+  /**
+   * present for C: the constant in the spec is a placeholder, learned from the data (threshold.ts). 'high': the spec is
+   * `field <= c` (large values violate). 'low': the spec is `c <= field` (small values violate).
+   */
+  learnConst?: { field: string; dir: 'high' | 'low' }
 }
 
 export type Fate = 'CANDLE' | 'REDUNDANT' | 'INCONSISTENT' | 'VOID' | 'BASE_RATE'
@@ -148,6 +159,8 @@ export interface JudgedCandidate {
   spec: CandidateSpec
   /** the learned tolerance (L3 only, when a consistent t exists) */
   t?: number
+  /** the learned constant (C only; also written into the spec) */
+  c?: number
   fate: Fate
   /** the cause, in words (for a death, why it died) */
   detail: string
@@ -175,6 +188,9 @@ export interface JudgedCandidate {
    * L3 candle: the range of t the data supports (the prototype's definition, ignoring eps). lo = the smallest ratio
    * x/y - 1 at which the approved-violation limit holds (with no exceptions allowed, the largest approved ratio).
    * hi = the smallest held ratio above lo, or null if there is none. Any t in [lo, hi) catches the same holds.
+   *
+   * C candle: the range of constants giving the same partition. lo and hi are the adjacent observed values on either side of
+   * the cut. `X <= c` gives the same violators for any c in [lo, hi); `X >= c` for any c in (lo, hi]. c is the midpoint.
    */
   interval?: { lo: number | null; hi: number | null }
 }

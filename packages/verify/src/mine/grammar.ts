@@ -13,6 +13,7 @@
  *       S <= P
  *   I1  a cited-ids list holds exactly one id, and it equals an id field (set semantics, normalised)
  *   I2  id = id         every unordered pair of single-id fields
+ *   C   X <= c, c <= X  per numeric document field, c learned from the labels (opt-in: `thresholds`; threshold.ts)
  *
  * A source's line value is Σ amount when the source has an amount field, and otherwise Σ qty·price.
  *
@@ -51,6 +52,13 @@ export function validateSchema(schema: MineSchema): void {
   for (const [n, f] of Object.entries(schema.lines ?? {})) check(n, f, 'line')
 }
 
+/** A C candidate's spec with its constant filled in ('high': `field <= c`; 'low': `c <= field`). eps 0: see threshold.ts. */
+export function constSpec(field: string, dir: 'high' | 'low', c: number): CandidateSpec {
+  return dir === 'high'
+    ? { scope: 'document', form: 'rel', op: '<=', left: { field }, right: { const: c }, eps: 0 }
+    : { scope: 'document', form: 'rel', op: '<=', left: { const: c }, right: { field }, eps: 0 }
+}
+
 export const approveLabels = (schema: MineSchema): Set<string> => new Set(Array.isArray(schema.approve) ? schema.approve : [schema.approve])
 
 const epsOf = (f: MineFieldSpec): number => f.eps ?? (f.type === 'qty' ? DEFAULT_EPS.qty : DEFAULT_EPS.money)
@@ -68,7 +76,7 @@ export function renderTerm(t: Term): string {
 }
 
 /** Build the lattice from the schema, in grammar order. */
-export function buildGrammar(schema: MineSchema, tGrid: readonly number[] = DEFAULT_T_GRID): Candidate[] {
+export function buildGrammar(schema: MineSchema, tGrid: readonly number[] = DEFAULT_T_GRID, opts: { thresholds?: boolean } = {}): Candidate[] {
   validateSchema(schema)
   const lines = Object.entries(schema.lines ?? {})
   const docs = Object.entries(schema.fields)
@@ -142,6 +150,15 @@ export function buildGrammar(schema: MineSchema, tGrid: readonly number[] = DEFA
   const idF = docs.filter(([, f]) => f.type === 'id').map(([n]) => n)
   for (const list of idsF) for (const id of idF) out.push({ id: `I1 ${list} cites exactly one id = ${id}`, family: 'I1', spec: { scope: 'document', form: 'ids_one', list, id } })
   idF.forEach((x, i) => { for (const y of idF.slice(i + 1)) out.push({ id: `I2 ${x} = ${y}`, family: 'I2', spec: { scope: 'document', form: 'id_eq', x, y } }) })
+
+  // ── learned constants (opt-in, last, so the families above keep their order) ──
+  if (opts.thresholds) {
+    for (const [X, f] of docs) {
+      if (!isNumeric(f)) continue
+      out.push({ id: `C ${X} <= c`, family: 'C', spec: constSpec(X, 'high', 0), learnConst: { field: X, dir: 'high' } })
+      out.push({ id: `C ${X} >= c`, family: 'C', spec: constSpec(X, 'low', 0), learnConst: { field: X, dir: 'low' } })
+    }
+  }
 
   return out
 }
