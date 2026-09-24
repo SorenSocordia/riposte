@@ -24,6 +24,15 @@ function."* We tested the short function.
 The full write-up is [`packages/verify/docs/BENCHMARK-AP.md`](packages/verify/docs/BENCHMARK-AP.md). Every number re-runs from
 [`bench/ap`](bench/ap).
 
+## Rules that write themselves
+
+Someone has to write the rules. Unless the rules can be learned. From the same 100 invoices, labelled only *paid* or
+*held*, `verify mine` rediscovered **all 4 of the policy's rules, with 0 false rules**. That includes the 2% price tolerance,
+learned from the labels with the interval the data supports. The 4 rules explain all 68 holds, and every rejected candidate
+is recorded with its cause of death. The rules compile into an ordinary ruleset: enforcing them, `verify` agrees with the
+gold decision on 100 of 100 invoices. The method was pre-registered before the miner was written. Write-up:
+[`BENCHMARK-MINE.md`](packages/verify/docs/BENCHMARK-MINE.md). **This is on synthetic data. Real-data tests are next.**
+
 **Honest scope:** the benchmark is synthetic and templated, and real invoices will abstain more often. Abstaining is the designed
 way to fail, because a person looks at it. Coverage is always published next to accuracy.
 
@@ -31,7 +40,7 @@ way to fail, because a person looks at it. Coverage is always published next to 
 
 | | what it does |
 |---|---|
-| [`packages/verify`](packages/verify) · `riposte-verify` | **The engine.** Deterministic post-extraction checks: recompute, cross-reference, quote-match. Built-in rulesets cover invoices, AIA pay applications, the AP three-way match and legal citations, and you can define any other document type in JSON. Each verdict is a proof object with per-operand provenance, a deterministic verdict id, an optional Ed25519 signature, and engine-free replay. Available as a CLI, over HTTP (OpenAPI 3.1), over MCP, and as a library. |
+| [`packages/verify`](packages/verify) · `riposte-verify` | **The engine.** Deterministic post-extraction checks: recompute, cross-reference, quote-match. Built-in rulesets cover invoices, AIA pay applications, the AP three-way match and legal citations, and you can define any other document type in JSON. Each verdict is a proof object with per-operand provenance, a deterministic verdict id, an optional Ed25519 signature, and engine-free replay. Available as a CLI, over HTTP (OpenAPI 3.1), over MCP, and as a library. **`verify mine`** learns rules from labelled history and compiles them into a ruleset. |
 | [`packages/receipts`](packages/receipts) · `riposte-ai` | **The layer agents call.** `check_done` compares an agent's "done" with the real state. `ap_gate` compares a model's pay/hold decision with the deterministic three-way match and executes only when they agree. `check_claims` checks the claims an agent ends a turn with ("tests pass", "pushed") against what its tools actually returned. `model_attest` checks which model actually answered, reply by reply, against the one the run declared, and flags silent switches. It also includes a hash-chained, signed receipt ledger and option-order flip probes for typed decisions. Ships as an MCP server and a CLI. |
 | [`bench/ap`](bench/ap) | **The benchmark harness:** the frozen blind checker, the disclosed tuned checker, the audit of published model decisions, the stress generator, and every per-case result. |
 

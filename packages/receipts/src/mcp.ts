@@ -16,6 +16,7 @@ import { readFileSync } from 'node:fs'
 import { resolve, relative, isAbsolute } from 'node:path'
 import { splitApLayout, type ApDocuments } from 'riposte-verify'
 import { apGate } from './ap-gate.js'
+import { draftResolution } from './ap-resolve.js'
 import { checkDone, type DoneClaim, type StateReader } from './done.js'
 import { openLedger, type Ledger, type ChainPolicy } from './ledger.js'
 import { attestModels, eventsFromClaudeCodeTranscript, eventsFromReplies, type AttestPolicy, type ModelEvent } from './model-attest.js'
@@ -169,7 +170,13 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
         ? { invoice: args.invoice, purchase_order: args.purchase_order, goods_receipt: args.goods_receipt } : null
     if (!docs) throw new Error('ap_gate requires {invoice, purchase_order, goods_receipt} or {layout}')
     const g = apGate(args.decision, docs)
-    const summary = { action: g.action, effect: g.effect, model_decision: g.model_decision, checker_decision: g.checker_decision, reason: g.reason, grounding: g.check.grounding, verdict_id: g.check.verdict.verdict_id }
+    // the generative half: when the checker holds, draft what a controller would send (every number a recorded fact)
+    const draft = g.check.decision !== 'approve' ? draftResolution(g.check, docs) : undefined
+    const summary = {
+      action: g.action, effect: g.effect, model_decision: g.model_decision, checker_decision: g.checker_decision, reason: g.reason,
+      grounding: g.check.grounding, verdict_id: g.check.verdict.verdict_id,
+      ...(draft ? { resolution: { kind: draft.kind, subject: draft.subject, body: draft.body, ...(draft.short_pay ? { short_pay: draft.short_pay } : {}), facts: draft.facts } } : {}),
+    }
     const entry = deps.ledger.append('ap_gate', summary)
     return toolResult({ ...summary, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }

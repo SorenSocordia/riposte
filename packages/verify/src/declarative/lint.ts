@@ -13,8 +13,9 @@ export interface LintResult {
   warnings: string[]
 }
 
-const VALID_KINDS = new Set(['amount', 'rate', 'quantity', 'string'])
+const VALID_KINDS = new Set(['amount', 'rate', 'quantity', 'string', 'bool', 'identifier'])
 const VALID_OPS = new Set(['=', '<=', '>=', '!='])
+const VALID_COMPARE = new Set(['number', 'identifier'])
 
 export function lintRuleset(rs: unknown): LintResult {
   const errors: string[] = []
@@ -35,6 +36,11 @@ export function lintRuleset(rs: unknown): LintResult {
   const lineRoles = new Set(Object.keys(fields).filter(k => fields[k]!.line))
   const computedRoles = new Set(Object.keys(computed))
   const allRoles = new Set([...docRoles, ...lineRoles, ...computedRoles])
+  const identifierRoles = new Set(Object.keys(fields).filter(k => fields[k]!.kind === 'identifier'))
+  const noIdentifierArithmetic = (expr: unknown, where: string): void => {
+    if (typeof expr !== 'string') return
+    try { for (const ref of referencedRoles(expr)) if (identifierRoles.has(ref)) errors.push(`${where}: identifier field "${ref}" cannot be used in arithmetic (use a check with compare: "identifier")`) } catch { /* parse errors are reported by parse() */ }
+  }
 
   // fields well-formed
   for (const [role, f] of Object.entries(fields)) {
@@ -52,7 +58,7 @@ export function lintRuleset(rs: unknown): LintResult {
   }
 
   // computed formulas
-  for (const [role, formula] of Object.entries(computed)) parse(formula, `computed "${role}"`)
+  for (const [role, formula] of Object.entries(computed)) { parse(formula, `computed "${role}"`); noIdentifierArithmetic(formula, `computed "${role}"`) }
 
   // checks
   const usedRoles = new Set<string>()
@@ -61,9 +67,23 @@ export function lintRuleset(rs: unknown): LintResult {
     if (typeof c.code !== 'string' || c.code.length === 0) errors.push(`${where}: missing "code"`)
     if (!VALID_OPS.has(c.op)) errors.push(`${where}: invalid op "${c.op}"`)
     const scope = c.scope ?? 'document'
+    if (c.compare !== undefined && !VALID_COMPARE.has(c.compare)) { errors.push(`${where}: invalid compare "${String(c.compare)}" (number | identifier)`); return }
+    if (c.compare === 'identifier') {
+      // two NAMED identifier fields visible in this scope; only = and !=
+      if (c.op !== '=' && c.op !== '!=') errors.push(`${where}: an identifier check supports only = and !=`)
+      for (const side of ['left', 'right'] as const) {
+        const name = typeof c[side] === 'string' ? c[side].trim() : ''
+        usedRoles.add(name)
+        const f = Object.prototype.hasOwnProperty.call(fields, name) ? fields[name] : undefined
+        if (!f || f.kind !== 'identifier') errors.push(`${where}."${side}": an identifier check must name an 'identifier' field (got "${name}")`)
+        else if (!!f.line !== (scope === 'line')) errors.push(`${where}."${side}": "${name}" is a ${f.line ? 'line' : 'document'} field but the check is ${scope}-scope`)
+      }
+      return
+    }
     for (const side of ['left', 'right'] as const) {
       const expr = c[side]
       parse(expr, `${where}."${side}"`)
+      noIdentifierArithmetic(expr, `${where}."${side}"`)
       if (typeof expr !== 'string') continue
       for (const ref of referencedRoles(expr)) {
         usedRoles.add(ref)

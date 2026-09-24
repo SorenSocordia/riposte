@@ -6758,7 +6758,37 @@ function getPath(obj, path) {
   }
   return cur;
 }
+function normBool(raw) {
+  if (raw === true || raw === false) return { value: raw ? 1 : 0, norms: ["bool_to_number"] };
+  if (raw === 1 || raw === 0) return { value: raw, norms: ["already_number"] };
+  if (typeof raw === "string") {
+    const s = raw.trim().toLowerCase();
+    if (s === "true" || s === "yes" || s === "1") return { value: 1, norms: ["bool_text_parsed"] };
+    if (s === "false" || s === "no" || s === "0") return { value: 0, norms: ["bool_text_parsed"] };
+  }
+  return null;
+}
+function normIdentifiers(raw) {
+  const one = (x) => {
+    if (typeof x === "number" && Number.isFinite(x)) return String(x);
+    if (typeof x !== "string") return void 0;
+    const n = x.replace(/\s+/g, "").toUpperCase();
+    return n.length ? n : null;
+  };
+  if (!Array.isArray(raw)) {
+    const n = one(raw);
+    return typeof n === "string" ? [n] : null;
+  }
+  const out = [];
+  for (const x of raw) {
+    const n = one(x);
+    if (n === void 0) return null;
+    if (n !== null && !out.includes(n)) out.push(n);
+  }
+  return out;
+}
 function normByKind(kind, raw) {
+  if (kind === "bool") return normBool(raw);
   const n = kind === "rate" ? normalizeRate(raw) : kind === "quantity" ? normalizeQuantity(raw) : normalizeAmount(raw);
   if (!n?.success || typeof n.normalized !== "number" || !Number.isFinite(n.normalized)) return null;
   return { value: n.normalized, norms: n.transformations };
@@ -6770,6 +6800,12 @@ function bindField(source, field) {
     if (raw === void 0 || raw === null || raw === "") continue;
     const confidence = i === 0 ? 100 : 95;
     if (field.kind === "string") return { status: "ok", strValue: String(raw), path: field.paths[i], confidence, original: raw };
+    if (field.kind === "identifier") {
+      const ids = normIdentifiers(raw);
+      if (ids) return { status: "ok", ids, path: field.paths[i], confidence, original: raw, norms: ["identifier_normalized"] };
+      resolvedButBad = true;
+      continue;
+    }
     const norm = normByKind(field.kind, raw);
     if (norm) return { status: "ok", value: norm.value, path: field.paths[i], confidence, original: raw, norms: norm.norms };
     resolvedButBad = true;
@@ -6779,7 +6815,7 @@ function bindField(source, field) {
 }
 function fieldEvidence(role, b) {
   if (b.status !== "ok" || !b.path) return null;
-  const value = b.value !== void 0 ? b.value : b.strValue ?? null;
+  const value = b.ids !== void 0 ? Array.isArray(b.original) ? b.ids : b.ids[0] ?? null : b.value !== void 0 ? b.value : b.strValue ?? null;
   const source = b.path.startsWith("default(") ? "computed" : "invoice";
   const e = { locator: { kind: "field", source, path: b.path }, value, confidence: b.confidence, role: "OPERAND" };
   if (b.original !== void 0 && String(b.original) !== String(value)) e.original = b.original;
@@ -6860,6 +6896,35 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
       ...passed ? {} : { variance: round4(left - right) }
     });
   };
+  const runIdentifierCheck = (chk, prefix, scope, lookup) => {
+    const base = { claim_id: `${prefix}.${chk.code}`, kind: "CROSS_REFERENCE", tier: "DETERMINISTIC", field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code };
+    const abstain = (insufficiency) => {
+      claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` });
+    };
+    const L = String(chk.left ?? "").trim(), R = String(chk.right ?? "").trim();
+    if (chk.op !== "=" && chk.op !== "!=") return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: `identifier checks support only = and != (got ${chk.op})` });
+    for (const r of [L, R]) {
+      const f = Object.prototype.hasOwnProperty.call(ruleset.fields, r) ? ruleset.fields[r] : void 0;
+      if (!f || f.kind !== "identifier" || !!f.line !== (scope === "line")) return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: `"${r}" is not a ${scope}-level 'identifier' field (an identifier check names two identifier fields)` });
+    }
+    const bl = lookup(L), br = lookup(R);
+    for (const [r, b] of [[L, bl], [R, br]]) if (b?.status === "unparseable") return abstain({ reason: "UNPARSEABLE", detail: `${r} is present but is not an identifier or a list of identifiers`, missing: [r] });
+    for (const [r, b] of [[L, bl], [R, br]]) if (!b || b.status !== "ok" || !b.ids) return abstain({ reason: "FIELD_MISSING", detail: `${r} not present`, missing: [r] });
+    const li = bl.ids, ri = br.ids;
+    const same = li.length === ri.length && li.every((x) => ri.includes(x));
+    const passed = chk.op === "=" ? same : !same;
+    const show = (ids) => ids.length === 1 ? ids[0] : `{${ids.join(", ")}}`;
+    const asValue = (ids) => ids.length === 1 ? ids[0] : ids;
+    claims.push({
+      ...base,
+      outcome: passed ? "PASS" : "FAIL",
+      asserted: asValue(li),
+      computation: { formula: `${L} ${chk.op} ${R} (identifier sets; whitespace removed, upper-cased)`, operands: { [L]: li, [R]: ri }, result: asValue(ri) },
+      evidence: [fieldEvidence(L, bl), fieldEvidence(R, br)].filter((e) => e !== null),
+      locked: !passed,
+      explanation: `${chk.field ?? chk.code}: ${show(li)} ${chk.op} ${show(ri)} \u2014 ${passed ? "holds" : "does not hold"}.`
+    });
+  };
   const docMissing = (roles) => {
     for (const r of roles) {
       const b = boundDoc.get(r);
@@ -6905,9 +6970,16 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
     }
     return out;
   };
-  for (const chk of ruleset.checks.filter((c) => (c.scope ?? "document") === "document")) runCheck(chk, docEnv, "document", docEvidence, docMissing);
+  for (const chk of ruleset.checks.filter((c) => (c.scope ?? "document") === "document")) {
+    if (chk.compare === "identifier") runIdentifierCheck(chk, "document", "document", (r) => boundDoc.get(r));
+    else runCheck(chk, docEnv, "document", docEvidence, docMissing);
+  }
   ruleset.checks.filter((c) => c.scope === "line").forEach((chk) => {
     boundLines.forEach((m, i) => {
+      if (chk.compare === "identifier") {
+        runIdentifierCheck(chk, `line[${i}]`, "line", (r) => m.get(r));
+        return;
+      }
       const lineVars = {};
       for (const [role, b] of m) lineVars[role] = b.status === "ok" ? b.value : void 0;
       const env = { vars: lineVars, sum: () => void 0 };
@@ -7579,8 +7651,8 @@ function parseInvoice(text) {
     const nums = numbersIn(l.text);
     const unclassify = () => {
       if (!MONEY.test(l.text) || STRAY.test(l.text)) return;
-      const money = nums.filter((n) => /\.\d{2}$/.test(n.text));
-      const pick2 = money[money.length - 1] ?? nums[nums.length - 1];
+      const money2 = nums.filter((n) => /\.\d{2}$/.test(n.text));
+      const pick2 = money2[money2.length - 1] ?? nums[nums.length - 1];
       if (pick2) unclassified.push({ value: pick2.value, span: spanOf(l), text: line2 });
     };
     if (TOTAL.test(l.text) && !NOT_TOTAL.test(l.text) && nums.length) {
@@ -7589,8 +7661,8 @@ function parseInvoice(text) {
         continue;
       }
       const kw = l.text.search(TOTAL);
-      const money = nums.filter((n) => n.index > kw && /\.\d{2}$/.test(n.text));
-      totals.push({ value: (money[0] ?? nums[nums.length - 1]).value, span: spanOf(l) });
+      const money2 = nums.filter((n) => n.index > kw && /\.\d{2}$/.test(n.text));
+      totals.push({ value: (money2[0] ?? nums[nums.length - 1]).value, span: spanOf(l) });
       continue;
     }
     if (FREIGHT.test(l.text) && nums.length && !/not allowed|no freight/i.test(l.text)) {
@@ -7742,9 +7814,9 @@ function verifyInvoiceMatch(docs, options = {}) {
     const invNo = inv.invoiceNumber;
     const num2 = invNo.value.toUpperCase();
     const exact = history.findIndex((h) => h.invoice_number.trim().toUpperCase() === num2 && sameVendor(h));
-    const statedTotal = inv.totals.length === 1 ? round2(inv.totals[0].value) : null;
+    const statedTotal2 = inv.totals.length === 1 ? round2(inv.totals[0].value) : null;
     const invPo = inv.poNumbers.length === 1 ? inv.poNumbers[0].value : null;
-    const near = exact >= 0 ? -1 : history.findIndex((h) => sameVendor(h) && invPo !== null && h.po_number === invPo && statedTotal !== null && h.total !== void 0 && close(round2(h.total), statedTotal, tolT));
+    const near = exact >= 0 ? -1 : history.findIndex((h) => sameVendor(h) && invPo !== null && h.po_number === invPo && statedTotal2 !== null && h.total !== void 0 && close(round2(h.total), statedTotal2, tolT));
     const histEv = (i) => ({ locator: { kind: "field", source: "history", path: `history[${i}]` }, value: history[i].invoice_number, confidence: 100, role: "REFERENCE" });
     if (exact >= 0) {
       const h = history[exact];
@@ -8000,8 +8072,9 @@ function verifyInvoiceMatch(docs, options = {}) {
 }
 
 // packages/verify/src/declarative/lint.ts
-var VALID_KINDS = /* @__PURE__ */ new Set(["amount", "rate", "quantity", "string"]);
+var VALID_KINDS = /* @__PURE__ */ new Set(["amount", "rate", "quantity", "string", "bool", "identifier"]);
 var VALID_OPS = /* @__PURE__ */ new Set(["=", "<=", ">=", "!="]);
+var VALID_COMPARE = /* @__PURE__ */ new Set(["number", "identifier"]);
 function lintRuleset(rs) {
   const errors = [];
   const warnings = [];
@@ -8019,6 +8092,14 @@ function lintRuleset(rs) {
   const lineRoles = new Set(Object.keys(fields).filter((k) => fields[k].line));
   const computedRoles = new Set(Object.keys(computed2));
   const allRoles = /* @__PURE__ */ new Set([...docRoles, ...lineRoles, ...computedRoles]);
+  const identifierRoles = new Set(Object.keys(fields).filter((k) => fields[k].kind === "identifier"));
+  const noIdentifierArithmetic = (expr, where) => {
+    if (typeof expr !== "string") return;
+    try {
+      for (const ref of referencedRoles(expr)) if (identifierRoles.has(ref)) errors.push(`${where}: identifier field "${ref}" cannot be used in arithmetic (use a check with compare: "identifier")`);
+    } catch {
+    }
+  };
   for (const [role, f] of Object.entries(fields)) {
     if (!Array.isArray(f.paths) || f.paths.length === 0) errors.push(`field "${role}": "paths" must be a non-empty array`);
     if (f.kind !== void 0 && !VALID_KINDS.has(f.kind)) errors.push(`field "${role}": invalid kind "${f.kind}"`);
@@ -8038,16 +8119,35 @@ function lintRuleset(rs) {
     }
     for (const ref of referencedRoles(expr)) if (!allRoles.has(ref)) errors.push(`${where}: references unknown role "${ref}"`);
   };
-  for (const [role, formula] of Object.entries(computed2)) parse(formula, `computed "${role}"`);
+  for (const [role, formula] of Object.entries(computed2)) {
+    parse(formula, `computed "${role}"`);
+    noIdentifierArithmetic(formula, `computed "${role}"`);
+  }
   const usedRoles = /* @__PURE__ */ new Set();
   R.checks.forEach((c, i) => {
     const where = `check[${i}]${c.code ? ` (${c.code})` : ""}`;
     if (typeof c.code !== "string" || c.code.length === 0) errors.push(`${where}: missing "code"`);
     if (!VALID_OPS.has(c.op)) errors.push(`${where}: invalid op "${c.op}"`);
     const scope = c.scope ?? "document";
+    if (c.compare !== void 0 && !VALID_COMPARE.has(c.compare)) {
+      errors.push(`${where}: invalid compare "${String(c.compare)}" (number | identifier)`);
+      return;
+    }
+    if (c.compare === "identifier") {
+      if (c.op !== "=" && c.op !== "!=") errors.push(`${where}: an identifier check supports only = and !=`);
+      for (const side of ["left", "right"]) {
+        const name = typeof c[side] === "string" ? c[side].trim() : "";
+        usedRoles.add(name);
+        const f = Object.prototype.hasOwnProperty.call(fields, name) ? fields[name] : void 0;
+        if (!f || f.kind !== "identifier") errors.push(`${where}."${side}": an identifier check must name an 'identifier' field (got "${name}")`);
+        else if (!!f.line !== (scope === "line")) errors.push(`${where}."${side}": "${name}" is a ${f.line ? "line" : "document"} field but the check is ${scope}-scope`);
+      }
+      return;
+    }
     for (const side of ["left", "right"]) {
       const expr = c[side];
       parse(expr, `${where}."${side}"`);
+      noIdentifierArithmetic(expr, `${where}."${side}"`);
       if (typeof expr !== "string") continue;
       for (const ref of referencedRoles(expr)) {
         usedRoles.add(ref);
@@ -8494,6 +8594,153 @@ function apGate(modelDecision, docs, opts = {}) {
     check,
     reason: c === "approve" ? "model and checker agree: all four checks pass" : `model and checker agree: ${c} \u2014 ${check.reasons[0] ?? ""}`
   };
+}
+
+// packages/receipts/src/ap-resolve.ts
+var money = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+var qty = (n) => String(n);
+var r2 = (n) => Math.round(n * 100) / 100;
+function isTransposition(a, b) {
+  if (a.length !== b.length || a === b) return false;
+  const d = [...a].map((ch, i) => ch !== b[i] ? i : -1).filter((i) => i >= 0);
+  return d.length === 2 && d[1] === d[0] + 1 && a[d[0]] === b[d[1]] && a[d[1]] === b[d[0]];
+}
+function invoiceLineFor(check, docs, ruleId) {
+  if (!docs) return null;
+  const claim = check.verdict.claims.find((c) => c.rule_id === ruleId && c.outcome === "FAIL");
+  const loc = claim?.evidence.find((e) => e.role === "OPERAND")?.locator;
+  if (!loc || loc.kind !== "span" || typeof loc.line !== "number") return null;
+  const l = parseInvoice(docs.invoice).lines.find((x) => x.span.line === loc.line);
+  return l ? { qty: l.qty, unit: l.unit, line: loc.line } : null;
+}
+function statedTotal(docs) {
+  if (!docs) return null;
+  const t = [...new Set(parseInvoice(docs.invoice).totals.map((x) => x.value))];
+  return t.length === 1 ? t[0] : null;
+}
+function draftResolution(check, documents) {
+  const docs = typeof documents === "string" ? splitApLayout(documents) : documents ?? null;
+  const g = check.grounding;
+  const inv = g.invoice_number ?? "your invoice";
+  const po = g.po_number ?? "";
+  const base = { decision: check.decision, verdict_id: check.verdict.verdict_id };
+  const facts = [];
+  const fact = (f) => {
+    facts.push(f);
+    return f.value;
+  };
+  if (g.invoice_number) fact({ label: "invoice number", value: g.invoice_number, source: "invoice" });
+  if (g.item) fact({ label: "item", value: g.item, source: "purchase_order" });
+  switch (check.decision) {
+    case "approve":
+      return { ...base, kind: "none", subject: `${inv}: approved`, body: `${inv} matches the purchase order and the goods receipt. Nothing to send.`, facts };
+    case "abstain":
+      return { ...base, kind: "review", subject: `${inv}: needs a person`, body: `No draft: the checker could not read this invoice unambiguously.
+- ${check.reasons.join("\n- ")}`, facts };
+    case "hold_quantity": {
+      fact({ label: "PO number", value: po, source: "purchase_order" });
+      const billed = fact({ label: "quantity billed", value: g.invoiced, source: "invoice" });
+      const received = fact({ label: "quantity received", value: g.expected, source: "goods_receipt" });
+      const excess = fact({ label: "units billed but not received", value: billed - received, source: "computed", from: ["quantity billed", "quantity received"] });
+      const line2 = invoiceLineFor(check, docs, "AP_QTY_RECEIVED");
+      const total = statedTotal(docs);
+      let credit = "", short;
+      if (line2) {
+        fact({ label: "invoice unit price", value: line2.unit, source: "invoice", line: line2.line });
+        const amt = fact({ label: "credit requested", value: r2(excess * line2.unit), source: "computed", from: ["units billed but not received", "invoice unit price"] });
+        credit = ` That is ${money(amt)} at your invoiced unit price of ${money(line2.unit)}.`;
+        if (total !== null) {
+          fact({ label: "stated total", value: total, source: "invoice" });
+          const now = fact({ label: "payable now", value: r2(total - amt), source: "computed", from: ["stated total", "credit requested"] });
+          short = { payable_now: now, withheld: amt, stated_total: total };
+        }
+      }
+      return {
+        ...base,
+        kind: "vendor_query",
+        ...short ? { short_pay: short } : {},
+        subject: `${inv} (${po}): billed ${qty(billed)} \xD7 ${g.item}, received ${qty(received)}`,
+        body: `Hello,
+
+${inv} against ${po} bills ${qty(billed)} \xD7 ${g.item}, but our goods receipt shows ${qty(received)} received. Please send a credit memo for the ${qty(excess)} unit(s) not delivered, or proof of delivery.${credit}` + (short ? `
+
+We will pay ${money(short.payable_now)} now and hold ${money(short.withheld)} until this is resolved.` : "") + "\n\nThank you.",
+        facts
+      };
+    }
+    case "hold_price": {
+      fact({ label: "PO number", value: po, source: "purchase_order" });
+      const billed = fact({ label: "invoiced unit price", value: g.invoiced, source: "invoice" });
+      const agreed = fact({ label: "PO unit price", value: g.expected, source: "purchase_order" });
+      const over = fact({ label: "overcharge per unit", value: r2(billed - agreed), source: "computed", from: ["invoiced unit price", "PO unit price"] });
+      const pct = fact({ label: "overcharge %", value: r2((billed - agreed) / agreed * 100), source: "computed", from: ["invoiced unit price", "PO unit price"] });
+      const line2 = invoiceLineFor(check, docs, "AP_PRICE_PO");
+      const total = statedTotal(docs);
+      let short, extra = "";
+      if (line2) {
+        fact({ label: "quantity on the line", value: line2.qty, source: "invoice", line: line2.line });
+        const amt = fact({ label: "overcharge on the line", value: r2(over * line2.qty), source: "computed", from: ["overcharge per unit", "quantity on the line"] });
+        extra = ` Across ${qty(line2.qty)} unit(s) that is ${money(amt)}.`;
+        if (total !== null) {
+          fact({ label: "stated total", value: total, source: "invoice" });
+          const now = fact({ label: "payable now", value: r2(total - amt), source: "computed", from: ["stated total", "overcharge on the line"] });
+          short = { payable_now: now, withheld: amt, stated_total: total };
+        }
+      }
+      return {
+        ...base,
+        kind: "vendor_query",
+        ...short ? { short_pay: short } : {},
+        subject: `${inv} (${po}): ${g.item} billed at ${money(billed)}, PO price ${money(agreed)}`,
+        body: `Hello,
+
+${inv} bills ${g.item} at ${money(billed)} per unit; ${po} agreed ${money(agreed)} (${pct}% over, beyond our tolerance).${extra} Please rebill at the PO price, or send the approved price change.` + (short ? `
+
+We will pay ${money(short.payable_now)} now and hold ${money(short.withheld)} until this is resolved.` : "") + "\n\nThank you.",
+        facts
+      };
+    }
+    case "hold_total": {
+      fact({ label: "PO number", value: po, source: "purchase_order" });
+      const stated = fact({ label: "stated total", value: g.invoiced, source: "invoice" });
+      const sum = fact({ label: "sum of lines (+ allowed freight)", value: g.expected, source: "computed", from: ["invoice line amounts"] });
+      const diff = fact({ label: "difference", value: r2(Math.abs(stated - sum)), source: "computed", from: ["stated total", "sum of lines (+ allowed freight)"] });
+      const dir = stated > sum ? "above" : "below";
+      return {
+        ...base,
+        kind: "vendor_query",
+        subject: `${inv} (${po}): total ${money(stated)} does not match its lines (${money(sum)})`,
+        body: `Hello,
+
+${inv} states a total of ${money(stated)}, but its lines add up to ${money(sum)}; the stated total is ${money(diff)} ${dir} them. Please send a corrected invoice. We will hold payment until it arrives.
+
+Thank you.`,
+        facts
+      };
+    }
+    case "hold_no_po": {
+      const cited = typeof g.invoiced === "string" ? g.invoiced : null;
+      const open = String(g.expected ?? po);
+      if (cited) fact({ label: "PO cited on invoice", value: cited, source: "invoice" });
+      fact({ label: "open PO", value: open, source: "purchase_order" });
+      const typo = cited !== null && isTransposition(cited, open);
+      return {
+        ...base,
+        kind: "vendor_query",
+        subject: `${inv}: PO reference ${cited ?? "missing"}`,
+        body: `Hello,
+
+${inv} ${cited ? `cites ${cited}` : "does not cite a purchase order"}; the open order we have is ${open}.` + (typo ? ` That looks like two digits transposed.` : "") + ` Please confirm the PO, or reissue the invoice against ${open}.
+
+Thank you.`,
+        facts
+      };
+    }
+    case "hold_duplicate":
+      return { ...base, kind: "do_not_pay", subject: `${inv}: already booked, do not pay`, body: `${inv} matches an invoice already booked.
+- ${check.reasons.join("\n- ")}`, facts };
+  }
+  return { ...base, kind: "review", subject: `${inv}: needs a person`, body: check.reasons.join("\n"), facts };
 }
 
 // packages/receipts/src/done.ts
@@ -9173,7 +9420,17 @@ function callTool(name, args, deps2) {
     const docs = typeof args.layout === "string" ? splitApLayout(args.layout) : typeof args.invoice === "string" && typeof args.purchase_order === "string" && typeof args.goods_receipt === "string" ? { invoice: args.invoice, purchase_order: args.purchase_order, goods_receipt: args.goods_receipt } : null;
     if (!docs) throw new Error("ap_gate requires {invoice, purchase_order, goods_receipt} or {layout}");
     const g = apGate(args.decision, docs);
-    const summary = { action: g.action, effect: g.effect, model_decision: g.model_decision, checker_decision: g.checker_decision, reason: g.reason, grounding: g.check.grounding, verdict_id: g.check.verdict.verdict_id };
+    const draft = g.check.decision !== "approve" ? draftResolution(g.check, docs) : void 0;
+    const summary = {
+      action: g.action,
+      effect: g.effect,
+      model_decision: g.model_decision,
+      checker_decision: g.checker_decision,
+      reason: g.reason,
+      grounding: g.check.grounding,
+      verdict_id: g.check.verdict.verdict_id,
+      ...draft ? { resolution: { kind: draft.kind, subject: draft.subject, body: draft.body, ...draft.short_pay ? { short_pay: draft.short_pay } : {}, facts: draft.facts } } : {}
+    };
     const entry = deps2.ledger.append("ap_gate", summary);
     return toolResult({ ...summary, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } });
   }

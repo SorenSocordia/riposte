@@ -342,6 +342,13 @@ export { generateSigningKeypair, signVerdict, verifyEnvelope, type SignedVerdict
 export { reconcile, type ReconciliationRuleset, type ReconField, type ReconCheck, type ReconcileOptions } from './reconcile/index.js'
 export { PRACTITIONER, STRICT, applyTolerancePolicy, type TolerancePolicy } from './tolerance.js'
 export {
+  mine, compileRuleset, caseToExtraction, apCasesToTable, AP_MINE_SCHEMA, MINE_VERSION, DEFAULT_T_GRID,
+  buildGrammar, validateSchema, validateCaseTable, resolveMineOptions, parseJsonl, caseTableFromRows,
+  tally, learnT, judgeConsistency, judgeGrounding, judgeNovelty, hypergeomAllHolds, hypergeomUpperTail, groundingP,
+  type MineSchema, type MineFieldSpec, type MineFieldType, type MineCase, type CaseTable, type ExcludedCase, type MineOptions,
+  type MineReport, type JudgedCandidate, type CandidateSpec, type Candidate, type Fate, type CompiledRuleset, type CompileOptions, type DistilApCase,
+} from './mine/index.js'
+export {
   verifyAgainstSource, verifyQuote, verifyValueInText, prepareSource, matchQuote, matchValue,
   type QuoteAssertion, type ValueAssertion,
 } from './textmatch/index.js'

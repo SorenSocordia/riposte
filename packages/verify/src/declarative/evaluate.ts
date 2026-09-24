@@ -22,6 +22,8 @@ interface Bound {
   status: 'ok' | 'missing' | 'unparseable'
   value?: number
   strValue?: string
+  /** kind 'identifier': the normalised ids (deduplicated, first-appearance order) */
+  ids?: string[]
   path?: string
   confidence: number
   original?: unknown
@@ -38,7 +40,38 @@ function getPath(obj: unknown, path: string): unknown {
   return cur
 }
 
+/** kind 'bool': true/false, 1/0 and "true"/"false"/"yes"/"no"/"1"/"0" map to 1/0. Anything else is null (UNPARSEABLE). */
+function normBool(raw: unknown): { value: number; norms?: string[] } | null {
+  if (raw === true || raw === false) return { value: raw ? 1 : 0, norms: ['bool_to_number'] }
+  if (raw === 1 || raw === 0) return { value: raw, norms: ['already_number'] }
+  if (typeof raw === 'string') {
+    const s = raw.trim().toLowerCase()
+    if (s === 'true' || s === 'yes' || s === '1') return { value: 1, norms: ['bool_text_parsed'] }
+    if (s === 'false' || s === 'no' || s === '0') return { value: 0, norms: ['bool_text_parsed'] }
+  }
+  return null
+}
+
+/** kind 'identifier': one id (string/number) or a list of them → normalised (whitespace removed, upper-cased), deduplicated. */
+function normIdentifiers(raw: unknown): string[] | null {
+  const one = (x: unknown): string | null | undefined => {
+    if (typeof x === 'number' && Number.isFinite(x)) return String(x)
+    if (typeof x !== 'string') return undefined // not an identifier at all
+    const n = x.replace(/\s+/g, '').toUpperCase()
+    return n.length ? n : null // blank → ignored
+  }
+  if (!Array.isArray(raw)) { const n = one(raw); return typeof n === 'string' ? [n] : null }
+  const out: string[] = []
+  for (const x of raw) {
+    const n = one(x)
+    if (n === undefined) return null
+    if (n !== null && !out.includes(n)) out.push(n)
+  }
+  return out
+}
+
 function normByKind(kind: DeclField['kind'], raw: unknown): { value: number; norms?: string[] } | null {
+  if (kind === 'bool') return normBool(raw)
   const n = kind === 'rate' ? normalizeRate(raw) : kind === 'quantity' ? normalizeQuantity(raw) : normalizeAmount(raw)
   if (!n?.success || typeof n.normalized !== 'number' || !Number.isFinite(n.normalized)) return null
   return { value: n.normalized, norms: n.transformations }
@@ -52,6 +85,12 @@ function bindField(source: unknown, field: DeclField): Bound {
     if (raw === undefined || raw === null || raw === '') continue
     const confidence = i === 0 ? 100 : 95
     if (field.kind === 'string') return { status: 'ok', strValue: String(raw), path: field.paths[i], confidence, original: raw }
+    if (field.kind === 'identifier') {
+      const ids = normIdentifiers(raw)
+      if (ids) return { status: 'ok', ids, path: field.paths[i], confidence, original: raw, norms: ['identifier_normalized'] }
+      resolvedButBad = true
+      continue
+    }
     const norm = normByKind(field.kind, raw)
     if (norm) return { status: 'ok', value: norm.value, path: field.paths[i], confidence, original: raw, norms: norm.norms }
     resolvedButBad = true
@@ -63,7 +102,7 @@ function bindField(source: unknown, field: DeclField): Bound {
 
 function fieldEvidence(role: string, b: Bound): Evidence | null {
   if (b.status !== 'ok' || !b.path) return null
-  const value: Value = b.value !== undefined ? b.value : (b.strValue ?? null)
+  const value: Value = b.ids !== undefined ? (Array.isArray(b.original) ? b.ids : (b.ids[0] ?? null)) : b.value !== undefined ? b.value : (b.strValue ?? null)
   const source = b.path.startsWith('default(') ? 'computed' : 'invoice'
   const e: Evidence = { locator: { kind: 'field', source, path: b.path }, value, confidence: b.confidence, role: 'OPERAND' }
   if (b.original !== undefined && String(b.original) !== String(value)) e.original = b.original as Value
@@ -140,6 +179,32 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
     })
   }
 
+  // ---- an identifier check (compare: 'identifier'): two NAMED identifier fields, compared as normalised id sets
+  const runIdentifierCheck = (chk: DeclCheck, prefix: string, scope: 'document' | 'line', lookup: (role: string) => Bound | undefined): void => {
+    const base = { claim_id: `${prefix}.${chk.code}`, kind: 'CROSS_REFERENCE' as const, tier: 'DETERMINISTIC' as const, field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code }
+    const abstain = (insufficiency: Insufficiency): void => { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` }) }
+    const L = String(chk.left ?? '').trim(), R = String(chk.right ?? '').trim()
+    if (chk.op !== '=' && chk.op !== '!=') return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: `identifier checks support only = and != (got ${chk.op})` })
+    for (const r of [L, R]) {
+      const f = Object.prototype.hasOwnProperty.call(ruleset.fields, r) ? ruleset.fields[r] : undefined
+      if (!f || f.kind !== 'identifier' || !!f.line !== (scope === 'line')) return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: `"${r}" is not a ${scope}-level 'identifier' field (an identifier check names two identifier fields)` })
+    }
+    const bl = lookup(L), br = lookup(R)
+    for (const [r, b] of [[L, bl], [R, br]] as const) if (b?.status === 'unparseable') return abstain({ reason: 'UNPARSEABLE', detail: `${r} is present but is not an identifier or a list of identifiers`, missing: [r] })
+    for (const [r, b] of [[L, bl], [R, br]] as const) if (!b || b.status !== 'ok' || !b.ids) return abstain({ reason: 'FIELD_MISSING', detail: `${r} not present`, missing: [r] })
+    const li = bl!.ids!, ri = br!.ids!
+    const same = li.length === ri.length && li.every(x => ri.includes(x))
+    const passed = chk.op === '=' ? same : !same
+    const show = (ids: string[]): string => (ids.length === 1 ? ids[0]! : `{${ids.join(', ')}}`)
+    const asValue = (ids: string[]): Value => (ids.length === 1 ? ids[0]! : ids)
+    claims.push({
+      ...base, outcome: passed ? 'PASS' : 'FAIL', asserted: asValue(li),
+      computation: { formula: `${L} ${chk.op} ${R} (identifier sets; whitespace removed, upper-cased)`, operands: { [L]: li, [R]: ri }, result: asValue(ri) },
+      evidence: [fieldEvidence(L, bl!), fieldEvidence(R, br!)].filter((e): e is Evidence => e !== null),
+      locked: !passed, explanation: `${chk.field ?? chk.code}: ${show(li)} ${chk.op} ${show(ri)} — ${passed ? 'holds' : 'does not hold'}.`,
+    })
+  }
+
   // ---- document-scope checks
   const docMissing = (roles: string[]): Insufficiency | null => {
     for (const r of roles) {
@@ -171,11 +236,15 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
     }
     return out
   }
-  for (const chk of ruleset.checks.filter(c => (c.scope ?? 'document') === 'document')) runCheck(chk, docEnv, 'document', docEvidence, docMissing)
+  for (const chk of ruleset.checks.filter(c => (c.scope ?? 'document') === 'document')) {
+    if (chk.compare === 'identifier') runIdentifierCheck(chk, 'document', 'document', r => boundDoc.get(r))
+    else runCheck(chk, docEnv, 'document', docEvidence, docMissing)
+  }
 
   // ---- line-scope checks
   ruleset.checks.filter(c => c.scope === 'line').forEach(chk => {
     boundLines.forEach((m, i) => {
+      if (chk.compare === 'identifier') { runIdentifierCheck(chk, `line[${i}]`, 'line', r => m.get(r)); return }
       const lineVars: Record<string, number | undefined> = {}
       for (const [role, b] of m) lineVars[role] = b.status === 'ok' ? b.value : undefined
       const env: Env = { vars: lineVars, sum: () => undefined }

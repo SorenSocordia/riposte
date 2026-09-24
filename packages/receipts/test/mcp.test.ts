@@ -52,6 +52,9 @@ describe('Receipts MCP server', () => {
     const t001 = JSON.parse(cases[0]!)
     const r = call('ap_gate', { decision: 'approve', layout: t001.input }, deps)
     expect(r.structuredContent).toMatchObject({ action: 'REVIEW', checker_decision: 'hold_quantity' })
+    // the draft rides along: a vendor query with a short-pay figure, every number a recorded fact
+    expect(r.structuredContent.resolution).toMatchObject({ kind: 'vendor_query', short_pay: { withheld: 22.35, payable_now: 1913.15 } })
+    expect(String((r.structuredContent.resolution as { body: string }).body)).toMatch(/credit memo for the 3 unit\(s\) not delivered/)
   })
 
   it('ledger_verify: the whole chain of everything above verifies; bad args return a tool error, not a crash', () => {

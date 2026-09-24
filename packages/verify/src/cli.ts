@@ -8,17 +8,23 @@
  *   cat invoice.json | verify -                           # read the extraction from stdin
  *   verify lint --ruleset peppol.json                     # validate a declarative ruleset
  *   verify measure --ruleset peppol.json --labels set.json   # mint a measured DeclaredAccuracy
+ *   verify mine cases.jsonl --schema schema.json          # mine candidate rules from labelled approve/hold cases
+ *   verify mine invoice_cases.jsonl --ap --ruleset-out mined.json   # Distil-style AP cases → report + enforceable ruleset
  *
  * Prints JSON to stdout. Exit code: 0 = PASS/ok, 1 = FAIL/not-ok, 2 = INSUFFICIENT_DATA, 3 = usage/error.
  * Deterministic (no clock in the output beyond issued_at). No network.
  */
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import {
   verify, lintRuleset, measureRuleset, renderMeasurement, verifyReplay,
   type VerifyOptions, type Json, type DeclarativeRuleset, type LabeledCase, type Verdict,
 } from './index.js'
 import { verifyInvoiceMatch, splitApLayout, type ApDocuments } from './ap/index.js'
+import {
+  mine, compileRuleset, apCasesToTable, AP_MINE_SCHEMA, parseJsonl, caseTableFromRows,
+  type MineSchema, type MineReport, type CompiledRuleset, type DistilApCase,
+} from './mine/index.js'
 
 export interface CliIO { out: (s: string) => void; err: (s: string) => void }
 const PROCESS_IO: CliIO = { out: s => { process.stdout.write(s) }, err: s => { process.stderr.write(s) } }
@@ -60,6 +66,11 @@ riposte-verify lint --ruleset <file.json>              validate a declarative ru
 riposte-verify measure --ruleset <file.json> --labels <set.json>   measured accuracy on a labeled set
 riposte-verify replay <verdict.json> [--inputs <inputs.json>]      independently check a verdict's binding (no engine)
 riposte-verify ap <layout.txt> | --invoice <f> --po <f> --receipt <f>   AP three-way match (exit 0 approve · 1 hold · 2 abstain)
+verify mine <cases.jsonl> --schema <schema.json>   mine candidate rules from labelled approve/hold cases (JSON report)
+  --ap                                  cases are Distil-style AP layouts {id,input,decision}; built-in AP schema unless --schema
+  --max-approved-violation-rate <r>     tolerate approved exceptions (default 0 = none)
+  --ruleset-out <file>                  also write the compiled ruleset (enforce: verify <doc> --ruleset <file>)
+  --ruleset-id <id>                     id of the compiled ruleset (default "mined")
 
 Exit: 0 PASS/ok · 1 FAIL/not-ok · 2 INSUFFICIENT_DATA · 3 error`
 
@@ -149,12 +160,83 @@ function runAp(argv: string[], io: CliIO): number {
   return r.decision === 'approve' ? 0 : r.decision === 'abstain' ? 2 : 1
 }
 
+export interface MineArgs {
+  file?: string
+  schema?: string
+  ap: boolean
+  /** the raw --max-approved-violation-rate text (validated in runMine) */
+  rate?: string
+  rulesetOut?: string
+  rulesetId?: string
+  help: boolean
+  /** flags `verify mine` does not know. A typo must not silently mine with defaults. */
+  unknown: string[]
+}
+
+export function parseMineArgs(argv: string[]): MineArgs {
+  const a: MineArgs = { ap: false, help: false, unknown: [] }
+  for (let i = 0; i < argv.length; i++) {
+    const t = argv[i] as string
+    switch (t) {
+      case '-h': case '--help': a.help = true; break
+      case '--schema': a.schema = argv[++i]; break
+      case '--ap': a.ap = true; break
+      case '--max-approved-violation-rate': a.rate = argv[++i]; break
+      case '--ruleset-out': a.rulesetOut = argv[++i]; break
+      case '--ruleset-id': a.rulesetId = argv[++i]; break
+      default: if (t.startsWith('-') && t !== '-') a.unknown.push(t); else a.file = t
+    }
+  }
+  return a
+}
+
+/**
+ * The pure core of `verify mine`: JSONL text (+ schema) → { report, compiled }. No I/O.
+ * With `ap`, each line is a Distil-style AP case, turned into the case table by the AP adapter (schema defaults to the
+ * AP schema). Otherwise each line is a case-table row `{ id, label, fields, lines? }` and a schema is required.
+ */
+export function mineFromJsonl(text: string, opts: { schema?: MineSchema; ap?: boolean; maxApprovedViolationRate?: number; rulesetId?: string }): { report: MineReport; compiled: CompiledRuleset } {
+  const rows = parseJsonl(text)
+  const table = opts.ap ? apCasesToTable(rows as DistilApCase[]) : caseTableFromRows(rows)
+  const schema = opts.schema ?? (opts.ap ? AP_MINE_SCHEMA : undefined)
+  if (!schema) throw new Error('a schema is required (or use the AP adapter)')
+  const report = mine(table, schema, opts.maxApprovedViolationRate !== undefined ? { maxApprovedViolationRate: opts.maxApprovedViolationRate } : {})
+  return { report, compiled: compileRuleset(report, opts.rulesetId !== undefined ? { id: opts.rulesetId } : {}) }
+}
+
+function runMine(argv: string[], io: CliIO): number {
+  const a = parseMineArgs(argv)
+  if (a.help) { io.err(`${USAGE}\n`); return 0 }
+  if (a.unknown.length) { io.err(`verify mine: unknown option(s) ${a.unknown.join(', ')}\n${USAGE}\n`); return 3 }
+  if (!a.file || (!a.schema && !a.ap)) { io.err(`verify mine needs <cases.jsonl> and --schema <schema.json> (or --ap)\n${USAGE}\n`); return 3 }
+  let rate: number | undefined
+  if (a.rate !== undefined) {
+    rate = Number(a.rate)
+    if (a.rate.trim() === '' || !Number.isFinite(rate) || rate < 0 || rate >= 1) { io.err(`--max-approved-violation-rate must be a number in [0, 1) (got "${a.rate}")\n`); return 3 }
+  }
+  let text: string, schema: MineSchema | undefined
+  try {
+    text = readFileSync(a.file === '-' ? 0 : a.file, 'utf8')
+    schema = a.schema ? (readJson(a.schema) as unknown as MineSchema) : undefined
+  } catch (e) { io.err(`error reading input: ${(e as Error).message}\n`); return 3 }
+  let out: { report: MineReport; compiled: CompiledRuleset }
+  try {
+    out = mineFromJsonl(text, { ap: a.ap, ...(schema ? { schema } : {}), ...(rate !== undefined ? { maxApprovedViolationRate: rate } : {}), ...(a.rulesetId !== undefined ? { rulesetId: a.rulesetId } : {}) })
+  } catch (e) { io.err(`verify mine: ${(e as Error).message}\n`); return 3 }
+  if (a.rulesetOut) {
+    try { writeFileSync(a.rulesetOut, `${JSON.stringify(out.compiled.ruleset, null, 2)}\n`) } catch (e) { io.err(`error writing ruleset: ${(e as Error).message}\n`); return 3 }
+  }
+  io.out(`${JSON.stringify(out, null, 2)}\n`)
+  return 0
+}
+
 export function run(argv: string[], io: CliIO = PROCESS_IO): number {
   const [first, ...rest] = argv
   if (first === 'lint') return runLint(rest, io)
   if (first === 'measure') return runMeasure(rest, io)
   if (first === 'replay') return runReplay(rest, io)
   if (first === 'ap') return runAp(rest, io)
+  if (first === 'mine') return runMine(rest, io)
   return runVerify(argv, io)
 }
 

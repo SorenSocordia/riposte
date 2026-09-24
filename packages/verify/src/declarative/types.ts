@@ -15,8 +15,15 @@
 export interface DeclField {
   /** Candidate paths, most-preferred first. Dot notation + `[n]` indices. For a `line` field, paths are relative to each line object. */
   paths: string[]
-  /** How the value normalizes. Default 'amount' (currency). 'rate' = a fraction; 'quantity' = a count; 'string' = text (recorded, not compared). */
-  kind?: 'amount' | 'rate' | 'quantity' | 'string'
+  /**
+   * How the value normalizes. Default 'amount' (currency). 'rate' = a fraction; 'quantity' = a count; 'string' = text (recorded, not compared).
+   * Added 2026-09-24 (additive; existing rulesets are unaffected):
+   *   'bool'       = true/false → 1/0 in expressions (also accepts 1/0 and "true"/"false"/"yes"/"no"). This lets a check
+   *                  gate on a flag, e.g. `sum(AMT) + FREIGHT * FREIGHT_ALLOWED`. Anything else is UNPARSEABLE.
+   *   'identifier' = an id or a list of ids (e.g. PO numbers), normalised by removing whitespace and upper-casing. Only
+   *                  usable in a `compare: 'identifier'` check, never in arithmetic.
+   */
+  kind?: 'amount' | 'rate' | 'quantity' | 'string' | 'bool' | 'identifier'
   /** True = a per-line field (resolved once per item in the line array). Default false = a document-level field. */
   line?: boolean
   /** Value to use when the field is ABSENT (e.g. an optional allowance/charge that is 0 when omitted). If unset, an absent field abstains. */
@@ -38,6 +45,13 @@ export interface DeclCheck {
   scope?: 'document' | 'line'
   /** The caller-vocabulary field this check is "about" (for the verdict). */
   field?: string
+  /**
+   * 'number' (default) = numeric comparison of the two expressions. 'identifier' (added 2026-09-24) = `left` and `right`
+   * each NAME one 'identifier' field (no expressions). `=` holds iff the two normalised id SETS are equal: a single id
+   * equals a single id, and a cited-ids list equals {the PO's number} only if it cites exactly that one number. `!=`
+   * is the negation. Only '=' and '!=' are valid. The claim is a CROSS_REFERENCE.
+   */
+  compare?: 'number' | 'identifier'
 }
 
 export interface DeclarativeRuleset {

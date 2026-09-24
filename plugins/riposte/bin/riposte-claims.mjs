@@ -7163,7 +7163,37 @@ function getPath(obj, path) {
   }
   return cur;
 }
+function normBool(raw) {
+  if (raw === true || raw === false) return { value: raw ? 1 : 0, norms: ["bool_to_number"] };
+  if (raw === 1 || raw === 0) return { value: raw, norms: ["already_number"] };
+  if (typeof raw === "string") {
+    const s = raw.trim().toLowerCase();
+    if (s === "true" || s === "yes" || s === "1") return { value: 1, norms: ["bool_text_parsed"] };
+    if (s === "false" || s === "no" || s === "0") return { value: 0, norms: ["bool_text_parsed"] };
+  }
+  return null;
+}
+function normIdentifiers(raw) {
+  const one = (x) => {
+    if (typeof x === "number" && Number.isFinite(x)) return String(x);
+    if (typeof x !== "string") return void 0;
+    const n = x.replace(/\s+/g, "").toUpperCase();
+    return n.length ? n : null;
+  };
+  if (!Array.isArray(raw)) {
+    const n = one(raw);
+    return typeof n === "string" ? [n] : null;
+  }
+  const out = [];
+  for (const x of raw) {
+    const n = one(x);
+    if (n === void 0) return null;
+    if (n !== null && !out.includes(n)) out.push(n);
+  }
+  return out;
+}
 function normByKind(kind, raw) {
+  if (kind === "bool") return normBool(raw);
   const n = kind === "rate" ? normalizeRate(raw) : kind === "quantity" ? normalizeQuantity(raw) : normalizeAmount(raw);
   if (!n?.success || typeof n.normalized !== "number" || !Number.isFinite(n.normalized)) return null;
   return { value: n.normalized, norms: n.transformations };
@@ -7175,6 +7205,12 @@ function bindField(source, field) {
     if (raw === void 0 || raw === null || raw === "") continue;
     const confidence = i === 0 ? 100 : 95;
     if (field.kind === "string") return { status: "ok", strValue: String(raw), path: field.paths[i], confidence, original: raw };
+    if (field.kind === "identifier") {
+      const ids = normIdentifiers(raw);
+      if (ids) return { status: "ok", ids, path: field.paths[i], confidence, original: raw, norms: ["identifier_normalized"] };
+      resolvedButBad = true;
+      continue;
+    }
     const norm = normByKind(field.kind, raw);
     if (norm) return { status: "ok", value: norm.value, path: field.paths[i], confidence, original: raw, norms: norm.norms };
     resolvedButBad = true;
@@ -7184,7 +7220,7 @@ function bindField(source, field) {
 }
 function fieldEvidence(role, b) {
   if (b.status !== "ok" || !b.path) return null;
-  const value = b.value !== void 0 ? b.value : b.strValue ?? null;
+  const value = b.ids !== void 0 ? Array.isArray(b.original) ? b.ids : b.ids[0] ?? null : b.value !== void 0 ? b.value : b.strValue ?? null;
   const source = b.path.startsWith("default(") ? "computed" : "invoice";
   const e = { locator: { kind: "field", source, path: b.path }, value, confidence: b.confidence, role: "OPERAND" };
   if (b.original !== void 0 && String(b.original) !== String(value)) e.original = b.original;
@@ -7265,6 +7301,35 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
       ...passed ? {} : { variance: round4(left - right) }
     });
   };
+  const runIdentifierCheck = (chk, prefix, scope, lookup) => {
+    const base = { claim_id: `${prefix}.${chk.code}`, kind: "CROSS_REFERENCE", tier: "DETERMINISTIC", field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code };
+    const abstain = (insufficiency) => {
+      claims.push({ ...base, outcome: "INSUFFICIENT_DATA", asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` });
+    };
+    const L = String(chk.left ?? "").trim(), R = String(chk.right ?? "").trim();
+    if (chk.op !== "=" && chk.op !== "!=") return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: `identifier checks support only = and != (got ${chk.op})` });
+    for (const r of [L, R]) {
+      const f = Object.prototype.hasOwnProperty.call(ruleset.fields, r) ? ruleset.fields[r] : void 0;
+      if (!f || f.kind !== "identifier" || !!f.line !== (scope === "line")) return abstain({ reason: "OUT_OF_RULESET_SCOPE", detail: `"${r}" is not a ${scope}-level 'identifier' field (an identifier check names two identifier fields)` });
+    }
+    const bl = lookup(L), br = lookup(R);
+    for (const [r, b] of [[L, bl], [R, br]]) if (b?.status === "unparseable") return abstain({ reason: "UNPARSEABLE", detail: `${r} is present but is not an identifier or a list of identifiers`, missing: [r] });
+    for (const [r, b] of [[L, bl], [R, br]]) if (!b || b.status !== "ok" || !b.ids) return abstain({ reason: "FIELD_MISSING", detail: `${r} not present`, missing: [r] });
+    const li = bl.ids, ri = br.ids;
+    const same = li.length === ri.length && li.every((x) => ri.includes(x));
+    const passed = chk.op === "=" ? same : !same;
+    const show = (ids) => ids.length === 1 ? ids[0] : `{${ids.join(", ")}}`;
+    const asValue = (ids) => ids.length === 1 ? ids[0] : ids;
+    claims.push({
+      ...base,
+      outcome: passed ? "PASS" : "FAIL",
+      asserted: asValue(li),
+      computation: { formula: `${L} ${chk.op} ${R} (identifier sets; whitespace removed, upper-cased)`, operands: { [L]: li, [R]: ri }, result: asValue(ri) },
+      evidence: [fieldEvidence(L, bl), fieldEvidence(R, br)].filter((e) => e !== null),
+      locked: !passed,
+      explanation: `${chk.field ?? chk.code}: ${show(li)} ${chk.op} ${show(ri)} \u2014 ${passed ? "holds" : "does not hold"}.`
+    });
+  };
   const docMissing = (roles) => {
     for (const r of roles) {
       const b = boundDoc.get(r);
@@ -7310,9 +7375,16 @@ function verifyDeclarative(extraction, ruleset, options = {}) {
     }
     return out;
   };
-  for (const chk of ruleset.checks.filter((c) => (c.scope ?? "document") === "document")) runCheck(chk, docEnv, "document", docEvidence, docMissing);
+  for (const chk of ruleset.checks.filter((c) => (c.scope ?? "document") === "document")) {
+    if (chk.compare === "identifier") runIdentifierCheck(chk, "document", "document", (r) => boundDoc.get(r));
+    else runCheck(chk, docEnv, "document", docEvidence, docMissing);
+  }
   ruleset.checks.filter((c) => c.scope === "line").forEach((chk) => {
     boundLines.forEach((m, i) => {
+      if (chk.compare === "identifier") {
+        runIdentifierCheck(chk, `line[${i}]`, "line", (r) => m.get(r));
+        return;
+      }
       const lineVars = {};
       for (const [role, b] of m) lineVars[role] = b.status === "ok" ? b.value : void 0;
       const env = { vars: lineVars, sum: () => void 0 };
@@ -7903,8 +7975,9 @@ function verifyCitations(citations, sources = {}, options = {}) {
 }
 
 // packages/verify/src/declarative/lint.ts
-var VALID_KINDS = /* @__PURE__ */ new Set(["amount", "rate", "quantity", "string"]);
+var VALID_KINDS = /* @__PURE__ */ new Set(["amount", "rate", "quantity", "string", "bool", "identifier"]);
 var VALID_OPS = /* @__PURE__ */ new Set(["=", "<=", ">=", "!="]);
+var VALID_COMPARE = /* @__PURE__ */ new Set(["number", "identifier"]);
 function lintRuleset(rs) {
   const errors = [];
   const warnings = [];
@@ -7922,6 +7995,14 @@ function lintRuleset(rs) {
   const lineRoles = new Set(Object.keys(fields).filter((k) => fields[k].line));
   const computedRoles = new Set(Object.keys(computed2));
   const allRoles = /* @__PURE__ */ new Set([...docRoles, ...lineRoles, ...computedRoles]);
+  const identifierRoles = new Set(Object.keys(fields).filter((k) => fields[k].kind === "identifier"));
+  const noIdentifierArithmetic = (expr, where) => {
+    if (typeof expr !== "string") return;
+    try {
+      for (const ref of referencedRoles(expr)) if (identifierRoles.has(ref)) errors.push(`${where}: identifier field "${ref}" cannot be used in arithmetic (use a check with compare: "identifier")`);
+    } catch {
+    }
+  };
   for (const [role, f] of Object.entries(fields)) {
     if (!Array.isArray(f.paths) || f.paths.length === 0) errors.push(`field "${role}": "paths" must be a non-empty array`);
     if (f.kind !== void 0 && !VALID_KINDS.has(f.kind)) errors.push(`field "${role}": invalid kind "${f.kind}"`);
@@ -7941,16 +8022,35 @@ function lintRuleset(rs) {
     }
     for (const ref of referencedRoles(expr)) if (!allRoles.has(ref)) errors.push(`${where}: references unknown role "${ref}"`);
   };
-  for (const [role, formula] of Object.entries(computed2)) parse(formula, `computed "${role}"`);
+  for (const [role, formula] of Object.entries(computed2)) {
+    parse(formula, `computed "${role}"`);
+    noIdentifierArithmetic(formula, `computed "${role}"`);
+  }
   const usedRoles = /* @__PURE__ */ new Set();
   R.checks.forEach((c, i) => {
     const where = `check[${i}]${c.code ? ` (${c.code})` : ""}`;
     if (typeof c.code !== "string" || c.code.length === 0) errors.push(`${where}: missing "code"`);
     if (!VALID_OPS.has(c.op)) errors.push(`${where}: invalid op "${c.op}"`);
     const scope = c.scope ?? "document";
+    if (c.compare !== void 0 && !VALID_COMPARE.has(c.compare)) {
+      errors.push(`${where}: invalid compare "${String(c.compare)}" (number | identifier)`);
+      return;
+    }
+    if (c.compare === "identifier") {
+      if (c.op !== "=" && c.op !== "!=") errors.push(`${where}: an identifier check supports only = and !=`);
+      for (const side of ["left", "right"]) {
+        const name = typeof c[side] === "string" ? c[side].trim() : "";
+        usedRoles.add(name);
+        const f = Object.prototype.hasOwnProperty.call(fields, name) ? fields[name] : void 0;
+        if (!f || f.kind !== "identifier") errors.push(`${where}."${side}": an identifier check must name an 'identifier' field (got "${name}")`);
+        else if (!!f.line !== (scope === "line")) errors.push(`${where}."${side}": "${name}" is a ${f.line ? "line" : "document"} field but the check is ${scope}-scope`);
+      }
+      return;
+    }
     for (const side of ["left", "right"]) {
       const expr = c[side];
       parse(expr, `${where}."${side}"`);
+      noIdentifierArithmetic(expr, `${where}."${side}"`);
       if (typeof expr !== "string") continue;
       for (const ref of referencedRoles(expr)) {
         usedRoles.add(ref);

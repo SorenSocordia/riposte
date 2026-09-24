@@ -37,6 +37,28 @@
 
 Could-not-compare → `UNPARSEABLE`, not FAIL · missing reference → `REFERENCE_NOT_PROVIDED` · no verdict on a fuzzy-matched field (`AMBIGUOUS_FIELD`) · no verdict against an ambiguous reference (`AMBIGUOUS_REFERENCE`). A ruleset may add its own refusals through `compute()`'s absence reasons (pay-app: `AMBIGUOUS_UNIT` for a bare percent in (0, 1]).
 
+## Mining a ruleset from labelled decisions (`src/mine`, 2026-09-24)
+
+When a customer has past approve/hold decisions but no written policy, `verify mine` proposes the rules. It takes a case
+table (`{ id, label, fields, lines? }` per line of a JSONL file) plus a schema that types each field (`qty` · `money` ·
+`bool` · `id` · `ids`, with arithmetic roles `price`/`amount`/`total`/`extra` and a `source` per document). From these
+it generates a grammar and judges every candidate against the Oracle-AP gauntlet: CONSISTENCY (no approved case violates
+it) → GROUNDING (exact hypergeometric, ≥ 5 hold violators, p ≤ 0.01) → NOVELTY (greedy by coverage, ≥ 3 new holds).
+The survivors are **candles**: proposals for a person to ratify. Every death goes to the **morgue** with its cause.
+`--ap` runs Distil-style AP cases through the AP parser first (`apCasesToTable`). `--max-approved-violation-rate r`
+tolerates approved exceptions, and grounding then uses the enrichment tail P(X ≥ holds among violators) (see
+`src/mine/stats.ts`). `--ruleset-out` compiles the candles into a declarative ruleset that `verify <doc> --ruleset`
+enforces.
+
+Regression anchor: on the Distil AP set it reproduces the preregistered prototype bit for bit (4/4 policy rules, 0 false
+candles, price t = 2%, 68/68 holds explained), and the compiled ruleset agrees with the gold decision on 100/100.
+
+**Declarative-format additions (additive; every existing ruleset behaves as before):** field kinds `bool` (1/0 in
+expressions, e.g. `sum(AMT) + FREIGHT * FREIGHT_ALLOWED`) and `identifier`, plus `compare: "identifier"` checks
+(normalised id-set equality, e.g. "the invoice cites exactly the PO's number"). **Not expressible yet:** a sum of a
+per-line product (`sum(qty*price)`). A candle that needs one is listed under `not_expressible` and left out, never
+approximated, and the compiled ruleset is marked `complete: false`.
+
 ## Candidates, in the order the demand data ranks them (2026-09-22)
 
 invoice ✔ · pay-app ✔ · paystub / bank-statement running balance (fraud pre-screen) · freight bill vs rate agreement · financial-statement footing · legal cite-check (needs the source-text axis).
