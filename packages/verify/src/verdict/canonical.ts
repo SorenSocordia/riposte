@@ -37,7 +37,10 @@ function normalize(v: unknown): unknown {
   }
   if (typeof v === 'object') {
     const src = v as Record<string, unknown>
-    const out: Record<string, unknown> = {}
+    // A null-prototype copy, so a "__proto__" key is data, not the copy's prototype. With `{}`, JSON.parse('{"__proto__":
+    // {"x":1}}') canonicalized to "{}" and collided with {} (PERF lane finding, 2026-09-28): two different inputs shared
+    // one hash, against the determinism contract. Every other input's bytes are unchanged.
+    const out: Record<string, unknown> = Object.create(null)
     for (const k of Object.keys(src).sort()) {
       const n = normalize(src[k])
       if (n !== undefined) out[k] = n

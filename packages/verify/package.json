@@ -35,7 +35,7 @@
     "demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
-    "jsonpath-plus": "^10.3.0"
+    "jsonpath-plus": "10.4.0"
   },
   "devDependencies": {
     "@types/node": "^22",

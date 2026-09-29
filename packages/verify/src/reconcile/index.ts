@@ -18,7 +18,7 @@ import { evalExpr, referencedRoles, type Env } from '../declarative/expr.js'
 import { normalizeAmount } from '../binding/forensic-normalizer.js'
 import { hashOf } from '../verdict/canonical.js'
 import { ENGINE_VERSION, SCHEMA_VERSION } from '../version.js'
-import { deriveVerdictId } from '../protocol/replay.js'
+import { deriveVerdictId } from '../protocol/verdict-id.js'
 import type { Verdict, ClaimVerdict, Evidence, Outcome, Coverage, Insufficiency, InsufficiencyReason } from '../verdict/schema.js'
 
 export type Json = Record<string, unknown>

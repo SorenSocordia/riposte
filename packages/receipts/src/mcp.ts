@@ -22,6 +22,7 @@ import { openLedger, type Ledger, type ChainPolicy } from './ledger.js'
 import { attestModels, eventsFromClaudeCodeTranscript, eventsFromReplies, type AttestPolicy, type ModelEvent } from './model-attest.js'
 import { checkClaims, sessionFromClaudeCodeTranscript } from './claims.js'
 import { auditTurns } from './claims-command.js'
+import { stamped } from './version.js'
 
 export const PROTOCOL_VERSION = '2025-06-18'
 export const SERVER_INFO = { name: 'receipts', version: '0.0.1' } as const
@@ -160,7 +161,7 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
   if (name === 'check_done') {
     if (typeof args.claim !== 'string' || !Array.isArray(args.expectations)) throw new Error('check_done requires "claim" and "expectations"')
     const r = checkDone({ claim: args.claim, expectations: args.expectations as DoneClaim['expectations'] }, deps.read)
-    const entry = deps.ledger.append('done_check', r)
+    const entry = deps.ledger.append('done_check', stamped('done_check', r))
     return toolResult({ ...r, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
   if (name === 'ap_gate') {
@@ -177,7 +178,7 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
       grounding: g.check.grounding, verdict_id: g.check.verdict.verdict_id,
       ...(draft ? { resolution: { kind: draft.kind, subject: draft.subject, body: draft.body, ...(draft.short_pay ? { short_pay: draft.short_pay } : {}), facts: draft.facts } } : {}),
     }
-    const entry = deps.ledger.append('ap_gate', summary)
+    const entry = deps.ledger.append('ap_gate', stamped('ap_gate', summary))
     return toolResult({ ...summary, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
   if (name === 'model_attest') {
@@ -196,7 +197,7 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
     if (Array.isArray(args.allowed)) policy.allowed = args.allowed.filter((x): x is string => typeof x === 'string')
     if (typeof args.fail_on_silent_switch === 'boolean') policy.failOnSilentSwitch = args.fail_on_silent_switch
     const a = attestModels(events, policy)
-    const entry = deps.ledger.append('model_attest', { source, ...a })
+    const entry = deps.ledger.append('model_attest', stamped('model_attest', { source, ...a }))
     return toolResult({ ...a, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
   if (name === 'check_claims') {
@@ -206,11 +207,11 @@ function callTool(name: string, args: unknown, deps: ServerDeps): unknown {
     const source = `transcript:${args.transcript}`
     if (args.all_turns === true) {
       const a = auditTurns(text)
-      const entry = deps.ledger.append('claims_check', { source, all_turns: true, ...a })
+      const entry = deps.ledger.append('claims_check', stamped('claims_check', { source, all_turns: true, ...a }))
       return toolResult({ ...a, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
     }
     const r = checkClaims(sessionFromClaudeCodeTranscript(text))
-    const entry = deps.ledger.append('claims_check', { source, ...r })
+    const entry = deps.ledger.append('claims_check', stamped('claims_check', { source, ...r }))
     return toolResult({ ...r, receipt: { seq: entry.seq, hash: entry.hash, signed: Boolean(entry.signature) } })
   }
   if (name === 'ledger_verify') {

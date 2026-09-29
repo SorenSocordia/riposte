@@ -9,6 +9,7 @@
  * With --all-turns the exit code is the worst turn's.
  */
 import { checkClaims, checkMessageClaims, findFinalMessage, sessionFromClaudeCodeTranscript, turnEnds, type ClaimsResult } from './claims.js'
+import { AUDIENCES, deliver, factsFromClaims, type Audience, type Delivery, type DeliveryFacts } from './nunchi.js'
 
 export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns] [--strict]  |  riposte-claims --hook [--strict] [--only-contradicted | --record-only] [--ledger <file>]   (hook JSON on stdin)'
 const CODES = { PASS: 0, FAIL: 1, ABSTAIN: 2 } as const
@@ -62,7 +63,22 @@ export function auditTurns(jsonl: string, opts: { strict?: boolean } = {}): Turn
   return audit
 }
 
-export interface HookDecision { code: 0 | 1 | 2; stderr: string; result?: ClaimsResult; skipped?: string; wouldBlock?: boolean }
+export interface HookDecision {
+  code: 0 | 1 | 2; stderr: string; result?: ClaimsResult; skipped?: string; wouldBlock?: boolean
+  /** only with the Nunchi opt-in: how the "done" moment was delivered (the facts, their hash, timing, weight, audience) */
+  delivery?: Delivery
+}
+
+/**
+ * The Nunchi opt-in for the Stop hook (RIPOSTE_NUNCHI=on). It changes HOW a sent-back stop is worded, never WHETHER a stop
+ * is sent back: the exit code and the silence of a silent stop are exactly the default's.
+ */
+export interface NunchiStopOptions {
+  /** the declared consequence tier (a name in nunchi's DEFAULT_TIERS). Unset or unknown → the top tier (plain words, D6). */
+  tier?: string
+  audience?: Audience
+}
+
 export interface StopHookOptions {
   /** send back only claims that are demonstrably false; unbacked ones are just recorded */
   onlyContradicted?: boolean
@@ -70,6 +86,19 @@ export interface StopHookOptions {
   recordOnly?: boolean
   /** strict policy: "done / fixed / implemented" needs a passing test run after the last code edit (see ClaimOptions) */
   strict?: boolean
+  /** opt-in: word the send-back through Nunchi (the delivery layer). Absent = the default message, byte for byte. */
+  nunchi?: NunchiStopOptions
+}
+
+/** The instruction every sent-back stop ends with, in every wording. */
+export const STOP_SEND_BACK = 'Run the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n'
+
+/** The tier name used when RIPOSTE_TIER is unset. Undeclared, so Nunchi treats it as the top tier: plain words (D6). */
+export const NUNCHI_UNSET_TIER = 'unset'
+
+/** The "done" moment through Nunchi. A sent-back stop is SURFACEd in-flow (to the agent, once); it is never held for a person. */
+function doneDelivery(result: ClaimsResult, n: NunchiStopOptions, action: DeliveryFacts['action'] | undefined, in_flow: boolean): Delivery {
+  return deliver(factsFromClaims(result, { ...(action ? { action } : {}), in_flow }), { moment: 'done-claim', tier: n.tier ?? NUNCHI_UNSET_TIER, audience: n.audience ?? 'solo' })
 }
 
 /**
@@ -99,8 +128,14 @@ export function stopHook(stdin: string, readFile: (path: string) => string, opts
     result = checkMessageClaims(last, steps, at >= 0 ? at : steps.length, undefined, policy)
   } else result = checkClaims(steps, undefined, policy)
   const flagged = result.claims.filter((c) => c.status === 'CONTRADICTED' || (!opts.onlyContradicted && c.status === 'UNSUPPORTED'))
-  if (!flagged.length) return { code: 0, stderr: '', result, wouldBlock: false }
-  if (opts.recordOnly) return { code: 0, stderr: '', result, wouldBlock: true }
+  const n = opts.nunchi
+  // With the opt-in, a silent stop stays silent: its delivery goes on the record only (in_flow false → timing on-record).
+  if (!flagged.length) return { code: 0, stderr: '', result, wouldBlock: false, ...(n && result.claims.length ? { delivery: doneDelivery(result, n, undefined, false) } : {}) }
+  if (opts.recordOnly) return { code: 0, stderr: '', result, wouldBlock: true, ...(n ? { delivery: doneDelivery(result, n, 'SURFACE', false) } : {}) }
+  if (n) {
+    const delivery = doneDelivery(result, n, 'SURFACE', true)
+    return { code: 2, result, wouldBlock: true, delivery, stderr: `${delivery.text.endsWith('\n') ? delivery.text : `${delivery.text}\n`}${STOP_SEND_BACK}` }
+  }
   const lines = flagged.map((c) => {
     const ev = c.evidence ? ` [${c.evidence.command ? c.evidence.command.slice(0, 60) : c.evidence.tool}${c.evidence.at ? ` @ ${c.evidence.at}` : ''}]` : ''
     return `• "${c.claim.length > 120 ? `${c.claim.slice(0, 117)}…` : c.claim}" — ${c.status}: ${c.reason}${ev}`
@@ -108,7 +143,7 @@ export function stopHook(stdin: string, readFile: (path: string) => string, opts
   return {
     code: 2, result, wouldBlock: true,
     stderr: `Before you finish: your final message makes ${flagged.length === 1 ? 'a claim' : 'claims'} this session's tool results don't back.\n${lines.join('\n')}\n` +
-      'Run the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n',
+      STOP_SEND_BACK,
   }
 }
 
@@ -120,6 +155,8 @@ const MODES: readonly HookMode[] = ['record-only', 'only-contradicted', 'block']
  * - RIPOSTE_HOOK_MODE: record-only (default) | only-contradicted | block
  * - RIPOSTE_STRICT: 1 or true
  * - RIPOSTE_LEDGER: a file path
+ * - RIPOSTE_NUNCHI: on (opt-in) | off (default): word a sent-back stop through Nunchi. With it, RIPOSTE_TIER (a consequence
+ *   tier: low | moderate | high | severe; unset = the top tier, plain words) and RIPOSTE_AUDIENCE (solo | pr | auditor).
  * The default is the one that never forces a turn. An unrecognised mode falls back to it and is reported, never guessed.
  */
 export function hookOptionsFromEnv(env: Record<string, string | undefined>): { mode: HookMode; opts: StopHookOptions; ledger?: string; problems: string[] } {
@@ -131,9 +168,33 @@ export function hookOptionsFromEnv(env: Record<string, string | undefined>): { m
     else problems.push(`RIPOSTE_HOOK_MODE="${env.RIPOSTE_HOOK_MODE}" is not one of ${MODES.join(' | ')}; using record-only`)
   }
   const strict = /^(?:1|true|yes)$/i.test((env.RIPOSTE_STRICT ?? '').trim())
-  const opts: StopHookOptions = { recordOnly: mode === 'record-only', onlyContradicted: mode === 'only-contradicted', strict }
+  const rawN = (env.RIPOSTE_NUNCHI ?? '').trim().toLowerCase()
+  let nunchi: NunchiStopOptions | undefined
+  if (/^(?:on|1|true|yes)$/.test(rawN)) {
+    const tier = env.RIPOSTE_TIER?.trim() || undefined
+    const rawA = (env.RIPOSTE_AUDIENCE ?? '').trim().toLowerCase()
+    let audience: Audience = 'solo'
+    if (rawA) {
+      if ((AUDIENCES as readonly string[]).includes(rawA)) audience = rawA as Audience
+      else problems.push(`RIPOSTE_AUDIENCE="${env.RIPOSTE_AUDIENCE}" is not one of ${AUDIENCES.join(' | ')}; using solo`)
+    }
+    nunchi = { ...(tier ? { tier } : {}), audience }
+  } else if (rawN && !/^(?:off|0|false|no)$/.test(rawN)) problems.push(`RIPOSTE_NUNCHI="${env.RIPOSTE_NUNCHI}" is not on or off; staying off (the default messages)`)
+  const opts: StopHookOptions = { recordOnly: mode === 'record-only', onlyContradicted: mode === 'only-contradicted', strict, ...(nunchi ? { nunchi } : {}) }
   const ledger = env.RIPOSTE_LEDGER?.trim() || undefined
   return { mode, opts, ...(ledger ? { ledger } : {}), problems }
+}
+
+/**
+ * The body of the 'claims_check' receipt the Stop hook writes. Without the Nunchi opt-in it is exactly what the hook has
+ * always written; with it, one more key (`nunchi`) ties the receipt to the delivered facts by hash.
+ */
+export function stopReceipt(d: HookDecision, mode: string, strict: boolean): Record<string, unknown> {
+  const x = d.delivery
+  return {
+    source: 'stop_hook', mode, strict, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result,
+    ...(x ? { nunchi: { delivery_version: x.delivery_version, facts_hash: x.facts_hash, moment: x.moment, speak: x.timing.speak, weight: x.weight, floor: x.floor, tier: x.tier.name, audience: x.audience } } : {}),
+  }
 }
 
 /** `stdin` is consulted only when no path was given (Claude Code hooks pass {"transcript_path": …} on stdin). */

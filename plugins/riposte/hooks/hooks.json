@@ -10,6 +10,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/bin/riposte-action-hook.mjs\" --hook --ledger \"${CLAUDE_PLUGIN_DATA}/receipts.jsonl\"",
+            "timeout": 15
+          }
+        ]
+      }
     ]
   }
 }

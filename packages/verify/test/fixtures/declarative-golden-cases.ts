@@ -19,7 +19,21 @@ import { createHash } from 'node:crypto'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const EX = join(HERE, '..', '..', 'docs', 'examples')
-const load = (f: string): Record<string, unknown> => JSON.parse(readFileSync(join(EX, f), 'utf8'))
+/**
+ * The golden guards the ENGINE's byte identity, so its inputs are frozen. The three e-invoice rulesets were corrected
+ * to 0.1.0 on 2026-09-28 (docs/RULESET-CORRECTIONS-2026-09-28.md); the golden keeps running their shipped 0.0.1 bytes
+ * (sha256-identical copies in fixtures/golden-rulesets/), under the same case ids. The corrected rulesets are tested in
+ * test/ruleset-corrections.test.ts. DECISION (forkable): the alternative is to point these cases at the live files
+ * and regenerate their 123 hashes.
+ */
+const FROZEN: Record<string, string> = {
+  'ksef-fa3.ruleset.json': join(HERE, 'golden-rulesets', 'ksef-fa3.ruleset.v0.0.1.json'),
+  'peppol-en16931.ruleset.json': join(HERE, 'golden-rulesets', 'peppol-en16931.ruleset.v0.0.1.json'),
+  'zatca-ksa.ruleset.json': join(HERE, 'golden-rulesets', 'zatca-ksa.ruleset.v0.0.1.json'),
+  // E-INVOICE-2 (2026-09-28): purchase-order moved LINE_PRICE to the `price` kind (0.1.0); the golden keeps its 0.0.1 bytes.
+  'purchase-order.ruleset.json': join(HERE, 'golden-rulesets', 'purchase-order.ruleset.v0.0.1.json'),
+}
+const load = (f: string): Record<string, unknown> => JSON.parse(readFileSync(FROZEN[f] ?? join(EX, f), 'utf8'))
 
 export interface GoldenApi {
   verify: (x: Record<string, unknown>, o: Record<string, unknown>) => unknown

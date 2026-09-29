@@ -1,0 +1,28 @@
+{
+  "mapping_version": "completeness-mapping-v0",
+  "key": ["vendor_id", "invoice_number"],
+  "population": {
+    "columns": {
+      "payment_id": "PaymentID",
+      "vendor_id": "VendorID",
+      "invoice_number": "InvoiceNo",
+      "amount": "Amount",
+      "currency": "Currency",
+      "invoice_date": "InvoiceDate",
+      "payment_date": "PaymentDate"
+    },
+    "date_format": "YYYY-MM-DD"
+  },
+  "book": {
+    "fields": {
+      "invoice_number": [{ "extraction": "invoice_number" }],
+      "vendor_id": [{ "extraction": "vendor_id" }],
+      "amount": [{ "extraction": "totals.total" }, { "claim": "document.TOTAL_INT" }],
+      "currency": [{ "extraction": "currency" }],
+      "invoice_date": [{ "extraction": "invoice_date" }]
+    }
+  },
+  "normalize": { "invoice_number": { "case": "upper" }, "vendor_id": { "case": "upper" } },
+  "payment_date_utc_offset": "+00:00",
+  "on_malformed": "refuse"
+}

@@ -22,8 +22,14 @@ export interface DeclField {
    *                  gate on a flag, e.g. `sum(AMT) + FREIGHT * FREIGHT_ALLOWED`. Anything else is UNPARSEABLE.
    *   'identifier' = an id or a list of ids (e.g. PO numbers), normalised by removing whitespace and upper-casing. Only
    *                  usable in a `compare: 'identifier'` check, never in arithmetic.
+   * Added 2026-09-28 (additive):
+   *   'price'      = a unit price at full precision. 'amount' rounds to the cent, but a unit price legitimately carries
+   *                  more decimals (EN 16931 sets no decimal limit on BT-146; KSeF FA(3) allows 8 on P_9A). A JSON
+   *                  number is taken exactly, and so is a plain decimal string ("3.335"). Any other string goes through
+   *                  the amount parser, and if that parser would have to round it, the value is UNPARSEABLE, never
+   *                  rounded. Like 'quantity', a price is not a rounding-inference operand.
    */
-  kind?: 'amount' | 'rate' | 'quantity' | 'string' | 'bool' | 'identifier'
+  kind?: 'amount' | 'rate' | 'quantity' | 'string' | 'bool' | 'identifier' | 'price'
   /** True = a per-line field (resolved once per item in the line array). Default false = a document-level field. */
   line?: boolean
   /** Value to use when the field is ABSENT (e.g. an optional allowance/charge that is 0 when omitted). If unset, an absent field abstains. */
@@ -71,6 +77,26 @@ export interface DeclCheck {
   abstain_if?: DeclCondition[]
   /** Per-check override of the ruleset's `tolerance.rounding` ('infer' | 'none'). Numeric checks only. */
   rounding?: RoundingMode
+
+  // ── Added 2026-09-28 (additive: a check that uses neither behaves exactly as before) ─────────────────────────────
+  /**
+   * DECLARED ABSTENTION. When set, the check never decides: on every document (on every line, for a line check) it
+   * abstains with reason OUT_OF_RULESET_SCOPE, and the detail is `declared abstention: <this text>`. Use it for an
+   * identity the ruleset author cannot source from the governing spec. The gap then shows in every verdict instead of
+   * being guessed at or silently dropped. `left`/`right` are still linted, so the check documents its candidate identity.
+   */
+  abstain?: string
+  /** Why the check's guards exist, e.g. the cited source. When any guard fires, this text is appended to its detail. */
+  guard_reason?: string
+
+  // ── Added 2026-09-28 by E-INVOICE-2 (additive: a check that does not use it behaves exactly as before) ────────────
+  /**
+   * Abstain (OUT_OF_RULESET_SCOPE) when `present` is reported but `without` is not. It is for a list of items whose
+   * stated total the identity uses in their place, since the engine does not sum a nested list: e.g. KSeF `Obciazenia`
+   * (the charge items) reported without `SumaObciazen` (their stated sum). A `default` value does not count as reported
+   * for either role, and a `without` that is present but unparseable does not satisfy the guard.
+   */
+  abstain_if_present_without?: { present: string; without: string }[]
 }
 
 /** A guard condition: `left op right`, compared exactly unless `tol` is given. */
@@ -112,6 +138,11 @@ export interface DeclarativeRuleset {
    * `rounding: 'infer'` (added 2026-09-24) switches every numeric check to the rounding-aware tolerance (see RoundingMode).
    */
   tolerance?: { rel: number; absCap: number; rounding?: RoundingMode }
+  /**
+   * The primary sources the ruleset cites, as key → URL (added 2026-09-28). Check names refer to the keys. This is
+   * documentation only: it is hashed with the ruleset and never evaluated.
+   */
+  sources?: Record<string, string>
 }
 
 /** A value is a declarative ruleset if it declares fields + checks and does NOT carry the built-in ruleset's compute(). */

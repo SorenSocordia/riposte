@@ -89,6 +89,27 @@ containing an invalid character: it reports it. That was a pre-existing crash. T
 shares the parser, so `ROLE?` parses there, but it has **no** optional semantics: reconcile treats every referenced role
 as required.
 
+## Sourced abstention and full-precision prices (2026-09-28)
+
+Four more additions came with the e-invoice ruleset corrections (`docs/RULESET-CORRECTIONS-2026-09-28.md`: Peppol,
+ZATCA and KSeF 0.0.1 → 0.1.0), and a fifth, the item-list guard, the same day (built for the KSeF `DoZaplaty`
+identity). Like the ones above they are additive: a ruleset that uses none of them produces byte-identical verdicts,
+which the 489-hash golden still pins. A second golden (`test/declarative-golden-einvoice-v010.test.ts`, 177 hashes)
+pins the three e-invoice rulesets at their 0.1.0 bytes.
+
+| Feature | Syntax | Semantics |
+|---|---|---|
+| **Declared abstention** | `"abstain": "<why>"` on a check | The check never decides. On every document (on every line, for a line check) it abstains with `OUT_OF_RULESET_SCOPE`, and the detail is `declared abstention: <why>`. This comes first, before operands or guards are looked at, and it works on identifier checks too. `left`/`right` are still linted, so the check documents its candidate identity. Use it for an identity you cannot source from the governing spec: the gap then shows in every verdict instead of being guessed at or silently dropped. Lint rejects an empty string, and it emits a warning (`declared abstention; the check never decides (…)`) so the gap is visible there too. |
+| **Guard reason** | `"guard_reason": "<why>"` on a check | When one of the check's abstain guards fires (`abstain_if_present`, `abstain_unless_all_present`, `abstain_if`), the guard's detail becomes `<guard detail>. Reason: <why>`. It is typically the cited source. Other abstentions (a missing field, a declared abstention) are not changed. Lint rejects an empty string, and it warns when the check has no guard for the reason to explain. |
+| **Price kind** | `"kind": "price"` on a field | A unit price at full precision. `amount` rounds to the cent, but a unit price legitimately carries more decimals (EN 16931 sets no decimal limit on BT-146; KSeF FA(3) allows 8 on P_9A). A JSON number is taken exactly, and so is a plain decimal string (`"3.335"`). Any other string goes through the amount parser, and if that parser would have to round it (more than two decimals, e.g. `"$1,234.5678"`), the value is `UNPARSEABLE`, never rounded. Like `quantity`, a price is not an operand for rounding inference. |
+| **Sources** | `"sources": { "KEY": "https://…" }` on the ruleset | The primary sources the ruleset cites, as key → URL or citation. Check names refer to the keys (e.g. `… [PEPPOL-RULES-CEN, CEN-SCH]`). It is documentation only: never evaluated, but hashed with the ruleset like every other byte, so a changed citation is a changed ruleset. Lint requires an object whose values are non-empty strings. |
+| **Item list without its total** (E-INVOICE-2) | `"abstain_if_present_without": [{ "present": "ITEMS", "without": "ITEMS_SUM" }]` on a check | An abstain guard, alongside the three above. It fires (`OUT_OF_RULESET_SCOPE`, detail `guard abstain_if_present_without: ITEMS is reported (<path>) without ITEMS_SUM; …`, plus the `guard_reason`) when `present` is reported and `without` is not. It is for an identity that reads a stated total in place of a list of items, since the engine never sums a nested list (e.g. KSeF `Obciazenia` without `SumaObciazen`). A `default` value does not count as reported, and a `without` that is present but unparseable does not satisfy the guard. It works per line and on identifier checks. Lint checks the shape, that both roles exist, and the scope rules of `abstain_if_present`. |
+
+`docs/examples/purchase-order.ruleset.json` moved its `LINE_PRICE` to `price` on the same date (0.0.1 → 0.1.0,
+pre-registered on a constructed set: false alarms 8/8 → 0/8, misses 3/6 → 0/6). The first golden keeps running its
+0.0.1 bytes (`test/fixtures/golden-rulesets/`), as it does for the three e-invoice rulesets: the golden guards the
+engine, and a ruleset change is tested on its own.
+
 ## Candidates, in the order the demand data ranks them (2026-09-22)
 
 invoice ✔ · pay-app ✔ · paystub / bank-statement running balance (fraud pre-screen) · freight bill vs rate agreement · financial-statement footing · legal cite-check (needs the source-text axis).

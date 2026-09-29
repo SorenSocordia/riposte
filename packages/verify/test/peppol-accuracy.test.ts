@@ -60,7 +60,7 @@ describe('Peppol / EN 16931 — measured (not asserted) declared accuracy', () =
     const m = measureRuleset(PEPPOL, cases)
     expect(m.metrics).toMatchObject({ tp: 2, tn: 2, fp: 0, fn: 0, abstain: 0, total: 4 })
     expect(m.accuracy.domain).toBe('e-invoice')
-    expect(m.accuracy.ruleset_version).toBe('0.0.1')
+    expect(m.accuracy.ruleset_version).toBe('0.1.0') // corrected 2026-09-28; the before/after set is in ruleset-corrections.test.ts
     expect(m.accuracy.fp_rate).toBe(0)
     expect(m.accuracy.fn_rate).toBe(0)
     expect(m.accuracy.measured_on).toMatch(/^[0-9a-f]{64}$/)

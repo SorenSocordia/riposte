@@ -38,16 +38,20 @@ describe('scoring', () => {
 
 describe('the deterministic verifier on the labeled corpus', () => {
   const v = runVerifier(CORPUS)
-  it('has ZERO false alarms and ZERO missed errors on the v0 set, ruling on every case', () => {
-    expect(v.metrics.fp_rate).toBe(0)
+  // Invoice ruleset 0.1.0 (2026-09-28) forgives rounding, not materiality. The frozen `rounding-drift` case is labelled
+  // CLEAN under the practitioners' 0.05% materiality rule, but its 40 cents cannot come from rounding two cent-exact lines,
+  // so 0.1.0 FAILs it. The label stays frozen and the false alarm is published (docs/NUMERIC-HONESTY-2026-09-28.md).
+  const PUBLISHED_FALSE_ALARMS = ['rounding-drift']
+  it('ZERO missed errors, ruling on every case; one published false alarm (rounding-drift) under invoice 0.1.0', () => {
     expect(v.metrics.fn_rate).toBe(0)
+    expect(v.metrics.fp).toBe(PUBLISHED_FALSE_ALARMS.length)
     expect(v.metrics.coverage).toBe(1)
     expect(v.metrics.total).toBe(CORPUS.length)
   })
-  it('every case\'s verdict matches its ground-truth label', () => {
+  it('every other case\'s verdict matches its ground-truth label', () => {
     for (const r of v.rows) {
       const expected = CORPUS.find(c => c.name === r.name)!.label === 'ERROR' ? 'FAIL' : 'PASS'
-      expect(r.judgment, r.name).toBe(expected)
+      expect(r.judgment, r.name).toBe(PUBLISHED_FALSE_ALARMS.includes(r.name) ? 'FAIL' : expected)
     }
   })
 })

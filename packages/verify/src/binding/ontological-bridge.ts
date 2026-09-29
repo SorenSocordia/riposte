@@ -22,6 +22,7 @@ import type {
 } from '../kernel/types.js'
 import {
   normalizeAmount,
+  normalizePrice,
   normalizeQuantity,
   normalizeDate,
   normalizeReference,
@@ -70,9 +71,60 @@ const getFlightRecorder = (): EpistemicFlightRecorder | null => null
 
 // --- logging: injectable, silent by default (a verifier must not spray stdout) -----------
 let bridgeLog: (message: string) => void = () => {}
+// Every call site tests this first, so no message string is built while nobody is listening (F3, 2026-09-28).
+let bridgeLogOn = false
 /** Install a logger for the binding layer (debugging/telemetry); pass undefined to silence. */
 export function setBridgeLogger(logger?: (message: string) => void): void {
   bridgeLog = logger ?? (() => {})
+  bridgeLogOn = logger !== undefined && logger !== null
+}
+
+// --- per-call memo (F3, 2026-09-28) -------------------------------------------------------
+/**
+ * Work that does not read the line index, done once per createLineItemBindings call instead of once per line. That call
+ * used to redo it for every line: each document-level path walk (with every alternative), the contract-rule and evidence
+ * summaries, the invoice date, and the heterogeneity scan over every line description. That made an n-line invoice
+ * cost O(n²).
+ *
+ * Every entry is a pure function of (document object, mapping or path) while the call runs; the bridge never writes to a
+ * document. The scope is dropped when the call returns (or throws), so a caller who edits a document between verify()
+ * calls is never served an old answer. What still depends on the line stays per line: every `[*]` path read at a line
+ * index, and the fuzzy search at a line index (deepSearch reads line_items[i], so a document-level role CAN bind a
+ * different value on each line when the document has no field of its own).
+ */
+interface DocumentScope {
+  plans: Map<DomainOntology, MappingPlan>
+  pathShape: Map<DomainFieldMapping, { jsonPath: boolean; wildcard: boolean }>
+  direct: Map<unknown, Map<DomainFieldMapping, FuzzyMatchResult | null>>
+  fuzzy: Map<unknown, Map<string, unknown>>
+  dates: Map<unknown, string | undefined>
+  contractRules: Map<unknown, ContractRuleData[]>
+  evidenceItems: Map<unknown, EvidenceData[]>
+  heterogeneity: Map<unknown, { descriptions: string[]; categoryCount: number }>
+}
+
+/** An ontology's mappings sorted by priority (stable), split by the document each step binds from. */
+interface MappingPlan {
+  invoice: DomainFieldMapping[]
+  contract: DomainFieldMapping[]
+  evidence: DomainFieldMapping[]
+}
+
+function newDocumentScope(): DocumentScope {
+  return {
+    plans: new Map(), pathShape: new Map(), direct: new Map(), fuzzy: new Map(),
+    dates: new Map(), contractRules: new Map(), evidenceItems: new Map(), heterogeneity: new Map(),
+  }
+}
+
+/** The inner memo for one document (keyed by the document object itself). */
+function perDocument<K, V>(outer: Map<unknown, Map<K, V>>, document: unknown): Map<K, V> {
+  let inner = outer.get(document)
+  if (!inner) {
+    inner = new Map()
+    outer.set(document, inner)
+  }
+  return inner
 }
 
 // ============================================================================
@@ -176,6 +228,9 @@ export class OntologicalBridge {
   private currentDocumentId: string | undefined
   private currentDomain: string | undefined
   private currentDocumentType: 'invoice' | 'contract' | 'evidence' | undefined
+  // F3: live only inside createLineItemBindings (see DocumentScope); null everywhere else, so a lone createBindings
+  // call behaves exactly as before.
+  private scope: DocumentScope | null = null
 
   constructor() {
     // Load default ontologies
@@ -216,6 +271,97 @@ export class OntologicalBridge {
    */
   getOntology(domainId: string): DomainOntology | undefined {
     return this.ontologies.get(domainId)
+  }
+
+  // --------------------------------------------------------------------------
+  // F3 memo helpers. Each returns exactly what its uncached body returns; inside a createLineItemBindings call the
+  // answer is computed on first use (so anything that throws still throws at the same point) and reused by later lines.
+  // --------------------------------------------------------------------------
+
+  private mappingPlanOf(ontology: DomainOntology): MappingPlan {
+    const hit = this.scope?.plans.get(ontology)
+    if (hit) return hit
+    // Sort mappings by priority (higher first); Array.prototype.sort is stable, so equal priorities keep ontology order
+    const sortedMappings = [...ontology.mappings].sort((a, b) => b.priority - a.priority)
+    const plan: MappingPlan = {
+      invoice: sortedMappings.filter(m => m.documentType === 'invoice' || m.documentType === 'any'),
+      contract: sortedMappings.filter(m => m.documentType === 'contract' || m.documentType === 'any'),
+      evidence: sortedMappings.filter(m => m.documentType === 'evidence'),
+    }
+    this.scope?.plans.set(ontology, plan)
+    return plan
+  }
+
+  private dateOf(doc: Record<string, unknown>): string | undefined {
+    const memo = this.scope?.dates
+    if (memo?.has(doc)) return memo.get(doc)
+    const date = this.extractDateValue(doc)
+    memo?.set(doc, date)
+    return date
+  }
+
+  private contractRulesOf(contract: Record<string, unknown>): ContractRuleData[] {
+    const hit = this.scope?.contractRules.get(contract)
+    if (hit) return hit
+    const rules = this.extractContractRulesForCorrelation(contract)
+    this.scope?.contractRules.set(contract, rules)
+    return rules
+  }
+
+  private evidenceItemsOf(evidence: Record<string, unknown>[]): EvidenceData[] {
+    const hit = this.scope?.evidenceItems.get(evidence)
+    if (hit) return hit
+    const items = this.extractEvidenceForCorrelation(evidence)
+    this.scope?.evidenceItems.set(evidence, items)
+    return items
+  }
+
+  /**
+   * v5.5 heterogeneity scan: the distinct line-item categories across ALL line descriptions. A property of the invoice,
+   * not of any one line.
+   */
+  private heterogeneityOf(invoiceLineItems: Array<Record<string, unknown>>): { descriptions: string[]; categoryCount: number } {
+    const hit = this.scope?.heterogeneity.get(invoiceLineItems)
+    if (hit) return hit
+    // Extract all line item descriptions. F-BF1 (2026-09-28): a null line has none; it used to throw here ("reading
+    // 'description'") and take the whole verify() down with it, on valid JSON such as {"line_items":[null,5]}.
+    const descriptions = invoiceLineItems
+      .map(item => (item === null || item === undefined ? undefined : (item.description || item.service || item.name)) as string | undefined)
+      .filter((d): d is string => typeof d === 'string' && d.length > 0)
+      .map(d => d.toLowerCase())
+
+    // Check for heterogeneity by looking for distinct categories
+    const hasTransport = descriptions.some(d => /transport|haul|freight|delivery|drive/.test(d))
+    const hasFuel = descriptions.some(d => /fuel|gas|diesel/.test(d))
+    const hasCrane = descriptions.some(d => /crane|mobilization|rigging|lift/.test(d))
+    const hasMileage = descriptions.some(d => /mileage|mile|excess|distance/.test(d))
+    const hasPerDiem = descriptions.some(d => /per diem|lodging|overnight|hotel/.test(d))
+    const hasOther = descriptions.some(d => /surcharge|fee|charge|standby|wait/.test(d))
+
+    const categoryCount = [hasTransport, hasFuel, hasCrane, hasMileage, hasPerDiem, hasOther].filter(Boolean).length
+    const out = { descriptions, categoryCount }
+    this.scope?.heterogeneity.set(invoiceLineItems, out)
+    return out
+  }
+
+  /**
+   * True when the exact/alternative phase of `mapping` cannot see `arrayIndex`, so its answer is fixed per document:
+   * no path is a JSONPath (resolveJsonPath indexes its match list and returns a fresh array per call), and either no
+   * index is given or no path has a `[*]` (extractExact reads the index only at a `[*]` segment).
+   */
+  private isLineBlind(mapping: DomainFieldMapping, arrayIndex: number | undefined, scope: DocumentScope): boolean {
+    let shape = scope.pathShape.get(mapping)
+    if (!shape) {
+      // A malformed mapping (a non-string path, a non-array alternativePaths) is never memoized, so it fails exactly
+      // where and when it always did.
+      const alts = mapping.alternativePaths
+      const paths = !alts ? [mapping.fieldPath] : Array.isArray(alts) ? [mapping.fieldPath, ...alts] : null
+      shape = paths === null || paths.some(p => typeof p !== 'string')
+        ? { jsonPath: true, wildcard: true }
+        : { jsonPath: paths.some(p => p.startsWith('$')), wildcard: paths.some(p => p.includes('[*]')) }
+      scope.pathShape.set(mapping, shape)
+    }
+    return !shape.jsonPath && (arrayIndex === undefined || !shape.wildcard)
   }
 
   /**
@@ -486,7 +632,7 @@ export class OntologicalBridge {
     this.setExtractionContext(invoiceId, domainId, 'invoice')
 
     if (!ontology) {
-      bridgeLog(`[OntologicalBridge] No ontology for domain: ${domainId}`)
+      if (bridgeLogOn) bridgeLog(`[OntologicalBridge] No ontology for domain: ${domainId}`)
       return {
         bindings: {},
         invoiceId,
@@ -498,8 +644,8 @@ export class OntologicalBridge {
     // Correlation engine available for future use - currently using LLM-based correlation
     // const correlationEngine = getCorrelationEngine()
 
-    // Sort mappings by priority (higher first)
-    const sortedMappings = [...ontology.mappings].sort((a, b) => b.priority - a.priority)
+    // Sort mappings by priority (higher first), split per step
+    const plan = this.mappingPlanOf(ontology)
 
     // Line item data extracted for correlation matching (used in contract/evidence steps below)
     // const lineItemData = this.extractLineItemForCorrelation(invoice, lineItemIndex)
@@ -509,12 +655,12 @@ export class OntologicalBridge {
     // v4.5: Include full normalization audit trail in every binding
     // v5.0: Special handling for EVENT_DATE to prefer service_date over invoice_date
     // ========================================================================
-    for (const mapping of sortedMappings.filter(m => m.documentType === 'invoice' || m.documentType === 'any')) {
+    for (const mapping of plan.invoice) {
       if (bindings[mapping.role]) continue // Already have a higher-priority binding
 
       // v5.0 TIME_ORD FIX: Special handling for EVENT_DATE to select service_date from dates array
       if (mapping.role === 'EVENT_DATE') {
-        const dateValue = this.extractDateValue(invoice)
+        const dateValue = this.dateOf(invoice)
         if (dateValue) {
           const normResult = this.normalizeValueForRole(dateValue, mapping.role)
           bindings[mapping.role] = {
@@ -526,7 +672,7 @@ export class OntologicalBridge {
             normalizedValue: typeof normResult.normalized === 'object' ? String(normResult.normalized) : normResult.normalized,
             normalizations: normResult.meta?.transformations,
           }
-          bridgeLog(`[OntologicalBridge] EVENT_DATE BIND (smart): ${String(dateValue).slice(0, 50)} (service_date preferred, 100%)`)
+          if (bridgeLogOn) bridgeLog(`[OntologicalBridge] EVENT_DATE BIND (smart): ${String(dateValue).slice(0, 50)} (service_date preferred, 100%)`)
           continue
         }
       }
@@ -546,7 +692,7 @@ export class OntologicalBridge {
           normalizedValue: typeof normResult.normalized === 'object' ? String(normResult.normalized) : normResult.normalized,
           normalizations: normResult.meta?.transformations,
         }
-        if (match.matchType === 'fuzzy' || match.matchType === 'deep_search') {
+        if (bridgeLogOn && (match.matchType === 'fuzzy' || match.matchType === 'deep_search')) {
           bridgeLog(`[OntologicalBridge] FUZZY BIND: ${mapping.role} = ${String(match.value).slice(0, 50)} (${match.matchPath}, ${match.confidence}%)`)
         }
       }
@@ -558,7 +704,7 @@ export class OntologicalBridge {
     // v5.1: Update context for flight recorder
     // ========================================================================
     this.setExtractionContext(invoiceId, domainId, 'contract')
-    const contractRules = this.extractContractRulesForCorrelation(contract)
+    const contractRules = this.contractRulesOf(contract)
 
     // Check for LLM correlation map first
     const llmMapping = llmCorrelationMap?.lineItemMappings?.find(
@@ -570,8 +716,10 @@ export class OntologicalBridge {
 
     // If LLM provided a HIGH confidence match, use it
     if (llmContractMatch && llmContractMatch.confidence === 'HIGH' && llmContractMatch.ruleIndex !== undefined && llmContractMatch.ruleIndex >= 0) {
-      bridgeLog(`[OntologicalBridge] LLM CONTRACT CORRELATION: ${llmContractMatch.ruleName || 'unnamed'} (${llmContractMatch.confidence})`)
-      bridgeLog(`[OntologicalBridge]   Reasoning: ${llmContractMatch.reasoning}`)
+      if (bridgeLogOn) {
+        bridgeLog(`[OntologicalBridge] LLM CONTRACT CORRELATION: ${llmContractMatch.ruleName || 'unnamed'} (${llmContractMatch.confidence})`)
+        bridgeLog(`[OntologicalBridge]   Reasoning: ${llmContractMatch.reasoning}`)
+      }
       contractCorrelation = {
         score: 90, // LLM HIGH = 90%
         factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: 90 },
@@ -580,7 +728,7 @@ export class OntologicalBridge {
         isReliable: true,
       }
     } else if (llmContractMatch && llmContractMatch.confidence === 'MEDIUM' && llmContractMatch.ruleIndex !== undefined && llmContractMatch.ruleIndex >= 0) {
-      bridgeLog(`[OntologicalBridge] LLM CONTRACT CORRELATION (MEDIUM): ${llmContractMatch.ruleName || 'unnamed'}`)
+      if (bridgeLogOn) bridgeLog(`[OntologicalBridge] LLM CONTRACT CORRELATION (MEDIUM): ${llmContractMatch.ruleName || 'unnamed'}`)
       contractCorrelation = {
         score: 65, // LLM MEDIUM = 65%
         factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: 65 },
@@ -591,8 +739,10 @@ export class OntologicalBridge {
     } else if (llmCorrelationMap && llmCorrelationMap.lineItemMappings.length > 0 && contractRules.length > 0) {
       // v4.5: LLM provided correlation_map with mappings, but no match for this specific line item
       // This is a WARNING: MAPPING_FAILURE - LLM couldn't find a semantic match
-      bridgeLog(`[OntologicalBridge] WARNING: MAPPING_FAILURE - LLM couldn't map line item ${lineItemIndex} to contract rule`)
-      bridgeLog(`[OntologicalBridge]   LLM tried but confidence was LOW or no match found`)
+      if (bridgeLogOn) {
+        bridgeLog(`[OntologicalBridge] WARNING: MAPPING_FAILURE - LLM couldn't map line item ${lineItemIndex} to contract rule`)
+        bridgeLog(`[OntologicalBridge]   LLM tried but confidence was LOW or no match found`)
+      }
       contractCorrelation = {
         score: 0,
         factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: 0 },
@@ -615,7 +765,7 @@ export class OntologicalBridge {
       const keywordMatch = this.findContractRuleByKeywords(lineItemDescription, contractRules as Array<Record<string, unknown>>)
 
       if (keywordMatch.matchedIndex >= 0) {
-        bridgeLog(`[OntologicalBridge] v5.19 KEYWORD MATCH: Line "${lineItemDescription.slice(0, 40)}" → Rule "${keywordMatch.ruleName}" (${keywordMatch.score}% confidence)`)
+        if (bridgeLogOn) bridgeLog(`[OntologicalBridge] v5.19 KEYWORD MATCH: Line "${lineItemDescription.slice(0, 40)}" → Rule "${keywordMatch.ruleName}" (${keywordMatch.score}% confidence)`)
         contractCorrelation = {
           score: keywordMatch.score,
           factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: keywordMatch.score },
@@ -624,7 +774,7 @@ export class OntologicalBridge {
           isReliable: keywordMatch.score >= 70, // Treat 70%+ keyword matches as reliable
         }
       } else {
-        bridgeLog(`[OntologicalBridge] v5.19: No keyword match found for "${lineItemDescription.slice(0, 40)}" in ${contractRules.length} rules`)
+        if (bridgeLogOn) bridgeLog(`[OntologicalBridge] v5.19: No keyword match found for "${lineItemDescription.slice(0, 40)}" in ${contractRules.length} rules`)
         contractCorrelation = {
           score: 0,
           factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: 0 },
@@ -649,7 +799,7 @@ export class OntologicalBridge {
     // If contract has MULTIPLE rules, we NEED reliable correlation to know which one to use
     const hasMultipleRules = contractRules.length > 1
 
-    for (const mapping of sortedMappings.filter(m => m.documentType === 'contract' || m.documentType === 'any')) {
+    for (const mapping of plan.contract) {
       if (bindings[mapping.role]) continue
 
       // v5.6 FIX: For array-based contract fields (financial_rules[*]):
@@ -662,7 +812,7 @@ export class OntologicalBridge {
       if (isArrayBasedField && hasMultipleRules && !contractCorrelation.isReliable) {
         // Skip binding array-based fields when we can't reliably match to a contract rule
         // This will result in INSUFFICIENT_DATA verdict instead of false FAIL
-        bridgeLog(`[OntologicalBridge] SKIPPING ${mapping.role} - multiple contract rules require reliable correlation`)
+        if (bridgeLogOn) bridgeLog(`[OntologicalBridge] SKIPPING ${mapping.role} - multiple contract rules require reliable correlation`)
         continue
       }
 
@@ -708,10 +858,12 @@ export class OntologicalBridge {
           normalizations: normResult.meta?.transformations,
         }
 
-        if (match.matchType === 'fuzzy' || match.matchType === 'deep_search') {
-          bridgeLog(`[OntologicalBridge] CONTRACT BIND (${match.matchType}): ${mapping.role} = ${String(match.value).slice(0, 50)} (${match.matchPath}, ${adjustedConfidence}% adjusted)`)
-        } else {
-          bridgeLog(`[OntologicalBridge] CONTRACT BIND (${match.matchType}): ${mapping.role} = ${String(match.value).slice(0, 50)} (${match.matchPath}, ${adjustedConfidence}%)`)
+        if (bridgeLogOn) {
+          if (match.matchType === 'fuzzy' || match.matchType === 'deep_search') {
+            bridgeLog(`[OntologicalBridge] CONTRACT BIND (${match.matchType}): ${mapping.role} = ${String(match.value).slice(0, 50)} (${match.matchPath}, ${adjustedConfidence}% adjusted)`)
+          } else {
+            bridgeLog(`[OntologicalBridge] CONTRACT BIND (${match.matchType}): ${mapping.role} = ${String(match.value).slice(0, 50)} (${match.matchPath}, ${adjustedConfidence}%)`)
+          }
         }
       }
     }
@@ -722,7 +874,7 @@ export class OntologicalBridge {
     // v5.1: Update context for flight recorder
     // ========================================================================
     this.setExtractionContext(invoiceId, domainId, 'evidence')
-    const evidenceItems = this.extractEvidenceForCorrelation(evidence)
+    const evidenceItems = this.evidenceItemsOf(evidence)
 
     // Check for LLM evidence correlation
     const llmEvidenceMatches = llmMapping?.matchedEvidence?.filter(
@@ -734,8 +886,10 @@ export class OntologicalBridge {
     // If LLM provided HIGH confidence evidence match, use it
     if (llmEvidenceMatches.length > 0 && llmEvidenceMatches[0].confidence === 'HIGH') {
       const bestMatch = llmEvidenceMatches[0]
-      bridgeLog(`[OntologicalBridge] LLM EVIDENCE CORRELATION: doc[${bestMatch.evidenceDocIndex}] ticket:${bestMatch.ticketNumber || 'none'} (${bestMatch.confidence})`)
-      bridgeLog(`[OntologicalBridge]   Reasoning: ${bestMatch.reasoning}`)
+      if (bridgeLogOn) {
+        bridgeLog(`[OntologicalBridge] LLM EVIDENCE CORRELATION: doc[${bestMatch.evidenceDocIndex}] ticket:${bestMatch.ticketNumber || 'none'} (${bestMatch.confidence})`)
+        bridgeLog(`[OntologicalBridge]   Reasoning: ${bestMatch.reasoning}`)
+      }
       evidenceCorrelation = {
         score: 90, // LLM HIGH = 90%
         factors: { dateMatch: 45, referenceMatch: 45, descriptionMatch: 0 },
@@ -745,7 +899,7 @@ export class OntologicalBridge {
       }
     } else if (llmEvidenceMatches.length > 0 && llmEvidenceMatches[0].confidence === 'MEDIUM') {
       const bestMatch = llmEvidenceMatches[0]
-      bridgeLog(`[OntologicalBridge] LLM EVIDENCE CORRELATION (MEDIUM): doc[${bestMatch.evidenceDocIndex}]`)
+      if (bridgeLogOn) bridgeLog(`[OntologicalBridge] LLM EVIDENCE CORRELATION (MEDIUM): doc[${bestMatch.evidenceDocIndex}]`)
       evidenceCorrelation = {
         score: 65, // LLM MEDIUM = 65%
         factors: { dateMatch: 32, referenceMatch: 33, descriptionMatch: 0 },
@@ -756,8 +910,10 @@ export class OntologicalBridge {
     } else if (llmCorrelationMap && evidenceItems.length > 0) {
       // v4.5: LLM provided correlation_map but no match for this line item
       // This is a WARNING: MAPPING_FAILURE - LLM couldn't find a semantic match
-      bridgeLog(`[OntologicalBridge] WARNING: MAPPING_FAILURE - LLM couldn't map line item ${lineItemIndex} to evidence`)
-      bridgeLog(`[OntologicalBridge]   LLM tried but confidence was LOW or no match found`)
+      if (bridgeLogOn) {
+        bridgeLog(`[OntologicalBridge] WARNING: MAPPING_FAILURE - LLM couldn't map line item ${lineItemIndex} to evidence`)
+        bridgeLog(`[OntologicalBridge]   LLM tried but confidence was LOW or no match found`)
+      }
       evidenceCorrelation = {
         score: 0,
         factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: 0 },
@@ -768,9 +924,11 @@ export class OntologicalBridge {
     } else if (!llmCorrelationMap && evidenceItems.length > 0) {
       // v4.5: No LLM correlation_map at all - KILL JACCARD FALLBACK
       // Instead of fabricating matches with Jaccard, issue a clear warning
-      bridgeLog(`[OntologicalBridge] WARNING: MAPPING_FAILURE - No LLM correlation_map provided`)
-      bridgeLog(`[OntologicalBridge]   ${evidenceItems.length} evidence items exist but cannot be semantically matched`)
-      bridgeLog(`[OntologicalBridge]   JACCARD FALLBACK DISABLED - insufficient data for reliable matching`)
+      if (bridgeLogOn) {
+        bridgeLog(`[OntologicalBridge] WARNING: MAPPING_FAILURE - No LLM correlation_map provided`)
+        bridgeLog(`[OntologicalBridge]   ${evidenceItems.length} evidence items exist but cannot be semantically matched`)
+        bridgeLog(`[OntologicalBridge]   JACCARD FALLBACK DISABLED - insufficient data for reliable matching`)
+      }
       evidenceCorrelation = {
         score: 0,
         factors: { dateMatch: 0, referenceMatch: 0, descriptionMatch: 0 },
@@ -789,38 +947,26 @@ export class OntologicalBridge {
       }
     }
 
-    for (const mapping of sortedMappings.filter(m => m.documentType === 'evidence')) {
+    for (const mapping of plan.evidence) {
       if (bindings[mapping.role]) continue
 
       // v5.5 HETEROGENEOUS LINE ITEM DETECTION (must run BEFORE correlation branch)
       // If invoice has multiple distinct line item types (e.g., "transport" + "fuel surcharge" + "crane"),
       // we cannot safely bind a single ACTUAL_QUANTITY globally - different line items need different handling
       if (mapping.role === 'ACTUAL_QUANTITY') {
-        bridgeLog(`[OntologicalBridge] v5.5 CHECK ENTERED - invoice exists: ${!!invoice}`)
+        if (bridgeLogOn) bridgeLog(`[OntologicalBridge] v5.5 CHECK ENTERED - invoice exists: ${!!invoice}`)
         const invoiceLineItems = invoice ? (invoice as Record<string, unknown>).line_items as Array<Record<string, unknown>> | undefined : undefined
-        bridgeLog(`[OntologicalBridge] v5.5 line_items: ${invoiceLineItems ? `array of ${invoiceLineItems.length}` : 'undefined'}`)
+        if (bridgeLogOn) bridgeLog(`[OntologicalBridge] v5.5 line_items: ${invoiceLineItems ? `array of ${invoiceLineItems.length}` : 'undefined'}`)
         if (invoiceLineItems && Array.isArray(invoiceLineItems) && invoiceLineItems.length > 1) {
-          // Extract all line item descriptions
-          const descriptions = invoiceLineItems
-            .map(item => (item.description || item.service || item.name) as string | undefined)
-            .filter((d): d is string => typeof d === 'string' && d.length > 0)
-            .map(d => d.toLowerCase())
-
-          // Check for heterogeneity by looking for distinct categories
-          const hasTransport = descriptions.some(d => /transport|haul|freight|delivery|drive/.test(d))
-          const hasFuel = descriptions.some(d => /fuel|gas|diesel/.test(d))
-          const hasCrane = descriptions.some(d => /crane|mobilization|rigging|lift/.test(d))
-          const hasMileage = descriptions.some(d => /mileage|mile|excess|distance/.test(d))
-          const hasPerDiem = descriptions.some(d => /per diem|lodging|overnight|hotel/.test(d))
-          const hasOther = descriptions.some(d => /surcharge|fee|charge|standby|wait/.test(d))
-
-          const categoryCount = [hasTransport, hasFuel, hasCrane, hasMileage, hasPerDiem, hasOther].filter(Boolean).length
+          const { descriptions, categoryCount } = this.heterogeneityOf(invoiceLineItems)
 
           if (categoryCount >= 2) {
             // Multiple line item categories detected - don't bind global ACTUAL_QUANTITY
-            bridgeLog(`[OntologicalBridge] v5.5 HETEROGENEOUS INVOICE DETECTED - ${categoryCount} distinct categories`)
-            bridgeLog(`[OntologicalBridge]   Line items: ${descriptions.slice(0, 3).join(', ')}${descriptions.length > 3 ? '...' : ''}`)
-            bridgeLog(`[OntologicalBridge]   SKIPPING global ACTUAL_QUANTITY binding - LLM will handle per-line-item`)
+            if (bridgeLogOn) {
+              bridgeLog(`[OntologicalBridge] v5.5 HETEROGENEOUS INVOICE DETECTED - ${categoryCount} distinct categories`)
+              bridgeLog(`[OntologicalBridge]   Line items: ${descriptions.slice(0, 3).join(', ')}${descriptions.length > 3 ? '...' : ''}`)
+              bridgeLog(`[OntologicalBridge]   SKIPPING global ACTUAL_QUANTITY binding - LLM will handle per-line-item`)
+            }
             continue // Skip this role entirely for this invoice
           }
         }
@@ -856,7 +1002,7 @@ export class OntologicalBridge {
             normalizations: normResult.meta?.transformations,
           }
 
-          bridgeLog(`[OntologicalBridge] EVIDENCE BIND (${match.matchType}): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}%)`)
+          if (bridgeLogOn) bridgeLog(`[OntologicalBridge] EVIDENCE BIND (${match.matchType}): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}%)`)
         }
       } else {
         // v5.0 QTY_MATCH FIX: Single Evidence Deterministic Mode
@@ -904,9 +1050,11 @@ export class OntologicalBridge {
               const SEMANTIC_THRESHOLD = 0.25 // 25% word overlap required
 
               if (similarity < SEMANTIC_THRESHOLD) {
-                bridgeLog(`[OntologicalBridge] SKIPPED ACTUAL_QUANTITY binding - descriptions don't match (${(similarity * 100).toFixed(0)}% < ${SEMANTIC_THRESHOLD * 100}%)`)
-                bridgeLog(`[OntologicalBridge]   Invoice: "${typeof invoiceDesc === 'string' ? invoiceDesc.slice(0, 50) : 'N/A'}"`)
-                bridgeLog(`[OntologicalBridge]   Evidence: "${evidenceDescForQty?.slice(0, 50) || 'N/A'}"`)
+                if (bridgeLogOn) {
+                  bridgeLog(`[OntologicalBridge] SKIPPED ACTUAL_QUANTITY binding - descriptions don't match (${(similarity * 100).toFixed(0)}% < ${SEMANTIC_THRESHOLD * 100}%)`)
+                  bridgeLog(`[OntologicalBridge]   Invoice: "${typeof invoiceDesc === 'string' ? invoiceDesc.slice(0, 50) : 'N/A'}"`)
+                  bridgeLog(`[OntologicalBridge]   Evidence: "${evidenceDescForQty?.slice(0, 50) || 'N/A'}"`)
+                }
                 continue // Skip this evidence, try next
               }
             }
@@ -918,15 +1066,15 @@ export class OntologicalBridge {
             if (isSingleEvidence && isDeterministicPath) {
               // Single evidence + explicit path = high confidence (no ambiguity)
               adjustedConfidence = match.confidence // 100% for exact, 95% for alternative
-              bridgeLog(`[OntologicalBridge] EVIDENCE BIND (single-deterministic): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}%)`)
+              if (bridgeLogOn) bridgeLog(`[OntologicalBridge] EVIDENCE BIND (single-deterministic): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}%)`)
             } else if (isSingleEvidence) {
               // Single evidence + fuzzy path = medium confidence
               adjustedConfidence = Math.min(75, match.confidence)
-              bridgeLog(`[OntologicalBridge] EVIDENCE BIND (single-fuzzy): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}%)`)
+              if (bridgeLogOn) bridgeLog(`[OntologicalBridge] EVIDENCE BIND (single-fuzzy): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}%)`)
             } else {
               // Multiple evidence documents without correlation = low confidence
               adjustedConfidence = Math.min(50, Math.round(match.confidence * 0.5))
-              bridgeLog(`[OntologicalBridge] EVIDENCE BIND (uncorrelated): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}% - LOW CONFIDENCE)`)
+              if (bridgeLogOn) bridgeLog(`[OntologicalBridge] EVIDENCE BIND (uncorrelated): ${mapping.role} = ${String(match.value).slice(0, 50)} (${adjustedConfidence}% - LOW CONFIDENCE)`)
             }
 
             // v4.5: Use role-specific normalization with audit trail
@@ -960,8 +1108,10 @@ export class OntologicalBridge {
       if (typeof verified === 'number' && typeof claimed === 'number' && claimed > 0) {
         const ratio = verified / claimed
         if (ratio < 0.05 && verified < 100) { // Less than 5% AND under $100
-          bridgeLog(`[OntologicalBridge] v5.11 FIX: Rejecting VERIFIED_AMOUNT=${verified} - implausibly small vs CLAIMED_AMOUNT=${claimed} (ratio: ${(ratio * 100).toFixed(1)}%)`)
-          bridgeLog(`[OntologicalBridge]   This is likely hours (${verified}) misread as dollars from ticket totals.total`)
+          if (bridgeLogOn) {
+            bridgeLog(`[OntologicalBridge] v5.11 FIX: Rejecting VERIFIED_AMOUNT=${verified} - implausibly small vs CLAIMED_AMOUNT=${claimed} (ratio: ${(ratio * 100).toFixed(1)}%)`)
+            bridgeLog(`[OntologicalBridge]   This is likely hours (${verified}) misread as dollars from ticket totals.total`)
+          }
           delete bindings.VERIFIED_AMOUNT
         }
       }
@@ -1271,7 +1421,7 @@ export class OntologicalBridge {
     if (matchedCategory) {
       // Skip fuel surcharges - they're index-based and can't be validated
       if (matchedCategory.skipValidation) {
-        logCorrelation('SKIP', `${matchedCategory.name} requires external validation`)
+        if (bridgeLogOn) logCorrelation('SKIP', `${matchedCategory.name} requires external validation`)
         return {
           matchedIndex: -1,
           ruleName: '',
@@ -1306,7 +1456,7 @@ export class OntologicalBridge {
 
       if (bestMatch) {
         const ruleName = (bestMatch.rule.rule_name || bestMatch.rule.description || 'unnamed') as string
-        logCorrelation('CATEGORY', `${matchedCategory.name} → "${ruleName}" (${bestMatch.score}%)`)
+        if (bridgeLogOn) logCorrelation('CATEGORY', `${matchedCategory.name} → "${ruleName}" (${bestMatch.score}%)`)
         return {
           matchedIndex: bestMatch.index,
           ruleName,
@@ -1316,7 +1466,7 @@ export class OntologicalBridge {
       }
 
       // Category matched but no rule found
-      logCorrelation('CATEGORY_NO_RULE', `${matchedCategory.name} category but no matching rule in ${contractRules.length} rules`)
+      if (bridgeLogOn) logCorrelation('CATEGORY_NO_RULE', `${matchedCategory.name} category but no matching rule in ${contractRules.length} rules`)
     }
 
     // === PHASE 2: Generic word overlap fallback (v10.9.2) ===
@@ -1328,7 +1478,7 @@ export class OntologicalBridge {
       .filter(w => !['the', 'and', 'for', 'per', 'with', 'from', 'this', 'that'].includes(w))
 
     if (lineWords.length === 0) {
-      logCorrelation('FAIL', 'No meaningful words in line item description')
+      if (bridgeLogOn) logCorrelation('FAIL', 'No meaningful words in line item description')
       return {
         matchedIndex: -1,
         ruleName: '',
@@ -1363,7 +1513,7 @@ export class OntologicalBridge {
     if (bestGenericMatch && bestGenericMatch.matchedWords.length >= 1) {
       const ruleName = (bestGenericMatch.rule.rule_name || bestGenericMatch.rule.description || 'unnamed') as string
       const wordsStr = bestGenericMatch.matchedWords.slice(0, 3).join(', ')
-      logCorrelation('GENERIC', `words [${wordsStr}] → "${ruleName}" (${bestGenericMatch.score}%)`)
+      if (bridgeLogOn) logCorrelation('GENERIC', `words [${wordsStr}] → "${ruleName}" (${bestGenericMatch.score}%)`)
       return {
         matchedIndex: bestGenericMatch.index,
         ruleName,
@@ -1373,10 +1523,10 @@ export class OntologicalBridge {
     }
 
     // === PHASE 3: No match - log for debugging ===
-    logCorrelation('FAIL', `No match in ${contractRules.length} rules. Line words: [${lineWords.slice(0, 5).join(', ')}]`)
+    if (bridgeLogOn) logCorrelation('FAIL', `No match in ${contractRules.length} rules. Line words: [${lineWords.slice(0, 5).join(', ')}]`)
 
     // Log rule names for debugging
-    if (contractRules.length > 0 && contractRules.length <= 10) {
+    if (bridgeLogOn && contractRules.length > 0 && contractRules.length <= 10) {
       const ruleNames = contractRules.map(r => (r.rule_name || r.description || 'unnamed') as string)
       bridgeLog(`[OntologicalBridge] CORRELATION DEBUG: Available rules: [${ruleNames.join(', ')}]`)
     }
@@ -1396,6 +1546,70 @@ export class OntologicalBridge {
    * v5.1 FULL-SPECTRUM TRACEABILITY: Logs all resolution attempts to flight recorder
    */
   private extractWithFallbacks(
+    document: Record<string, unknown>,
+    mapping: DomainFieldMapping,
+    arrayIndex?: number
+  ): FuzzyMatchResult | null {
+    // F3: phases 1–2 are fixed per (document, mapping) when no path can see the line index (isLineBlind), so inside
+    // createLineItemBindings they run once and later lines reuse the answer. A flight recorder must see every attempt,
+    // so it bypasses the memo.
+    const scope = this.flightRecorder ? null : this.scope
+    const memo = scope && this.isLineBlind(mapping, arrayIndex, scope) ? perDocument(scope.direct, document) : undefined
+    const known = memo?.get(mapping)
+    if (known === undefined) {
+      const found = this.extractDirect(document, mapping, arrayIndex)
+      memo?.set(mapping, found === null ? null : { ...found })
+      if (found !== null) return found
+    } else if (known !== null) {
+      return { ...known }
+    }
+    // Every primary and alternative path was tried and missed (the list phases 1–2 build on a full miss)
+    const alternativesTried = this.flightRecorder ? [mapping.fieldPath, ...(mapping.alternativePaths || [])] : []
+
+    // 3. Try fuzzy extraction with field aliases (confidence: 75) - WITH TYPE VALIDATION
+    const fuzzyEnabled = mapping.fuzzyMatch !== false
+    if (fuzzyEnabled) {
+      const value = this.fuzzyValueOf(document, mapping.fieldPath, arrayIndex)
+      if (value !== null && value !== undefined) {
+        // TYPE GUARD: Validate extracted value matches expected type
+        if (this.validateValueType(value, mapping.role)) {
+          // Log success
+          this.logResolutionAttempt('fuzzy', mapping.role, true, value, 75, 'fuzzy', 1, alternativesTried, document)
+          return {
+            value,
+            confidence: 75,
+            matchType: 'fuzzy',
+            matchPath: 'fuzzy'
+          }
+        } else {
+          if (bridgeLogOn) bridgeLog(`[OntologicalBridge] Fuzzy match REJECTED for ${mapping.role}: got ${typeof value} (${String(value).slice(0, 50)})`)
+          // Log type validation failure
+          if (this.flightRecorder) this.logResolutionAttempt('fuzzy', mapping.role, false, null, 0, 'none', 0, alternativesTried, document, `Type validation failed: expected ${mapping.role}-compatible, got ${typeof value}`)
+        }
+      }
+    }
+
+    // Log complete failure - no path resolved
+    if (this.flightRecorder) {
+      this.logResolutionAttempt(
+        mapping.fieldPath,
+        mapping.role,
+        false,
+        null,
+        0,
+        'none',
+        0,
+        alternativesTried,
+        document,
+        `No path resolved for ${mapping.role}. Tried: ${alternativesTried.join(', ')}`
+      )
+    }
+
+    return null
+  }
+
+  /** Phases 1–2 of extractWithFallbacks: the primary path (confidence 100), then each alternative path (95). */
+  private extractDirect(
     document: Record<string, unknown>,
     mapping: DomainFieldMapping,
     arrayIndex?: number
@@ -1433,45 +1647,22 @@ export class OntologicalBridge {
         alternativesTried.push(altPath)
       }
     }
-
-    // 3. Try fuzzy extraction with field aliases (confidence: 75) - WITH TYPE VALIDATION
-    const fuzzyEnabled = mapping.fuzzyMatch !== false
-    if (fuzzyEnabled) {
-      value = this.extractValue(document, mapping.fieldPath, arrayIndex, true)
-      if (value !== null && value !== undefined) {
-        // TYPE GUARD: Validate extracted value matches expected type
-        if (this.validateValueType(value, mapping.role)) {
-          // Log success
-          this.logResolutionAttempt('fuzzy', mapping.role, true, value, 75, 'fuzzy', 1, alternativesTried, document)
-          return {
-            value,
-            confidence: 75,
-            matchType: 'fuzzy',
-            matchPath: 'fuzzy'
-          }
-        } else {
-          bridgeLog(`[OntologicalBridge] Fuzzy match REJECTED for ${mapping.role}: got ${typeof value} (${String(value).slice(0, 50)})`)
-          // Log type validation failure
-          this.logResolutionAttempt('fuzzy', mapping.role, false, null, 0, 'none', 0, alternativesTried, document, `Type validation failed: expected ${mapping.role}-compatible, got ${typeof value}`)
-        }
-      }
-    }
-
-    // Log complete failure - no path resolved
-    this.logResolutionAttempt(
-      mapping.fieldPath,
-      mapping.role,
-      false,
-      null,
-      0,
-      'none',
-      0,
-      alternativesTried,
-      document,
-      `No path resolved for ${mapping.role}. Tried: ${alternativesTried.join(', ')}`
-    )
-
     return null
+  }
+
+  /**
+   * extractValue with fuzzy search on. With no line index the search is a fixed function of (document, path), and every
+   * value it returns is the document's own (no fresh container), so inside createLineItemBindings it runs once per
+   * document. At a line index it stays per line: deepSearch reads that line's item.
+   */
+  private fuzzyValueOf(document: Record<string, unknown>, fieldPath: string, arrayIndex?: number): unknown {
+    const memo = this.scope && arrayIndex === undefined && typeof fieldPath === 'string' && !fieldPath.startsWith('$')
+      ? perDocument(this.scope.fuzzy, document)
+      : undefined
+    if (memo?.has(fieldPath)) return memo.get(fieldPath)
+    const value = this.extractValue(document, fieldPath, arrayIndex, true)
+    memo?.set(fieldPath, value)
+    return value
   }
 
   /**
@@ -1580,9 +1771,12 @@ export class OntologicalBridge {
       if (rep !== role) return this.normalizeValueForRole(value, rep)
     }
 
+    // Unit-price roles - money per unit at FULL precision, never cent-rounded (0.125 × 1,000 is 125, not 130)
+    const priceRoles: UniversalRole[] = ['RATE_APPLIED', 'RATE_CONTRACTED']
+
     // Numeric roles - use amount normalizer (cents)
     const numericRoles: UniversalRole[] = [
-      'RATE_APPLIED', 'RATE_CONTRACTED', 'CLAIMED_AMOUNT',
+      'CLAIMED_AMOUNT',
       'VERIFIED_AMOUNT', 'CONTRACTED_LIMIT', 'LINE_ITEM_TOTAL', 'EXPECTED_TOTAL',
       // invoice document-level amounts
       'SUBTOTAL', 'TAX_AMOUNT', 'DISCOUNT_AMOUNT', 'SERVICE_CHARGE', 'GRAND_TOTAL',
@@ -1603,6 +1797,16 @@ export class OntologicalBridge {
 
     if (rateRoles.includes(role)) {
       const result = normalizeRate(value)
+      if (result?.success) {
+        return {
+          normalized: result.normalized,
+          meta: result as NormalizedValue<unknown>
+        }
+      }
+    }
+
+    if (priceRoles.includes(role)) {
+      const result = normalizePrice(value)
       if (result?.success) {
         return {
           normalized: result.normalized,
@@ -1704,7 +1908,7 @@ export class OntologicalBridge {
         field: 'RATE_APPLIED * CLAIMED_QUANTITY',
         confidence: Math.min(bindings.RATE_APPLIED?.confidence ?? 0, bindings.CLAIMED_QUANTITY?.confidence ?? 0), // inherit the weakest operand
       }
-      bridgeLog(`[OntologicalBridge] COMPUTED: LINE_ITEM_TOTAL = ${rateApplied} × ${claimedQty} = ${computedTotal}`)
+      if (bridgeLogOn) bridgeLog(`[OntologicalBridge] COMPUTED: LINE_ITEM_TOTAL = ${rateApplied} × ${claimedQty} = ${computedTotal}`)
     }
 
     // EXPECTED_TOTAL = RATE_CONTRACTED * ACTUAL_QUANTITY (requires contract + evidence)
@@ -1738,8 +1942,8 @@ export class OntologicalBridge {
         field: 'RATE_CONTRACTED * ACTUAL_QUANTITY',
         confidence: Math.min(actualQtyBinding.confidence, 95), // Capped by correlation quality
       }
-      bridgeLog(`[OntologicalBridge] COMPUTED: EXPECTED_TOTAL = ${rateContracted} × ${actualQty} = ${rateContracted * actualQty} (similarity: ${(descSimilarity * 100).toFixed(0)}%)`)
-    } else if (typeof rateContracted === 'number' && typeof actualQty === 'number') {
+      if (bridgeLogOn) bridgeLog(`[OntologicalBridge] COMPUTED: EXPECTED_TOTAL = ${rateContracted} × ${actualQty} = ${rateContracted * actualQty} (similarity: ${(descSimilarity * 100).toFixed(0)}%)`)
+    } else if (bridgeLogOn && typeof rateContracted === 'number' && typeof actualQty === 'number') {
       // Log why we skipped EXPECTED_TOTAL computation
       const invDescStr = typeof invoiceDesc === 'string' ? invoiceDesc.slice(0, 50) : 'N/A'
       const evDescStr = typeof evidenceDesc === 'string' ? evidenceDesc.slice(0, 50) : 'N/A'
@@ -1774,7 +1978,7 @@ export class OntologicalBridge {
           field: 'RATE_APPLIED * CLAIMED_QUANTITY (math check)',
           confidence: bindings.LINE_ITEM_TOTAL.confidence, // inherit from the computed total
         }
-        bridgeLog(`[OntologicalBridge] COMPUTED: VERIFIED_AMOUNT = ${bindings.LINE_ITEM_TOTAL.value} (math check: rate×qty)`)
+        if (bridgeLogOn) bridgeLog(`[OntologicalBridge] COMPUTED: VERIFIED_AMOUNT = ${bindings.LINE_ITEM_TOTAL.value} (math check: rate×qty)`)
       }
       // NOTE: We no longer set VERIFIED_AMOUNT from EXPECTED_TOTAL
       // That comparison is semantically a RATE+QTY check, not a MATH check
@@ -1804,8 +2008,15 @@ export class OntologicalBridge {
     }
 
     const contexts: BindingContext[] = []
-    for (let i = 0; i < lineItems.length; i++) {
-      contexts.push(this.createBindings(domainId, invoice, contract, evidence, i, llmCorrelationMap))
+    // F3: the document-level work is done once for all lines (see DocumentScope), then dropped even if a line throws
+    const outer = this.scope
+    this.scope = outer ?? newDocumentScope()
+    try {
+      for (let i = 0; i < lineItems.length; i++) {
+        contexts.push(this.createBindings(domainId, invoice, contract, evidence, i, llmCorrelationMap))
+      }
+    } finally {
+      this.scope = outer
     }
     return contexts
   }

@@ -83,18 +83,20 @@ describe('verify measure', () => {
 
 describe('verify replay', () => {
   const v = verifyDeclarative({ subtotal: 100, tax: 10, total: 110 }, ruleset as DeclarativeRuleset, { now: () => new Date('2026-09-22T00:00:00Z') })
-  it('a genuine verdict replays → exit 0', () => {
+  it('a genuine verdict with no inputs: structure verified, outcome NOT re-performed → exit 2 (R1)', () => {
     const io = cap()
     const vp = tmp('verdict.json', v)
-    expect(run(['replay', vp], io)).toBe(0)
-    expect(io.out_()).toMatch(/"id_ok": true/)
+    expect(run(['replay', vp], io)).toBe(2)
+    expect(JSON.parse(io.out_())).toMatchObject({ ok: true, id_ok: true, outcome_verified: false, status: 'STRUCTURE_ONLY' })
+    expect(io.err_()).toMatch(/structure verified; outcome NOT re-performed/)
   })
-  it('with --inputs, binding to the right inputs → exit 0', () => {
+  it('with --inputs, the check is re-performed and byte-identical → exit 0', () => {
     const io = cap()
     const vp = tmp('verdict.json', v)
     const ip = tmp('inputs.json', { extraction: { subtotal: 100, tax: 10, total: 110 }, ruleset })
     expect(run(['replay', vp, '--inputs', ip], io)).toBe(0)
-    expect(io.out_()).toMatch(/"input_ok": true/)
+    expect(JSON.parse(io.out_())).toMatchObject({ input_ok: true, outcome_verified: true, status: 'REPERFORMED', reperformed: { engine: 'declarative', identical: true } })
+    expect(io.err_()).toMatch(/outcome VERIFIED: re-performed with declarative/)
   })
   it('a tampered verdict_id → exit 1', () => {
     const io = cap()

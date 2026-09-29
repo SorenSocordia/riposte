@@ -511,7 +511,9 @@ describe('verify mine (CLI)', () => {
   })
 
   it('--ruleset-out writes a ruleset that `verify <doc> --ruleset` enforces (hold → exit 1, approve → exit 0)', () => {
+    // N2 (CLI-2, 2026-09-28): --ruleset-out never writes over a file, so the path must not exist yet (it is cleaned up after).
     const rsPath = tmp('mined.json', '')
+    rmSync(rsPath)
     expect(run(['mine', AP_PATH, '--ap', '--ruleset-out', rsPath, '--ruleset-id', 'ap-mined'], cap())).toBe(0)
     const rs = JSON.parse(readFileSync(rsPath, 'utf8')) as DeclarativeRuleset
     expect(rs.id).toBe('ap-mined')

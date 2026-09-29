@@ -40,6 +40,29 @@ function isValidDate(x: unknown): x is Date {
   return x instanceof Date && !isNaN(x.getTime())
 }
 
+/** What kind of value a predicate operand is. Values of different kinds cannot be compared by = or !=. */
+function valueKind(x: unknown): string {
+  if (x === null || x === undefined) return 'missing'
+  if (x instanceof Date) return 'date'
+  if (Array.isArray(x)) return 'list'
+  return typeof x
+}
+
+function describeOperand(x: unknown): string {
+  const k = valueKind(x)
+  if (k === 'string') {
+    const s = x as string
+    return `the text "${s.length > 40 ? `${s.slice(0, 40)}…` : s}"`
+  }
+  return k === 'missing' ? 'missing' : `a ${k}`
+}
+
+/** A "Type mismatch" reason (honesty rule 1 reads the prefix: could-not-compare is UNPARSEABLE, never FAIL). */
+function mismatchReason(op: string, p: AxiomPredicate, left: unknown, right: unknown): string {
+  const rightName = p.rightRole ?? 'the constant'
+  return `Type mismatch for ${op} comparison: ${p.leftRole} is ${describeOperand(left)}, ${rightName} is ${describeOperand(right)}, so they could not be compared`
+}
+
 // ============================================================================
 // VALIDATION GAVEL CLASS
 // ============================================================================
@@ -357,6 +380,9 @@ export class ValidationGavel {
         } else if (isValidDate(leftValue) && isValidDate(rightValue)) {
           passed = leftValue.getTime() === rightValue.getTime()
           if (!passed) failureReason = `${leftValue.toISOString()} ≠ ${rightValue.toISOString()}`
+        } else if (valueKind(leftValue) !== valueKind(rightValue)) {
+          // Text against a number ("n/a" vs 10) could not be compared: honesty rule 1 makes that UNPARSEABLE, never FAIL.
+          failureReason = mismatchReason('=', predicate, leftValue, rightValue)
         } else {
           passed = leftValue === rightValue
           if (!passed) failureReason = `${String(leftValue)} ≠ ${String(rightValue)}`
@@ -367,6 +393,9 @@ export class ValidationGavel {
         if (typeof leftValue === 'number' && typeof rightValue === 'number') {
           passed = Math.abs(leftValue - rightValue) > tolerance
           if (!passed) failureReason = `${leftValue} = ${rightValue}`
+        } else if (valueKind(leftValue) !== valueKind(rightValue)) {
+          // Different kinds are not "different values": they could not be compared, so neither PASS nor FAIL.
+          failureReason = mismatchReason('!=', predicate, leftValue, rightValue)
         } else {
           passed = leftValue !== rightValue
           if (!passed) failureReason = `${String(leftValue)} = ${String(rightValue)}`

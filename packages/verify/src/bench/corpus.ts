@@ -10,7 +10,7 @@
  * held-out documents (roadmap 1.4); those load through the same shape. Every label here is defensible in one sentence.
  */
 
-import type { Json, VerifyOptions } from '../index.js'
+import type { Json, VerifyOptions } from '../verify.js'
 
 export type Label = 'CLEAN' | 'ERROR'
 

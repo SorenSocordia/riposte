@@ -1,0 +1,30 @@
+{
+  "id": "zatca-ksa-en16931",
+  "version": "0.0.1",
+  "domain": "e-invoice",
+  "name": "ZATCA (Saudi Arabia / FATOORA) e-invoice — EN 16931 document footing",
+  "lineArrayKeys": ["lines", "invoice_lines", "line_items"],
+  "fields": {
+    "LINE_EXT":  { "paths": ["line_extension_amount", "LineExtensionAmount", "net_amount"], "line": true },
+    "QTY":       { "paths": ["invoiced_quantity", "InvoicedQuantity", "quantity", "qty"], "kind": "quantity", "line": true },
+    "PRICE":     { "paths": ["price_amount", "PriceAmount", "price", "unit_price"], "line": true },
+    "BASE_QTY":  { "paths": ["base_quantity", "BaseQuantity"], "kind": "quantity", "line": true, "default": 1 },
+
+    "SUM_LINE_NET": { "paths": ["line_extension_amount", "LineExtensionAmount", "totals.line_extension_amount", "sum_of_line_net_amount"] },
+    "ALLOWANCE":    { "paths": ["allowance_total_amount", "AllowanceTotalAmount", "totals.allowance_total_amount"], "default": 0 },
+    "CHARGE":       { "paths": ["charge_total_amount", "ChargeTotalAmount", "totals.charge_total_amount"], "default": 0 },
+    "TAX_EXCL":     { "paths": ["tax_exclusive_amount", "TaxExclusiveAmount", "totals.tax_exclusive_amount"] },
+    "TAX_AMT":      { "paths": ["tax_amount", "TaxAmount", "totals.tax_amount"], "default": 0 },
+    "TAX_INCL":     { "paths": ["tax_inclusive_amount", "TaxInclusiveAmount", "totals.tax_inclusive_amount"] },
+    "PREPAID":      { "paths": ["prepaid_amount", "PrepaidAmount", "totals.prepaid_amount"], "default": 0 },
+    "ROUNDING":     { "paths": ["payable_rounding_amount", "PayableRoundingAmount", "totals.payable_rounding_amount"], "default": 0 },
+    "PAYABLE":      { "paths": ["payable_amount", "PayableAmount", "totals.payable_amount", "amount_due"] }
+  },
+  "checks": [
+    { "code": "LINES_SUM_INT", "field": "sum_of_line_net_amount", "left": "SUM_LINE_NET", "op": "=", "right": "sum(LINE_EXT)" },
+    { "code": "TAX_EXCL_INT",  "field": "tax_exclusive_amount",   "left": "TAX_EXCL", "op": "=", "right": "SUM_LINE_NET - ALLOWANCE + CHARGE" },
+    { "code": "TAX_INCL_INT",  "field": "tax_inclusive_amount",   "left": "TAX_INCL", "op": "=", "right": "TAX_EXCL + TAX_AMT" },
+    { "code": "PAYABLE_INT",   "field": "payable_amount",         "left": "PAYABLE",  "op": "=", "right": "TAX_INCL - PREPAID + ROUNDING" },
+    { "code": "LINE_MATH_INT", "field": "line_extension_amount", "scope": "line", "left": "LINE_EXT", "op": "=", "right": "QTY * PRICE / BASE_QTY" }
+  ]
+}

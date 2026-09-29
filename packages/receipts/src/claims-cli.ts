@@ -4,12 +4,14 @@
  *   --hook      Claude Code Stop hook: reads the hook JSON on stdin, exits 2 to send an unbacked "done" back once, else 0
  *   --ledger f  append every checked stop to a hash-chained receipt ledger (signed if RECEIPTS_KEY points at an Ed25519 PEM)
  *   --from-env  take the hook mode / strict / ledger from RIPOSTE_HOOK_MODE, RIPOSTE_STRICT, RIPOSTE_LEDGER (for plugins);
- *               --ledger then only supplies the default path
+ *               --ledger then only supplies the default path. Opt-in: RIPOSTE_NUNCHI=on (+ RIPOSTE_TIER, RIPOSTE_AUDIENCE)
+ *               words a sent-back stop through Nunchi; unset, every message is the default one, byte for byte
  */
 import { readFileSync } from 'node:fs'
-import { claimsCli, hookOptionsFromEnv, parseClaimsArgs, stopHook, type StopHookOptions } from './claims-command.js'
+import { claimsCli, hookOptionsFromEnv, parseClaimsArgs, stopHook, stopReceipt, type StopHookOptions } from './claims-command.js'
 import { openLedger } from './ledger.js'
 import { fileStore } from './file-store.js'
+import { stamped } from './version.js'
 
 const argv = process.argv.slice(2)
 const args = parseClaimsArgs(argv)
@@ -32,7 +34,7 @@ if (args.hook && !args.error && !args.help) {
       try {
         const signingKey = process.env.RECEIPTS_KEY ? readFileSync(process.env.RECEIPTS_KEY, 'utf8') : undefined
         openLedger(fileStore(ledgerPath), signingKey ? { signingKey } : {})
-          .append('claims_check', { source: 'stop_hook', mode, strict: opts.strict === true, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result })
+          .append('claims_check', stamped('claims_check', stopReceipt(d, mode, opts.strict === true)))
       } catch (e) { process.stderr.write(`riposte-claims: ledger not written: ${(e as Error).message}\n`) }
     }
     process.stderr.write(d.stderr)

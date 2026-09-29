@@ -13,7 +13,7 @@ import type { RulesetMeasurement, LabeledCase } from '../declarative/measure.js'
 import type { DeclarativeRuleset } from '../declarative/types.js'
 import type { LedgerStats } from '../ledger/types.js'
 import type { CalibrationReport } from '../ledger/calibration.js'
-import type { BatchItem, BatchResult } from '../index.js'
+import type { BatchItem, BatchResult } from '../verify.js'
 
 export interface TransportRequest { method: string; path: string; body?: unknown; headers: Record<string, string | undefined> }
 export interface TransportResponse { status: number; json: unknown }

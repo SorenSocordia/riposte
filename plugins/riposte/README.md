@@ -4,7 +4,8 @@ One install gives your agent:
 - a **Stop hook** that checks the claims it ends a turn with ("all tests pass", "the build is clean", "committed", "pushed",
   "created `x`") against what its own tools actually returned in the session, and writes a receipt;
 - the **MCP tools** `check_done`, `ap_gate`, `model_attest`, `check_claims` and `ledger_verify`;
-- a **tamper-evident receipt ledger** (hash-chained JSONL, optionally Ed25519-signed).
+- a **tamper-evident receipt ledger** (hash-chained JSONL, optionally Ed25519-signed);
+- an **action hook** on MCP tool calls, **off** until you turn it on (see [below](#the-action-hook-off-by-default)).
 
 ```bash
 claude plugin marketplace add SorenSocordia/riposte
@@ -12,7 +13,7 @@ claude plugin install riposte@riposte            # add -s project or -s local to
 ```
 
 ## It measures before it enforces
-By default the hook is **record-only**. It never sends a turn back and never fails. It checks every stop and records what it
+By default the Stop hook is **record-only**. It never sends a turn back and never fails. It checks every stop and records what it
 would have done (`would_block`), so you can read the ledger before you decide to enforce anything. Configure it with
 environment variables, for example in the `env` block of your settings:
 
@@ -20,15 +21,43 @@ environment variables, for example in the `env` block of your settings:
 |---|---|
 | `RIPOSTE_HOOK_MODE` | `record-only` (default) · `only-contradicted` (send back only claims that are demonstrably false) · `block` (also send back unbacked ones) |
 | `RIPOSTE_STRICT` | `1`: "done / fixed / implemented" then needs a passing test run after the last code edit |
-| `RIPOSTE_LEDGER` | the hook's ledger file (default: the plugin's data directory, `receipts.jsonl`) |
+| `RIPOSTE_LEDGER` | the Stop hook's ledger file (default: the plugin's data directory, `receipts.jsonl`). Never used for action receipts. |
 | `RECEIPTS_KEY` | path to an Ed25519 private key (PEM). Entries get signed. |
+| `RIPOSTE_NUNCHI` | `off` (default): the default messages, byte for byte · `on` (also `1`, `true`, `yes`): a sent-back stop is worded for its consequence tier and audience. It changes how the stop is said, never whether it is sent back, and the receipt gains a `nunchi` key with the hash of the facts it delivered. |
+| `RIPOSTE_TIER` | with `RIPOSTE_NUNCHI=on`: `low` · `moderate` · `high` · `severe`. Unset (or any other value) counts as the top tier: plain words, no softening. |
+| `RIPOSTE_AUDIENCE` | with `RIPOSTE_NUNCHI=on`: `solo` (default, terminal lines) · `pr` (Markdown with a findings table) · `auditor` (a keyed record with the facts hash) |
+
+`RIPOSTE_TIER` and `RIPOSTE_AUDIENCE` do nothing without `RIPOSTE_NUNCHI=on`. Whatever the wording, the facts are the same:
+every finding, with its evidence, in every tier and audience.
 
 In any enforcing mode, a stop is sent back **at most once** (`stop_hook_active`), and the hook's own failures never block the
 agent.
 
+## The action hook: off by default
+The plugin registers a `PreToolUse` hook on MCP tools only (matcher `mcp__.*`, which includes this plugin's own tools). Until
+you set `RIPOSTE_ACTION_HOOK`, it exits before its engine loads, prints nothing and records nothing. When on, it checks each
+call to a tool that your **action policy** declares: is every value the call would send grounded in a declared source?
+- At the `gate` and `autonomy` rungs, a FAIL or ABSTAIN is **held for a person**: Claude Code's permission prompt. When nobody
+  can be asked (`dontAsk`, `bypassPermissions`), or the same call was already held in this session, the call is denied with
+  the reason and an instruction not to retry. At `gate`, a PASS also goes to the prompt, for review.
+- At `advise`, the finding is shown to you and added to the agent's context, and the call runs. At `record`, it is only recorded.
+- Tools the policy doesn't declare pass through. The hook never allows anything Claude Code wouldn't allow on its own, and its
+  own errors never block a call.
+
+| variable | values |
+|---|---|
+| `RIPOSTE_ACTION_HOOK` | `off` (default) · `record-only` (check and record what it would have done, `would_decision`; print nothing) · `on` |
+| `RIPOSTE_ACTION_POLICY` | path to the action policy (required unless off). Example: [`packages/adapters/examples/action-policy.example.json`](../../packages/adapters/examples/action-policy.example.json). Check one with `node bin/riposte-action.mjs --lint --policy <file>`. |
+| `RIPOSTE_ACTION_LEDGER` | where action receipts go. Default: the plugin's data directory, `receipts.jsonl`, which the hook is given with `--ledger` (the same file the Stop hook and the MCP tools use by default). `RIPOSTE_LEDGER` is never used for action receipts. The hook's repeat guard reads this ledger. |
+
+What it costs, measured on one Windows machine (median of 30 interleaved runs): a bare `node` start takes 45 ms. With the hook
+off, each MCP call pays one node start through the gate, 51 ms. With it on, about 65 ms, receipt included.
+
 ## The executables
-`bin/` holds self-contained bundles generated by `npm run build:plugin` from `packages/receipts`. The same commands work from a
-shell:
+`bin/` holds self-contained bundles generated by `npm run build:plugin` from `packages/receipts` and `packages/adapters`. The
+build then checks that every file `hooks/hooks.json` and `.mcp.json` point at is there (`npm run check:plugin` re-runs that
+check and runs each registered command once). The same commands work from a shell:
 - `node bin/riposte-claims.mjs <transcript> --all-turns` audits a whole session.
 - `node bin/riposte-attest.mjs <transcript> --declared <model-id>` checks which model actually answered.
 - `node bin/riposte-ledger.mjs verify <ledger> --key <issuer.pub.pem>` verifies a ledger without trusting anyone.
+- `node bin/riposte-action.mjs --check --policy <file>` checks one proposed call (`{"tool": …, "arguments": {…}}` on stdin).

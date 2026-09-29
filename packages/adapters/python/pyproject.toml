@@ -1,0 +1,16 @@
+[project]
+name = "riposte-adapters"
+version = "0.0.1"
+description = "Riposte hold adapters: LangGraph AgentMiddleware.wrap_tool_call and OpenAI Agents tool_input_guardrail / needs_approval. Record and advise surface; gate and autonomy hold until a person resolves it."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = []
+
+[project.optional-dependencies]
+langgraph = ["langchain>=1.0", "langgraph>=1.0"]
+openai-agents = ["openai-agents>=0.22"]
+test = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

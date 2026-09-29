@@ -1,30 +1,53 @@
 {
   "id": "peppol-en16931",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "domain": "e-invoice",
   "name": "Peppol BIS Billing 3.0 / EN 16931 invoice",
+  "sources": {
+    "PEPPOL-RULES-CEN": "https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/",
+    "PEPPOL-RULES-PEPPOL": "https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/",
+    "CEN-SCH": "https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/rules/sch/CEN-EN16931-UBL.sch",
+    "PEPPOL-SCH": "https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/rules/sch/PEPPOL-EN16931-UBL.sch",
+    "PEPPOL-BIS": "https://docs.peppol.eu/poacc/billing/3.0/bis/"
+  },
   "lineArrayKeys": ["lines", "invoice_lines", "line_items"],
+  "tolerance": { "rel": 0, "absCap": 0 },
   "fields": {
     "LINE_EXT":  { "paths": ["line_extension_amount", "LineExtensionAmount", "net_amount"], "line": true },
     "QTY":       { "paths": ["invoiced_quantity", "InvoicedQuantity", "quantity", "qty"], "kind": "quantity", "line": true },
-    "PRICE":     { "paths": ["price_amount", "PriceAmount", "price", "unit_price"], "line": true },
+    "PRICE":     { "paths": ["price_amount", "PriceAmount", "price", "unit_price"], "kind": "price", "line": true },
     "BASE_QTY":  { "paths": ["base_quantity", "BaseQuantity"], "kind": "quantity", "line": true, "default": 1 },
+    "LINE_ALLOWANCE": { "paths": ["line_allowance_amount", "allowance_amount", "allowance_total_amount"], "line": true },
+    "LINE_CHARGE":    { "paths": ["line_charge_amount", "charge_amount", "charge_total_amount"], "line": true },
+    "LINE_ALLOWANCE_CHARGE_LIST": { "paths": ["allowance_charges", "allowances_charges", "AllowanceCharge", "allowances", "charges"], "kind": "string", "line": true },
 
     "SUM_LINE_NET": { "paths": ["line_extension_amount", "LineExtensionAmount", "totals.line_extension_amount", "sum_of_line_net_amount"] },
     "ALLOWANCE":    { "paths": ["allowance_total_amount", "AllowanceTotalAmount", "totals.allowance_total_amount"], "default": 0 },
     "CHARGE":       { "paths": ["charge_total_amount", "ChargeTotalAmount", "totals.charge_total_amount"], "default": 0 },
     "TAX_EXCL":     { "paths": ["tax_exclusive_amount", "TaxExclusiveAmount", "totals.tax_exclusive_amount"] },
-    "TAX_AMT":      { "paths": ["tax_amount", "TaxAmount", "totals.tax_amount"], "default": 0 },
+    "TAX_AMT":      { "paths": ["tax_amount", "TaxAmount", "totals.tax_amount"] },
     "TAX_INCL":     { "paths": ["tax_inclusive_amount", "TaxInclusiveAmount", "totals.tax_inclusive_amount"] },
     "PREPAID":      { "paths": ["prepaid_amount", "PrepaidAmount", "totals.prepaid_amount"], "default": 0 },
     "ROUNDING":     { "paths": ["payable_rounding_amount", "PayableRoundingAmount", "totals.payable_rounding_amount"], "default": 0 },
     "PAYABLE":      { "paths": ["payable_amount", "PayableAmount", "totals.payable_amount", "amount_due"] }
   },
   "checks": [
-    { "code": "LINES_SUM_INT", "field": "sum_of_line_net_amount", "left": "SUM_LINE_NET", "op": "=", "right": "sum(LINE_EXT)" },
-    { "code": "TAX_EXCL_INT",  "field": "tax_exclusive_amount",   "left": "TAX_EXCL", "op": "=", "right": "SUM_LINE_NET - ALLOWANCE + CHARGE" },
-    { "code": "TAX_INCL_INT",  "field": "tax_inclusive_amount",   "left": "TAX_INCL", "op": "=", "right": "TAX_EXCL + TAX_AMT" },
-    { "code": "PAYABLE_INT",   "field": "payable_amount",         "left": "PAYABLE",  "op": "=", "right": "TAX_INCL - PREPAID + ROUNDING" },
-    { "code": "LINE_MATH_INT", "field": "line_extension_amount", "scope": "line", "left": "LINE_EXT", "op": "=", "right": "QTY * PRICE / BASE_QTY" }
+    { "code": "LINES_SUM_INT", "field": "sum_of_line_net_amount", "tol": 0.005,
+      "name": "BR-CO-10: BT-106 = Σ BT-131, exact to the cent [PEPPOL-RULES-CEN, CEN-SCH]",
+      "left": "SUM_LINE_NET", "op": "=", "right": "sum(LINE_EXT)" },
+    { "code": "TAX_EXCL_INT", "field": "tax_exclusive_amount", "tol": 0.005,
+      "name": "BR-CO-13: BT-109 = BT-106 − BT-107 + BT-108, exact to the cent [PEPPOL-RULES-CEN, CEN-SCH]",
+      "left": "TAX_EXCL", "op": "=", "right": "SUM_LINE_NET - ALLOWANCE + CHARGE" },
+    { "code": "TAX_INCL_INT", "field": "tax_inclusive_amount", "tol": 0.005,
+      "name": "BR-CO-15: BT-112 = BT-109 + BT-110, exact to the cent; BT-110 is required [PEPPOL-RULES-CEN, CEN-SCH]",
+      "left": "TAX_INCL", "op": "=", "right": "TAX_EXCL + TAX_AMT" },
+    { "code": "PAYABLE_INT", "field": "payable_amount", "tol": 0.005,
+      "name": "BR-CO-16: BT-115 = BT-112 − BT-113 + BT-114, exact to the cent [PEPPOL-RULES-CEN, CEN-SCH]",
+      "left": "PAYABLE", "op": "=", "right": "TAX_INCL - PREPAID + ROUNDING" },
+    { "code": "LINE_MATH_INT", "field": "line_extension_amount", "scope": "line", "tol": 0.020001,
+      "name": "PEPPOL-EN16931-R120: BT-131 = BT-129 × (BT-146 / BT-149) + Σ BT-141 − Σ BT-136, slack 0.02 [PEPPOL-RULES-PEPPOL, PEPPOL-SCH]",
+      "left": "LINE_EXT", "op": "=", "right": "QTY * PRICE / BASE_QTY + LINE_CHARGE? - LINE_ALLOWANCE?",
+      "abstain_if_present": ["LINE_ALLOWANCE_CHARGE_LIST"],
+      "guard_reason": "the line lists its allowances/charges as items; this ruleset reads only their totals (line_allowance_amount / line_charge_amount), so it cannot sum Σ BT-136 / Σ BT-141 here" }
   ]
 }

@@ -1,0 +1,53 @@
+{
+  "id": "ksef-fa3-pl",
+  "version": "0.1.0",
+  "domain": "e-invoice",
+  "name": "Poland KSeF FA(3) invoice — national schema footing (NOT EN 16931)",
+  "sources": {
+    "FA3-XSD": "http://crd.gov.pl/wzor/2025/06/25/13775/schemat.xsd",
+    "MF-BROSZURA": "https://ksef.podatki.gov.pl/media/jknpcymf/broszura-informacyjna-dotyczaca-struktury-logicznej-fa-3-04032026.pdf"
+  },
+  "lineArrayKeys": ["lines", "FaWiersze", "invoice_lines", "line_items"],
+  "tolerance": { "rel": 0.0003, "absCap": 0.02 },
+  "fields": {
+    "P_11":  { "paths": ["P_11", "line_net", "net_value"], "line": true },
+    "P_8B":  { "paths": ["P_8B", "quantity", "qty"], "kind": "quantity", "line": true },
+    "P_9A":  { "paths": ["P_9A", "unit_price", "net_unit_price"], "kind": "price", "line": true },
+    "P_10":  { "paths": ["P_10", "discount"], "line": true },
+    "P_9B":  { "paths": ["P_9B"], "line": true },
+    "P_11A": { "paths": ["P_11A"], "line": true },
+
+    "P_13_1":   { "paths": ["P_13_1"], "default": 0 },
+    "P_13_2":   { "paths": ["P_13_2"], "default": 0 },
+    "P_13_3":   { "paths": ["P_13_3"], "default": 0 },
+    "P_13_4":   { "paths": ["P_13_4"], "default": 0 },
+    "P_13_5":   { "paths": ["P_13_5"], "default": 0 },
+    "P_13_6_1": { "paths": ["P_13_6_1"], "default": 0 },
+    "P_13_6_2": { "paths": ["P_13_6_2"], "default": 0 },
+    "P_13_6_3": { "paths": ["P_13_6_3"], "default": 0 },
+    "P_13_7":   { "paths": ["P_13_7"], "default": 0 },
+    "P_13_8":   { "paths": ["P_13_8"], "default": 0 },
+    "P_13_9":   { "paths": ["P_13_9"], "default": 0 },
+    "P_13_10":  { "paths": ["P_13_10"], "default": 0 },
+    "P_13_11":  { "paths": ["P_13_11"], "default": 0 },
+    "P_14_1":   { "paths": ["P_14_1"], "default": 0 },
+    "P_14_2":   { "paths": ["P_14_2"], "default": 0 },
+    "P_14_3":   { "paths": ["P_14_3"], "default": 0 },
+    "P_14_4":   { "paths": ["P_14_4"], "default": 0 },
+    "P_14_5":   { "paths": ["P_14_5"], "default": 0 },
+
+    "P_15": { "paths": ["P_15", "gross_total", "amount_due"] }
+  },
+  "checks": [
+    { "code": "GROSS_INT", "field": "P_15", "tol": 0.02,
+      "name": "P_15 = Σ P_13_x + Σ P_14_x over the FA(3) buckets (house candidate; not stated by the sources) [FA3-XSD, MF-BROSZURA]",
+      "left": "P_15", "op": "=",
+      "right": "P_13_1 + P_13_2 + P_13_3 + P_13_4 + P_13_5 + P_13_6_1 + P_13_6_2 + P_13_6_3 + P_13_7 + P_13_8 + P_13_9 + P_13_10 + P_13_11 + P_14_1 + P_14_2 + P_14_3 + P_14_4 + P_14_5",
+      "abstain": "UNSOURCED. Neither the FA(3) XSD nor the MF information sheet (2026-03-04) states P_15 = Σ P_13_x + Σ P_14_x. P_15 is 'Kwota należności ogółem' (total amount due), and the sheet (p.52) names cases where it is something else: the payment documented (advance invoices), the amount remaining (art. 106f ust. 3 invoices) and the correction (corrective invoices). The formula over the full FA(3) bucket set is kept as the candidate until a source states it" },
+    { "code": "LINE_NET_INT", "field": "P_11", "scope": "line", "tol": 0.02,
+      "name": "P_11 = P_8B × P_9A, as the MF sheet's worked examples compute it (Przykład 22-23, pp.100-104: 'cena jednostkowa 90 zł, wartość netto 3 sztuk równa się 270 zł'); a worked example, not a stated rule [MF-BROSZURA, FA3-XSD]",
+      "left": "P_11", "op": "=", "right": "P_8B * P_9A",
+      "abstain_if_present": ["P_10", "P_9B", "P_11A"],
+      "guard_reason": "P_10 (discounts not already in the net unit price) is not stated as per unit or per line in the FA(3) XSD or the MF sheet (pp.90-91); P_9B / P_11A mark the gross method of art. 106e ust. 7-8, where the sheet says the gross unit price and gross value replace the net ones (p.90)" }
+  ]
+}

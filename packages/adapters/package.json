@@ -1,0 +1,38 @@
+{
+  "name": "riposte-adapters",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Hold adapters: the delivery surface for Riposte's gate and autonomy rungs. A Claude Code PreToolUse hook mode (off by default), a LangGraph AgentMiddleware.wrap_tool_call and an OpenAI Agents tool_input_guardrail. Record and advise surface; gate and autonomy hold a FAIL or ABSTAIN until a person resolves it.",
+  "author": "Tucker Anderson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SorenSocordia/riposte.git",
+    "directory": "packages/adapters"
+  },
+  "homepage": "https://github.com/SorenSocordia/riposte/tree/main/packages/adapters",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "riposte-action": "bin/riposte-action.mjs"
+  },
+  "scripts": {
+    "build": "node scripts/build-bin.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:py": "python -m pytest python/tests -q -p no:cacheprovider -p no:recording"
+  },
+  "dependencies": {
+    "riposte-verify": "0.0.1",
+    "riposte-ai": "0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "esbuild": "^0.27.2",
+    "typescript": "^5",
+    "vitest": "^4.0.17"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0"
+}

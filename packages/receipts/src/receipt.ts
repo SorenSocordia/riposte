@@ -14,11 +14,14 @@ import { canonicalize, hashOf } from 'riposte-verify'
 import type { SystemOneRequest, SystemOneResponse } from './systemone.js'
 import type { FlipResult } from './flip.js'
 import type { GateResult } from './gate.js'
+import { checkerStamp, type CheckerStamp } from './version.js'
 
 export const RECEIPT_VERSION = 'receipts/0.1'
 
 export interface DecisionReceipt {
   receipt_version: typeof RECEIPT_VERSION
+  /** the gate that issued it and its build (absent on receipts issued before 2026-09-29; they still verify) */
+  checker?: CheckerStamp
   receipt_id: string
   issued_at: string
   model: string
@@ -55,6 +58,7 @@ export function buildReceipt(input: BuildReceiptInput): DecisionReceipt {
 
   const body: Omit<DecisionReceipt, 'receipt_id' | 'issued_at'> = {
     receipt_version: RECEIPT_VERSION,
+    checker: checkerStamp('decision'),
     model: response.model,
     request_hash: hashOf(request),
     option_orders,

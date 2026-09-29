@@ -23,6 +23,9 @@ export type Tier = 'DETERMINISTIC' | 'REASONED'
 
 export type ClaimKind = 'RECOMPUTE' | 'QUOTE_MATCH' | 'CROSS_REFERENCE' | 'CONSISTENCY'
 
+/** A verdict's named aggregation rule (see Verdict.aggregation and verdict/aggregation.ts). */
+export type Aggregation = 'ANY_FAIL_FAILS' | 'ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVER_PASSES'
+
 export type InsufficiencyReason =
   | 'FIELD_MISSING'            // a required field was not present in the extraction
   | 'UNPARSEABLE'              // present, but could not be normalized/compared (type mismatch, bad number/date)
@@ -149,14 +152,28 @@ export interface Verdict {
 
   // --- the result -----------------------------------------------------------------------------
   outcome: Outcome
-  /** FAIL if any claim FAILs; else INSUFFICIENT_DATA if no claim could run; else PASS. */
-  aggregation: 'ANY_FAIL_FAILS'
+  /**
+   * The named rule the outcome follows from its claims by (verdict/aggregation.ts; every reader recomputes with the rule named):
+   *   ANY_FAIL_FAILS: FAIL if any claim FAILs; else INSUFFICIENT_DATA if no claim could run; else PASS.
+   *   ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVER_PASSES (additive, 2026-09-29): FAIL if any claim FAILs; else PASS only if a claim of
+   *     a kind other than CONSISTENCY PASSed; else INSUFFICIENT_DATA. Named by the e-invoice twin since 0.3.0.
+   */
+  aggregation: Aggregation
   claims: ClaimVerdict[]
 
   // --- honesty about ourselves ----------------------------------------------------------------
   coverage: Coverage
   /** Populated once the public Verification Index exists. Measured on a preregistered set or absent. */
   declared_accuracy?: DeclaredAccuracy
+
+  // --- v0.1 typed channel (additive; see channel.ts) -------------------------------------------
+  /**
+   * The channel this proof object speaks on. A Verdict can only ever be 'VERDICT': checked against a binding source
+   * and evidenced, never flexes. Generated material (miner candles, suggestions, opinions) is COUNSEL and is a
+   * different type. Absent on verdicts emitted before v0.1 and by default (so every existing byte and verdict_id is
+   * unchanged); `stampVerdictChannel()` sets it after checking the proof object earns it. NOT part of verdict_id.
+   */
+  channel?: 'VERDICT'
 
   // --- Stage 2 / Stage 3 reserved (additive; unused in v0) -------------------------------------
   ledger?: {

@@ -455,7 +455,21 @@ export function parseCjkNumeral(input: string): number | null {
   return Number.isFinite(total) ? total : null
 }
 
+/** A currency amount: parsed (locale, symbols, signs) and rounded to the cent. Totals, line amounts, taxes. */
 export function normalizeAmount(value: unknown): NormalizedValue<number> | null {
+  return parseMoney(value, true)
+}
+
+/**
+ * A unit price or rate in money units, at FULL precision (added 2026-09-28): the same parse as `normalizeAmount`, never
+ * rounded to the cent. A unit price of 0.125 × 1,000 units is 125.00; read as 0.13 it would be 130.00, a false FAIL.
+ * Currency totals keep `normalizeAmount`; the declarative `price` kind is the same idea on the declarative path.
+ */
+export function normalizePrice(value: unknown): NormalizedValue<number> | null {
+  return parseMoney(value, false)
+}
+
+function parseMoney(value: unknown, toCents: boolean): NormalizedValue<number> | null {
   if (value === null || value === undefined || value === '') {
     return null
   }
@@ -475,7 +489,7 @@ export function normalizeAmount(value: unknown): NormalizedValue<number> | null 
         error: 'Value is NaN'
       }
     }
-    const rounded = Math.round(value * 100) / 100
+    const rounded = toCents ? Math.round(value * 100) / 100 : value
     if (rounded !== value) {
       transformations.push('rounded_to_2_decimals')
     }
@@ -555,8 +569,16 @@ export function normalizeAmount(value: unknown): NormalizedValue<number> | null 
       // Period followed by 1-2 digits → US decimal (1,250.00 or 1,250.5)
       detectedLocale = 'US'
     } else if (/^\d{3}$/.test(afterPeriod)) {
-      // Period followed by exactly 3 digits → European thousands (1.250 with no decimal)
-      detectedLocale = 'EU'
+      if (/^0\./.test(cleaned)) {
+        // A leading "0." (the sign is already stripped) is never a thousands group: "0.125" is a decimal, not 125
+        // (2026-09-28, E-INVOICE-2 finding)
+        detectedLocale = 'US'
+      } else {
+        // Period followed by exactly 3 digits → European thousands (1.250 with no decimal). A lone "1.250" stays
+        // thousands on purpose: refusing it as ambiguous broke real Indonesian receipts ("25.000" = 25,000 IDR).
+        // See docs/NUMERIC-HONESTY-2026-09-28.md ("Not fixed here").
+        detectedLocale = 'EU'
+      }
     }
   }
 
@@ -609,7 +631,7 @@ export function normalizeAmount(value: unknown): NormalizedValue<number> | null 
   }
 
   let result = isNegative ? -parsed : parsed
-  const rounded = Math.round(result * 100) / 100
+  const rounded = toCents ? Math.round(result * 100) / 100 : result
   if (rounded !== result) {
     transformations.push('rounded_to_2_decimals')
     result = rounded

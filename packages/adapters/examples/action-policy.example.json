@@ -1,0 +1,26 @@
+{
+  "policy_version": "riposte-action-policy-v0",
+  "tiers": ["low", "moderate", "high", "severe"],
+  "audience": "solo",
+  "actions": [
+    {
+      "tool": "mcp__bank__transfer",
+      "workflow": "ap.transfer",
+      "level": "gate",
+      "tier": "severe",
+      "set_by": "controller@example.com",
+      "sources": {
+        "allowed": { "to_account": ["220-000-1111", "220-000-2222"], "currency": ["USD"] },
+        "require": ["to_account", "amount", "currency"]
+      }
+    },
+    {
+      "tool": "mcp__erp__post_journal",
+      "workflow": "gl.journal",
+      "level": "advise",
+      "tier": "moderate",
+      "set_by": "controller@example.com",
+      "sources": { "allowed": { "account": ["6100", "6200"] } }
+    }
+  ]
+}

@@ -12,16 +12,19 @@
   "type": "module",
   "workspaces": [
     "packages/verify",
-    "packages/receipts"
+    "packages/receipts",
+    "packages/adapters"
   ],
   "scripts": {
-    "build": "npm run build -w riposte-verify && npm run build -w riposte-ai",
-    "typecheck": "npm run typecheck -w riposte-verify && npm run typecheck -w riposte-ai",
-    "test": "npm test -w riposte-verify && npm test -w riposte-ai",
+    "build": "npm run build -w riposte-verify && npm run build -w riposte-ai && npm run build -w riposte-adapters",
+    "typecheck": "npm run typecheck -w riposte-verify && npm run typecheck -w riposte-ai && npm run typecheck -w riposte-adapters",
+    "test": "npm test -w riposte-verify && npm test -w riposte-ai && npm test -w riposte-adapters",
+    "test:py": "npm run test:py -w riposte-adapters",
     "bench:ap": "tsx bench/ap/bench.ts --run 1",
     "bench:ap:audit": "tsx bench/ap/audit.ts",
     "bench:ap:stress": "tsx bench/ap/stress.ts --seed holdout1",
-    "build:plugin": "node scripts/build-plugin.mjs"
+    "build:plugin": "node scripts/build-plugin.mjs",
+    "check:plugin": "node scripts/check-plugin.mjs --smoke"
   },
   "devDependencies": {
     "@types/node": "^22",

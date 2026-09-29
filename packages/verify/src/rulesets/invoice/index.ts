@@ -16,6 +16,7 @@ import { duplicateClaims } from '../../dedup.js'
 import { evidenceFromBinding } from '../../verdict/from-report.js'
 import type { Evidence } from '../../verdict/schema.js'
 import { RULESET as INVOICE_REF } from '../../version.js'
+import { CAPPED, PRACTITIONER } from '../../tolerance.js'
 import { INVOICE_AXIOMS } from './axioms.js'
 import { INVOICE_ONTOLOGY } from './ontology.js'
 import { computed, num, round4, type AbsenceMap, type ComputeInput, type ComputeOutput, type Ruleset } from '../types.js'
@@ -32,7 +33,26 @@ function operandEvidence(bindings: Partial<Record<UniversalRole, BoundValue>>, r
   return out
 }
 
-function compute({ docCtx, lineCtxs, extraction }: ComputeInput): ComputeOutput {
+/** Bound, but not a number: present and unparseable. Never the same thing as absent. */
+function unparseable(b: BoundValue | undefined): boolean {
+  return b !== undefined && b.value !== null && b.value !== undefined && num(b) === null
+}
+
+const shown = (b: BoundValue | undefined): string => {
+  const s = JSON.stringify(b?.value) ?? String(b?.value)
+  return s.length > 40 ? `${s.slice(0, 40)}…` : s
+}
+
+/**
+ * `readsJunkAsAbsent` is 0.0.1's behaviour, kept for replay: a tax, service charge or discount that was present but would
+ * not parse was read as absent → 0, so a correct total could FAIL on "n/a". From 0.1.0 it makes the expected total
+ * UNPARSEABLE instead (could-not-compare is not FAIL).
+ */
+function makeCompute(readsJunkAsAbsent: boolean): (input: ComputeInput) => ComputeOutput {
+  return input => compute(input, readsJunkAsAbsent)
+}
+
+function compute({ docCtx, lineCtxs, extraction }: ComputeInput, readsJunkAsAbsent: boolean): ComputeOutput {
   const docAbsence: AbsenceMap = {}
   const lineAbsence: AbsenceMap[] = lineCtxs.map(() => ({}))
   const attach: Record<string, Evidence[]> = {}
@@ -63,8 +83,18 @@ function compute({ docCtx, lineCtxs, extraction }: ComputeInput): ComputeOutput 
   const tax = num(B.TAX_AMOUNT)
   const discount = num(B.DISCOUNT_AMOUNT)
   const service = num(B.SERVICE_CHARGE)
+  const subtotalJunk = !readsJunkAsAbsent && unparseable(B.SUBTOTAL)
+  const subtotalAbsence = subtotalJunk
+    ? { reason: 'UNPARSEABLE' as const, detail: `SUBTOTAL is present but is not a number (${shown(B.SUBTOTAL)})` }
+    : 'SUBTOTAL not present on the extraction'
+  const junk = readsJunkAsAbsent ? [] : (['TAX_AMOUNT', 'SERVICE_CHARGE', 'DISCOUNT_AMOUNT'] as const).filter(r => unparseable(B[r]))
   if (subtotal === null || !B.SUBTOTAL) {
-    docAbsence.EXPECTED_GRAND_TOTAL = 'SUBTOTAL not present on the extraction'
+    docAbsence.EXPECTED_GRAND_TOTAL = subtotalAbsence
+  } else if (junk.length > 0) {
+    docAbsence.EXPECTED_GRAND_TOTAL = {
+      reason: 'UNPARSEABLE',
+      detail: `${junk.map(r => `${r} (${shown(B[r])})`).join(', ')} present but not a number, so the expected total cannot be computed (it is never read as 0)`,
+    }
   } else {
     const notes: string[] = []
     if (tax === null) notes.push('TAX_AMOUNT absent → 0')
@@ -88,7 +118,8 @@ function compute({ docCtx, lineCtxs, extraction }: ComputeInput): ComputeOutput 
 
   // EXPECTED_TAX_AMOUNT = SUBTOTAL × TAX_RATE (sub-cent precision; the one-cent tolerance absorbs either rounding convention)
   const rate = num(B.TAX_RATE)
-  if (subtotal === null || !B.SUBTOTAL) docAbsence.EXPECTED_TAX_AMOUNT = 'SUBTOTAL not present on the extraction'
+  if (subtotal === null || !B.SUBTOTAL) docAbsence.EXPECTED_TAX_AMOUNT = subtotalAbsence
+  else if (!readsJunkAsAbsent && unparseable(B.TAX_RATE)) docAbsence.EXPECTED_TAX_AMOUNT = { reason: 'UNPARSEABLE', detail: `TAX_RATE is present but is not a number (${shown(B.TAX_RATE)})` }
   else if (rate === null || !B.TAX_RATE) docAbsence.EXPECTED_TAX_AMOUNT = 'TAX_RATE not present on the extraction'
   else B.EXPECTED_TAX_AMOUNT = computed(round4(subtotal * rate), 'SUBTOTAL × TAX_RATE', [B.SUBTOTAL, B.TAX_RATE])
   attach['document.TAX_INT'] = operandEvidence(B, ['SUBTOTAL', 'TAX_RATE'])
@@ -122,10 +153,19 @@ export const INVOICE_RULESET: Ruleset = {
     history: [],
   },
   computedRoles: ['LINE_ITEMS_SUM', 'EXPECTED_GRAND_TOTAL', 'EXPECTED_TAX_AMOUNT', 'LINE_ITEM_TOTAL', 'EXPECTED_TOTAL'],
-  // Practitioner rounding policy: tolerate up to 0.05% of the compared magnitude (over the $0.01 floor) — a penny never false-alarms.
-  defaultTolerance: { rel: 0.0003, absCap: 0 }, // 0.03% band, no cap (see src/tolerance.ts): forgives real rounding across currencies, catches material errors
+  // Rounding policy (0.1.0): a 0.03% band over the $0.01 floor, capped at what rounding can produce on the claim (U × k,
+  // see src/tolerance.ts). A penny never false-alarms; $2,500 on a $10M line is never "rounding".
+  defaultTolerance: CAPPED,
   ambiguityGuards: [['RATE_SUP', 'RATE_CONTRACTED'], ['AMT_CAP', 'CONTRACTED_LIMIT']],
-  compute,
+  compute: makeCompute(false),
 }
+
+/**
+ * Invoice ruleset 0.0.1, retained so a verdict issued under it can be re-performed. It differs from 0.1.0 in two rules. Its
+ * tolerance: the 0.03% band was uncapped, so the amount it forgave grew with the document (red-team R6: $2,500 on a $10M
+ * line PASSed as rounding). And it read a tax, service charge or discount that would not parse as 0. Never the default;
+ * resolve it as 'invoice@0.0.1'.
+ */
+export const INVOICE_RULESET_V0_0_1: Ruleset = { ...INVOICE_RULESET, version: '0.0.1', defaultTolerance: PRACTITIONER, compute: makeCompute(true) }
 
 export default INVOICE_RULESET

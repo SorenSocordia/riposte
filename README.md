@@ -9,11 +9,13 @@ anyone can verify without trusting us.
 
 It is independent of the agent, the model, and the model vendor: the same input gives the same verdict, byte for byte.
 
-## Measured on someone else's benchmark
+## A model decides. A deterministic check recomputes. Together: 0 wrong auto-payments.
 
 Distil Labs published an accounts-payable benchmark (Apache-2.0): invoices that arrive as free-text emails, checked against a
-purchase order and a goods receipt. Their conclusion: *"That is why this is a job for a model and not for a short
-function."* We tested the short function.
+purchase order and a goods receipt. Reading those emails is work for a model. Riposte is the step after it. Once a model has
+decided pay or hold, a short deterministic check recomputes the three-way match and shows the exact lines it read. The
+payment goes through automatically only when the model and the check agree. When they disagree, or the check can't tell, a
+person decides.
 
 | | result |
 |---|---|

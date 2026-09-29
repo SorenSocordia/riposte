@@ -3,7 +3,7 @@
  * the Verification Index as Markdown. Deterministic given deterministic baselines (the verifier is always deterministic).
  */
 
-import { verify } from '../index.js'
+import { verify } from '../verify.js'
 import { ENGINE_VERSION } from '../version.js'
 import { CORPUS, type Label, type LabeledCase } from './corpus.js'
 import { score, metricsLine, type Judgment, type Metrics } from './score.js'

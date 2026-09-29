@@ -13,7 +13,7 @@ export interface LintResult {
   warnings: string[]
 }
 
-const VALID_KINDS = new Set(['amount', 'rate', 'quantity', 'string', 'bool', 'identifier'])
+const VALID_KINDS = new Set(['amount', 'rate', 'quantity', 'string', 'bool', 'identifier', 'price'])
 const VALID_OPS = new Set(['=', '<=', '>=', '!='])
 const VALID_COMPARE = new Set(['number', 'identifier'])
 /** Added 2026-09-24: guard conditions may also use strict < and >. */
@@ -69,6 +69,12 @@ export function lintRuleset(rs: unknown): LintResult {
   const tolRounding = (R.tolerance as { rounding?: unknown } | undefined)?.rounding
   if (tolRounding !== undefined && !VALID_ROUNDING.has(tolRounding as string)) errors.push(`tolerance.rounding: invalid value "${String(tolRounding)}" (none | infer)`)
 
+  // sources (added 2026-09-28; only checked when present): documentation, key → non-empty string
+  const src = (R as { sources?: unknown }).sources
+  if (src !== undefined && (src === null || typeof src !== 'object' || Array.isArray(src) || Object.values(src as object).some(v => typeof v !== 'string' || v.trim() === ''))) {
+    errors.push('"sources" must be an object mapping each key to a non-empty string (a URL or a citation)')
+  }
+
   // checks
   const usedRoles = new Set<string>()
   /** One numeric expression of a check (a side, an alternative's side, or a guard condition's side), with the scope rules. */
@@ -94,6 +100,27 @@ export function lintRuleset(rs: unknown): LintResult {
   }
   /** The 2026-09-24 check options: alternatives, guards, rounding. Silent for a check that uses none of them. */
   const checkNewOptions = (c: DeclarativeRuleset['checks'][number], where: string, scope: 'document' | 'line', isIdentifier: boolean): void => {
+    // 2026-09-28: declared abstention + guard reason (silent for a check that uses neither)
+    if (c.abstain !== undefined) {
+      if (typeof c.abstain !== 'string' || c.abstain.trim() === '') errors.push(`${where}: "abstain" must be a non-empty string (the reason the check never decides)`)
+      else warnings.push(`${where}: declared abstention; the check never decides (${c.abstain.length > 80 ? `${c.abstain.slice(0, 77)}...` : c.abstain})`)
+    }
+    if (c.guard_reason !== undefined) {
+      if (typeof c.guard_reason !== 'string' || c.guard_reason.trim() === '') errors.push(`${where}: "guard_reason" must be a non-empty string`)
+      else if (c.abstain_if_present === undefined && c.abstain_unless_all_present === undefined && c.abstain_if === undefined && c.abstain_if_present_without === undefined) warnings.push(`${where}: "guard_reason" is set but the check has no abstain guard`)
+    }
+    // E-INVOICE-2: abstain_if_present_without (silent for a check that does not use it)
+    if (c.abstain_if_present_without !== undefined) {
+      const list = c.abstain_if_present_without as unknown
+      if (!Array.isArray(list) || list.length === 0 || list.some(g => !g || typeof g !== 'object' || typeof (g as { present?: unknown }).present !== 'string' || typeof (g as { without?: unknown }).without !== 'string')) {
+        errors.push(`${where}: "abstain_if_present_without" must be a non-empty array of { present, without } role names`)
+      } else for (const g of list as { present: string; without: string }[]) for (const r of [g.present, g.without]) {
+        usedRoles.add(r)
+        if (!allRoles.has(r)) errors.push(`${where}."abstain_if_present_without": unknown role "${r}"`)
+        else if (scope === 'line' && !lineRoles.has(r)) errors.push(`${where}."abstain_if_present_without": a line-scope check can only name line fields ("${r}" is not one)`)
+        else if (scope === 'document' && lineRoles.has(r)) errors.push(`${where}."abstain_if_present_without": a document-scope check cannot name the per-line field "${r}"`)
+      }
+    }
     if (c.rounding !== undefined) {
       if (isIdentifier) errors.push(`${where}: "rounding" applies to numeric checks only`)
       else if (!VALID_ROUNDING.has(c.rounding)) errors.push(`${where}: invalid rounding "${String(c.rounding)}" (none | infer)`)

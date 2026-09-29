@@ -74,7 +74,8 @@ cat invoice.json | riposte-verify -
 ```ts
 import { verifyReplay, generateSigningKeypair, signVerdict, verifyEnvelope } from 'riposte-verify'
 
-verifyReplay(verdict, inputs)                  // re-derive the verdict id and check it is bound to these inputs; no engine needed
+verifyReplay(verdict, inputs)                  // re-derive the id, check it binds these inputs, and re-run the check byte for byte
+                                               // (without inputs: structure only, and it says the outcome was NOT re-performed)
 const { privateKeyPem } = generateSigningKeypair()
 const signed = signVerdict(verdict, privateKeyPem)
 verifyEnvelope(signed, inputs)                 // Ed25519 signature over the verdict + the same input-binding check
@@ -93,6 +94,11 @@ The tools are:
 - `verify_citations`: legal cite-checking.
 - `verify_action`: is a proposed action grounded in its sources?
 - `verify_declared`: any JSON-defined document type.
+- `verify_twin`: 10-K values against the filing's own inline-XBRL facts.
+- `action_check`: one proposed tool call, checked at its rung before it runs.
+- `voice_assess` · `opinion_render`: the rung a person granted, and the opinion over the book of record.
+- `reconcile_completeness`: did every payment go through the check?
+- `grant_cosign`: a second person's signature on a grant that needs two.
 
 An agent that is about to move money or file a document calls one of these and gates its action on the verdict.
 

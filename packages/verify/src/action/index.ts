@@ -13,6 +13,22 @@
  * OUT OF SCOPE, and we say so: whether the action is a good idea (planning), whether the agent is allowed to take it
  * (permissions), and destructive-action safety (sandboxing). This gate does not judge those.
  *
+ * RECORD-BOUND GROUNDING (`sources.records`, additive, 2026-09-29). An allow-list grounds each value on its own, so the
+ * amount approved for invoice A combined with the payee account of invoice B passes: mix-and-match. Approved RECORDS close
+ * that. Each record is a set of argument values approved TOGETHER; the arguments the records name (the union of their
+ * fields) are consequential, and they are grounded only as a whole:
+ *   PASS               one record equals the action on every record-named argument (the evidence cites that record)
+ *   FAIL               no record agrees with the action on the record-named arguments it supplies: each of those FAILs, and
+ *                      the explanation names the closest record and where it differs (the mix-and-match refusal; also a
+ *                      value no record carries, and an empty record list: nothing is approved)
+ *   INSUFFICIENT_DATA  a partial tuple: a record-named argument is missing or not a scalar. It abstains, and so does every
+ *                      other record-named argument even when a record agrees with the values given: a record is never
+ *                      grounded piecewise
+ * Values compare as allow-list values do (String(a) === String(b)). An `allowed` list on a record-named argument must also
+ * admit the value (else it FAILs as before); source text never grounds a record-named argument.
+ * Identity: a verdict names rule action@0.1.0 exactly when records were declared. Without them nothing changes: the same
+ * claims, the same bytes, the same verdict_id under action@0.0.1.
+ *
  * Deterministic: no I/O, no randomness, no clock except issued_at.
  */
 
@@ -22,6 +38,11 @@ import type { ClaimVerdict, Coverage, Evidence, Outcome, Value, Verdict } from '
 import { ENGINE_VERSION, SCHEMA_VERSION } from '../version.js'
 
 const ACTION_RULESET = { id: 'action', version: '0.0.1', domain: 'action' } as const
+/** The rule with record-bound grounding (above). Named only by verdicts whose sources declare `records`. */
+const ACTION_RECORDS_RULESET = { id: 'action', version: '0.1.0', domain: 'action' } as const
+
+/** One approved record: argument name → the value approved for it, together with the record's other values. */
+export type ApprovedRecord = Readonly<Record<string, string | number>>
 
 export interface ProposedAction {
   /** The tool/function the agent proposes to call (recorded on the verdict, never trusted). */
@@ -35,6 +56,12 @@ export interface ActionSources {
   text?: string
   /** Per-argument allow-lists: the value MUST be one of these approved values (e.g. permitted accounts, valid codes). */
   allowed?: Record<string, ReadonlyArray<string | number>>
+  /**
+   * Approved records: each names argument values approved TOGETHER (one invoice's amount, payee account and reference). The
+   * arguments they name must all equal ONE record (record-bound grounding, above). Name the tool's arguments: a record field
+   * the action never supplies leaves every record-named argument abstaining.
+   */
+  records?: ReadonlyArray<ApprovedRecord>
   /** Which argument paths are consequential and must be grounded. Default: every top-level scalar argument. */
   require?: string[]
 }
@@ -108,6 +135,79 @@ function groundArgument(
     locked: false, explanation: `No source declared for ${path}; provenance unverifiable.` }
 }
 
+const hasField = (r: ApprovedRecord, k: string): boolean => Object.prototype.hasOwnProperty.call(r, k)
+
+/** The arguments the records name: the union of their fields, in first-seen order. */
+function recordNamed(records: ReadonlyArray<ApprovedRecord>): string[] {
+  const out: string[] = []
+  for (const r of records) for (const k of Object.keys(r)) if (!out.includes(k)) out.push(k)
+  return out
+}
+
+/**
+ * Record-bound grounding (above): one claim per record-named argument, keyed by argument. `required` is the action's
+ * consequential arguments; with an empty record list it is what FAILs (nothing is approved).
+ */
+function groundRecords(args: Record<string, unknown>, records: ReadonlyArray<ApprovedRecord>, required: string[]): Map<string, ClaimVerdict> {
+  const rule = { kind: 'CROSS_REFERENCE' as const, tier: 'DETERMINISTIC' as const, rule_id: 'GROUNDED_RECORD', rule_name: 'Values grounded together in one approved record' }
+  const out = new Map<string, ClaimVerdict>()
+  const recordRef = (i: number, k: string, value: Value): Evidence =>
+    ({ locator: { kind: 'field', source: 'contract', path: `records[${i}].${k}` }, value, confidence: 100, role: 'REFERENCE' })
+
+  if (records.length === 0) {
+    for (const k of required) {
+      const v = (isScalar(args[k]) ? args[k] : null) as Value
+      out.set(k, { ...rule, claim_id: `arg.${k}`, field: k, asserted: v, outcome: 'FAIL',
+        computation: { formula: 'values ∈ one approved record', operands: { value: v, records: 0 }, result: false },
+        evidence: [{ locator: { kind: 'field', source: 'contract', path: 'records' }, value: v, confidence: 100, role: 'REFERENCE' }], locked: true,
+        explanation: `The approved records are empty, so nothing is approved: ${k} = ${JSON.stringify(args[k] ?? null)} has no approved record. Do not execute.` })
+    }
+    return out
+  }
+
+  const named = recordNamed(records)
+  const present = named.filter(k => isScalar(args[k]))
+  const missing = named.filter(k => !isScalar(args[k]))
+  const agrees = (r: ApprovedRecord, k: string): boolean => hasField(r, k) && String(r[k]) === String(args[k])
+  const consistent = records.map((_, i) => i).filter(i => present.every(k => agrees(records[i]!, k)))
+  const given = present.map(k => `${k} = ${JSON.stringify(args[k])}`).join(', ')
+  const partial = `the approved records bind ${named.join(', ')} together, and the action does not supply ${missing.join(', ')} as a value; a record is never grounded piecewise, so no record-named argument is grounded. Supply every record-named argument, or declare records that name only this tool's arguments.`
+  const abstain = (k: string): ClaimVerdict => ({ ...rule, claim_id: `arg.${k}`, field: k, asserted: (isScalar(args[k]) ? args[k] : null) as Value, outcome: 'INSUFFICIENT_DATA', evidence: [],
+    insufficiency: { reason: 'FIELD_MISSING', detail: `${k}: ${partial}`, missing },
+    locked: false, explanation: `${k} cannot be grounded on a partial record (missing: ${missing.join(', ')}); provenance unconfirmed.` })
+  for (const k of missing) out.set(k, abstain(k))
+
+  if (consistent.length === 0) {
+    // No approved record carries the values given together. Name the closest record (most agreeing fields, first on a tie).
+    const score = (i: number): number => present.filter(k => agrees(records[i]!, k)).length
+    let best = 0
+    for (let i = 1; i < records.length; i++) if (score(i) > score(best)) best = i
+    const r = records[best]!
+    const differs = present.filter(k => !agrees(r, k)).map(k => `${k} = ${hasField(r, k) ? JSON.stringify(r[k]) : '(not on it)'}`).join(', ')
+    const closest = `Closest approved record: records[${best}] (${score(best)} of ${present.length} agree; it has ${differs}).`
+    for (const k of present) {
+      const v = args[k] as Value
+      out.set(k, { ...rule, claim_id: `arg.${k}`, field: k, asserted: v, outcome: 'FAIL',
+        computation: { formula: 'values ∈ one approved record', operands: { value: v, records: records.length }, result: false },
+        evidence: [recordRef(best, k, hasField(r, k) ? r[k]! : null)], locked: true,
+        explanation: `No approved record carries ${given} together. ${closest} A value approved for one record combined with another record's value is not grounded. Do not execute.` })
+    }
+  } else if (missing.length === 0) {
+    const i = consistent[0]!
+    for (const k of present) {
+      const v = args[k] as Value
+      out.set(k, { ...rule, claim_id: `arg.${k}`, field: k, asserted: v, outcome: 'PASS',
+        computation: { formula: 'values ∈ one approved record', operands: { value: v, record: i }, result: true },
+        evidence: [recordRef(i, k, records[i]![k]!)], locked: true,
+        explanation: `${k} = ${JSON.stringify(v)} is grounded together with the action's other record-named values (${given}) in approved records[${i}].` })
+    }
+  } else {
+    // A record agrees with every value given, but the action leaves some of its record-named arguments out: a partial tuple.
+    for (const k of present) out.set(k, abstain(k))
+  }
+  return out
+}
+
 function coverageOf(claims: ClaimVerdict[]): Coverage {
   let pass = 0, fail = 0, ins = 0
   for (const c of claims) c.outcome === 'PASS' ? pass++ : c.outcome === 'FAIL' ? fail++ : ins++
@@ -121,12 +221,25 @@ function coverageOf(claims: ClaimVerdict[]): Coverage {
  */
 export function verifyAction(action: ProposedAction, sources: ActionSources = {}, options: VerifyActionOptions = {}): Verdict {
   const args = action.arguments ?? {}
-  const required = sources.require ?? Object.keys(args).filter(k => isScalar(args[k]))
+  const declared = sources.require ?? Object.keys(args).filter(k => isScalar(args[k]))
+  // With records, the arguments they name are consequential too (record-bound grounding, above); without, nothing changes.
+  const records = sources.records
+  const required = records ? [...declared, ...recordNamed(records).filter(k => !declared.includes(k))] : declared
+  const byRecord = records ? groundRecords(args, records, required) : undefined
   const prepared = typeof sources.text === 'string' && sources.text.length > 0 ? prepareSource(sources.text) : undefined
   const sourceHash = prepared ? sha256(sources.text as string) : undefined
 
   const claims: ClaimVerdict[] = required.map(path => {
     const v = args[path]
+    const rec = byRecord?.get(path)
+    if (rec) {
+      // An allow-list on a record-named argument must also admit the value.
+      if (rec.outcome !== 'INSUFFICIENT_DATA' && sources.allowed?.[path] !== undefined && isScalar(v)) {
+        const listed = groundArgument(path, v, { allowed: sources.allowed }, undefined, undefined)
+        if (listed.outcome === 'FAIL') return listed
+      }
+      return rec
+    }
     if (!isScalar(v)) {
       return { claim_id: `arg.${path}`, kind: 'CROSS_REFERENCE', tier: 'DETERMINISTIC', outcome: 'INSUFFICIENT_DATA',
         field: path, asserted: null, rule_id: 'GROUNDED', rule_name: 'Value grounded in an approved source', evidence: [],
@@ -139,15 +252,16 @@ export function verifyAction(action: ProposedAction, sources: ActionSources = {}
   const coverage = coverageOf(claims)
   const outcome: Outcome = coverage.claims_fail > 0 ? 'FAIL' : coverage.claims_insufficient > 0 || coverage.claims_checked === 0 ? 'INSUFFICIENT_DATA' : 'PASS'
 
+  const ruleset = records ? ACTION_RECORDS_RULESET : ACTION_RULESET
   const input_hash = hashOf({ action, sources })
-  const verdict_id = sha256(`${input_hash}:${ACTION_RULESET.id}@${ACTION_RULESET.version}:${ENGINE_VERSION}`).slice(0, 32)
+  const verdict_id = sha256(`${input_hash}:${ruleset.id}@${ruleset.version}:${ENGINE_VERSION}`).slice(0, 32)
   const issued_at = (options.now ?? (() => new Date()))().toISOString()
 
   return {
     schema_version: SCHEMA_VERSION, verdict_id, issued_at, engine_version: ENGINE_VERSION,
-    ruleset: { ...ACTION_RULESET }, input_hash, replayable: true,
+    ruleset: { ...ruleset }, input_hash, replayable: true,
     document: { extraction_hash: hashOf(action), ...(options.producer !== undefined ? { producer: options.producer } : {}), line_items: 0 },
-    references: { contract: sources.allowed !== undefined, evidence: 0, history: 0, source: prepared !== undefined },
+    references: { contract: sources.allowed !== undefined || records !== undefined, evidence: 0, history: 0, source: prepared !== undefined },
     outcome, aggregation: 'ANY_FAIL_FAILS', claims, coverage,
   }
 }

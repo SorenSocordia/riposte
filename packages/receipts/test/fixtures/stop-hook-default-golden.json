@@ -1,0 +1,2966 @@
+{
+ "captured_from": "products/receipts/dist, the pre-change build of src/claims-command.ts + src/claims-cli.ts (unchanged since 2026-09-23)",
+ "stopHook": {
+  "red|default": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red|only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true
+  },
+  "red|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red|strict-only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "green|default": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "green|only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "green|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "green|strict": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "green|strict-only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "bare|default": {
+   "code": 2,
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "no test run anywhere in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"Fixed — all tests pass.\" — UNSUPPORTED: no test run anywhere in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "bare|only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "no test run anywhere in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "bare|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "no test run anywhere in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+    ]
+   },
+   "wouldBlock": true
+  },
+  "bare|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "completed",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+     },
+     {
+      "kind": "tests_pass",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "no test run anywhere in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session",
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes claims this session's tool results don't back.\n• \"Fixed — all tests pass.\" — UNSUPPORTED: a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session\n• \"Fixed — all tests pass.\" — UNSUPPORTED: no test run anywhere in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "bare|strict-only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "completed",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+     },
+     {
+      "kind": "tests_pass",
+      "claim": "Fixed — all tests pass.",
+      "status": "UNSUPPORTED",
+      "reason": "no test run anywhere in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session",
+     "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "plain|default": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:02:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "plain|only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:02:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "plain|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:02:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "plain|strict": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:02:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "plain|strict-only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:02:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "mixed|default": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     },
+     {
+      "kind": "committed",
+      "claim": "I committed the change.",
+      "status": "UNSUPPORTED",
+      "reason": "no git commit ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+     "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes claims this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\n• \"I committed the change.\" — UNSUPPORTED: no git commit ran in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "mixed|only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     },
+     {
+      "kind": "committed",
+      "claim": "I committed the change.",
+      "status": "UNSUPPORTED",
+      "reason": "no git commit ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+     "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "mixed|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     },
+     {
+      "kind": "committed",
+      "claim": "I committed the change.",
+      "status": "UNSUPPORTED",
+      "reason": "no git commit ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+     "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+    ]
+   },
+   "wouldBlock": true
+  },
+  "mixed|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     },
+     {
+      "kind": "committed",
+      "claim": "I committed the change.",
+      "status": "UNSUPPORTED",
+      "reason": "no git commit ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+     "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes claims this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\n• \"I committed the change.\" — UNSUPPORTED: no git commit ran in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "mixed|strict-only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     },
+     {
+      "kind": "committed",
+      "claim": "I committed the change.",
+      "status": "UNSUPPORTED",
+      "reason": "no git commit ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+     "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "long|default": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "long|only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "long|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true
+  },
+  "long|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "long|strict-only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "fix|default": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "fix|only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "fix|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "no checkable completion claims in the final message"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "fix|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "completed",
+      "claim": "Fixed.",
+      "status": "UNSUPPORTED",
+      "reason": "a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed.\" — a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"Fixed.\" — UNSUPPORTED: a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "fix|strict-only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "ABSTAIN",
+    "claims": [
+     {
+      "kind": "completed",
+      "claim": "Fixed.",
+      "status": "UNSUPPORTED",
+      "reason": "a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+     }
+    ],
+    "final_message_at": "2026-09-23T12:03:00Z",
+    "reasons": [
+     "UNSUPPORTED: \"Fixed.\" — a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "lagging-ok|default": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "lagging-ok|only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "lagging-ok|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "lagging-ok|strict": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "lagging-ok|strict-only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "PASS",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 62 tests pass.",
+      "count": 62,
+      "status": "SUPPORTED",
+      "reason": "the last test run: 62 passing, 0 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "all 1 claim(s) are backed by this session's tool results"
+    ]
+   },
+   "wouldBlock": false
+  },
+  "lagging-wrong|default": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 99 tests pass.",
+      "count": 99,
+      "status": "CONTRADICTED",
+      "reason": "claims 99, the last run shows 62 passing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "lagging-wrong|only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 99 tests pass.",
+      "count": 99,
+      "status": "CONTRADICTED",
+      "reason": "claims 99, the last run shows 62 passing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "lagging-wrong|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 99 tests pass.",
+      "count": 99,
+      "status": "CONTRADICTED",
+      "reason": "claims 99, the last run shows 62 passing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+    ]
+   },
+   "wouldBlock": true
+  },
+  "lagging-wrong|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 99 tests pass.",
+      "count": 99,
+      "status": "CONTRADICTED",
+      "reason": "claims 99, the last run shows 62 passing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "lagging-wrong|strict-only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All 99 tests pass.",
+      "count": 99,
+      "status": "CONTRADICTED",
+      "reason": "claims 99, the last run shows 62 passing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red-last|default": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red-last|only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red-last|record-only": {
+   "code": 0,
+   "stderr": "",
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true
+  },
+  "red-last|strict": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red-last|strict-only-contradicted": {
+   "code": 2,
+   "result": {
+    "outcome": "FAIL",
+    "claims": [
+     {
+      "kind": "tests_pass",
+      "claim": "All tests pass.",
+      "status": "CONTRADICTED",
+      "reason": "the last test run reports 1 failing",
+      "evidence": {
+       "tool": "Bash",
+       "command": "npm test",
+       "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+       "at": "2026-09-23T12:02:30Z",
+       "tool_use_id": "toolu_2"
+      }
+     }
+    ],
+    "reasons": [
+     "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+    ]
+   },
+   "wouldBlock": true,
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n"
+  },
+  "red-active|default": {
+   "code": 0,
+   "stderr": "",
+   "skipped": "this stop was already sent back once"
+  },
+  "red-active|only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "skipped": "this stop was already sent back once"
+  },
+  "red-active|record-only": {
+   "code": 0,
+   "stderr": "",
+   "skipped": "this stop was already sent back once"
+  },
+  "red-active|strict": {
+   "code": 0,
+   "stderr": "",
+   "skipped": "this stop was already sent back once"
+  },
+  "red-active|strict-only-contradicted": {
+   "code": 0,
+   "stderr": "",
+   "skipped": "this stop was already sent back once"
+  },
+  "not-json|default": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n"
+  },
+  "not-json|only-contradicted": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n"
+  },
+  "not-json|record-only": {
+   "code": 0,
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n"
+  },
+  "not-json|strict": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n"
+  },
+  "not-json|strict-only-contradicted": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n"
+  },
+  "no-path|default": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n"
+  },
+  "no-path|only-contradicted": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n"
+  },
+  "no-path|record-only": {
+   "code": 0,
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n"
+  },
+  "no-path|strict": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n"
+  },
+  "no-path|strict-only-contradicted": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n"
+  },
+  "missing|default": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT\n"
+  },
+  "missing|only-contradicted": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT\n"
+  },
+  "missing|record-only": {
+   "code": 0,
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT\n"
+  },
+  "missing|strict": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT\n"
+  },
+  "missing|strict-only-contradicted": {
+   "code": 1,
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT\n"
+  }
+ },
+ "hookOptionsFromEnv": {
+  "empty": {
+   "mode": "record-only",
+   "opts": {
+    "recordOnly": true,
+    "onlyContradicted": false,
+    "strict": false
+   },
+   "problems": []
+  },
+  "block": {
+   "mode": "block",
+   "opts": {
+    "recordOnly": false,
+    "onlyContradicted": false,
+    "strict": false
+   },
+   "problems": []
+  },
+  "only-contradicted": {
+   "mode": "only-contradicted",
+   "opts": {
+    "recordOnly": false,
+    "onlyContradicted": true,
+    "strict": false
+   },
+   "problems": []
+  },
+  "record-only": {
+   "mode": "record-only",
+   "opts": {
+    "recordOnly": true,
+    "onlyContradicted": false,
+    "strict": false
+   },
+   "problems": []
+  },
+  "block-strict": {
+   "mode": "block",
+   "opts": {
+    "recordOnly": false,
+    "onlyContradicted": false,
+    "strict": true
+   },
+   "problems": []
+  },
+  "bad": {
+   "mode": "record-only",
+   "opts": {
+    "recordOnly": true,
+    "onlyContradicted": false,
+    "strict": false
+   },
+   "problems": [
+    "RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only"
+   ]
+  },
+  "ledger": {
+   "mode": "record-only",
+   "opts": {
+    "recordOnly": true,
+    "onlyContradicted": false,
+    "strict": false
+   },
+   "ledger": "/x/r.jsonl",
+   "problems": []
+  }
+ },
+ "bin": {
+  "red|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red|block": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red|only-contradicted": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "green|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "green|block": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "green|only-contradicted": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "green|block-strict": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "green|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "bare|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "ABSTAIN",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "Fixed — all tests pass.",
+       "status": "UNSUPPORTED",
+       "reason": "no test run anywhere in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+     ]
+    }
+   ]
+  },
+  "bare|block": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"Fixed — all tests pass.\" — UNSUPPORTED: no test run anywhere in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "ABSTAIN",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "Fixed — all tests pass.",
+       "status": "UNSUPPORTED",
+       "reason": "no test run anywhere in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+     ]
+    }
+   ]
+  },
+  "bare|only-contradicted": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "ABSTAIN",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "Fixed — all tests pass.",
+       "status": "UNSUPPORTED",
+       "reason": "no test run anywhere in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+     ]
+    }
+   ]
+  },
+  "bare|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes claims this session's tool results don't back.\n• \"Fixed — all tests pass.\" — UNSUPPORTED: a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session\n• \"Fixed — all tests pass.\" — UNSUPPORTED: no test run anywhere in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "ABSTAIN",
+     "claims": [
+      {
+       "kind": "completed",
+       "claim": "Fixed — all tests pass.",
+       "status": "UNSUPPORTED",
+       "reason": "a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+      },
+      {
+       "kind": "tests_pass",
+       "claim": "Fixed — all tests pass.",
+       "status": "UNSUPPORTED",
+       "reason": "no test run anywhere in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "UNSUPPORTED: \"Fixed — all tests pass.\" — a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session",
+      "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+     ]
+    }
+   ]
+  },
+  "bare|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "ABSTAIN",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "Fixed — all tests pass.",
+       "status": "UNSUPPORTED",
+       "reason": "no test run anywhere in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "UNSUPPORTED: \"Fixed — all tests pass.\" — no test run anywhere in this session"
+     ]
+    }
+   ]
+  },
+  "plain|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "plain|block": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "plain|only-contradicted": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "plain|block-strict": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "plain|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": []
+  },
+  "mixed|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      },
+      {
+       "kind": "committed",
+       "claim": "I committed the change.",
+       "status": "UNSUPPORTED",
+       "reason": "no git commit ran in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+      "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+     ]
+    }
+   ]
+  },
+  "mixed|block": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes claims this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\n• \"I committed the change.\" — UNSUPPORTED: no git commit ran in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      },
+      {
+       "kind": "committed",
+       "claim": "I committed the change.",
+       "status": "UNSUPPORTED",
+       "reason": "no git commit ran in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+      "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+     ]
+    }
+   ]
+  },
+  "mixed|only-contradicted": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      },
+      {
+       "kind": "committed",
+       "claim": "I committed the change.",
+       "status": "UNSUPPORTED",
+       "reason": "no git commit ran in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+      "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+     ]
+    }
+   ]
+  },
+  "mixed|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes claims this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\n• \"I committed the change.\" — UNSUPPORTED: no git commit ran in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      },
+      {
+       "kind": "committed",
+       "claim": "I committed the change.",
+       "status": "UNSUPPORTED",
+       "reason": "no git commit ran in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+      "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+     ]
+    }
+   ]
+  },
+  "mixed|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      },
+      {
+       "kind": "committed",
+       "claim": "I committed the change.",
+       "status": "UNSUPPORTED",
+       "reason": "no git commit ran in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+      "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+     ]
+    }
+   ]
+  },
+  "long|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "long|block": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "long|only-contradicted": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "long|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI …\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "long|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "CONTRADICTED: \"All tests pass, and I also double-checked every single edge case in the parser, the lexer, the formatter and the CLI wrapper around them.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "fix|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "fix|block": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "fix|only-contradicted": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "fix|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"Fixed.\" — UNSUPPORTED: a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "ABSTAIN",
+     "claims": [
+      {
+       "kind": "completed",
+       "claim": "Fixed.",
+       "status": "UNSUPPORTED",
+       "reason": "a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+      }
+     ],
+     "final_message_at": "2026-09-23T12:03:00Z",
+     "reasons": [
+      "UNSUPPORTED: \"Fixed.\" — a completion claim (strict) needs a passing test run after the last code edit; no test ran in this session"
+     ]
+    }
+   ]
+  },
+  "fix|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": []
+  },
+  "lagging-ok|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "lagging-ok|block": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "lagging-ok|only-contradicted": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "lagging-ok|block-strict": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "lagging-ok|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": false,
+     "outcome": "PASS",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 62 tests pass.",
+       "count": 62,
+       "status": "SUPPORTED",
+       "reason": "the last test run: 62 passing, 0 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "all 1 claim(s) are backed by this session's tool results"
+     ]
+    }
+   ]
+  },
+  "lagging-wrong|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 99 tests pass.",
+       "count": 99,
+       "status": "CONTRADICTED",
+       "reason": "claims 99, the last run shows 62 passing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+     ]
+    }
+   ]
+  },
+  "lagging-wrong|block": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 99 tests pass.",
+       "count": 99,
+       "status": "CONTRADICTED",
+       "reason": "claims 99, the last run shows 62 passing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+     ]
+    }
+   ]
+  },
+  "lagging-wrong|only-contradicted": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 99 tests pass.",
+       "count": 99,
+       "status": "CONTRADICTED",
+       "reason": "claims 99, the last run shows 62 passing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+     ]
+    }
+   ]
+  },
+  "lagging-wrong|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All 99 tests pass.\" — CONTRADICTED: claims 99, the last run shows 62 passing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 99 tests pass.",
+       "count": 99,
+       "status": "CONTRADICTED",
+       "reason": "claims 99, the last run shows 62 passing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+     ]
+    }
+   ]
+  },
+  "lagging-wrong|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All 99 tests pass.",
+       "count": 99,
+       "status": "CONTRADICTED",
+       "reason": "claims 99, the last run shows 62 passing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  5 passed (5) ⏎ Tests  62 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All 99 tests pass.\" — claims 99, the last run shows 62 passing"
+     ]
+    }
+   ]
+  },
+  "red-last|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red-last|block": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red-last|only-contradicted": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "only-contradicted",
+     "strict": false,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red-last|block-strict": {
+   "status": 2,
+   "stdout": "",
+   "stderr": "Before you finish: your final message makes a claim this session's tool results don't back.\n• \"All tests pass.\" — CONTRADICTED: the last test run reports 1 failing [npm test @ 2026-09-23T12:02:30Z]\nRun the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "block",
+     "strict": true,
+     "blocked": true,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red-last|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": [
+    {
+     "source": "stop_hook",
+     "mode": "record-only",
+     "strict": false,
+     "blocked": false,
+     "would_block": true,
+     "outcome": "FAIL",
+     "claims": [
+      {
+       "kind": "tests_pass",
+       "claim": "All tests pass.",
+       "status": "CONTRADICTED",
+       "reason": "the last test run reports 1 failing",
+       "evidence": {
+        "tool": "Bash",
+        "command": "npm test",
+        "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+        "at": "2026-09-23T12:02:30Z",
+        "tool_use_id": "toolu_2"
+       }
+      }
+     ],
+     "reasons": [
+      "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing"
+     ]
+    }
+   ]
+  },
+  "red-active|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "red-active|block": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "red-active|only-contradicted": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "red-active|block-strict": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "",
+   "bodies": []
+  },
+  "red-active|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\n",
+   "bodies": []
+  },
+  "not-json|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n",
+   "bodies": []
+  },
+  "not-json|block": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n",
+   "bodies": []
+  },
+  "not-json|only-contradicted": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n",
+   "bodies": []
+  },
+  "not-json|block-strict": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: stdin is not hook JSON\n",
+   "bodies": []
+  },
+  "not-json|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\nriposte-claims --hook: stdin is not hook JSON\n",
+   "bodies": []
+  },
+  "no-path|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n",
+   "bodies": []
+  },
+  "no-path|block": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n",
+   "bodies": []
+  },
+  "no-path|only-contradicted": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n",
+   "bodies": []
+  },
+  "no-path|block-strict": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: no transcript_path in the hook input\n",
+   "bodies": []
+  },
+  "no-path|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\nriposte-claims --hook: no transcript_path in the hook input\n",
+   "bodies": []
+  },
+  "missing|empty": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT: no such file or directory, open '<DIR>\\missing.jsonl'\n",
+   "bodies": []
+  },
+  "missing|block": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT: no such file or directory, open '<DIR>\\missing.jsonl'\n",
+   "bodies": []
+  },
+  "missing|only-contradicted": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT: no such file or directory, open '<DIR>\\missing.jsonl'\n",
+   "bodies": []
+  },
+  "missing|block-strict": {
+   "status": 1,
+   "stdout": "",
+   "stderr": "riposte-claims --hook: cannot read the transcript: ENOENT: no such file or directory, open '<DIR>\\missing.jsonl'\n",
+   "bodies": []
+  },
+  "missing|bad": {
+   "status": 0,
+   "stdout": "",
+   "stderr": "riposte-claims: RIPOSTE_HOOK_MODE=\"blok\" is not one of record-only | only-contradicted | block; using record-only\nriposte-claims --hook: cannot read the transcript: ENOENT: no such file or directory, open '<DIR>\\missing.jsonl'\n",
+   "bodies": []
+  }
+ }
+}

@@ -12,7 +12,7 @@
  * Rupiah/receipt number formatting ("75,000", "40,000.") is left as strings — the forensic normalizer handles it.
  */
 
-import type { Json } from '../../index.js'
+import type { Json } from '../../verify.js'
 
 interface CordMenuItem { nm?: string; cnt?: string; price?: string | number; unitprice?: string | number }
 interface CordSubTotal { subtotal_price?: string | number; tax_price?: string | number; service_price?: string | number; discount_price?: string | number }

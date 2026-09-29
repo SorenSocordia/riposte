@@ -17,10 +17,18 @@
  *    reporting unit U = the largest of {1, 1 000, 100 000, 1 000 000} dividing every operand, and
  *    tolerance = max(tol floor, rel × largest |operand|, U × number of operands). Operands = the reported amount-kind
  *    values the chosen form uses (see RoundingMode in types.ts). Such claims skip the separate relative-band pass.
+ *
+ * Added 2026-09-28 (additive, pinned by the same golden):
+ *  - DECLARED ABSTENTION `abstain: "<why>"`: the check never decides; every document abstains (OUT_OF_RULESET_SCOPE)
+ *    with `declared abstention: <why>`. This is for an identity the ruleset cannot source, so it is never guessed at.
+ *  - GUARD REASON `guard_reason: "<why>"`: appended to the detail of whichever abstain guard fires.
+ *  - FIELD KIND 'price': a unit price at full precision (see normPrice); 'amount' rounds to the cent.
+ *  - GUARD `abstain_if_present_without: [{ present, without }]` (E-INVOICE-2): abstain when an item list is reported
+ *    without the stated total the identity reads in its place (the engine never sums a nested list).
  */
 
 import { normalizeAmount, normalizeQuantity, normalizeRate } from '../binding/forensic-normalizer.js'
-import { applyTolerancePolicy } from '../tolerance.js'
+import { applyTolerancePolicy, toleranceIdentity } from '../tolerance.js'
 import { hashOf, sha256 } from '../verdict/canonical.js'
 import { round4 } from '../verdict/from-report.js'
 import type { ClaimVerdict, Coverage, DeclaredAccuracy, Evidence, Insufficiency, Outcome, Value, Verdict } from '../verdict/schema.js'
@@ -133,8 +141,23 @@ function normIdentifiers(raw: unknown): string[] | null {
   return out
 }
 
+/**
+ * kind 'price' (added 2026-09-28): a unit price at full precision, never rounded to the cent. A JSON number or a plain
+ * decimal string is exact. A formatted string ("€1.234,5", "1,500.00") goes through the amount parser, and if that
+ * parser had to round it (more than two decimals) the result is null, i.e. UNPARSEABLE. It is never silently rounded.
+ */
+function normPrice(raw: unknown): { value: number; norms?: string[] } | null {
+  if (typeof raw === 'number') return Number.isFinite(raw) ? { value: raw, norms: ['already_number'] } : null
+  if (typeof raw === 'string' && /^\s*-?\d+(\.\d+)?\s*$/.test(raw)) { const v = Number(raw); return Number.isFinite(v) ? { value: v, norms: ['plain_decimal_parsed'] } : null }
+  const n = normalizeAmount(raw)
+  if (!n?.success || typeof n.normalized !== 'number' || !Number.isFinite(n.normalized)) return null
+  if (n.transformations.includes('rounded_to_2_decimals')) return null
+  return { value: n.normalized, norms: n.transformations }
+}
+
 function normByKind(kind: DeclField['kind'], raw: unknown): { value: number; norms?: string[] } | null {
   if (kind === 'bool') return normBool(raw)
+  if (kind === 'price') return normPrice(raw)
   const n = kind === 'rate' ? normalizeRate(raw) : kind === 'quantity' ? normalizeQuantity(raw) : normalizeAmount(raw)
   if (!n?.success || typeof n.normalized !== 'number' || !Number.isFinite(n.normalized)) return null
   return { value: n.normalized, norms: n.transformations }
@@ -172,6 +195,9 @@ function fieldEvidence(role: string, b: Bound): Evidence | null {
   if (b.norms && b.norms.length) e.normalizations = b.norms
   return e
 }
+
+/** A check's declared abstention (DeclCheck.abstain, added 2026-09-28): the same insufficiency on every document. */
+const declaredAbstention = (why: string): Insufficiency => ({ reason: 'OUT_OF_RULESET_SCOPE', detail: `declared abstention: ${why}` })
 
 const evidenceKey = (e: Evidence): string => (e.locator.kind === 'field' ? `${e.locator.source}:${e.locator.path}` : `span:${e.locator.source_hash}`)
 
@@ -219,7 +245,12 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
   const fieldSpec = (r: string): DeclField | undefined => (Object.prototype.hasOwnProperty.call(ruleset.fields, r) ? ruleset.fields[r] : undefined)
 
   // ---- abstain guards (shared by numeric and identifier checks). null = no guard fires.
+  // A check's `guard_reason` (added 2026-09-28) is appended to whichever guard fires; without it the detail is unchanged.
   const guardInsufficiency = (chk: DeclCheck, env: Env, scope: ScopeInfo): Insufficiency | null => {
+    const g = firedGuard(chk, env, scope)
+    return g && chk.guard_reason !== undefined ? { ...g, detail: `${g.detail}. Reason: ${chk.guard_reason}` } : g
+  }
+  const firedGuard = (chk: DeclCheck, env: Env, scope: ScopeInfo): Insufficiency | null => {
     const unless = chk.abstain_unless_all_present ?? []
     if (unless.length) {
       const bad = unless.filter(r => scope.status(r) === 'unparseable')
@@ -230,6 +261,10 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
     for (const r of chk.abstain_if_present ?? []) {
       const s = scope.status(r)
       if (s === 'ok' || s === 'unparseable') { const w = scope.where(r); return { reason: 'OUT_OF_RULESET_SCOPE', detail: `guard abstain_if_present: ${r} is reported${w ? ` (${w})` : ''}; the identity does not model it` } }
+    }
+    for (const g of chk.abstain_if_present_without ?? []) {
+      const s = scope.status(g.present)
+      if ((s === 'ok' || s === 'unparseable') && scope.status(g.without) !== 'ok') { const w = scope.where(g.present); return { reason: 'OUT_OF_RULESET_SCOPE', detail: `guard abstain_if_present_without: ${g.present} is reported${w ? ` (${w})` : ''} without ${g.without}; the identity reads ${g.without} in its place` } }
     }
     for (const c of chk.abstain_if ?? []) {
       let l: number | undefined, r: number | undefined
@@ -249,6 +284,9 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
     const claim_id = `${prefix}.${chk.code}`
     const base = { claim_id, kind: 'RECOMPUTE' as const, tier: 'DETERMINISTIC' as const, field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code }
     const abstain = (insufficiency: Insufficiency): void => { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` }) }
+
+    // 0. A declared abstention (added 2026-09-28) never decides, whatever the data.
+    if (chk.abstain !== undefined) return abstain(declaredAbstention(chk.abstain))
 
     // 1. The form to evaluate: the primary left/right, else the first alternative whose REQUIRED operands are present.
     //    With no alternatives and no `?`, this is exactly the old single missing-operand test.
@@ -323,6 +361,7 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
   const runIdentifierCheck = (chk: DeclCheck, prefix: string, scope: 'document' | 'line', lookup: (role: string) => Bound | undefined, env: Env, info: ScopeInfo): void => {
     const base = { claim_id: `${prefix}.${chk.code}`, kind: 'CROSS_REFERENCE' as const, tier: 'DETERMINISTIC' as const, field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code }
     const abstain = (insufficiency: Insufficiency): void => { claims.push({ ...base, outcome: 'INSUFFICIENT_DATA', asserted: null, evidence: [], insufficiency, locked: false, explanation: `${chk.code}: ${insufficiency.detail}` }) }
+    if (chk.abstain !== undefined) return abstain(declaredAbstention(chk.abstain))
     const L = String(chk.left ?? '').trim(), R = String(chk.right ?? '').trim()
     if (chk.op !== '=' && chk.op !== '!=') return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: `identifier checks support only = and != (got ${chk.op})` })
     if (chk.alternatives !== undefined || chk.rounding !== undefined) return abstain({ reason: 'OUT_OF_RULESET_SCOPE', detail: 'alternatives and rounding apply to numeric checks only, not to an identifier check' })
@@ -443,7 +482,8 @@ export function verifyDeclarative(extraction: Json, ruleset: DeclarativeRuleset,
   const coverage: Coverage = { claims_total: claims.length, claims_checked: pass + fail, claims_pass: pass, claims_fail: fail, claims_insufficient: ins }
   const outcome: Outcome = fail > 0 ? 'FAIL' : pass + fail === 0 ? 'INSUFFICIENT_DATA' : 'PASS'
 
-  const input_hash = hashOf({ extraction, ruleset })
+  // A tolerance override can change the outcome, so the input identity commits to it, only when one is given (D-TOL-ID).
+  const input_hash = hashOf({ extraction, ruleset, ...(options.tolerance ? { tolerance: toleranceIdentity(options.tolerance) } : {}) })
   const verdict_id = sha256(`${input_hash}:${ruleset.id}@${ruleset.version}:${ENGINE_VERSION}`).slice(0, 32)
   const issued_at = (options.now ?? (() => new Date()))().toISOString()
 

@@ -1,0 +1,36 @@
+{
+  "id": "ksef-fa3-pl",
+  "version": "0.0.1",
+  "domain": "e-invoice",
+  "name": "Poland KSeF FA(3) invoice — national schema footing (NOT EN 16931)",
+  "lineArrayKeys": ["lines", "FaWiersze", "invoice_lines", "line_items"],
+  "tolerance": { "rel": 0.0003, "absCap": 0.02 },
+  "fields": {
+    "P_11":         { "paths": ["P_11", "line_net", "net_value"], "line": true },
+    "P_8B":         { "paths": ["P_8B", "quantity", "qty"], "kind": "quantity", "line": true },
+    "P_9A":         { "paths": ["P_9A", "unit_price", "net_unit_price"], "line": true },
+    "P_10":         { "paths": ["P_10", "discount"], "line": true, "default": 0 },
+    "P_10_Dodatki": { "paths": ["P_10_Dodatki", "surcharge"], "line": true, "default": 0 },
+
+    "P_13_1": { "paths": ["P_13_1"], "default": 0 },
+    "P_13_2": { "paths": ["P_13_2"], "default": 0 },
+    "P_13_3": { "paths": ["P_13_3"], "default": 0 },
+    "P_13_4": { "paths": ["P_13_4"], "default": 0 },
+    "P_13_5": { "paths": ["P_13_5"], "default": 0 },
+    "P_13_6": { "paths": ["P_13_6"], "default": 0 },
+    "P_13_7": { "paths": ["P_13_7"], "default": 0 },
+    "P_14_1": { "paths": ["P_14_1"], "default": 0 },
+    "P_14_2": { "paths": ["P_14_2"], "default": 0 },
+    "P_14_3": { "paths": ["P_14_3"], "default": 0 },
+    "P_14_4": { "paths": ["P_14_4"], "default": 0 },
+    "P_14_5": { "paths": ["P_14_5"], "default": 0 },
+
+    "P_15": { "paths": ["P_15", "gross_total", "amount_due"] }
+  },
+  "checks": [
+    { "code": "GROSS_INT", "field": "P_15", "tol": 0.02, "left": "P_15", "op": "=",
+      "right": "P_13_1 + P_13_2 + P_13_3 + P_13_4 + P_13_5 + P_13_6 + P_13_7 + P_14_1 + P_14_2 + P_14_3 + P_14_4 + P_14_5" },
+    { "code": "LINE_NET_INT", "field": "P_11", "scope": "line", "tol": 0.02, "left": "P_11", "op": "=",
+      "right": "P_8B * (P_9A - P_10 + P_10_Dodatki)" }
+  ]
+}

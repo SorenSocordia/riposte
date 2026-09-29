@@ -1,0 +1,356 @@
+{
+  "about": "Receipts written by the receipts code before the checker stamp (2026-09-29, RELEASE-2): no `checker` field. They must keep verifying byte for byte.",
+  "decision_receipt": {
+    "receipt": {
+      "receipt_version": "receipts/0.1",
+      "model": "test-model",
+      "request_hash": "2ce6c206b24373f968e91a17f5b78c63fb9a9c898ef02294b0716c3af2303023",
+      "option_orders": {
+        "decision": [
+          "pay",
+          "hold",
+          "return"
+        ]
+      },
+      "answers": {
+        "decision": {
+          "type": "choice",
+          "choice": "pay",
+          "probabilities": {
+            "pay": 0.95,
+            "hold": 0.025,
+            "return": 0.025
+          }
+        }
+      },
+      "gate": {
+        "outcome": "PROCEED",
+        "reasons": [
+          "all checks that ran passed; decision confident and in the allowed set"
+        ],
+        "decided": "pay",
+        "confidence": 0.95
+      },
+      "receipt_id": "22be4e48514f6cfbdfebe652500dc472",
+      "issued_at": "2026-09-29T00:00:00.000Z"
+    },
+    "alg": "ed25519",
+    "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+    "signature": "CjPt+A7kv21tO5em6XrfJVqAxriz4mKnPECBsvgAgxh4NaWB9ljDPfzoVsf3QVJRt8uC0O+a1Xx0EmNenXDdBg=="
+  },
+  "ledger": [
+    {
+      "seq": 0,
+      "kind": "done_check",
+      "at": "2026-09-29T00:00:01.000Z",
+      "body": {
+        "outcome": "PASS",
+        "claim": "Scheduled INV-1042",
+        "results": [
+          {
+            "source": "forms/payments.json",
+            "path": "INV-1042.status",
+            "outcome": "PASS",
+            "expected": "scheduled",
+            "actual": "scheduled",
+            "detail": "INV-1042.status = \"scheduled\" as claimed"
+          }
+        ],
+        "observed": {
+          "forms/payments.json": "eaa9ff929fd89bec36c09d9c1a43df5b14d5d45b2c4bbebfddfd9d036914ffc5"
+        },
+        "message": "Verified: \"Scheduled INV-1042\" — 1 expectation(s) hold in the real state."
+      },
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "b9ac3cd9643b52b215ef4ce133ccd6572e869419df75574c9ff7ecac40b1aeb2",
+      "signature": {
+        "alg": "ed25519",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+        "sig": "xHzoJOLywpCyMFRDla0r6Gff2tRBwQsyF8CLxMe1V3p73wV8ELJ2leCgLsssTZVOprGnvPv/dPnGaO6MwwrbDg=="
+      }
+    },
+    {
+      "seq": 1,
+      "kind": "ap_gate",
+      "at": "2026-09-29T00:00:02.000Z",
+      "body": {
+        "action": "REVIEW",
+        "effect": "HUMAN_REVIEW",
+        "model_decision": "approve",
+        "checker_decision": "hold_quantity",
+        "reason": "the model says \"approve\" but the checker says \"hold_quantity\" — Machine grease cartridge 14 oz: billed 10, received 7 — more billed than received. (Invoice line \"GREASE CART 14OZ\".)",
+        "grounding": {
+          "invoice_number": "AJ-97466",
+          "po_number": "PO-49051",
+          "item": "Machine grease cartridge 14 oz",
+          "invoiced": 10,
+          "expected": 7
+        },
+        "verdict_id": "394880b67362cf8c30ff9f8efb742250",
+        "resolution": {
+          "kind": "vendor_query",
+          "subject": "AJ-97466 (PO-49051): billed 10 × Machine grease cartridge 14 oz, received 7",
+          "body": "Hello,\n\nAJ-97466 against PO-49051 bills 10 × Machine grease cartridge 14 oz, but our goods receipt shows 7 received. Please send a credit memo for the 3 unit(s) not delivered, or proof of delivery. That is 22.35 at your invoiced unit price of 7.45.\n\nWe will pay 1,913.15 now and hold 22.35 until this is resolved.\n\nThank you.",
+          "short_pay": {
+            "payable_now": 1913.15,
+            "withheld": 22.35,
+            "stated_total": 1935.5
+          },
+          "facts": [
+            {
+              "label": "invoice number",
+              "value": "AJ-97466",
+              "source": "invoice"
+            },
+            {
+              "label": "item",
+              "value": "Machine grease cartridge 14 oz",
+              "source": "purchase_order"
+            },
+            {
+              "label": "PO number",
+              "value": "PO-49051",
+              "source": "purchase_order"
+            },
+            {
+              "label": "quantity billed",
+              "value": 10,
+              "source": "invoice"
+            },
+            {
+              "label": "quantity received",
+              "value": 7,
+              "source": "goods_receipt"
+            },
+            {
+              "label": "units billed but not received",
+              "value": 3,
+              "source": "computed",
+              "from": [
+                "quantity billed",
+                "quantity received"
+              ]
+            },
+            {
+              "label": "invoice unit price",
+              "value": 7.45,
+              "source": "invoice",
+              "line": 15
+            },
+            {
+              "label": "credit requested",
+              "value": 22.35,
+              "source": "computed",
+              "from": [
+                "units billed but not received",
+                "invoice unit price"
+              ]
+            },
+            {
+              "label": "stated total",
+              "value": 1935.5,
+              "source": "invoice"
+            },
+            {
+              "label": "payable now",
+              "value": 1913.15,
+              "source": "computed",
+              "from": [
+                "stated total",
+                "credit requested"
+              ]
+            }
+          ]
+        }
+      },
+      "prev_hash": "b9ac3cd9643b52b215ef4ce133ccd6572e869419df75574c9ff7ecac40b1aeb2",
+      "hash": "0320ae2121315cc20f8ec85ab28a9472a8b3103da0d577ff40b3e5432551ce16",
+      "signature": {
+        "alg": "ed25519",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+        "sig": "xhm1PNXf0xZyCmj1XInt6/uah0MqqsVwA5zpWbiAETWNFiHl8st6hm6w1Ees6tnRw0XwRV7cUacLPbXiC0dHDQ=="
+      }
+    },
+    {
+      "seq": 2,
+      "kind": "model_attest",
+      "at": "2026-09-29T00:00:03.000Z",
+      "body": {
+        "source": "replies",
+        "outcome": "FAIL",
+        "models": {
+          "model-a": 1,
+          "model-b": 1
+        },
+        "first": "model-a",
+        "last": "model-b",
+        "replies": 2,
+        "switches": [
+          {
+            "from": "model-a",
+            "to": "model-b",
+            "reply": 1,
+            "announced": false,
+            "cause": "unrecorded"
+          }
+        ],
+        "violations": [
+          {
+            "reply": 1,
+            "model": "model-b"
+          }
+        ],
+        "violation_count": 1,
+        "skipped": 0,
+        "host_switches": [],
+        "expected": [
+          "model-a"
+        ],
+        "reasons": [
+          "1 of 2 replies came from model-b — declared model-a",
+          "1 silent model switch (nothing announced the change): model-a → model-b"
+        ]
+      },
+      "prev_hash": "0320ae2121315cc20f8ec85ab28a9472a8b3103da0d577ff40b3e5432551ce16",
+      "hash": "66c88e857e6ff87848915b498499ea4fd8057e5ade6bad4fffb40f0b2abc0025",
+      "signature": {
+        "alg": "ed25519",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+        "sig": "8xwvHOCeptWPEB55raT7XIwJI9QDHXXIL32Zle3zOlc2oQ2aXd/Nqf7jDYDWEgXDOGCngIE+nb6Dkw0CZtGLDQ=="
+      }
+    },
+    {
+      "seq": 3,
+      "kind": "claims_check",
+      "at": "2026-09-29T00:00:04.000Z",
+      "body": {
+        "source": "transcript:mixed.jsonl",
+        "outcome": "FAIL",
+        "claims": [
+          {
+            "kind": "tests_pass",
+            "claim": "All tests pass.",
+            "status": "CONTRADICTED",
+            "reason": "the last test run reports 1 failing",
+            "evidence": {
+              "tool": "Bash",
+              "command": "npm test",
+              "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+              "at": "2026-09-23T12:02:30Z",
+              "tool_use_id": "toolu_2"
+            }
+          },
+          {
+            "kind": "committed",
+            "claim": "I committed the change.",
+            "status": "UNSUPPORTED",
+            "reason": "no git commit ran in this session"
+          }
+        ],
+        "final_message_at": "2026-09-23T12:03:00Z",
+        "reasons": [
+          "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+          "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+        ]
+      },
+      "prev_hash": "66c88e857e6ff87848915b498499ea4fd8057e5ade6bad4fffb40f0b2abc0025",
+      "hash": "5773b5253897ea170503315ed075fca2c6c2ef9d91ea50884ff3e25ce39d0ce1",
+      "signature": {
+        "alg": "ed25519",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+        "sig": "G5vpVfjkZXtdsgwazyr5KIfs5PD77vJmtFhVY6MBVkQuqnf7Ybg1REFQAExpTi/QPQCMGZ5kOV+Q86141oxyAA=="
+      }
+    },
+    {
+      "seq": 4,
+      "kind": "claims_check",
+      "at": "2026-09-29T00:00:05.000Z",
+      "body": {
+        "source": "transcript:mixed.jsonl",
+        "all_turns": true,
+        "turns": 1,
+        "turns_with_claims": 1,
+        "outcomes": {
+          "PASS": 0,
+          "FAIL": 1,
+          "ABSTAIN": 0
+        },
+        "claims": {
+          "SUPPORTED": 0,
+          "CONTRADICTED": 1,
+          "UNSUPPORTED": 1
+        },
+        "flagged": [
+          {
+            "at": "2026-09-23T12:03:00Z",
+            "kind": "tests_pass",
+            "status": "CONTRADICTED",
+            "claim": "All tests pass.",
+            "reason": "the last test run reports 1 failing"
+          },
+          {
+            "at": "2026-09-23T12:03:00Z",
+            "kind": "committed",
+            "status": "UNSUPPORTED",
+            "claim": "I committed the change.",
+            "reason": "no git commit ran in this session"
+          }
+        ]
+      },
+      "prev_hash": "5773b5253897ea170503315ed075fca2c6c2ef9d91ea50884ff3e25ce39d0ce1",
+      "hash": "5e73cebb2490839e49e269dcdf6f54bddf884a327723cf090b3add89f4dd59b0",
+      "signature": {
+        "alg": "ed25519",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+        "sig": "ZvQo0hVqm0swEgkQIfbmQkPzJ0ntoMnG6sadBOorZb8lFOYrQNV00UngxthrMP6NTh/JVKsp/Drtn77y3jV+DA=="
+      }
+    },
+    {
+      "seq": 5,
+      "kind": "claims_check",
+      "at": "2026-09-29T00:00:06.000Z",
+      "body": {
+        "source": "stop_hook",
+        "mode": "block",
+        "strict": false,
+        "blocked": true,
+        "would_block": true,
+        "outcome": "FAIL",
+        "claims": [
+          {
+            "kind": "tests_pass",
+            "claim": "All tests pass.",
+            "status": "CONTRADICTED",
+            "reason": "the last test run reports 1 failing",
+            "evidence": {
+              "tool": "Bash",
+              "command": "npm test",
+              "excerpt": "Test Files  1 failed | 4 passed (5) ⏎ Tests  1 failed | 61 passed (62)",
+              "at": "2026-09-23T12:02:30Z",
+              "tool_use_id": "toolu_2"
+            }
+          },
+          {
+            "kind": "committed",
+            "claim": "I committed the change.",
+            "status": "UNSUPPORTED",
+            "reason": "no git commit ran in this session"
+          }
+        ],
+        "final_message_at": "2026-09-23T12:03:00Z",
+        "reasons": [
+          "CONTRADICTED: \"All tests pass.\" — the last test run reports 1 failing",
+          "UNSUPPORTED: \"I committed the change.\" — no git commit ran in this session"
+        ]
+      },
+      "prev_hash": "5e73cebb2490839e49e269dcdf6f54bddf884a327723cf090b3add89f4dd59b0",
+      "hash": "b48b0205516a7bada0c97fcdfe320146ee6821ab7e930191cd8b7e8652a17cab",
+      "signature": {
+        "alg": "ed25519",
+        "public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAinxSG4z5J6gNJBGm0JSPRBUn5s/MFD++HZXDy70vBKY=\n-----END PUBLIC KEY-----\n",
+        "sig": "PV6U94Y9pFRfhVhdegB1UtAxhMANlfFvqeEFllTGZmb/6dYJrQXQhm85Hzl+0eoi305RTfMGD2Um1mUbR4ikDw=="
+      }
+    }
+  ],
+  "head": "b48b0205516a7bada0c97fcdfe320146ee6821ab7e930191cd8b7e8652a17cab"
+}

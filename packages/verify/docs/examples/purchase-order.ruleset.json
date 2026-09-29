@@ -1,11 +1,11 @@
 {
   "id": "purchase-order",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "domain": "purchase-order",
   "lineArrayKeys": ["items", "line_items"],
   "fields": {
     "LINE_QTY":    { "paths": ["qty", "quantity", "cantidad", "menge", "数量"], "kind": "quantity", "line": true },
-    "LINE_PRICE":  { "paths": ["unit_price", "price", "precio", "einzelpreis", "单价"], "kind": "amount", "line": true },
+    "LINE_PRICE":  { "paths": ["unit_price", "price", "precio", "einzelpreis", "单价"], "kind": "price", "line": true },
     "LINE_AMOUNT": { "paths": ["amount", "total", "importe", "betrag", "金额"], "kind": "amount", "line": true },
     "SUBTOTAL":    { "paths": ["subtotal", "totals.subtotal", "zwischensumme", "小计"] },
     "TAX":         { "paths": ["tax", "totals.tax", "impuesto", "mwst", "税"] },

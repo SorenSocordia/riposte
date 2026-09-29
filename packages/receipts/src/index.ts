@@ -19,6 +19,7 @@ export { orderSchedule, reorder } from './permute.js'
 export { flipProbe, type FlipOptions, type FlipResult } from './flip.js'
 export { gate, type GateChecks, type GatePolicy, type GateResult, type GateOutcome } from './gate.js'
 export { buildReceipt, signReceipt, verifyReceipt, RECEIPT_VERSION, type DecisionReceipt, type SignedReceipt, type ReceiptCheck } from './receipt.js'
+export { CHECKER_VERSION, CHECKER_IDS, checkerStamp, stamped, type CheckerKind, type CheckerStamp } from './version.js'
 
 export interface GuardOptions {
   checks?: GateChecks
@@ -57,6 +58,10 @@ export { handleRequest as handleMcpRequest, rootedJsonReader, rootedTextReader, 
 export { attestModels, modelGate, modelMatches, isFloatingAlias, eventsFromReplies, eventsFromClaudeCodeTranscript, type ModelEvent, type AttestPolicy, type ModelAttestation, type SwitchEvent, type ModelGateResult } from './model-attest.js'
 export { attestCli, parseAttestArgs, ATTEST_USAGE } from './attest-command.js'
 export { extractClaims, checkClaims, checkMessageClaims, findFinalMessage, parseTestOutput, sessionFromClaudeCodeTranscript, turnEnds, type Step, type ClaimOptions, type ClaimKind, type ClaimStatus, type ClaimCheck, type ClaimsResult, type ExtractedClaim, type Evidence } from './claims.js'
-export { claimsCli, parseClaimsArgs, auditTurns, stopHook, hookOptionsFromEnv, CLAIMS_USAGE, type TurnAudit, type HookDecision, type HookMode, type StopHookOptions } from './claims-command.js'
+export { claimsCli, parseClaimsArgs, auditTurns, stopHook, hookOptionsFromEnv, stopReceipt, CLAIMS_USAGE, STOP_SEND_BACK, NUNCHI_UNSET_TIER, type TurnAudit, type HookDecision, type HookMode, type StopHookOptions, type NunchiStopOptions } from './claims-command.js'
 export { ledgerCli, parseLedger, publicOf, LEDGER_USAGE } from './ledger-command.js'
 export { draftResolution, isTransposition, type ResolutionDraft, type Fact } from './ap-resolve.js'
+export {
+  deliver, factsFromNotice, factsFromClaims, factsFromDone, factTokens, weightOf, timingOf, DEFAULT_TIERS, SOFTENERS, MOMENTS, AUDIENCES,
+  type Delivery, type DeliveryContext, type DeliveryFacts, type DeliveryFinding, type NoticeLike, type Moment, type Audience, type Weight,
+} from './nunchi.js'

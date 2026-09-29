@@ -1,322 +1,29 @@
 /**
- * verify(extraction, options?) → Verdict
+ * The package's public surface. verify() and its options live in ./verify.ts; this file only re-exports.
  *
- * Deterministic post-extraction verification. The caller brings ALREADY-EXTRACTED structured data (from Reducto /
- * Extend / LlamaExtract / their own LLM). We never extract. We check whether the numbers, as extracted, cohere —
- * and say so with evidence, under a named RULESET:
- *
- *   'invoice'  (default)  commercial invoice — footing, per-line math, contract / evidence / duplicate checks
- *   'pay-app'             construction pay application (AIA G702 / G703) — every footing law of the two forms,
- *                         plus continuity against the previous application when it is supplied as history
- *
- * Four honesty rules (see verdict/from-report.ts and below): could-not-compare is not FAIL; a missing reference is
- * not the extraction's fault; a verdict is NEVER issued on a field that was only guessed by fuzzy name-matching; and
- * a verdict is never issued against a reference that offers several candidates none of which matched this line.
- *
- * Determinism: no I/O, no randomness, no clock except `issued_at` (injectable). canonicalize → hash → bind → gavel → verdict.
+ * A module under src/ that needs verify() imports it from ./verify.js, never from here: this barrel re-exports most of
+ * src/, so importing it from inside makes a cycle, and a bundle of one path (the action hook, replay) would pull the whole
+ * package in (core-tidy, 2026-09-29). test/barrel-imports.test.ts holds the line.
  */
 
-import { getOntologicalBridge, setBridgeLogger } from './binding/ontological-bridge.js'
-import { getAxiomRegistry } from './kernel/axiom-registry.js'
-import { getValidationGavel, setGavelLogger } from './kernel/validation-gavel.js'
-import type { BindingContext, ComputationalAxiom, UniversalRole, ValidationResult } from './kernel/types.js'
-import { resolveRuleset, INVOICE_RULESET } from './rulesets/index.js'
-import type { Ruleset } from './rulesets/types.js'
-import { verifyDeclarative } from './declarative/evaluate.js'
-import { isDeclarativeRuleset, type DeclarativeRuleset } from './declarative/types.js'
-import { hashOf, sha256 } from './verdict/canonical.js'
-import { applyTolerancePolicy, type TolerancePolicy } from './tolerance.js'
-import { prepareSource, verifyQuote, verifyValueInText, type QuoteAssertion, type ValueAssertion } from './textmatch/index.js'
-import {
-  abstainOnGuessedOperands,
-  evidenceKey,
-  toClaimVerdicts,
-  type ReferenceFlags,
-} from './verdict/from-report.js'
-import type { ClaimVerdict, Coverage, Evidence, Outcome, Verdict } from './verdict/schema.js'
-import { ENGINE_VERSION, SCHEMA_VERSION } from './version.js'
-
-export type Json = Record<string, unknown>
-
-export interface VerifyOptions {
-  /** Which ruleset to evaluate under: a built-in id, a built-in Ruleset object, or a DECLARATIVE (JSON) ruleset. Default 'invoice'. */
-  ruleset?: 'invoice' | 'pay-app' | Ruleset | DeclarativeRuleset
-  /** Optional reference documents. Cross-document checks run only when present. */
-  references?: {
-    contract?: Json
-    evidence?: Json[]
-    /** Prior documents of the same kind (the previous pay application; prior invoices). */
-    history?: Json[]
-  }
-  /**
-   * The source document's own text (digital-born; scanned/handwritten OCR belongs upstream and will mostly abstain).
-   * Enables the source-text axis: does each quoted passage appear VERBATIM, does each extracted value appear at all.
-   * `quotes` and `values` are what the caller asks us to confirm against the text.
-   */
-  source?: {
-    text: string
-    quotes?: QuoteAssertion[]
-    values?: ValueAssertion[]
-  }
-  /** Who produced the extraction (recorded, never trusted). */
-  producer?: string
-  /** Rounding-tolerance override: a relative band (0.0005 = 0.05%) over each rule's absolute floor. Default: the ruleset's policy. */
-  tolerance?: TolerancePolicy
-  /** Injectable clock — the ONLY source of non-determinism, and it touches only `issued_at`. */
-  now?: () => Date
-}
-
-const initialized = new Set<string>()
-function init(rs: Ruleset): void {
-  if (initialized.has(rs.id)) return
-  getOntologicalBridge().registerOntology(rs.ontology)
-  const registry = getAxiomRegistry()
-  for (const a of rs.axioms) registry.register(a)
-  setGavelLogger(undefined)
-  setBridgeLogger(undefined)
-  initialized.add(rs.id)
-}
-
-const isObj = (x: unknown): x is Json => x !== null && typeof x === 'object' && !Array.isArray(x)
-
-export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
-  // A declarative (JSON) ruleset takes a separate, enum-free evaluation path — same proof object out.
-  if (isDeclarativeRuleset(options.ruleset)) {
-    return verifyDeclarative(extraction, options.ruleset, {
-      ...(options.now ? { now: options.now } : {}),
-      ...(options.producer !== undefined ? { producer: options.producer } : {}),
-      ...(options.tolerance ? { tolerance: options.tolerance } : {}),
-    })
-  }
-  const rs = resolveRuleset(options.ruleset as 'invoice' | 'pay-app' | Ruleset | undefined)
-  init(rs)
-  const bridge = getOntologicalBridge()
-  const registry = getAxiomRegistry()
-  const gavel = getValidationGavel()
-
-  // References are the caller's; only real objects count. A null/junk reference is "not provided", never a crash.
-  const contractGiven = isObj(options.references?.contract)
-  const contract: Json = contractGiven ? (options.references?.contract as Json) : {}
-  const rawEvidence = options.references?.evidence
-  const evidence: Json[] = (Array.isArray(rawEvidence) ? rawEvidence : []).filter(isObj)
-  const rawHistory = options.references?.history
-  const history: Json[] = (Array.isArray(rawHistory) ? rawHistory : []).filter(isObj)
-  const refs: ReferenceFlags = { contract: contractGiven, evidence: evidence.length > 0, history: history.length > 0 }
-
-  // Source text axis (optional): does each quoted passage appear verbatim, does each extracted value appear at all.
-  const sourceGiven = typeof options.source?.text === 'string' && options.source.text.length > 0
-
-  // Hash what the caller actually sent (junk included) — two different inputs must never share a hash.
-  const input_hash = hashOf({
-    extraction,
-    references: { contract: options.references?.contract ?? null, evidence: rawEvidence ?? [], history: rawHistory ?? [] },
-    source: options.source ?? null,
-  })
-  const extraction_hash = hashOf(extraction)
-
-  const axiomsFor = (codes: readonly string[]): ComputationalAxiom[] =>
-    codes.map(c => registry.getByCode(c)).filter((a): a is ComputationalAxiom => a !== undefined)
-  const lineAxioms = axiomsFor(rs.lineCodes)
-  const docAxioms = axiomsFor(rs.documentCodes)
-
-  // ------------------------------------------------------------------ bind
-  const lineKeys = rs.ontology.lineArrayKeys ?? ['line_items']
-  const lineKey = lineKeys.find(k => Array.isArray(extraction[k]))
-  const lineCount = lineKey !== undefined ? (extraction[lineKey] as unknown[]).length : 0
-  const lineCtxs: BindingContext[] = lineCount > 0 ? bridge.createLineItemBindings(rs.domain, extraction, contract, evidence) : []
-  const docCtx = bridge.createBindings(rs.domain, extraction, contract, evidence, undefined)
-
-  // Computed roles (with provenance) and the reasons for anything that could not be computed.
-  const { docAbsence, lineAbsence, attach, claims: rulesetClaims } = rs.compute({
-    extraction, references: { contract: contractGiven ? contract : null, evidence, history }, docCtx, lineCtxs,
-  })
-
-  // ------------------------------------------------------------------ judge
-  const common = { registry, refs, kindByCode: rs.kindByCode, fieldByCode: rs.fieldByCode, referenceRoles: rs.referenceRoles }
-  const claims: ClaimVerdict[] = []
-
-  const docResults: ValidationResult[] = docAxioms.map(a => gavel.validateAxiom(a, docCtx))
-  claims.push(...toClaimVerdicts(docResults, docCtx, { ...common, claimPrefix: 'document', absence: docAbsence }))
-
-  lineCtxs.forEach((ctx, i) => {
-    const results: ValidationResult[] = lineAxioms.map(a => gavel.validateAxiom(a, ctx))
-    claims.push(...toClaimVerdicts(results, ctx, { ...common, claimPrefix: `line[${i}]`, absence: lineAbsence[i] ?? {} }))
-  })
-
-  // Ruleset-produced claims that are not gavel predicates (e.g. exact + near duplicate detection).
-  if (rulesetClaims) claims.push(...rulesetClaims)
-
-  // The operands behind computed roles belong on the receipt too, each with its own provenance.
-  for (const [claimId, extra] of Object.entries(attach)) attachEvidence(claims, claimId, extra)
-
-  // Rounding-tolerance policy — a penny (or a sub-0.05% rounding drift) is not an error. Runs before the honesty passes so
-  // a within-tolerance PASS that rests on a guessed operand still abstains below.
-  const policy: TolerancePolicy = options.tolerance ?? rs.defaultTolerance ?? { rel: 0, absCap: 0 }
-  applyTolerancePolicy(claims, policy)
-
-  // Honesty rule 3 — after every operand is on the receipt: no verdict on a guessed field.
-  abstainOnGuessedOperands(claims)
-  // Honesty rule 4 — no verdict against a reference that offers several candidates none of which matched this line.
-  abstainOnAmbiguousReference(rs, claims, lineCtxs, contract, contractGiven)
-
-  // Source-text axis — independent of the numeric gavel; span evidence at confidence 100 (verbatim or nothing).
-  if (sourceGiven) {
-    const text = options.source!.text
-    const prepared = prepareSource(text)
-    const sourceHash = sha256(text)
-    const idOf = (raw: string): string => (raw.startsWith('source.') ? raw : `source.${raw}`)
-    for (const q of options.source!.quotes ?? []) claims.push(verifyQuote({ ...q, id: idOf(q.id) }, prepared, sourceHash))
-    for (const v of options.source!.values ?? []) claims.push(verifyValueInText({ ...v, id: idOf(v.id) }, prepared, sourceHash))
-  }
-
-  // ------------------------------------------------------------------ aggregate
-  const coverage = coverageOf(claims)
-  const outcome: Outcome =
-    coverage.claims_fail > 0 ? 'FAIL'
-    : coverage.claims_checked === 0 ? 'INSUFFICIENT_DATA'
-    : 'PASS'
-
-  const verdict_id = sha256(`${input_hash}:${rs.id}@${rs.version}:${ENGINE_VERSION}`).slice(0, 32)
-  const issued_at = (options.now ?? (() => new Date()))().toISOString()
-
-  return {
-    schema_version: SCHEMA_VERSION,
-    verdict_id,
-    issued_at,
-    engine_version: ENGINE_VERSION,
-    ruleset: { id: rs.id, version: rs.version, domain: rs.domain },
-    input_hash,
-    replayable: true,
-    document: {
-      extraction_hash,
-      ...(options.producer !== undefined ? { producer: options.producer } : {}),
-      line_items: lineCount,
-    },
-    references: { contract: refs.contract, evidence: evidence.length, history: history.length, source: sourceGiven },
-    outcome,
-    aggregation: 'ANY_FAIL_FAILS',
-    claims,
-    coverage,
-  }
-}
-
-export interface BatchItem { extraction: Json; options?: Omit<VerifyOptions, 'now'> }
-export interface BatchResult { count: number; summary: Record<Outcome, number>; results: Verdict[] }
-
-/** Verify many documents in one call — the real-world "run a whole book of invoices" path. Deterministic; the summary is the triage. */
-export function verifyBatch(items: BatchItem[], shared: { now?: () => Date } = {}): BatchResult {
-  const summary: Record<Outcome, number> = { PASS: 0, FAIL: 0, INSUFFICIENT_DATA: 0 }
-  const results: Verdict[] = []
-  for (const it of items) {
-    const v = verify(it.extraction, { ...(it.options ?? {}), ...(shared.now ? { now: shared.now } : {}) })
-    summary[v.outcome]++
-    results.push(v)
-  }
-  return { count: items.length, summary, results }
-}
-
-/** Everything in a verdict that must be byte-identical across replays of the same input (drops `issued_at`). */
-export function replayView(v: Verdict): Omit<Verdict, 'issued_at'> {
-  const { issued_at: _drop, ...rest } = v
-  return rest
-}
-
-// ---------------------------------------------------------------------------------------------
-// honesty rule 4 — ambiguous references
-// ---------------------------------------------------------------------------------------------
-
-/**
- * How many candidate values a contract offers for a role, judging by the ontology's array-rooted paths
- * (e.g. `rates[*].rate`, `financial_rules[*].values.rate`, `price_list[*].unit_price`). Exact-path binding would
- * silently take the FIRST — which is a hallucinated verdict waiting to happen when there are several.
- */
-export function referenceMultiplicity(contract: Json, role: UniversalRole, ruleset: Ruleset = INVOICE_RULESET): number {
-  const roots = new Set<string>()
-  for (const m of ruleset.ontology.mappings) {
-    if (m.role !== role || m.documentType !== 'contract') continue
-    for (const p of [m.fieldPath, ...(m.alternativePaths ?? [])]) {
-      const i = p.indexOf('[*]')
-      if (i > 0) roots.add(p.slice(0, i))
-    }
-  }
-  let max = 0
-  for (const root of roots) {
-    if (root.includes('.')) continue // v0: top-level array roots only
-    const v = contract[root]
-    if (Array.isArray(v)) max = Math.max(max, v.filter(x => x !== null && x !== undefined).length)
-  }
-  return max
-}
-
-function abstainOnAmbiguousReference(rs: Ruleset, claims: ClaimVerdict[], lineCtxs: BindingContext[], contract: Json, contractGiven: boolean): void {
-  if (!contractGiven) return
-  for (const [code, role] of rs.ambiguityGuards) {
-    const n = referenceMultiplicity(contract, role, rs)
-    if (n <= 1) continue
-    lineCtxs.forEach((ctx, i) => {
-      // The bridge only marks contract correlation reliable when a rule was matched to THIS line (keyword/category
-      // match ≥ 70 against financial_rules). Anything else means "we don't know which candidate applies".
-      if (ctx.correlationInfo?.contract?.isReliable === true) return
-      const c = claims.find(x => x.claim_id === `line[${i}].${code}`)
-      if (!c || c.outcome === 'INSUFFICIENT_DATA') return
-      c.outcome = 'INSUFFICIENT_DATA'
-      c.locked = false
-      delete c.computation
-      delete c.variance
-      c.insufficiency = {
-        reason: 'AMBIGUOUS_REFERENCE',
-        detail: `the contract lists ${n} candidate values for ${role} and no rule could be matched to this line; supply financial_rules[] with a rule_name/description matching the line description, or a single-valued reference`,
-        missing: [role],
-      }
-      c.explanation = `Abstained: ${c.explanation}`
-    })
-  }
-}
-
-// ---------------------------------------------------------------------------------------------
-// helpers
-// ---------------------------------------------------------------------------------------------
-
-function attachEvidence(claims: ClaimVerdict[], claimId: string, extra: Evidence[]): void {
-  const claim = claims.find(c => c.claim_id === claimId)
-  if (!claim) return
-  const seen = new Set(claim.evidence.map(evidenceKey))
-  for (const e of extra) {
-    const k = evidenceKey(e)
-    if (seen.has(k)) continue
-    seen.add(k)
-    claim.evidence.push(e)
-  }
-}
-
-function coverageOf(claims: ClaimVerdict[]): Coverage {
-  let pass = 0, fail = 0, insufficient = 0
-  for (const c of claims) {
-    if (c.outcome === 'PASS') pass++
-    else if (c.outcome === 'FAIL') fail++
-    else insufficient++
-  }
-  return {
-    claims_total: claims.length,
-    claims_checked: pass + fail,
-    claims_pass: pass,
-    claims_fail: fail,
-    claims_insufficient: insufficient,
-  }
-}
+export {
+  verify, verifyBatch, replayView, referenceMultiplicity,
+  type Json, type VerifyOptions, type BatchItem, type BatchResult,
+} from './verify.js'
 
 // ---------------------------------------------------------------------------------------------
 // public surface
 // ---------------------------------------------------------------------------------------------
 
 export { ENGINE_VERSION, RULESET, PAY_APP_RULESET_REF, SCHEMA_VERSION } from './version.js'
-export { RULESETS, INVOICE_RULESET, PAY_APP_RULESET, resolveRuleset } from './rulesets/index.js'
+export { RULESETS, INVOICE_RULESET, PAY_APP_RULESET, resolveRuleset, RULESET_VERSIONS, INVOICE_RULESET_V0_0_1 } from './rulesets/index.js'
 export type { Ruleset, RulesetRef } from './rulesets/types.js'
 export { MIN_VERDICT_CONFIDENCE } from './verdict/from-report.js'
 export { setGavelLogger } from './kernel/validation-gavel.js'
 export { setBridgeLogger } from './binding/ontological-bridge.js'
 export { canonicalize, hashOf, sha256 } from './verdict/canonical.js'
-export { verifyAction, type ProposedAction, type ActionSources, type VerifyActionOptions } from './action/index.js'
+export { verifyAction, type ProposedAction, type ActionSources, type ApprovedRecord, type VerifyActionOptions } from './action/index.js'
+export { AGGREGATIONS, aggregateOutcome } from './verdict/aggregation.js'
 export { verifyCitations, verifyCitation, renderCitationAudit, type Citation, type OpinionSources } from './legal/index.js'
 export { verifyInvoiceMatch, splitApLayout, AP_RULESET, type PriorInvoice, type ApDocuments, type ApPolicy, type ApResult, type ApDecision, type VerifyInvoiceMatchOptions } from './ap/index.js'
 export { parseInvoice, parsePurchaseOrder, parseGoodsReceipt, type ParsedInvoice, type ParsedPo, type InvoiceLine, type PoLine, type ReceiptLine } from './ap/parse.js'
@@ -326,21 +33,116 @@ export { evalExpr } from './declarative/expr.js'
 export { lintRuleset, type LintResult } from './declarative/lint.js'
 export { measureRuleset, renderMeasurement, type LabeledCase, type RulesetMeasurement } from './declarative/measure.js'
 export { attachDeclaredAccuracy } from './verdict/accuracy.js'
+export {
+  channelOf, assertVerdict, proofProblem, stampVerdictChannel, serializeVerdict, renderVerdict, makeCounsel, isCounsel,
+  counselFromCandle, counselFromReport, counselFromReasoned, advisoriesFromVerdict, renderCounsel, renderChanneled,
+  serializeChanneled, ChannelViolation, STRENGTHS,
+  type Channel, type Counsel, type CounselInput, type JudgeResult, type GeneratedProvenance, type Strength, type ReasonedOptions,
+} from './verdict/channel.js'
+export {
+  actionNotice, renderActionNotice, verdictFindings, renderFindings, disputeCommand, ACTION_HANDLING,
+  type ActionNotice, type ActionHandling, type Finding, type VerdictFindings,
+} from './verdict/notices.js'
+export { normalQuantile, binomialCdf, wilsonInterval, clopperPearsonInterval, rateInterval, type BoundMethod, type Interval } from './verdict/bounds.js'
+export {
+  workflowCalibrations, workflowCalibration, defaultWorkflowOf, lintPolicy, revisePolicy, assessVoice, assessRung, policyRef,
+  calibrationIntact, consecutiveErrorsToBreach, errorsInHorizonToBreach, cleanReviewsToClear, levelRank, VOICE_LADDER, RUNGS,
+  RUNG_METRIC, EXAMPLE_PROMOTION_POLICY,
+  type VoiceLevel, type Rung, type RungMetric, type WorkflowCalibration, type WorkflowCalibrationOptions, type RungBar,
+  type TierRequirements, type PromotionPolicy, type PolicyRef, type PolicyRevision, type PolicyLint, type Grant,
+  type WorkflowDeclaration, type RungAssessment, type PromotionProposal, type DemotionProposal, type VoiceProposal,
+  type FailingCase, type VoiceAssessment,
+} from './verdict/voice.js'
+export {
+  promotionOpinion, disputeOpinion, renderOpinion, opinionJSON, openSnapshot, snapshotOfLedger, snapshotFromChainJSONL,
+  opinionIntact, OPINION_VERSION, defaultOwnsWorkflow,
+  disputeRuling, signRuling, verifySignedRuling, rulingProblem, rulingId, rulingBookJSONL, parseRulingBook,
+  RULING_SIGNING_PREFIX, LAW_RULINGS,
+  statuteFromRulings, statuteCounsel, statuteIntact, statuteMineFiles, STATUTE_VERSION, STATUTE_GENERATOR,
+  type PromotionOpinionInput, type DisputeOpinionInput, type LedgerSnapshot, type SnapshotView, type SnapshotOptions,
+  type Opinion, type OpinionRef,
+  type OpinionSubject, type Premise, type Reading, type CitedCell, type Authority, type Precedent, type PrecedentEntry,
+  type Ruling, type Disposition, type DissentPoint, type DissentTopic, type OverturnCondition,
+  type OpinionScope, type DecisionCite, type DeclinedBy,
+  type DisputeRuling, type SignedRuling, type LawRuling, type RulingCheck, type OpinionParams,
+  type Statute, type StatuteInput, type StatuteRow, type StatuteCell,
+} from './opinion/index.js'
 export { createLedger, MemoryLedger, type Ledger, type LedgerRecord, type LedgerQuery, type LedgerStats, type Review, type ReviewDecision } from './ledger/index.js'
 export { GENESIS, verifyChain, verifyChainAgainst, entryHash, payloadHash, linkEvent, type LedgerEvent, type LedgerEventType, type ChainCheck } from './ledger/index.js'
 export { ruleCalibration, renderCalibration, type RuleCalibration, type CalibrationReport, type CalibrationOptions } from './ledger/index.js'
 export { renderTenantReport, type TenantReportOptions } from './ledger/index.js'
 export { openFileLedger, parseChainJSONL } from './ledger/index.js'
+// Ledger at scale (2026-09-28): snapshot by reference, streamed export and reopen, torn-tail recovery.
+export {
+  ChainExportTooLarge, CHAIN_EXPORT_MAX_CHARS, readChainFile, repairTornTail, chainLines, writeChainJSONL, writeChainFile,
+  TornTailError, LedgerFileCorrupt, LedgerReadOnly, LedgerFileChanged, PAYLOAD_VIEW, payloadViewOf,
+  type ChainSnapshot, type ContentCheckOptions, type FileLedger, type FileLedgerOptions, type ChainFile, type TornTail,
+  type RepairReport, type ChainSource, type PayloadViewInfo, type ChainWalkOptions,
+} from './ledger/index.js'
+export {
+  signDecision, verifySignedDecision, decisionProblem, decisionId, decisionSubject, decisionConflict, makeGrant,
+  readDecisionBook, grantInForce, declinesFor, revisionsOf, isDecisionKind, DecisionRefused, DECISION_KINDS,
+  DECISION_LEVELS, DECISION_SIGNING_PREFIX,
+  type Decision, type DecisionKind, type GrantDecision, type DeclineDecision, type DeclineEvidence, type PolicyRevisionDecision,
+  type SignedDecision, type TrustedKeys, type DecisionEntry, type DecisionPayload, type DecisionBook, type DecisionCheck,
+} from './ledger/index.js'
+export { verdictDoorProblem, isRecordableVerdict, type VoiceConfig, type UnrecordedEvent } from './http/service.js'
+export {
+  voiceSurface, voiceFromJson, opinionFromJson, twinFromJson, snapshotFromJson, policyFromJson, declarationFromJson, bookStatus,
+  SurfaceInputError, TWIN_MAP_VERSIONS, TWIN_MAP_STATUS, TWIN_RULESETS, reconcileFromJson, populationFromJson, rootKeysFromJson, anchorsFromJson, actionCheckFromJson, actionDisposition, actionFromJson, levelFromJson, trustedKeysFromJson,
+  grantSettings,
+  type ActionCheckSurface, type ActionDisposition, type ReconcileSurface, type ReconcileContext, type TwinMapStatus,
+  type VoiceSurface, type OpinionSurface, type OpinionContext, type BookStatus, type WorkflowSettings,
+} from './http/surfaces.js'
+export {
+  tenantOpinions, renderOpinionsSection, monthPeriod, readRung, readVoiceBook, bookRefusal, declarationsOverridden, isBookSettings,
+  type BookSettings, type RungRead, type OverriddenDeclaration, type DeclinedProposal,
+  type TenantOpinions, type OpenProposal, type WorkflowVoiceRow, type NoticeRow, type WorkflowNotices, type RungNotices, type ReportPeriod,
+} from './ledger/report.js'
+export {
+  assessVoiceFromLedger, declineDecision, declineStanding, grantForProposal, policyRevisionDecision, isBookDeclaration,
+  RESEARCH_PROMOTION_POLICY, RESEARCH_REPORT, dollarBar, grantUnderPolicy, declineOnBook,
+  type BookDeclaration, type ChainExport, type BookCitation, type DeclineCitation, type StandingDecline,
+  type SamplingPlan, type EvidenceRequirements,
+} from './verdict/voice.js'
+// Evidence integrity (2026-09-28): key registry + roles, signed reviews, verifiable sampling, canaries, tenancy.
+export {
+  verifySignature, makeReview, makeKeyRegister, makeKeyRevoke, authorizeSigner, registryOf, grantAt, canarySealsFor,
+  canaryRevealsFor, canaryCommitment, CANARY_COMMIT_PREFIX, KeyRegistry, ROLES, ROLE_FOR, isRole, keyFingerprint,
+  SampleRefused, deriveSample, chainPeriods, periodAt, nextPeriodEnd, chainClock, periodFrame, recordWorkflow, sampleSeed,
+  drawSize, drawStratum, sampleSubject, sampleKey, PERIOD_UNITS, isPeriodUnit, STRATA, SAMPLE_SEED_PREFIX,
+  tenantOfWorkflow, decisionTenant, BOOK_DECISION_KINDS, isBookDecisionKind,
+  type KeyRegisterDecision, type KeyRevokeDecision, type CanarySealDecision, type CanaryRevealDecision, type ReviewDecisionBody,
+  type Signable, type SignedReviewEntry, type AnchorOptions, type Role, type RootKeys, type KeyEntry, type Authorization,
+  type PeriodUnit, type PeriodSpan, type Stratum, type SampleRates, type SampleBody, type SampleEntry, type SampleRequest,
+  type BookDecision, type BookDecisionKind, type KeyDecision, type CanaryDecision, type KeyDecisionKind, type CanaryDecisionKind,
+} from './ledger/index.js'
+export { zeroMissN, successLowerBound, describeBound, oneSidedLevel, SIDEDNESS, type Sidedness } from './verdict/bounds.js'
+// D-ANCHOR + R3 (security fix, 2026-09-28): unanchored decisions have no rung effect; recorded verdicts are re-checked on read.
+export { isAnchored, noEffect, noEffectNotice, ANCHOR_HINT, recordedVerdictProblem, carryOwnRead, governingProblem, type NoEffect } from './ledger/decisions.js'
+// D-DUAL + D-GOVERNING-POLICY surfaces (2026-09-28): the declared policy judges every grant; the second signature.
+export { governedRead, governedSignatures, governing, type GovernedRead } from './http/dual.js'
+export { cosignFromJson, type CosignSurface } from './http/cosign.js'
+export {
+  auditEvidence, auditApplies, samplingRates, chainOf, reviewsBy, dueSamples, commitDueSamples, reviewQueue, sealCanaries,
+  revealCanaries, newSalt,
+  type EvidenceAdjustment, type EvidenceCitation, type PeriodDraw, type QueueItem,
+} from './surveillance/index.js'
 export { route, type HttpRequest, type HttpResponse } from './http/router.js'
 export { serve, serveService, nodeHandler } from './http/serve.js'
 export { OPENAPI } from './http/openapi.js'
 export { createService, apiKeyAuth, fixedWindowRateLimiter, type Service, type ServiceOptions, type Authenticator, type AuthResult, type RateLimiter } from './http/service.js'
 export { signPayload, createFetchDispatcher, type WebhookTarget, type WebhookEvent, type WebhookDispatcher } from './http/webhooks.js'
 export { createClient, VerifyError, type VerifyClient, type ClientOptions, type Transport, type TransportRequest, type TransportResponse } from './sdk/client.js'
-export { deriveVerdictId, verifyReplay, type ReplayCheck } from './protocol/replay.js'
+export {
+  deriveVerdictId, verifyReplay, replayInputProblem, STRUCTURE_ONLY_NOTE,
+  type ReplayCheck, type ReplayStatus, type ReperformResult, type ReplayOptions,
+} from './protocol/replay.js'
+export { assertExtraction, extractionProblem, InputRefused } from './protocol/input.js'
 export { generateSigningKeypair, signVerdict, verifyEnvelope, type SignedVerdict, type EnvelopeCheck } from './protocol/envelope.js'
 export { reconcile, type ReconciliationRuleset, type ReconField, type ReconCheck, type ReconcileOptions } from './reconcile/index.js'
-export { PRACTITIONER, STRICT, applyTolerancePolicy, type TolerancePolicy } from './tolerance.js'
+export { PRACTITIONER, STRICT, CAPPED, applyTolerancePolicy, toleranceIdentity, documentGrain, roundingSteps, cashStepOf, type TolerancePolicy, type RoundingCap } from './tolerance.js'
+export { normalizePrice } from './binding/forensic-normalizer.js'
 export {
   mine, compileRuleset, caseToExtraction, apCasesToTable, AP_MINE_SCHEMA, MINE_VERSION, DEFAULT_T_GRID,
   buildGrammar, validateSchema, validateCaseTable, resolveMineOptions, parseJsonl, caseTableFromRows,
@@ -349,8 +151,43 @@ export {
   type MineSchema, type MineFieldSpec, type MineFieldType, type MineCase, type CaseTable, type ExcludedCase, type MineOptions,
   type MineReport, type JudgedCandidate, type CandidateSpec, type Candidate, type Fate, type CompiledRuleset, type CompileOptions, type DistilApCase,
 } from './mine/index.js'
+export { verifyCellCitations, parseTableText, parseCellNumber, tableScale, headerDate, type CellCitation, type CellCitationOptions, type TextTable, type TextTableRow } from './tables/index.js'
 export {
   verifyAgainstSource, verifyQuote, verifyValueInText, prepareSource, matchQuote, matchValue,
   type QuoteAssertion, type ValueAssertion,
 } from './textmatch/index.js'
+export * from './twin/index.js'
+export * from './twin-einvoice/index.js'
 export type * from './verdict/schema.js'
+// Completeness reconciliation (2026-09-28): does the book cover the population the customer paid from?
+export {
+  reconcileCompleteness, effectiveCompletenessMapping, completenessReportIntact, renderCompletenessReport, COMPLETENESS_BOUNDARY,
+  readPopulation, readPopulationCSV, readPopulationJSONL, populationFromRows, populationRowsHash, PopulationRefused, CompletenessRefused,
+  type CompletenessMapping, type CompletenessOptions, type CompletenessReport, type EffectiveMapping, type RenderCompletenessOptions,
+  type Population, type PopulationRow, type CsvDelimiter, type BookInput, type BookChain, type PopulationClass, type BookClass,
+  type MatchedItem, type HoldInfo, type BypassedItem, type AmbiguousGroup, type OrphanItem, type UnkeyedItem, type UnreadableItem,
+  type FieldDifference, type BookSource, type AmountFormat, type DateFormat, type KeyRules,
+} from './reconcile/completeness/index.js'
+// External anchoring (2026-09-28): signed checkpoints of the chain head, held outside the book; a rewrite that re-verifies
+// internally is caught against them.
+export {
+  checkpoint, signCheckpoint, verifyCheckpoint, verifyAgainstCheckpoints, verifyCheckpointSignature, checkpointBodyProblem,
+  checkpointMessage, checkpointDigest, checkpointId, CheckpointRefused, CHECKPOINT_VERSION, CHECKPOINT_SIGNING_PREFIX, WITNESS_ROLE,
+  fileWitness, dirWitness, readWitnessFile, readWitnessDir, latestCheckpoint, WitnessStoreCorrupt,
+  verifyTimestampToken, verifyCheckpointTimestamp,
+  type Checkpoint, type CheckpointBody, type CheckpointOptions, type CheckpointCheck, type CheckpointStatus, type AnchorReport,
+  type AnchorCheckOptions, type WitnessAnchors, type WitnessKeys, type WitnessVia, type Book as AnchorBook,
+  type CheckpointWriter, type PublishReceipt, type TimestampTrust, type TimestampCheck,
+} from './anchor/index.js'
+// Ruleset succession + governed reads (2026-09-29): a person carries a grant across a ruleset version, with a replay attached.
+export {
+  successionProblem, successionNotice, rulesetWorkflow, loosens, governedNoEffect, governedNotices, inadmissibleGrants, governingRead,
+  type Succession, type SuccessionReplay, type SuccessionChange, type SuccessionOutcome,
+} from './ledger/decisions.js'
+export {
+  successionReplay, checkSuccessionReplay, successionGrant,
+  type SuccessionReplayOptions, type SuccessionReplayResult, type SuccessionInput,
+} from './ledger/succession.js'
+// Calibration facts in the index (2026-09-29, P-J): calibration reads without parsing every verdict.
+export { recordFacts, recordFactsAt, evidenceMark, RECORD_FACTS, type VerdictFacts, type RecordFacts, type EvidenceMark } from './ledger/index.js'
+export { successionFromJson, type SuccessionSurface } from './http/succession.js'
