@@ -6,13 +6,15 @@
  * prompt, i.e. advisory). This makes the check mechanical: the agent states what should now be true, we read the real state
  * (a file, a form store, a record — through a reader the host supplies), and compare deterministically.
  *
- *   PASS    — every expectation holds in the real state
- *   FAIL    — at least one expectation is demonstrably false (the claim was untrue) → HOLD, tell the agent what's actually there
- *   ABSTAIN — the state could not be read, or an expectation is unverifiable → a person looks; the claim is NOT accepted
+ *   PASS              — every expectation holds in the real state
+ *   FAIL              — at least one expectation is demonstrably false (the claim was untrue) → HOLD, tell the agent what's actually there
+ *   INSUFFICIENT_DATA — can't tell: the state could not be read, or an expectation is unverifiable → a person looks; the claim
+ *                       is NOT accepted. Written ABSTAIN before 2026-10-06; readCheckOutcome (./outcome.ts) still reads that.
  *
  * Never accepts a claim it could not check. Deterministic; the only I/O is the host-supplied reader.
  */
 import { canonicalize, hashOf } from 'riposte-verify'
+import type { CheckOutcome } from './outcome.js'
 
 export interface Expectation {
   /** where to look: a key the reader understands (a file path, a record id, a form name…) */
@@ -36,7 +38,7 @@ export interface DoneClaim {
 /** Host-supplied: return the parsed JSON at `source`, or throw if it cannot be read. */
 export type StateReader = (source: string) => unknown
 
-export type DoneOutcome = 'PASS' | 'FAIL' | 'ABSTAIN'
+export type DoneOutcome = CheckOutcome
 
 export interface ExpectationResult {
   source: string
@@ -77,11 +79,11 @@ export function checkDone(claim: DoneClaim, read: StateReader): DoneResult {
   }
   const results: ExpectationResult[] = []
   if (!claim.expectations.length) {
-    return { outcome: 'ABSTAIN', claim: claim.claim, results, observed: {}, message: `"${claim.claim}" came with nothing checkable — not accepted as done; state what should now be true.` }
+    return { outcome: 'INSUFFICIENT_DATA', claim: claim.claim, results, observed: {}, message: `"${claim.claim}" came with nothing checkable — not accepted as done; state what should now be true.` }
   }
   for (const e of claim.expectations) {
     const st = load(e.source)
-    if (!st.ok) { results.push({ source: e.source, path: e.path, outcome: 'ABSTAIN', detail: `could not read ${e.source}: ${st.error}` }); continue }
+    if (!st.ok) { results.push({ source: e.source, path: e.path, outcome: 'INSUFFICIENT_DATA', detail: `could not read ${e.source}: ${st.error}` }); continue }
     const got = getPath(st.value, e.path)
     if (e.exists !== undefined && e.equals === undefined) {
       const ok = got.found === e.exists
@@ -89,7 +91,7 @@ export function checkDone(claim: DoneClaim, read: StateReader): DoneResult {
         detail: ok ? `${e.path} is ${got.found ? 'present' : 'absent'} as claimed` : `${e.path} is ${got.found ? 'present' : 'absent'}, but the claim says ${e.exists ? 'present' : 'absent'}` })
       continue
     }
-    if (e.equals === undefined) { results.push({ source: e.source, path: e.path, outcome: 'ABSTAIN', detail: 'expectation states neither `equals` nor `exists` — unverifiable' }); continue }
+    if (e.equals === undefined) { results.push({ source: e.source, path: e.path, outcome: 'INSUFFICIENT_DATA', detail: 'expectation states neither `equals` nor `exists` — unverifiable' }); continue }
     if (!got.found) { results.push({ source: e.source, path: e.path, outcome: 'FAIL', expected: e.equals, actual: undefined, detail: `${e.path} does not exist in ${e.source} — nothing was saved there` }); continue }
     const tol = e.tolerance ?? 0.005
     const ok = typeof e.equals === 'number' && typeof got.value === 'number' ? Math.abs(got.value - e.equals) <= tol : canonicalize(got.value) === canonicalize(e.equals)
@@ -98,12 +100,12 @@ export function checkDone(claim: DoneClaim, read: StateReader): DoneResult {
   }
   const observed: Record<string, string> = {}
   for (const [src, st] of cache) observed[src] = st.ok ? hashOf(st.value) : `unreadable: ${st.error}`
-  const outcome: DoneOutcome = results.some((r) => r.outcome === 'FAIL') ? 'FAIL' : results.some((r) => r.outcome === 'ABSTAIN') ? 'ABSTAIN' : 'PASS'
+  const outcome: DoneOutcome = results.some((r) => r.outcome === 'FAIL') ? 'FAIL' : results.some((r) => r.outcome === 'INSUFFICIENT_DATA') ? 'INSUFFICIENT_DATA' : 'PASS'
   const fails = results.filter((r) => r.outcome === 'FAIL')
   const message = outcome === 'PASS'
     ? `Verified: "${claim.claim}" — ${results.length} expectation(s) hold in the real state.`
     : outcome === 'FAIL'
       ? `Not done: "${claim.claim}" is contradicted by the actual state — ${fails.map((f) => f.detail).join('; ')}.`
-      : `Could not verify "${claim.claim}" — ${results.filter((r) => r.outcome === 'ABSTAIN').map((r) => r.detail).join('; ')}. Not accepted as done.`
+      : `Could not verify "${claim.claim}" — ${results.filter((r) => r.outcome === 'INSUFFICIENT_DATA').map((r) => r.detail).join('; ')}. Not accepted as done.`
   return { outcome, claim: claim.claim, results, observed, message }
 }

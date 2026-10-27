@@ -1,0 +1,47 @@
+{
+  "spec": "bench-spec/1",
+  "id": "sci-r2-argo",
+  "title": "Ocean float quality flags and one published table replayed (Argo mixed layers)",
+  "adapter": "items",
+  "label": "blind",
+  "blind": true,
+  "json_nan": true,
+  "files": { "c0": "scratch/c0-result.json", "recompute": "scratch/recompute-result.json", "formal": "scratch/formal-checks.json", "a2": "scratch/a2-tempthreshold-19021.json" },
+  "run": { "id": "SCI-R2 frozen recompute (float 19019) and the A2 demonstration (float 19021)", "date": "2026-10-04", "engine_version": null, "ruleset": null },
+  "rows": [
+    {
+      "claim": "C0 (decisive): the database row count sits in the abstract's band",
+      "items": "c0:", "where": {}, "hit": { "C0": "PASS" }, "method": "wilson",
+      "bar": { "text": "C0: PASS if N_valid is in [1,187,500, 1,250,000] (the abstract's 'nearly 1,250,000')", "test": { "k": { "eq": "$n" } } },
+      "note": "blind to the values, not to the method: the prereg froze while the data folder was empty",
+      "reported": { "k": 0, "n": 1 }
+    },
+    {
+      "claim": "C1 (decisive): per-profile density-threshold MLD from QC-honoring data agrees with the database",
+      "n": { "$from": "recompute:compare.QC.M" }, "k": { "$from": "recompute:compare.QC.C1_agree" }, "method": "wilson",
+      "bar": { "text": "C1: PASS if |M| >= 20 and at least 90% of M agree; FAIL if |M| >= 20 and fewer; INSUFFICIENT if |M| < 20", "test": { "rate": { "ge": 0.9 } }, "min_n": 20 },
+      "note": "the frozen float is flagged 2 on every level, so QC-honoring data admits no level",
+      "reported": { "k": 0, "n": 0 }
+    },
+    {
+      "claim": "C2 (decisive): per-profile mixed-layer mean temperature agrees with the database",
+      "n": { "$from": "recompute:compare.QC.C2_set" }, "k": { "$from": "recompute:compare.QC.C2_agree" }, "method": "wilson",
+      "bar": { "text": "C2: PASS if the restricted set has >= 20 profiles and at least 90% agree; INSUFFICIENT if fewer than 20", "test": { "rate": { "ge": 0.9 } }, "min_n": 20 },
+      "reported": { "k": 0, "n": 0 }
+    },
+    { "claim": "control, QC ignored: MLDs agreeing with the database", "n": { "$from": "recompute:compare.RAW.M" }, "k": { "$from": "recompute:compare.RAW.C1_agree" }, "method": "wilson", "note": "control verdicts are descriptive; they do not replace C1/C2", "reported": { "k": 100, "n": 264 } },
+    { "claim": "the published 2009 code replica: MLDs agreeing with the database", "n": { "$from": "recompute:compare.PUB.M" }, "k": { "$from": "recompute:compare.PUB.C1_agree" }, "method": "wilson", "reported": { "k": 100, "n": 259 } },
+    { "claim": "formal checks over the float profile files with no failure", "items": "formal:checks", "where": {}, "hit": { "fail": 0 }, "method": "wilson", "reported": { "k": 15, "n": 15 } },
+    { "claim": "formal checks passed by the derived database file", "items": "formal:database", "where": {}, "hit": { "result": "PASS" }, "method": "wilson", "reported": { "k": 2, "n": 12 } },
+    { "claim": "A2, QC honored: temperature-threshold MLDs agreeing with the database (float 19021)", "n": { "$from": "a2:compare_vs_tt_mld.QC.n_matched" }, "k": { "$from": "a2:compare_vs_tt_mld.QC.agree" }, "method": "wilson", "note": "post-hoc demonstration (Amendment A2), not a verdict", "reported": { "k": 219, "n": 219 } },
+    { "claim": "A2, QC ignored: temperature-threshold MLDs agreeing with the database (float 19021)", "n": { "$from": "a2:compare_vs_tt_mld.RAW.n_matched" }, "k": { "$from": "a2:compare_vs_tt_mld.RAW.agree" }, "method": "wilson", "note": "post-hoc demonstration (Amendment A2), not a verdict", "reported": { "k": 217, "n": 219 } }
+  ],
+  "misses": [
+    { "id": "selection-rule", "kind": "method", "description": "the float-selection rule did not anticipate a float flagged 2 on every level, so the decisive test had nothing to compute; a second float was chosen post hoc (A2)", "post_hoc": false },
+    { "id": "units-assumed", "kind": "data-defect", "description": "the prereg assumed the database's MLD in dbar and its temperature in situ; the file holds TEOS-10 depths and Conservative Temperature, and its attributes never say so", "post_hoc": false },
+    { "id": "row-count", "kind": "data-defect", "description": "the database holds 1,385,119 valid rows against the abstract's 'nearly 1,250,000' (possibly a later file than the paper's own processing)", "post_hoc": false },
+    { "id": "density-rule-unknown", "kind": "unexplained", "description": "the 2017 database's density-threshold rule is not identified: five density definitions give at most 1 of 259 exact, and the rule is unpublished", "post_hoc": true },
+    { "id": "database-format", "kind": "data-defect", "description": "the derived database file fails 10 of 12 format checks (no Conventions attribute, non-CF standard names, typed range mismatches, status meaning in units, a MATLAB datenum date, TEOS-10 quantities under EOS-80-era units)", "post_hoc": false },
+    { "id": "missing-rows", "kind": "data-defect", "description": "cycles 227 and 228 of float 19019 compute normally but have no database row, for no visible reason", "post_hoc": false }
+  ]
+}

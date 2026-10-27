@@ -94,7 +94,7 @@ describe('the scenario: every population row lands in the class it states', () =
       [s.verdicts.F4!.verdict_id, 'FAIL', true],
       [s.verdicts.D1a!.verdict_id, 'PASS', false],
     ])
-    // P-S3-R1 (SURFACES-4): under a tenant scope the summary is the tenant's slice (was records 15, out_of_scope 1, both tenants).
+    // P-S3-R1: under a tenant scope the summary is the tenant's slice (was records 15, out_of_scope 1, both tenants).
     expect(r.book).toMatchObject({ records: 14, out_of_scope: 0, in_scope: 14, in_period: 14, tenants: ['acme'], by_class: { MATCHED: 10, ORPHAN: 3, AMBIGUOUS: 1, UNKEYED: 0 } })
     expect(r.book.rungs).toEqual([{ workflow_id: 'acme/invoice@0.0.1', from: 'grant' }])
   })
@@ -458,7 +458,7 @@ describe('an empty population and an empty book', () => {
     expect(r.book.records).toBe(0)
     expect(renderCompletenessReport(r)).toContain('0 of 0 payments (n/a)')
   })
-  it('a book carrying something that is not a VERDICT is refused (R3), never counted as the control operating', () => {
+  it('a book carrying something that is not a VERDICT is refused, never counted as the control operating', () => {
     const s = buildScenario()
     const chain = parseChainJSONL(s.ledger.chainJSONL())
     // Rebuild a book where one RECORD payload carries COUNSEL (a pre-door legacy entry), re-linked so the chain verifies.
@@ -468,7 +468,7 @@ describe('an empty population and an empty book', () => {
     const events: LedgerEvent[] = []
     let prev = chain.events[0]!.prev_hash
     chain.events.forEach((e, j) => { const ev = linkEvent(j, prev, { ts: e.ts, type: e.type, verdict_id: e.verdict_id, payload: payloads[j] }); events.push(ev); prev = ev.entry_hash })
-    // R3 (2026-09-28): the book itself re-applies the verdict door on read, so such a book does not verify, and nothing is
+    // 2026-09-28: the book itself re-applies the verdict door on read, so such a book does not verify, and nothing is
     // reconciled against it. (The engine's own not_verdict exclusion stays as defence in depth.)
     expect(() => reconcileCompleteness(readPopulationCSV(s.csv), { events, payloads }, MAPPING, { ...ACME, extractions: s.extractions })).toThrow(CompletenessRefused)
     expect(() => reconcileCompleteness(readPopulationCSV(s.csv), { events, payloads }, MAPPING, { ...ACME, extractions: s.extractions })).toThrow(/does not pass the verdict door \(COUNSEL/)

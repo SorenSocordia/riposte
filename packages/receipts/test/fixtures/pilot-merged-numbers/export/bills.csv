@@ -1,0 +1,9 @@
+invoice_number,vendor,date,currency,total,tax,po,status,line_id,item,description,quantity,rate,amount
+GCS-20417,Gulf Coast Supply,2026-09-04,USD,5244.80,,PO-7731,paid,1,EMT-34,3/4 EMT conduit 10ft,40,8.12,324.80
+GCS-20417,Gulf Coast Supply,2026-09-04,USD,5244.80,,PO-7731,paid,2,PNL-200,200A panelboard,12,410.00,4920.00
+GCS-20417,Gulf Coast Supply Co.,2026-09-18,USD,5244.80,,PO-7731,paid,1,EMT-34,3/4 EMT conduit 10ft,40,8.12,324.80
+GCS-20417,Gulf Coast Supply Co.,2026-09-18,USD,5244.80,,PO-7731,paid,2,PNL-200,200A panelboard,12,410.00,4920.00
+GCS-20502,Gulf Coast Supply,2026-09-10,USD,812.00,,PO-7740,paid,1,EMT-34,3/4 EMT conduit 10ft,100,8.12,812.00
+RX-1188,Rexel,2026-09-12,USD,3058.00,,PO-7752,paid,1,THHN-12,12 AWG THHN per 1000ft,20,152.90,3058.00
+WS-9001,Wesco,2026-09-15,USD,1082.50,82.50,PO-7760,paid,1,BOX-4SQ,4in square box,500,2.00,1000.00
+GR-55,Graybar,2026-09-22,USD,1250.00,,PO-7771,held,1,FIT-12,1/2 EMT fitting,100,12.50,1250.00

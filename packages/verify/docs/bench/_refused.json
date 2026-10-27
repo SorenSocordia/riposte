@@ -1,0 +1,157 @@
+{
+ "format": "bench-refused/1",
+ "runs": [
+  {
+   "id": "ap-blind",
+   "title": "AP three-way match on a public benchmark, run 1 (blind by the authors' records only)",
+   "code": "no-recorded-hash",
+   "run_date": "2026-09-23",
+   "reason": "The tool refuses it: no recorded sha256 for its PREREG.md (no sidecar beside it, and no other chain source). No sha256 of that prereg was recorded before the run, and a hash taken now would prove the text from now on, never that it came before the run. So it is not a bench number. Its counts print above, outside the bench rule, with the provenance that does exist."
+  },
+  {
+   "id": "v1b-tabletop",
+   "title": "Evidence ruling tabletop: strike, correct, corroborate, clock",
+   "code": "withdrawn",
+   "status": "withdrawn: prereg not in tree",
+   "date": "2026-10-05",
+   "run_date": "2026-10-03",
+   "reason": "Withdrawn because its prereg names the authors' private folders and an internal code name. It cannot ship byte for byte, and an edited copy would not match its recorded sha256, so the table is not printed. It recorded no misses.",
+   "label": "evidence-ruling tabletop (withdrawn 2026-10-05: names private folders)"
+  },
+  {
+   "id": "rt1-red-team",
+   "title": "Matrix red team against the built products (findings only)",
+   "code": "withdrawn",
+   "status": "withdrawn: prereg and report not in tree",
+   "date": "2026-10-05",
+   "run_date": "2026-10-03",
+   "reason": "Withdrawn because its prereg, and the report its findings were typed from, name the authors' private folders. Neither can ship byte for byte, and an edited copy would not match its recorded sha256. Its findings stay in MISSES.md.",
+   "misses": [
+    {
+     "id": "F1",
+     "kind": "S0 approximability",
+     "description": "legal@0.1.0 certified a deontic modal swap: 'must' quoted as '[may]' or '[can]' PASSed as an accurate quotation",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / legal@0.2.0"
+    },
+    {
+     "id": "F2",
+     "kind": "S0 approximability",
+     "description": "legal@0.1.0 certified a bracketed antonym: 'preclude' quoted as '[allow]' PASSed",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / legal@0.2.0"
+    },
+    {
+     "id": "F3",
+     "kind": "S0 approximability",
+     "description": "legal@0.1.0 certified an ellipsis eliding a limiting clause ('unless ...', 'provided that ...'), reading a conditional as absolute",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / legal@0.2.0"
+    },
+    {
+     "id": "F4",
+     "kind": "S0 minimal complexity",
+     "description": "peppol 0.2.0's per-line R120 slack let each line net exceed quantity times price by 0.02, so N lines overbilled 0.02 times N with every check PASS (and +0.0201 on one line passed at cent rounding)",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / peppol-en16931@0.3.0 (summed deviation stated as an advisory under the V3 ruling; the per-line cliff is exactly 0.02)"
+    },
+    {
+     "id": "F5",
+     "kind": "S0 minimal complexity",
+     "description": "a line priced in another currency, with totals in the invoice currency, PASSes clean: R051 reads one document-level currency",
+     "post_hoc": false
+    },
+    {
+     "id": "F6",
+     "kind": "S0 robustness",
+     "description": "the lenient amount normalizer behind the built-in invoice, pay-app and reconcile rulesets coerces garbled amounts ('$1OO.O0' to 1, '°225.0' to 225)",
+     "post_hoc": false,
+     "fixed_by": "T2-B / engine 0.6.0 (built-in invoice, pay-app and reconcile read text amounts strictly: a garbled amount is UNPARSEABLE, never coerced and never defaulted; verdicts of engines up to 0.5.0 replay as they read)"
+    },
+    {
+     "id": "F7",
+     "kind": "S1 undecidability",
+     "description": "abstain as evasion: one non-numeric character on a failing operand turned FAIL into PASS-WITH-OPEN, and no FAIL was recorded against the vendor",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / engine 0.2.0 (HELD-SUSPECT), re-ruled by V1b / engine 0.3.0 (struck as suspect, counted, gate OPEN)"
+    },
+    {
+     "id": "F8",
+     "kind": "S1 minimal complexity",
+     "description": "a fifth VAT breakdown row with any wrong amount made BR-CO-14 abstain, so a VAT error could hide across five rows",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / peppol-en16931@0.3.0 (every VAT row read as a list)"
+    },
+    {
+     "id": "F9",
+     "kind": "S1 hash",
+     "description": "verdict_id and input_hash did not bind the remedy text: a doctored remedy on a FAIL replayed VERIFIED, and two different bundles shared one verdict id",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / engine 0.2.0 (remedy_table_hash in the verdict id; replay re-derives remedies from the pinned ruleset)"
+    },
+    {
+     "id": "F10",
+     "kind": "S1 scope",
+     "description": "a dissent's sentence is certified as appearing verbatim in the opinion: holding, concurrence, dissent and reported argument are not distinguished",
+     "post_hoc": false
+    },
+    {
+     "id": "F11",
+     "kind": "S1 attestation",
+     "description": "the attest monitor matched an undated model alias to any dated snapshot, including a fabricated future one, so a snapshot switch under one alias was hidden",
+     "post_hoc": false,
+     "fixed_by": "2026-10-04 / the attest monitor requires a dated snapshot to name a real calendar date no later than its reply, records the resolved snapshot as evidence, and names a snapshot change under one declaration (receipts test coh3-attest-snapshot)"
+    },
+    {
+     "id": "F12",
+     "kind": "S2 robustness",
+     "description": "R051 flipped to FAIL on a Cyrillic 'Е' in 'ЕUR': cross-script confusables are not folded",
+     "post_hoc": false
+    },
+    {
+     "id": "F13",
+     "kind": "S2 robustness",
+     "description": "a zero-width space inside an identifier flipped the verdict (whitespace matching missed U+200B)",
+     "post_hoc": false,
+     "fixed_by": "FIX-V / engine 0.2.0 (NFKC; invisible format characters and every kind of space removed)"
+    },
+    {
+     "id": "F14",
+     "kind": "S2 robustness",
+     "description": "the amount reader guessed the locale by position: '1.234' read 1234, a space-grouped '1 234' read 1 (truncated), '1,23' read 1.23",
+     "post_hoc": false,
+     "fixed_by": "T2-B / engine 0.6.0 (invoice, pay-app and reconcile: an ambiguous grouping reads only in the document's declared number_locale or the format its own unambiguous numbers settle, else UNPARSEABLE; a space group reads only under a declared fr; the declarative path reads so since engine 0.2.0 unless a ruleset sets strict_numbers false)"
+    },
+    {
+     "id": "F15",
+     "kind": "S2 robustness",
+     "description": "a trailing space in a key or a no-break space in a value made the field absent, a silent downgrade to PASS-WITH-OPEN",
+     "post_hoc": false,
+     "fixed_by": "T2-B / engine 0.6.0 (invoice, pay-app and reconcile: a key that differs from its path only by spaces or invisible characters is UNPARSEABLE, naming the key, and a refused value is never read as 0; a no-break space inside a number is unreadable; keys are scanned in the document under check, not in contract, evidence or history references; the declarative path names such keys since engine 0.2.0)"
+    },
+    {
+     "id": "F16",
+     "kind": "S2 scaling",
+     "description": "with the single-writer lock off (the plain CLI and MCP stdio paths), eight concurrent writers forked and corrupted the chain",
+     "post_hoc": false,
+     "fixed_by": "FIX-R / receipts per-append lock by default"
+    },
+    {
+     "id": "F17",
+     "kind": "S3 fairness",
+     "description": "an agent could hold a peer and renew the hold with no cap, starving one target forever",
+     "post_hoc": false,
+     "fixed_by": "T4c / custody hold renewal cap per lineage"
+    },
+    {
+     "id": "F18",
+     "kind": "S3 replay",
+     "description": "replay accepted a tampered document.producer (flagged, not re-performed) and an omitted remedies array (VERIFIED, unflagged)",
+     "post_hoc": false,
+     "fixed_by": "2026-10-05 / replay refuses a bundle without its remedies by default"
+    }
+   ],
+   "label": "red-team table (withdrawn 2026-10-05: names private folders)"
+  }
+ ]
+}

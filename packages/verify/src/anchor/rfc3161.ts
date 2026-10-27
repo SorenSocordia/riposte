@@ -1,5 +1,5 @@
 /**
- * RFC 3161 time-stamp tokens, verified OFFLINE (2026-09-28, anchor lane). No network, no new dependency: a minimal DER reader
+ * RFC 3161 time-stamp tokens, verified OFFLINE (2026-09-28). No network, no new dependency: a minimal DER reader
  * and node:crypto.
  *
  * A time-stamp authority (TSA) signs "this 32-byte digest existed by genTime". Asked to stamp checkpointDigest(cp) (the sha256 of

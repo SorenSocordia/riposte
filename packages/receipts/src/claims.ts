@@ -10,14 +10,17 @@
  *   SUPPORTED     the session's latest relevant tool result backs it (and no code was edited after that result)
  *   CONTRADICTED  the latest relevant result says otherwise (a failed test run, a rejected push, a different count)
  *   UNSUPPORTED   nothing in the session backs it: the check never ran, ran before the last code edit, or couldn't be read
- * Over the message: FAIL if anything is contradicted; ABSTAIN if something is unsupported (or there is nothing checkable);
- * PASS only if every claim found is supported.
+ * Over the message: FAIL if anything is contradicted; INSUFFICIENT_DATA (can't tell) if something is unsupported (or there is
+ * nothing checkable); PASS only if every claim found is supported. Before 2026-10-06 can't tell was written ABSTAIN, and a
+ * receipt that says so still reads as INSUFFICIENT_DATA (readCheckOutcome, ./outcome.ts).
  *
  * Conservative by design. Only assertive sentences are read. A sentence that hedges, negates or conditions ("should pass",
  * "not all tests pass", "if the build succeeds") is skipped, as is text inside code. That means it misses some claims, but it
  * doesn't put words in the agent's mouth. English only (the claim patterns are English; the evidence parsers are not).
  * Deterministic; no I/O.
  */
+
+import type { CheckOutcome } from './outcome.js'
 
 export type ClaimKind = 'tests_pass' | 'build_ok' | 'committed' | 'pushed' | 'file_written' | 'completed'
 
@@ -38,7 +41,7 @@ export interface Evidence { tool: string; command?: string; excerpt: string; at?
 export interface ClaimCheck extends ExtractedClaim { status: ClaimStatus; reason: string; evidence?: Evidence }
 
 export interface ClaimsResult {
-  outcome: 'PASS' | 'FAIL' | 'ABSTAIN'
+  outcome: CheckOutcome
   claims: ClaimCheck[]
   final_message_at?: string
   reasons: string[]
@@ -157,6 +160,7 @@ export function parseTestOutput(raw: string): { passed: number[]; failed: number
   const passed: number[] = []
   let failed = 0
   let recognised = false
+  let goTests = 0, goPackages = 0
   for (const line of text.split('\n')) {
     const l = line.trim()
     // vitest "Tests  1 failed | 19 passed (20)" · jest "Tests: 1 failed, 5 passed, 6 total" · pytest "3 failed, 10 passed in 0.1s"
@@ -168,9 +172,14 @@ export function parseTestOutput(raw: string): { passed: number[]; failed: number
       if (p) passed.push(Number(p[1]!.replace(/,/g, '')))
       if (f) failed += Number(f[1]!.replace(/,/g, ''))
     }
-    if (/^--- FAIL\b|^FAIL\s+\S/.test(l)) { recognised = true; failed += 1 } // go test
+    // go test (2026-10-03): one failing test is its "--- FAIL:" line. The package line ("FAIL\t<pkg>\t0.01s", or
+    // "[build failed]") counts only when no test line did (a build failure). vitest's "FAIL  <file> > <test>" line is no count
+    // at all (its "Tests  1 failed" summary is); it used to match here too, so one failing vitest test read "2 failing".
+    if (/^--- FAIL\b/.test(l)) { recognised = true; goTests += 1 }
+    else if (/^FAIL\s+\S+\s+(?:[\d.]+s|\[(?:build|setup) failed\])\s*$/.test(l)) { recognised = true; goPackages += 1 }
     if (/^ok\s+\S+\s+[\d.]+s/.test(l)) { recognised = true; passed.push(1) } // go test package
   }
+  failed += goTests > 0 ? goTests : goPackages
   return { passed, failed, recognised }
 }
 
@@ -262,7 +271,7 @@ function checkOne(c: ExtractedClaim, steps: Step[], upTo: number): ClaimCheck {
 export function checkClaims(steps: Step[], finalIndex?: number, opts: ClaimOptions = {}): ClaimsResult {
   let end = finalIndex ?? -1
   if (end < 0) for (let i = steps.length - 1; i >= 0; i--) if (steps[i]!.kind === 'assistant_text') { end = i; break }
-  if (end < 0) return { outcome: 'ABSTAIN', claims: [], reasons: ['no assistant message to check'] }
+  if (end < 0) return { outcome: 'INSUFFICIENT_DATA', claims: [], reasons: ['no assistant message to check'] }
   // the final message = the contiguous run of assistant text ending at `end` (one reply can be several text blocks)
   let start = end
   while (start > 0 && steps[start - 1]!.kind === 'assistant_text') start--
@@ -277,12 +286,12 @@ export function checkClaims(steps: Step[], finalIndex?: number, opts: ClaimOptio
 export function checkMessageClaims(text: string, steps: Step[], upTo = steps.length, at?: string, opts: ClaimOptions = {}): ClaimsResult {
   const claims = extractClaims(text, opts).map((c) => checkOne(c, steps, upTo))
   const base = at ? { final_message_at: at } : {}
-  if (!claims.length) return { outcome: 'ABSTAIN', claims, ...base, reasons: ['no checkable completion claims in the final message'] }
+  if (!claims.length) return { outcome: 'INSUFFICIENT_DATA', claims, ...base, reasons: ['no checkable completion claims in the final message'] }
   const contra = claims.filter((c) => c.status === 'CONTRADICTED')
   const unsup = claims.filter((c) => c.status === 'UNSUPPORTED')
   const reasons = [...contra, ...unsup].map((c) => `${c.status}: "${c.claim}" — ${c.reason}`)
   if (contra.length) return { outcome: 'FAIL', claims, ...base, reasons }
-  if (unsup.length) return { outcome: 'ABSTAIN', claims, ...base, reasons }
+  if (unsup.length) return { outcome: 'INSUFFICIENT_DATA', claims, ...base, reasons }
   return { outcome: 'PASS', claims, ...base, reasons: [`all ${claims.length} claim(s) are backed by this session's tool results`] }
 }
 

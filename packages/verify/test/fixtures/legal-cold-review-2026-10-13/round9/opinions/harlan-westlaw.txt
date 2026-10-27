@@ -1,0 +1,33 @@
+Harlan Tool Co. v. Brightwater Logistics, Inc., 88 F.4th 412 (2023)
+2023 WL 7491022, 113 UCC Rep.Serv.2d 845
+KeyCite Yellow Flag - Negative Treatment
+Distinguished by Marlow Freight Co. v. Tessaly Corp., 9th Cir., March 3, 2025
+88 F.4th 412
+United States Court of Appeals, Ninth Circuit.
+HARLAN TOOL COMPANY, Plaintiff-Appellant,
+v.
+BRIGHTWATER LOGISTICS, INC., Defendant-Appellee.
+No. 22-35511
+Argued and Submitted May 9, 2023
+Filed November 14, 2023
+Synopsis
+Background: Buyer of warehousing services sued provider for breach of contract. The district court granted summary judgment to provider.
+West Headnotes (2)
+[1] Contracts - Ambiguity in general
+An ambiguity exists only where the contract language is reasonably susceptible to more than one meaning.
+[2] Contracts - Extrinsic evidence
+Extrinsic evidence may not be used to create an ambiguity where none exists.
+Opinion
+HENDRICKS, Circuit Judge:
+*415 We must decide whether the phrase “storage charges” in the parties’ agreement includes handling fees. [1] A contract term is ambiguous only when it is reasonably susceptible to more than one meaning after the court has considered the agreement as a whole. Harlan argues that the term is ambiguous because the industry uses it loosely. We disagree.
+[2] A court may consider extrinsic evidence to determine whether a term is ambiguous, but such evidence may not be used to vary the plain terms of an integrated writing.3 The agreement here contains an integration clause, and the parties are sophisticated commercial actors who negotiated it at
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 3
+Harlan Tool Co. v. Brightwater Logistics, Inc., 88 F.4th 412 (2023)
+2023 WL 7491022, 113 UCC Rep.Serv.2d 845
+*416 arm’s length. Read as a whole, the agreement treats handling fees as a separate line item, and the district court did not err in granting summary judgment to Brightwater on that claim. We therefore AFFIRM.
+MOLINA, Circuit Judge, dissenting.
+I would hold that the phrase “storage charges” is reasonably susceptible to a meaning that includes handling fees, and that summary judgment was therefore improper.
+Footnotes
+3 The parties do not dispute that the agreement is fully integrated.
+All Citations
+88 F.4th 412, 113 UCC Rep.Serv.2d 845

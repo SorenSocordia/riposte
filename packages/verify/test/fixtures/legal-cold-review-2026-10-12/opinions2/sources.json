@@ -1,0 +1,6 @@
+{
+  "tw-v1": { "file": "twombly-v1-plain-dissent-line.txt", "source": "judge variant: dissent designation without 'with whom ... except as to Part IV'" },
+  "tw-v1b": { "file": "twombly-v1b-with-whom.txt", "source": "judge variant: 'with whom Justice GINSBURG joins, dissenting.'" },
+  "tw-v2": { "file": "twombly-v2-short-parallel-no-Bd.txt", "source": "judge variant: short parallel-cite running header; 'Bd.' spelled out" },
+  "550 U.S. 544": { "file": "twombly-district-court.txt", "source": "judge variant: the district court opinion in the same matter, filed under the Supreme Court cite" }
+}

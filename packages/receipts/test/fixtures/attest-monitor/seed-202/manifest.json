@@ -1,0 +1,200 @@
+{
+  "month": "2026-09",
+  "deployer": "Synthetic Co. (generated, not a customer)",
+  "runs": [
+    {
+      "name": "run-c01",
+      "path": "runs/run-c01.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301"
+    },
+    {
+      "name": "run-c02",
+      "path": "runs/run-c02.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha"
+    },
+    {
+      "name": "run-c03",
+      "path": "runs/run-c03.jsonl",
+      "format": "api-log",
+      "provider": "openai",
+      "declared": "model-gamma-2025-04-14"
+    },
+    {
+      "name": "run-c04",
+      "path": "runs/run-c04.jsonl",
+      "format": "api-log",
+      "provider": "openai",
+      "declared": "model-gamma-2025-04-14"
+    },
+    {
+      "name": "run-c05",
+      "path": "runs/run-c05.jsonl",
+      "format": "api-log",
+      "provider": "openrouter",
+      "declared": "vendor-a/model-delta"
+    },
+    {
+      "name": "run-c06",
+      "path": "runs/run-c06.jsonl",
+      "format": "api-log",
+      "provider": "openrouter",
+      "declared": "vendor-a/model-delta"
+    },
+    {
+      "name": "run-c07",
+      "path": "runs/run-c07.jsonl",
+      "format": "codex",
+      "provider": "openai",
+      "declared": "model-gamma"
+    },
+    {
+      "name": "run-c08",
+      "path": "runs/run-c08.jsonl",
+      "format": "codex",
+      "provider": "openai",
+      "declared": "model-gamma"
+    },
+    {
+      "name": "run-c09",
+      "path": "runs/run-c09.jsonl",
+      "format": "api-log",
+      "provider": "anthropic",
+      "declared": "model-beta-20250301"
+    },
+    {
+      "name": "run-c10",
+      "path": "runs/run-c10.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301"
+    },
+    {
+      "name": "run-p01",
+      "path": "runs/run-p01.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301",
+      "allowed": [
+        "model-alpha-20250301",
+        "model-beta-20250301"
+      ]
+    },
+    {
+      "name": "run-p02",
+      "path": "runs/run-p02.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301"
+    },
+    {
+      "name": "run-p03",
+      "path": "runs/run-p03.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301"
+    },
+    {
+      "name": "run-p04",
+      "path": "runs/run-p04.jsonl",
+      "format": "api-log",
+      "provider": "openai",
+      "declared": "model-gamma-2025-04-14"
+    },
+    {
+      "name": "run-p05",
+      "path": "runs/run-p05.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-latest"
+    },
+    {
+      "name": "run-p06",
+      "path": "runs/run-p06.jsonl",
+      "format": "api-log",
+      "provider": "openai",
+      "declared": "model-gamma"
+    },
+    {
+      "name": "run-p07",
+      "path": "runs/run-p07.jsonl",
+      "format": "codex",
+      "provider": "openai",
+      "declared": "model-gamma",
+      "allowed": [
+        "model-gamma",
+        "model-gamma-mini"
+      ]
+    },
+    {
+      "name": "run-p08",
+      "path": "runs/run-p08.jsonl",
+      "format": "codex",
+      "provider": "openai",
+      "declared": "model-gamma"
+    },
+    {
+      "name": "run-p09",
+      "path": "runs/run-p09.jsonl",
+      "format": "api-log",
+      "provider": "openrouter",
+      "declared": "vendor-a/model-delta"
+    },
+    {
+      "name": "run-p10",
+      "path": "runs/run-p10.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301"
+    },
+    {
+      "name": "run-p11",
+      "path": "runs/run-p11.jsonl",
+      "format": "claude-code",
+      "provider": "anthropic",
+      "declared": "model-alpha-20250301"
+    },
+    {
+      "name": "run-p12",
+      "path": "runs/run-p12.jsonl",
+      "format": "api-log",
+      "provider": "anthropic",
+      "declared": "model-beta-20250301"
+    }
+  ],
+  "exports": [
+    {
+      "source": "anthropic-usage-report",
+      "path": "exports/anthropic-usage-report.json"
+    },
+    {
+      "source": "openai-usage",
+      "path": "exports/openai-usage.json"
+    },
+    {
+      "source": "openai-chat-completions",
+      "path": "exports/openai-chat-completions.json"
+    },
+    {
+      "source": "openai-responses",
+      "path": "exports/openai-responses.jsonl"
+    },
+    {
+      "source": "openrouter-generations",
+      "path": "exports/openrouter-generations.jsonl"
+    },
+    {
+      "source": "openrouter-activity",
+      "path": "exports/openrouter-activity.json"
+    }
+  ],
+  "anchors": [
+    {
+      "ledger": "anchors/anchors.jsonl",
+      "public_key": "anchors/anchor.pub.pem"
+    }
+  ]
+}

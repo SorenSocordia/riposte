@@ -42,7 +42,7 @@
  * ANCHORED signer's decision has effect; an unanchored GRANT or DECLINE is cited under `book.no_effect` with its notice and
  * moves nothing, in either direction. The flag path (a WorkflowDeclaration with `granted`) is unchanged, byte for byte.
  *
- * EVIDENCE INTEGRITY (2026-09-28, wave 3): so the evidence behind a grant cannot quietly rot or be gamed. A policy tier may
+ * EVIDENCE INTEGRITY (2026-09-28): so the evidence behind a grant cannot quietly rot or be gamed. A policy tier may
  * declare, fixed at grant like everything else: a sampling plan (random review draws from the book, and SURVEILLANCE under
  * autonomy, so the false-PASS evidence keeps flowing and a demotion PROPOSAL can fire on a new miss), random-selection-only
  * evidence, signed reviews, segregation of duties, reviewer-attention canaries, and a highest grantable rung (max_rung). The
@@ -331,9 +331,9 @@ export interface PromotionPolicy {
  * can be exercised and read. A deployment declares its own policy; the bars are a business and risk decision, not ours.
  * Note what the severe tier implies: with 0 misses, a 0.1% bar at 99% one-sided Wilson needs 5,407 reviewed PASSes.
  *
- * FIXED 2026-09-28 (evidence-integrity lane; research §5.1): severe.autonomy.min_n was 2,000, which can never clear its own
+ * FIXED 2026-09-28 (research §5.1): severe.autonomy.min_n was 2,000, which can never clear its own
  * bar (the zero-miss n is 5,407 under this policy's one-sided Wilson; 4,603 exact), so the stated minimum was not the real
- * one. It is now the zero-miss n, and the sidedness is declared. VERSION 0.2.0 (E13, design ruling, 2026-09-28): a changed
+ * one. It is now the zero-miss n, and the sidedness is declared. VERSION 0.2.0 (design ruling, 2026-09-28): a changed
  * body never keeps an old label, so the fix ships as 0.2.0. 0.1.0 names the earlier body (severe min_n 2,000, sidedness
  * undeclared).
  * The research-grounded tiers are RESEARCH_PROMOTION_POLICY, below.
@@ -1199,7 +1199,7 @@ export function assessVoiceFromLedger(
 }
 
 /**
- * N3 (CLI lane): a GRANT made under a policy, refused the same way on every surface (CLI, MCP, HTTP). The policy lints, the
+ * A GRANT made under a policy, refused the same way on every surface (CLI, MCP, HTTP). The policy lints, the
  * tier is declared, the rung is grantable at that tier (max_rung), then makeGrant (well-formed, bounds on autonomy). The
  * grant names the policy by hash: the settings are fixed from here.
  */
@@ -1223,7 +1223,7 @@ export function grantUnderPolicy(policy: PromotionPolicy, input: Omit<GrantDecis
 }
 
 /**
- * N4 (CLI lane): a person's "no", checked against the book as it stands. Re-derives the assessment from the ledger itself and
+ * A person's "no", checked against the book as it stands. Re-derives the assessment from the ledger itself and
  * refuses unless the live proposal is exactly the one named (an assessment passed around can be recomputed by a forger; the
  * book cannot). Returns the DECLINE to sign and append.
  */
@@ -1355,7 +1355,7 @@ function assessCore(calibration: WorkflowCalibration, declaration: WorkflowDecla
       ? [`surveillance: ${trigger.length} post-grant finding(s) under autonomy (${trigger.filter(id => !untestedIds.has(id)).length} overturned, ${trigger.filter(id => untestedIds.has(id)).length} untested)`]
       : []
     // DECISION D-UNEVIDENCED (2026-09-28; fork: here): evidence OF failure is urgent; an ABSENCE of evidence is a
-    // standing notice. E4 (flipped 2026-09-28, the security-fix lane): `urgent` is exactly basis === 'failure'.
+    // standing notice. Flipped 2026-09-28: `urgent` is exactly basis === 'failure'.
     const basis: DemotionProposal['basis'] = failing_cases.length > 0 || failureBlockers.length > 0 ? 'failure' : 'unevidenced'
     const body: Omit<DemotionProposal, 'proposal_id'> = {
       kind: 'DEMOTION_PROPOSAL', urgent: basis === 'failure', basis, ...common, to,

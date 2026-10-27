@@ -1,0 +1,771 @@
+{
+  "prereg_sha256": "f20a9a23800728f341f87a6f170c22d9f3d00b2afe47ba65a1603968b6507633",
+  "inputs": {
+    "rotmod": {
+      "path": "data\\NGC3198_rotmod.dat",
+      "sha256": "17b774ad11e7dd745a067073b76f1909d4de32fa87616df12b64da3f225cf953"
+    },
+    "table1": {
+      "path": "data\\SPARC_Lelli2016c.mrt",
+      "sha256": "5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243"
+    },
+    "table2": {
+      "path": "data\\MassModels_Lelli2016c.mrt",
+      "sha256": "9108994b12cc401b94a1768beca61c53ec354779385c9c9cc571049f3043244c"
+    }
+  },
+  "columns": [
+    "Rad",
+    "Vobs",
+    "errV",
+    "Vgas",
+    "Vdisk",
+    "Vbul",
+    "SBdisk",
+    "SBbul"
+  ],
+  "units": [
+    "kpc",
+    "km/s",
+    "km/s",
+    "km/s",
+    "km/s",
+    "km/s",
+    "L/pc^2",
+    "L/pc^2"
+  ],
+  "missing_columns": [],
+  "n_rows": 43,
+  "params": {
+    "R_kpc": 10.0,
+    "X_kms": 10.0,
+    "Y_kms": 30.0,
+    "N_min": 5,
+    "Y_disk": 0.5,
+    "Y_bul": 0.7
+  },
+  "unit_check": {
+    "Rad": {
+      "declared": "kpc",
+      "expected": "kpc",
+      "ok": true
+    },
+    "Vobs": {
+      "declared": "km/s",
+      "expected": "km/s",
+      "ok": true
+    },
+    "errV": {
+      "declared": "km/s",
+      "expected": "km/s",
+      "ok": true
+    },
+    "Vgas": {
+      "declared": "km/s",
+      "expected": "km/s",
+      "ok": true
+    },
+    "Vdisk": {
+      "declared": "km/s",
+      "expected": "km/s",
+      "ok": true
+    },
+    "Vbul": {
+      "declared": "km/s",
+      "expected": "km/s",
+      "ok": true
+    }
+  },
+  "radius_strictly_increasing": true,
+  "table2_crosscheck": {
+    "rows_table2": 43,
+    "rows_rotmod": 43,
+    "cell_mismatches": 0
+  },
+  "per_point": [
+    {
+      "Rad": 0.32,
+      "Vobs": 24.4,
+      "errV": 35.9,
+      "Vgas": 0.0,
+      "Vdisk_scaled": 44.746,
+      "Vbar": 44.746,
+      "excess": -20.346,
+      "Vbar_Yd0.7": 52.944,
+      "beyond_R": false
+    },
+    {
+      "Rad": 0.64,
+      "Vobs": 43.3,
+      "errV": 16.3,
+      "Vgas": 0.0,
+      "Vdisk_scaled": 52.085,
+      "Vbar": 52.085,
+      "excess": -8.785,
+      "Vbar_Yd0.7": 61.628,
+      "beyond_R": false
+    },
+    {
+      "Rad": 0.96,
+      "Vobs": 45.5,
+      "errV": 16.1,
+      "Vgas": 0.0,
+      "Vdisk_scaled": 55.847,
+      "Vbar": 55.847,
+      "excess": -10.347,
+      "Vbar_Yd0.7": 66.079,
+      "beyond_R": false
+    },
+    {
+      "Rad": 1.28,
+      "Vobs": 58.5,
+      "errV": 15.4,
+      "Vgas": 0.35,
+      "Vdisk_scaled": 58.478,
+      "Vbar": 58.479,
+      "excess": 0.021,
+      "Vbar_Yd0.7": 69.193,
+      "beyond_R": false
+    },
+    {
+      "Rad": 1.61,
+      "Vobs": 68.8,
+      "errV": 7.61,
+      "Vgas": 0.15,
+      "Vdisk_scaled": 59.553,
+      "Vbar": 59.553,
+      "excess": 9.247,
+      "Vbar_Yd0.7": 70.464,
+      "beyond_R": false
+    },
+    {
+      "Rad": 1.93,
+      "Vobs": 76.9,
+      "errV": 10.3,
+      "Vgas": -0.05,
+      "Vdisk_scaled": 58.81,
+      "Vbar": 58.81,
+      "excess": 18.09,
+      "Vbar_Yd0.7": 69.585,
+      "beyond_R": false
+    },
+    {
+      "Rad": 2.24,
+      "Vobs": 82.0,
+      "errV": 8.09,
+      "Vgas": -0.47,
+      "Vdisk_scaled": 61.547,
+      "Vbar": 61.545,
+      "excess": 20.455,
+      "Vbar_Yd0.7": 72.821,
+      "beyond_R": false
+    },
+    {
+      "Rad": 2.57,
+      "Vobs": 86.9,
+      "errV": 7.6,
+      "Vgas": -0.95,
+      "Vdisk_scaled": 62.869,
+      "Vbar": 62.862,
+      "excess": 24.038,
+      "Vbar_Yd0.7": 74.381,
+      "beyond_R": false
+    },
+    {
+      "Rad": 2.89,
+      "Vobs": 97.6,
+      "errV": 3.03,
+      "Vgas": -1.43,
+      "Vdisk_scaled": 62.918,
+      "Vbar": 62.902,
+      "excess": 34.698,
+      "Vbar_Yd0.7": 74.432,
+      "beyond_R": false
+    },
+    {
+      "Rad": 3.21,
+      "Vobs": 100.0,
+      "errV": 5.31,
+      "Vgas": -1.14,
+      "Vdisk_scaled": 66.334,
+      "Vbar": 66.324,
+      "excess": 33.676,
+      "Vbar_Yd0.7": 78.479,
+      "beyond_R": false
+    },
+    {
+      "Rad": 3.54,
+      "Vobs": 107.0,
+      "errV": 7.51,
+      "Vgas": -0.39,
+      "Vdisk_scaled": 71.573,
+      "Vbar": 71.572,
+      "excess": 35.428,
+      "Vbar_Yd0.7": 84.686,
+      "beyond_R": false
+    },
+    {
+      "Rad": 3.85,
+      "Vobs": 113.0,
+      "errV": 7.32,
+      "Vgas": 0.36,
+      "Vdisk_scaled": 76.742,
+      "Vbar": 76.743,
+      "excess": 36.257,
+      "Vbar_Yd0.7": 90.803,
+      "beyond_R": false
+    },
+    {
+      "Rad": 4.17,
+      "Vobs": 117.0,
+      "errV": 5.21,
+      "Vgas": 1.52,
+      "Vdisk_scaled": 81.678,
+      "Vbar": 81.692,
+      "excess": 35.308,
+      "Vbar_Yd0.7": 96.655,
+      "beyond_R": false
+    },
+    {
+      "Rad": 4.5,
+      "Vobs": 119.0,
+      "errV": 5.67,
+      "Vgas": 3.07,
+      "Vdisk_scaled": 85.213,
+      "Vbar": 85.269,
+      "excess": 33.731,
+      "Vbar_Yd0.7": 100.873,
+      "beyond_R": false
+    },
+    {
+      "Rad": 4.82,
+      "Vobs": 127.0,
+      "errV": 5.39,
+      "Vgas": 4.63,
+      "Vdisk_scaled": 88.685,
+      "Vbar": 88.806,
+      "excess": 38.194,
+      "Vbar_Yd0.7": 105.036,
+      "beyond_R": false
+    },
+    {
+      "Rad": 5.15,
+      "Vobs": 132.0,
+      "errV": 4.34,
+      "Vgas": 6.02,
+      "Vdisk_scaled": 91.5,
+      "Vbar": 91.697,
+      "excess": 40.303,
+      "Vbar_Yd0.7": 108.431,
+      "beyond_R": false
+    },
+    {
+      "Rad": 5.46,
+      "Vobs": 134.0,
+      "errV": 2.36,
+      "Vgas": 7.16,
+      "Vdisk_scaled": 94.151,
+      "Vbar": 94.423,
+      "excess": 39.577,
+      "Vbar_Yd0.7": 111.631,
+      "beyond_R": false
+    },
+    {
+      "Rad": 5.78,
+      "Vobs": 137.0,
+      "errV": 0.89,
+      "Vgas": 8.31,
+      "Vdisk_scaled": 96.485,
+      "Vbar": 96.842,
+      "excess": 40.158,
+      "Vbar_Yd0.7": 114.464,
+      "beyond_R": false
+    },
+    {
+      "Rad": 6.1,
+      "Vobs": 140.0,
+      "errV": 2.84,
+      "Vgas": 9.46,
+      "Vdisk_scaled": 98.578,
+      "Vbar": 99.031,
+      "excess": 40.969,
+      "Vbar_Yd0.7": 117.022,
+      "beyond_R": false
+    },
+    {
+      "Rad": 6.43,
+      "Vobs": 142.0,
+      "errV": 0.88,
+      "Vgas": 10.61,
+      "Vdisk_scaled": 100.303,
+      "Vbar": 100.863,
+      "excess": 41.137,
+      "Vbar_Yd0.7": 119.154,
+      "beyond_R": false
+    },
+    {
+      "Rad": 6.74,
+      "Vobs": 144.0,
+      "errV": 1.23,
+      "Vgas": 11.77,
+      "Vdisk_scaled": 100.635,
+      "Vbar": 101.321,
+      "excess": 42.679,
+      "Vbar_Yd0.7": 119.654,
+      "beyond_R": false
+    },
+    {
+      "Rad": 7.06,
+      "Vobs": 146.0,
+      "errV": 1.57,
+      "Vgas": 12.87,
+      "Vdisk_scaled": 99.66,
+      "Vbar": 100.487,
+      "excess": 45.513,
+      "Vbar_Yd0.7": 118.619,
+      "beyond_R": false
+    },
+    {
+      "Rad": 8.04,
+      "Vobs": 147.0,
+      "errV": 3.0,
+      "Vgas": 16.39,
+      "Vdisk_scaled": 95.94,
+      "Vbar": 97.33,
+      "excess": 49.67,
+      "Vbar_Yd0.7": 114.695,
+      "beyond_R": false
+    },
+    {
+      "Rad": 9.04,
+      "Vobs": 148.0,
+      "errV": 3.0,
+      "Vgas": 20.03,
+      "Vdisk_scaled": 92.482,
+      "Vbar": 94.627,
+      "excess": 53.373,
+      "Vbar_Yd0.7": 111.245,
+      "beyond_R": false
+    },
+    {
+      "Rad": 10.04,
+      "Vobs": 152.0,
+      "errV": 2.0,
+      "Vgas": 23.68,
+      "Vdisk_scaled": 90.58,
+      "Vbar": 93.625,
+      "excess": 58.375,
+      "Vbar_Yd0.7": 109.761,
+      "beyond_R": true
+    },
+    {
+      "Rad": 11.04,
+      "Vobs": 155.0,
+      "errV": 2.0,
+      "Vgas": 27.08,
+      "Vdisk_scaled": 89.569,
+      "Vbar": 93.573,
+      "excess": 61.427,
+      "Vbar_Yd0.7": 109.385,
+      "beyond_R": true
+    },
+    {
+      "Rad": 12.05,
+      "Vobs": 156.0,
+      "errV": 2.0,
+      "Vgas": 30.11,
+      "Vdisk_scaled": 88.374,
+      "Vbar": 93.363,
+      "excess": 62.637,
+      "Vbar_Yd0.7": 108.815,
+      "beyond_R": true
+    },
+    {
+      "Rad": 14.05,
+      "Vobs": 157.0,
+      "errV": 2.0,
+      "Vgas": 34.48,
+      "Vdisk_scaled": 83.523,
+      "Vbar": 90.361,
+      "excess": 66.639,
+      "Vbar_Yd0.7": 104.669,
+      "beyond_R": true
+    },
+    {
+      "Rad": 16.07,
+      "Vobs": 153.0,
+      "errV": 2.0,
+      "Vgas": 36.43,
+      "Vdisk_scaled": 76.523,
+      "Vbar": 84.752,
+      "excess": 68.248,
+      "Vbar_Yd0.7": 97.597,
+      "beyond_R": true
+    },
+    {
+      "Rad": 18.13,
+      "Vobs": 153.0,
+      "errV": 2.0,
+      "Vgas": 37.76,
+      "Vdisk_scaled": 71.488,
+      "Vbar": 80.848,
+      "excess": 72.152,
+      "Vbar_Yd0.7": 92.632,
+      "beyond_R": true
+    },
+    {
+      "Rad": 20.05,
+      "Vobs": 154.0,
+      "errV": 2.0,
+      "Vgas": 39.83,
+      "Vdisk_scaled": 68.165,
+      "Vbar": 78.949,
+      "excess": 75.051,
+      "Vbar_Yd0.7": 89.953,
+      "beyond_R": true
+    },
+    {
+      "Rad": 22.12,
+      "Vobs": 153.0,
+      "errV": 2.0,
+      "Vgas": 40.92,
+      "Vdisk_scaled": 64.743,
+      "Vbar": 76.59,
+      "excess": 76.41,
+      "Vbar_Yd0.7": 86.849,
+      "beyond_R": true
+    },
+    {
+      "Rad": 24.03,
+      "Vobs": 150.0,
+      "errV": 2.0,
+      "Vgas": 41.77,
+      "Vdisk_scaled": 61.54,
+      "Vbar": 74.376,
+      "excess": 75.624,
+      "Vbar_Yd0.7": 83.945,
+      "beyond_R": true
+    },
+    {
+      "Rad": 26.1,
+      "Vobs": 149.0,
+      "errV": 2.0,
+      "Vgas": 43.71,
+      "Vdisk_scaled": 58.457,
+      "Vbar": 72.991,
+      "excess": 76.009,
+      "Vbar_Yd0.7": 81.821,
+      "beyond_R": true
+    },
+    {
+      "Rad": 28.16,
+      "Vobs": 148.0,
+      "errV": 2.0,
+      "Vgas": 45.41,
+      "Vdisk_scaled": 55.904,
+      "Vbar": 72.023,
+      "excess": 75.977,
+      "Vbar_Yd0.7": 80.233,
+      "beyond_R": true
+    },
+    {
+      "Rad": 30.08,
+      "Vobs": 146.0,
+      "errV": 2.0,
+      "Vgas": 45.29,
+      "Vdisk_scaled": 53.79,
+      "Vbar": 70.317,
+      "excess": 75.683,
+      "Vbar_Yd0.7": 78.114,
+      "beyond_R": true
+    },
+    {
+      "Rad": 32.14,
+      "Vobs": 147.0,
+      "errV": 2.0,
+      "Vgas": 44.56,
+      "Vdisk_scaled": 51.81,
+      "Vbar": 68.336,
+      "excess": 78.664,
+      "Vbar_Yd0.7": 75.786,
+      "beyond_R": true
+    },
+    {
+      "Rad": 34.06,
+      "Vobs": 148.0,
+      "errV": 2.0,
+      "Vgas": 44.81,
+      "Vdisk_scaled": 50.141,
+      "Vbar": 67.246,
+      "excess": 80.754,
+      "Vbar_Yd0.7": 74.348,
+      "beyond_R": true
+    },
+    {
+      "Rad": 36.12,
+      "Vobs": 148.0,
+      "errV": 2.0,
+      "Vgas": 45.9,
+      "Vdisk_scaled": 48.522,
+      "Vbar": 66.792,
+      "excess": 81.208,
+      "Vbar_Yd0.7": 73.504,
+      "beyond_R": true
+    },
+    {
+      "Rad": 38.19,
+      "Vobs": 149.0,
+      "errV": 2.0,
+      "Vgas": 46.75,
+      "Vdisk_scaled": 47.086,
+      "Vbar": 66.353,
+      "excess": 82.647,
+      "Vbar_Yd0.7": 72.729,
+      "beyond_R": true
+    },
+    {
+      "Rad": 40.1,
+      "Vobs": 150.0,
+      "errV": 2.0,
+      "Vgas": 47.48,
+      "Vdisk_scaled": 45.849,
+      "Vbar": 66.004,
+      "excess": 83.996,
+      "Vbar_Yd0.7": 72.092,
+      "beyond_R": true
+    },
+    {
+      "Rad": 42.17,
+      "Vobs": 150.0,
+      "errV": 3.0,
+      "Vgas": 48.93,
+      "Vdisk_scaled": 44.618,
+      "Vbar": 66.219,
+      "excess": 83.781,
+      "Vbar_Yd0.7": 71.981,
+      "beyond_R": true
+    },
+    {
+      "Rad": 44.08,
+      "Vobs": 149.0,
+      "errV": 3.0,
+      "Vgas": 47.84,
+      "Vdisk_scaled": 43.579,
+      "Vbar": 64.713,
+      "excess": 84.287,
+      "Vbar_Yd0.7": 70.338,
+      "beyond_R": true
+    }
+  ],
+  "n_beyond_R": 19,
+  "C0_distance": {
+    "rotmod_header_Mpc": 13.8,
+    "table1_D_Mpc": 13.8,
+    "table1_e_D": 1.4,
+    "match": true
+  },
+  "table1_row": "    NGC3198  5  13.80  1.40  3 73.0  3.0  38.279   0.212  5.84   178.99  3.14  1602.62  10.869 35.66 150.1   3.9   1 Da06,Be91,Be87",
+  "verdicts": {
+    "C1": {
+      "verdict": "PASS",
+      "median_Vobs": 150.0,
+      "max_abs_dev": 7.0,
+      "worst_point": {
+        "Rad": 14.05,
+        "Vobs": 157.0
+      },
+      "range_Vobs": [
+        146.0,
+        157.0
+      ],
+      "C1e_error_aware_not_decisive": "PASS"
+    },
+    "C2": {
+      "verdict": "PASS",
+      "min_excess": 58.375,
+      "at": {
+        "Rad": 10.04,
+        "Vobs": 152.0,
+        "Vbar": 93.625
+      },
+      "max_excess": 84.287,
+      "normalisation_source": "Table2 ReadMe Note (3): Vdisk and Vbul are given for M/L = 1 solMass/solLum at [3.6].",
+      "C2e_conservative_not_decisive": {
+        "verdict": "PASS",
+        "min": 56.375
+      },
+      "C2s_Ydisk0.7_not_decisive": {
+        "verdict": "PASS",
+        "min": 42.239
+      }
+    },
+    "C3": {
+      "verdict": "PASS",
+      "Vf_recomputed": 150.087,
+      "Vflat_table1": 150.1,
+      "e_Vflat_table1": 3.9,
+      "diff": -0.013,
+      "n_points_included": 23,
+      "trace": [
+        {
+          "index": 40,
+          "V": 150.0,
+          "running_mean": 149.5,
+          "frac": 0.0033,
+          "ok": true
+        },
+        {
+          "index": 39,
+          "V": 149.0,
+          "running_mean": 149.6667,
+          "frac": 0.0045,
+          "ok": true
+        },
+        {
+          "index": 38,
+          "V": 148.0,
+          "running_mean": 149.5,
+          "frac": 0.01,
+          "ok": true
+        },
+        {
+          "index": 37,
+          "V": 148.0,
+          "running_mean": 149.2,
+          "frac": 0.008,
+          "ok": true
+        },
+        {
+          "index": 36,
+          "V": 147.0,
+          "running_mean": 149.0,
+          "frac": 0.0134,
+          "ok": true
+        },
+        {
+          "index": 35,
+          "V": 146.0,
+          "running_mean": 148.7143,
+          "frac": 0.0183,
+          "ok": true
+        },
+        {
+          "index": 34,
+          "V": 148.0,
+          "running_mean": 148.375,
+          "frac": 0.0025,
+          "ok": true
+        },
+        {
+          "index": 33,
+          "V": 149.0,
+          "running_mean": 148.3333,
+          "frac": 0.0045,
+          "ok": true
+        },
+        {
+          "index": 32,
+          "V": 150.0,
+          "running_mean": 148.4,
+          "frac": 0.0108,
+          "ok": true
+        },
+        {
+          "index": 31,
+          "V": 153.0,
+          "running_mean": 148.5455,
+          "frac": 0.03,
+          "ok": true
+        },
+        {
+          "index": 30,
+          "V": 154.0,
+          "running_mean": 148.9167,
+          "frac": 0.0341,
+          "ok": true
+        },
+        {
+          "index": 29,
+          "V": 153.0,
+          "running_mean": 149.3077,
+          "frac": 0.0247,
+          "ok": true
+        },
+        {
+          "index": 28,
+          "V": 153.0,
+          "running_mean": 149.5714,
+          "frac": 0.0229,
+          "ok": true
+        },
+        {
+          "index": 27,
+          "V": 157.0,
+          "running_mean": 149.8,
+          "frac": 0.0481,
+          "ok": true
+        },
+        {
+          "index": 26,
+          "V": 156.0,
+          "running_mean": 150.25,
+          "frac": 0.0383,
+          "ok": true
+        },
+        {
+          "index": 25,
+          "V": 155.0,
+          "running_mean": 150.5882,
+          "frac": 0.0293,
+          "ok": true
+        },
+        {
+          "index": 24,
+          "V": 152.0,
+          "running_mean": 150.8333,
+          "frac": 0.0077,
+          "ok": true
+        },
+        {
+          "index": 23,
+          "V": 148.0,
+          "running_mean": 150.8947,
+          "frac": 0.0192,
+          "ok": true
+        },
+        {
+          "index": 22,
+          "V": 147.0,
+          "running_mean": 150.75,
+          "frac": 0.0249,
+          "ok": true
+        },
+        {
+          "index": 21,
+          "V": 146.0,
+          "running_mean": 150.5714,
+          "frac": 0.0304,
+          "ok": true
+        },
+        {
+          "index": 20,
+          "V": 144.0,
+          "running_mean": 150.3636,
+          "frac": 0.0423,
+          "ok": true
+        },
+        {
+          "index": 19,
+          "V": 142.0,
+          "running_mean": 150.087,
+          "frac": 0.0539,
+          "ok": false
+        }
+      ]
+    }
+  },
+  "plot": {
+    "path": "plots\\ngc3198-rotation-curve.png",
+    "sha256": "aa0f3f2a1a73039bccdff55301bee461fbbf40ab8448ff7d939d03cc7f6f445e"
+  }
+}

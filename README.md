@@ -2,119 +2,84 @@
 
 **Parry the claim. Answer with proof.**
 
-AI agents decide, act, and report "done." Riposte checks those things against the documents and the real state —
-deterministically, with no model in the loop — and answers **PASS**, **FAIL**, or **ABSTAIN** (it can't verify, so a person
-decides). Every answer carries a replayable proof, and every result can be written to a hash-chained, signed ledger that
-anyone can verify without trusting us.
+Riposte re-checks figures and quotations that someone has already read off a business document, and answers **PASS**,
+**FAIL** or **can't tell** with a proof you can replay on your own machine; it is not an extractor, a payment system or a
+fraud check, and it calls no AI model.
 
-It is independent of the agent, the model, and the model vendor: the same input gives the same verdict, byte for byte.
+Someone else does the reading: a person, your ERP, an OCR tool or an AI model. The engine reads text itself in two places
+only, and the page for each says so: the accounts-payable command's emailed-bill input, and a document filed in an
+arbitration case.
 
-## A model decides. A deterministic check recomputes. Together: 0 wrong auto-payments.
+## Five doors
 
-Distil Labs published an accounts-payable benchmark (Apache-2.0): invoices that arrive as free-text emails, checked against a
-purchase order and a goods receipt. Reading those emails is work for a model. Riposte is the step after it. Once a model has
-decided pay or hold, a short deterministic check recomputes the three-way match and shows the exact lines it read. The
-payment goes through automatically only when the model and the check agree. When they disagree, or the check can't tell, a
-person decides.
+Each page has the first command, what an answer means for that reader, what is not checked, and where to read next.
 
-| | result |
-|---|---|
-| Blind, pre-registered run (checker frozen after seeing 3 of the 100 cases) | 82 / 100 decided · **0 wrong** · 18 handed to a person |
-| Gating the 7 AI configurations Distil published | 111 / 111 wrong decisions caught · **0 wrong auto-payments** · 63–82% needed no person |
-| Stress: meaning-preserving perturbations, 5 unseen seeds | **0 wrong in 3,000** · 74–100% decided automatically |
+- **[Accounts payable](docs/doors/accounts-payable.md):** vendor bills against PO and goods receipt, and AIA G702/G703 pay applications. On Distil Labs' public 100-invoice benchmark the frozen check made 0 wrong of 82 decided, in a run blind by the authors' records only ([misses ledger](packages/verify/docs/MISSES.md) row r4-13), and 0 wrong of 2,755 decided on 3,000 perturbed copies the authors generated (row r2-61).
+  `node packages/verify/dist/cli.js ap packages/verify/docs/examples/ap-three-way.txt`
+- **[E-invoices](docs/doors/e-invoice.md):** what your extractor read, against the Peppol BIS 3.0 / EN 16931, ZATCA or KSeF XML itself.
+  `echo '[{"id":"total","field":"payable_amount","value":1043.00}]' | node packages/verify/dist/cli.js twin-einvoice packages/verify/test/fixtures/einvoice/peppol-bis3-invoice.xml --claims - --profile peppol-bis3`
+- **[Legal operations](docs/doors/legal.md):** quotations in a brief, against the opinion text they cite.
+  `node packages/verify/dist/cli.js citations packages/verify/docs/examples/legal-citations.json --sources packages/verify/docs/examples/legal-opinions`
+- **[Engineers](docs/doors/engineers.md):** make a verdict, then try to make its replay lie.
+  `node packages/verify/dist/cli.js docs/doors/examples/invoice.json > verdict.json`
+- **[Methods reviewers](docs/doors/methods.md):** start with what failed, then the numbers and how far each one reaches.
+  `npx tsx bench/ap/bench.ts --run 1`
 
-The full write-up is [`packages/verify/docs/BENCHMARK-AP.md`](packages/verify/docs/BENCHMARK-AP.md). Every number re-runs from
-[`bench/ap`](bench/ap).
+## How to read an answer
 
-## Rules that write themselves
+Each state has one name on screen and one in a verdict's JSON. A bill from the `ap` command also gets a decision, and the
+two answers share the exit codes:
 
-Someone has to write the rules. Unless the rules can be learned. From the same 100 invoices, labelled only *paid* or
-*held*, `verify mine` rediscovered **all 4 of the policy's rules, with 0 false rules**. That includes the 2% price tolerance,
-learned from the labels with the interval the data supports. The 4 rules explain all 68 holds, and every rejected candidate
-is recorded with its cause of death. The rules compile into an ordinary ruleset: enforcing them, `verify` agrees with the
-gold decision on 100 of 100 invoices. The method was pre-registered before the miner was written. Write-up:
-[`BENCHMARK-MINE.md`](packages/verify/docs/BENCHMARK-MINE.md). **That result is on synthetic data. The first real-data tests are below, and
-they did not all pass.**
+| exit code | a verdict, on screen | the verdict's JSON | a bill's decision (`ap`) |
+|---|---|---|---|
+| 0 | `PASS`: every check ran and held | `PASS` | approve |
+| 1 | `FAIL`: a check found a figure or quotation that does not agree | `FAIL` | hold |
+| 2 | `PASS-WITH-OPEN`: every check that ran held, but at least one could not run | `PASS_WITH_OPEN` in `gate_status` (`outcome` stays `PASS`) | A PERSON DECIDES (`abstain` in the JSON) |
+| 2 | `INSUFFICIENT_DATA`: can't tell, no check could run | `INSUFFICIENT_DATA` | A PERSON DECIDES |
 
-**Honest scope:** the benchmark is synthetic and templated, and real invoices will abstain more often. Abstaining is the designed
-way to fail, because a person looks at it. Coverage is always published next to accuracy.
+PASS-WITH-OPEN and A PERSON DECIDES are both exit 2. Only a clean PASS exits 0, so anything that acts on money must read
+`gate_status`, not only `outcome`. Every answer that is not a PASS names what would settle it: a missing document, a
+re-read, or the person allowed to rule. A replay shows that an answer is what the stated rules give on those inputs, not
+that the inputs were read off the document correctly. The structured input path is the product. The emailed-text path is a
+convenience with a documented limit, and every approve names which path read the bill. Terms are in the [glossary](docs/GLOSSARY.md).
 
-## On real SEC filings: including the misses
+## Install
 
-Three studies on every 10-K in two quarters of the SEC's public Financial Statement Data Sets. Each was pre-registered
-before its data was downloaded, and each is published whether it passed or not
-([`BENCHMARK-SEC.md`](packages/verify/docs/BENCHMARK-SEC.md), harness in [`bench/sec`](bench/sec)).
-
-| | result |
-|---|---|
-| Footing identities on filed statements, blind (4,262 10-Ks) | precision **1–17%**: a field miss, published |
-| Redesigned v0.2 on a held-out quarter | flag volume **−90%** with coverage kept, but precision **12.5–18.8%** against a 50% bar: **FAIL** |
-| Mining the SEC's filer-status rule from labels alone (3,002 filers) | right field every time; exit threshold within **0.6%**; entry threshold off: **FAIL** by the pre-registered test |
-
-What the misses taught us:
-- In 166 audited flags there was no genuine accounting error. Every correct flag was a number filed under the wrong XBRL
-  element.
-- Filed statements are among the most-checked numbers anywhere. These identities earn their keep checking an AI's
-  *extraction* of a statement, where the errors are introduced. That is the next pre-registered test.
-
-## What's here
-
-| | what it does |
-|---|---|
-| [`packages/verify`](packages/verify) · `riposte-verify` | **The engine.** Deterministic post-extraction checks: recompute, cross-reference, quote-match. Built-in rulesets cover invoices, AIA pay applications, the AP three-way match and legal citations, and you can define any other document type in JSON. Each verdict is a proof object with per-operand provenance, a deterministic verdict id, an optional Ed25519 signature, and engine-free replay. Available as a CLI, over HTTP (OpenAPI 3.1), over MCP, and as a library. **`verify mine`** learns rules from labelled history and compiles them into a ruleset. |
-| [`packages/receipts`](packages/receipts) · `riposte-ai` | **The layer agents call.** `check_done` compares an agent's "done" with the real state. `ap_gate` compares a model's pay/hold decision with the deterministic three-way match and executes only when they agree. `check_claims` checks the claims an agent ends a turn with ("tests pass", "pushed") against what its tools actually returned. `model_attest` checks which model actually answered, reply by reply, against the one the run declared, and flags silent switches. It also includes a hash-chained, signed receipt ledger and option-order flip probes for typed decisions. Ships as an MCP server and a CLI. |
-| [`bench/sec`](bench/sec) | **The SEC harness:** the frozen pre-registrations (verbatim), the scripts, the hand-labelled audits with EDGAR links, and the results. |
-| [`bench/ap`](bench/ap) | **The benchmark harness:** the frozen blind checker, the disclosed tuned checker, the audit of published model decisions, the stress generator, and every per-case result. |
-
-## Install in Claude Code (one plugin)
-
-```bash
-claude plugin marketplace add SorenSocordia/riposte
-claude plugin install riposte@riposte            # -s project or -s local to scope it to one project
-```
-
-It adds a Stop hook that checks the agent's closing claims against its own tool results, the MCP tools, and a receipt ledger.
-**It is record-only by default**: it measures and never forces a turn until you set `RIPOSTE_HOOK_MODE`. See
-[`plugins/riposte`](plugins/riposte).
-
-## Quick start (from source; not yet on npm)
+From source: not on npm, no installer and no signed release yet. You need git and Node.js 20 or later.
 
 ```bash
 git clone https://github.com/SorenSocordia/riposte.git && cd riposte
-npm install
+npm install --legacy-peer-deps   # plain npm install works under npm 11.6.2 and fails under npm 10.9.x
 npm run build
-npm test
 ```
 
-Check an invoice against its purchase order and goods receipt:
+Every command on these pages runs from the repository root. The engine's command is `node packages/verify/dist/cli.js`;
+`riposte-verify` is its package name, and building does not install a command by that name. Engine 0.7.2, the one this tree
+builds, is an open label, so a verdict issued under it can still change on a later 0.7.2 build; 0.6.0, 0.7.0 and 0.7.1 are closed,
+and no version is released yet. The [changelog](packages/verify/CHANGELOG.md) defines "closed" and "released".
 
-```bash
-node packages/verify/dist/cli.js ap packages/verify/docs/examples/ap-three-way.txt
-# → hold_quantity: "Machine grease cartridge 14 oz" billed 10, received 7 — with the exact lines it read. Exit 1 (hold).
-```
+## Who stands behind it
 
-Give an agent receipts (any MCP host):
+Riposte is published by [ENTITY]. The work is done by a small software lab: one person and the AI agents that work for
+it. The agents write much of the code, run the studies and audit some of them. Where an agent's work should be weighed
+differently, such as an audit, the page that reports it says so.
 
-```json
-{ "mcpServers": { "riposte": {
-    "command": "node", "args": ["<path>/riposte/packages/receipts/dist/stdio.js"],
-    "env": { "RECEIPTS_ROOT": "<the agent's workspace>" } } } }
-```
+- **The person behind it:** E. Tucker Anderson.
+- **Contact and pilots:** hello@fragarachlabs.com.
+- **Reported defects, security issues and replay kills:** kill@fragarachlabs.com ([`SECURITY.md`](SECURITY.md)).
+- **Who answers:** both addresses are read by a person. Replies are drafted with the lab's own tools and signed by a person.
+- **Price:** [PRICE]
+- **Support and accountability:** [SUPPORT-TERMS]
 
-Re-run the benchmark:
+The code is licensed under Apache-2.0, which provides it "as is", without warranty, except where separate written terms
+say otherwise.
 
-```bash
-npx tsx bench/ap/bench.ts --run 1              # the blind run — checker sha256 d1ad333f…, 82 decided, 0 wrong
-npx tsx bench/ap/audit.ts                      # gate every published model decision
-npx tsx bench/ap/stress.ts --seed holdout1     # … through holdout5
-```
+## What failed, and the numbers
 
-## Principles
-
-- **Deterministic.** The same input, ruleset and engine version always produce the same verdict id, byte for byte.
-- **Abstain, never guess.** A value that can't be read unambiguously comes back as *can't tell*, with the reason.
-- **Independent.** No model calls and no network at runtime. It runs on-prem or air-gapped.
-- **Published error.** Accuracy is reported alongside coverage, and blind runs are kept separate from tuned ones.
+- **What failed:** every miss from every bench table, and every defect logged in each round of cold review, is in the
+  [misses ledger](packages/verify/docs/MISSES.md), dated.
+- **The numbers:** every table, with its counts, interval, preregistered bar and tier, is on the
+  [bench page](packages/verify/docs/BENCH.md); the [methods page](docs/doors/methods.md) says how far each number reaches.
 
 ## License
 

@@ -1,0 +1,9 @@
+# Evaluator's sealed key: G = accurate as quoted (a PASS is right; can't tell costs time), B = not accurate (a PASS is a miss)
+h1 G verbatim | h2 B dropped "only" | h3 B ellipsis hides "only ... does not apply" (meaning inverted) | h4 B party's argument | h5 B West headnote | h6 B dissent
+h7 G spans page footer | h8 G after star page | h9 B should->may | h10 G opinion quotes Warrior & Gulf, no (quoting) | h11 G proper bracket substitution he->[it] (Bluebook 5.2)
+h12 B narrow->limited | h13 G Bluebook full cite with pin | h14 G Id. short form
+d1 G HN marker inside | d2 B dropped "only" | d3 B may not->cannot | d4 G before n3 call | d5 G but cut before limitation (can't tell acceptable) | d6 B party's ask
+d7 B ellipsis hides "not, standing alone," (meaning inverted) | d8 B fabricated | d9 B Lexis headnote | d10 G after [**6] | d11 B-minor unbracketed case change | d12 G bracketed case change
+d13 B or->and
+o1 G | o2 B "In Brightwater's view" | o3 B silent drop of condition | o4 G-marked but drops a condition (can't tell acceptable) | o5 G opinion quotes Daubert | o6 G PDF line-break hyphen "disre-/garded"
+o7 B weight/admissibility swapped (meaning inverted) | o8 G fair ellipsis, reporter spacing F.Supp.3d vs F. Supp. 3d | o9 B-minor dropped comma | o10 B fabricated paraphrase in quotation marks

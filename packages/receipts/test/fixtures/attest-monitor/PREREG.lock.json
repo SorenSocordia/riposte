@@ -1,0 +1,32 @@
+{
+  "prereg_version": "riposte.attest-monitor-prereg/0.1.0",
+  "file": "PREREG.md",
+  "sha256": "4e26ddbd3c8da912c56f3e697d307fe22acd226482784666f7fca4c0e211d526",
+  "frozen_at": "2026-10-03T09:40:15.969Z",
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "month": "2026-09",
+  "bars": {
+    "P1_planted_switches_flagged": "27/27",
+    "P2_clean_false_flags": 0,
+    "S1_planted_disagreements_flagged": "12/12",
+    "S2_planted_extra_flags": 0
+  },
+  "sources": {
+    "src/attest-monitor/tiers.ts": "ffe492f306045167ce3b6ad98d84c5b2ba383e46e9322b6e37759ffe94470d3f",
+    "src/attest-monitor/hosts.ts": "628e4da8dad5d8668ef766550f4cfe83f5ae93939b8e7ab2c8748d399a073adf",
+    "src/attest-monitor/exports.ts": "6545d2d194585fb6dc5c5288785b3b5a7c43135cf53341281e39da38f4a18761",
+    "src/attest-monitor/match.ts": "c98f2170da11afeba696826c703d05b796717a062838191a2fd1c3caa599490d",
+    "src/attest-monitor/monitor.ts": "ed5a4553d8538297283ff12eb6618d44b39f5f3621103661ded19e40202df7ae",
+    "src/attest-monitor/anchor.ts": "27f5f03c7cac70e1867d97392fbfede6fd2e312f234f3af101acc1b1e8888c66",
+    "src/attest-monitor/manifest.ts": "99fb211b181aef4442b594ac0de481427852d2be389cb23983af02a9d14f36c9",
+    "src/attest-monitor/report.ts": "a1475a1af1f7a56e289c9f77d181c6bcb2d07182ef63c079fbb285489b882714",
+    "src/attest-monitor/score.ts": "f5d3c97289f01cce5c53904409c594115f1915cdd9c701f082bc94c147c8abc2",
+    "src/attest-monitor/synth.ts": "45369f2e692b1d8250ef205a756a32d5279fdac0ae80d2ed7067488a1a4df256",
+    "src/model-attest.ts": "2601de25ddff311ec8119bebbcf9f21488a84a939bf271e836b842ad2086d067",
+    "src/attest-monitor-command.ts": "2b62c0ae5ed478bb6f5e5318e240352c325b9b0d61e473599daad876567857e6"
+  }
+}

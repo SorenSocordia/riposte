@@ -101,3 +101,42 @@ export async function flipProbe(transport: Transport, req: SystemOneRequest, opt
   }
   return out
 }
+
+/** One recorded answer: what a model chose for one choice question when its options were in `order`. */
+export interface RecordedChoice {
+  /** the question name in the request */
+  question: string
+  /** the option keys in the order they were shown */
+  order: string[]
+  answer: ChoiceAnswer
+  /** when given, the recording applies only to a request with exactly this state */
+  state?: string
+}
+
+/** Thrown by a recorded transport asked for an option order nobody recorded. */
+export class NotRecorded extends Error {
+  constructor(readonly question: string, readonly order: string[]) {
+    super(`no recorded answer for "${question}" with the options in the order ${order.join(', ')}`)
+    this.name = 'NotRecorded'
+  }
+}
+
+/**
+ * A transport that answers from recordings instead of a model (2026-10-03): replay a run that was made under several
+ * option orders, offline and byte for byte. Any order nobody recorded throws NotRecorded, so the probe never invents an answer.
+ * A file with one order per question (the identity) cannot measure stability: flipProbe needs at least two orders.
+ */
+export function recordedTransport(recordings: readonly RecordedChoice[], model = 'recorded'): Transport {
+  const key = (q: string, order: readonly string[]): string => `${q}\u0000${order.join('\u0001')}`
+  return async (req) => {
+    const answers: Record<string, ChoiceAnswer> = {}
+    for (const [name, q] of Object.entries(req.questions)) {
+      if (q.type !== 'choice') continue
+      const order = Object.keys(q.criteria)
+      const hit = recordings.find((r) => key(r.question, r.order) === key(name, order) && (r.state === undefined || r.state === req.state))
+      if (!hit) throw new NotRecorded(name, order)
+      answers[name] = hit.answer
+    }
+    return { model, answers }
+  }
+}

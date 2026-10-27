@@ -1,0 +1,10 @@
+v0  2026-10-03T06:19:45Z  sha256 37f97a990eae538196933f7172560fb512a6f7829a4dbe2c1883430c40f4229f  PREREG-v0.frozen.md  (before any trace parsed; download in progress at 638345216 bytes)
+A   2026-10-03T06:54:39Z  sha256 41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31  PREREG-final.frozen.md  (v0 + Amendment A; before any scored trace parsed; seed = 0x41e0908d = 1105236109)
+data  sha256 af63bc687fc4152f2123b05c3af7772b37ef3fce2d3f67f812666c9e356baae7  md5 4eb909242351193a61e1c15b9c3cc814  BPI_Challenge_2019.xes
+harness  41ab2f1a2609844d8658e51641fd32d2f8790a85b0c976cfd384d5c9555c3759 *run.mjs
+harness  202a710d893d7878ea3ee120da17575475867d27c488812b7e23b43b5bfdcaaa *mapping.mjs
+harness  7af2234e27f6afd02c2b4e429012ea30bfa4786d0eacdc331c42d889be81f4e1 *xes.mjs
+harness  319b6c68fa3f36793a99c6aa357d6a641d68001efef28d0cd5a74222df8241f4 *score.mjs
+harness  a178f3d6b31923adf04b5a3d11f040e9a35c2f074058ea7b364015a70fdd5031 *stats.mjs
+harness  39541b345cd9cf3047a9db25e9dd04571ebfe125976bd9be2a8e289cd70f888a *dump.mjs
+verify-snapshot  tree e4673ab6c50127cac2c3e9c70486c751b5aedbba9bfecfc92787983cbe6e3b6c  (engine 0.0.1, copied from products/verify/dist at 2026-10-03 02:18 EDT)

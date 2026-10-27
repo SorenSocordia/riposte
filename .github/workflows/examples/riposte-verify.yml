@@ -1,0 +1,56 @@
+# Example (GitHub does not run workflows in this subfolder). Copy it to .github/workflows/riposte-verify.yml in your own
+# repository and point `files` at your extracted documents. Details: docs/GITHUB-ACTION.md.
+name: Riposte verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  riposte:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # required to upload SARIF to code scanning
+      security-events: write
+      # only required in private repositories
+      actions: read
+    steps:
+      # Third-party actions are pinned by full commit SHA, the release tag in the comment (checked against GitHub 2026-10-05).
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      # Pinned by full commit SHA like the actions above. This action has no release yet, so there is no tag to name. Put the
+      # 40-character commit of the repository you reviewed where REPLACE_WITH_COMMIT_SHA stands (the newest commit on its main
+      # branch is shown on the repository page). Until you do, the workflow does not run: a copy never follows the default
+      # branch by accident. The action builds its checker with `npm ci` from the package-lock.json of the commit you pin;
+      # a commit without one fails this step and says so, and nothing is installed (docs/GITHUB-ACTION.md, "Safety").
+      - name: Riposte verify
+        id: riposte
+        uses: SorenSocordia/riposte/.github/actions/riposte-verify@REPLACE_WITH_COMMIT_SHA
+        with:
+          files: |
+            extractions/**/*.json
+            !extractions/archive/**
+          ruleset: invoice
+          # insufficient-data (default): the job fails on a FAIL, on can't tell (INSUFFICIENT_DATA) and on a file that could not
+          # be checked. Set fail-on: fail to fail only on a FAIL, so can't tell passes and shows as a warning alert.
+          fail-on: insufficient-data
+
+      # Runs even when the check step failed, so the FAIL findings still become alerts.
+      - name: Upload findings to code scanning
+        if: ${{ !cancelled() }}
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: riposte.sarif
+
+      # The proofs the alerts' replay commands name: download and run `riposte-verify replay riposte-proofs/<id>.json`.
+      - name: Keep the proofs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: riposte-proofs
+          path: riposte-proofs/

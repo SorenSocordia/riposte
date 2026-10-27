@@ -1,5 +1,5 @@
 /**
- * BOOK FIRST (wave 4, 2026-09-28): the surfaces read each workflow's rung from the book of record (the GRANT in force, a
+ * BOOK FIRST (2026-09-28): the surfaces read each workflow's rung from the book of record (the GRANT in force, a
  * person's signed decision), never from a flag, and say a person's decline in words.
  *   - renderTenantReport / tenantOpinions take `voice.book`: granted workflows are listed (with or without verdicts), the
  *     rung is cited, a standing DECLINE is said ("declined by X at T; re-raises when …"), a lapsed one is named when the
@@ -12,7 +12,7 @@
  * SURFACES-2 (2026-09-28): the books anchor the owner's key (D-ANCHOR: an unanchored GRANT or DECLINE is on the book and has
  * no rung effect), so the grants here are in force; the unanchored cases say so. The report's words follow D-DECLINED-COPY
  * ("Kept at <rung> by <person>, <date>; stands until …" / "Not now: <person>, <date>; re-raises when …"), and a book-read ask
- * points at `verify opinion --from-book` (CLI-2's SW4 verb).
+ * points at `verify opinion --from-book`.
  */
 import { describe, it, expect } from 'vitest'
 // The book is issued under the retained invoice 0.0.1 so its workflow stays <tenant>/invoice@0.0.1 (pinned 2026-09-28, NUMERIC-HONESTY).
@@ -89,7 +89,7 @@ describe('the report reads each rung from the book of record', () => {
     expect(o.asking[0]!.opinion_command).toBe(FROM_BOOK(WF()))
     // the same proposal the book-read assessment raises
     expect(o.asking[0]!.proposal_id).toBe(assessVoiceFromLedger(ledger, WF(), P).proposal!.proposal_id)
-    // P2 (2026-09-28): the grants block lists the decisions that have no effect (none on this anchored book).
+    // 2026-09-28: the grants block lists the decisions that have no effect (none on this anchored book).
     expect(o.grants).toEqual({ verified: true, unanchored_signers: [], no_effect: [], overridden: [] })
 
     const md = renderTenantReport(ledger, bookOpts(ledger))

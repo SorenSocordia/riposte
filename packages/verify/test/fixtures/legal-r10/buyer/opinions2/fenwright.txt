@@ -1,0 +1,33 @@
+Fenwright Marine Supply, LLC v. Abernook Tooling Co., Slip Copy (2026)
+2026 WL 3318842
+Only the Westlaw citation is currently available.
+United States District Court, D. Westmark.
+
+FENWRIGHT MARINE SUPPLY, LLC, Plaintiff,
+v.
+ABERNOOK TOOLING CO., Defendant.
+
+Case No. 4:25-cv-01188
+|
+Signed August 4, 2026
+
+Attorneys and Law Firms
+Priya Castellane, Talbridge, for Plaintiff.
+Owen Strachey, Talbridge, for Defendant.
+
+Opinion
+
+MEMORANDUM OPINION AND ORDER
+CORDELL, District Judge
+
+Fenwright moves for sanctions, contending that Abernook failed to preserve the text messages of its sales staff. The motion is granted in part.
+
+Rule 37(e) does not call for perfection. A party that fails to take reasonable steps to preserve electronically stored information may be sanctioned only if the information cannot be restored or replaced through additional discovery. Even then, the most severe measures, an adverse-inference instruction or dismissal, are available only upon a finding that the party acted with the intent to deprive another party of the information's use in the litigation. Negligence, even gross negligence, will not do.
+
+A litigation hold issued within fourteen days of a demand letter is presumptively reasonable. Abernook issued none for five months.
+
+Fenwright asks the Court to infer intent from the length of the delay alone. The Court declines. The delay shows carelessness, not a purpose to deprive.
+
+Abernook shall pay Fenwright's reasonable fees incurred in bringing this motion. The request for an adverse-inference instruction is DENIED.
+
+IT IS SO ORDERED.

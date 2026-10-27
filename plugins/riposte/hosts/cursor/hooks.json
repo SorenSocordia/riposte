@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 15, "failClosed": true }],
+    "postToolUse": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 15 }],
+    "postToolUseFailure": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 15 }],
+    "afterFileEdit": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 15 }],
+    "afterAgentResponse": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 15 }],
+    "stop": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 30, "loop_limit": 1 }],
+    "sessionEnd": [{ "command": "node \"RIPOSTE_HOSTS_DIR/cursor/riposte-cursor.mjs\" --hook", "timeout": 15 }]
+  }
+}

@@ -1,0 +1,20 @@
+Kessler Mfg. Corp. v. Arden Supply Co.
+United States Court of Appeals for the Seventh Circuit
+February 8, 2023, Argued; June 2, 2023, Decided
+No. 22-1847
+Reporter
+61 F.4th 233 *; 2023 U.S. App. LEXIS 14021 **
+KESSLER MANUFACTURING CORP., Plaintiff-Appellee, v. ARDEN SUPPLY COMPANY, Defendant-Appellant.
+Core Terms
+arbitration clause, waiver, delegation, motion to compel, litigation conduct
+LexisNexis® Headnotes
+HN1[ ] A party waives its right to arbitrate when it acts inconsistently with that right.
+HN2[ ] Prejudice is not a condition of waiver.
+Judges: Before EASTBROOK, ROWAN, and KITTREDGE, Circuit Judges.
+Opinion by: ROWAN
+Opinion
+[*235] ROWAN, Circuit Judge. Arden appeals the denial of its motion to compel arbitration. Arden contends that a party cannot waive arbitration unless the opposing party shows prejudice. That rule no longer holds. HN1[ ] A party waives its right to arbitrate when it acts inconsistently with that right, and prejudice is not required. n1
+Arden litigated in federal court for fourteen months, served and answered discovery, and moved for summary judgment before it invoked the arbitration clause. According to Arden, the delegation clause sends the waiver question to the arbitrator. We disagree: courts [**4] presumptively decide whether litigation conduct has waived arbitration, absent clear and unmistakable evidence that the parties intended otherwise.
+The district court reasoned that Arden’s conduct was a deliberate attempt to test the waters in court before seeking a second forum. We see no error in that assessment. The judgment is AFFIRMED.
+Footnotes
+n1 The Supreme Court rejected the prejudice requirement in Morgan v. Sundance, Inc., 596 U.S. 411 (2022).

@@ -1,0 +1,13 @@
+AT&T MOBILITY LLC v. CONCEPCION et ux.
+563 U.S. 333
+No. 09-893.
+Argued November 9, 2010.
+Decided April 27, 2011.
+SCALIA, J., delivered the opinion of the Court, in which ROBERTS, C. J., and KENNEDY, THOMAS, and ALITO, JJ., joined. THOMAS, J., filed a concurring opinion. BREYER, J., filed a dissenting opinion, in which GINSBURG, SOTOMAYOR, and KAGAN, JJ., joined.
+JUSTICE SCALIA delivered the opinion of the Court.
+The final phrase of § 2 permits arbitration agreements to be declared unenforceable "upon such grounds as exist at law or in equity for the revocation of any contract." This saving clause permits agreements to arbitrate to be invalidated by "generally applicable contract defenses, such as fraud, duress, or unconscionability," but not by defenses that apply only to arbitration or that derive their meaning from the fact that an agreement to arbitrate is at issue.
+The Concepcions contend that the Discover Bank rule is a ground that exists at law or in equity for the revocation of any contract. We disagree.
+Requiring the availability of classwide arbitration interferes with fundamental attributes of arbitration and thus creates a scheme inconsistent with the FAA.
+It is so ordered.
+JUSTICE BREYER, with whom JUSTICE GINSBURG, JUSTICE SOTOMAYOR, and JUSTICE KAGAN join, dissenting.
+The Discover Bank rule is consistent with the federal Act's language and primary objective. It does not put arbitration agreements on an unequal footing with other contracts.

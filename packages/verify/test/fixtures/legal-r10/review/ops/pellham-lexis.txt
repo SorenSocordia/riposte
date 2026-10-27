@@ -1,0 +1,72 @@
+Pellham Grain Co. v. Ostrava Rail, LLC
+Supreme Court of Westmarch
+November 4, 2025, Argued; February 17, 2026, Decided
+No. S-2291
+
+Reporter
+77 Wm.3d 512 *; 2026 Wm. LEXIS 88 **
+PELLHAM GRAIN COMPANY, Appellant, v. OSTRAVA RAIL, LLC, Respondent.
+
+Prior History: Appeal from the Court of Appeals of Westmarch, Second District.
+
+Disposition: Affirmed.
+
+Core Terms
+arbitration, waiver, limitations, tolling, merchant, notice
+
+Case Summary
+
+Overview
+HOLDINGS: The limitations period in a merchant contract may be shortened to six months; arbitration was not waived.
+
+Outcome
+Judgment affirmed.
+
+LexisNexis® Headnotes
+
+Contracts Law > Remedies > Limitations Periods
+HN1[ ] Parties to a merchant contract may agree to any limitations period they choose.
+
+Civil Procedure > Alternative Dispute Resolution > Waiver
+HN2[ ] A party waives arbitration only by conduct that prejudices its opponent.
+
+Counsel: Elsbeth Cray, for appellant. Daniel Moreau-Quist, for respondent.
+
+Judges: MARROW, J., announced the judgment of the Court and delivered an opinion, in which FENN and ODUYA, JJ., joined. TRASK, J., filed a concurring opinion. BELLWEATHER, C.J., filed a dissenting opinion, in which HOLLIS, J., joined.
+
+Opinion by: MARROW
+
+Opinion
+
+[*514] MARROW, J., announced the judgment of the Court and delivered an opinion, in which FENN and ODUYA, JJ., joined.
+
+Pellham Grain Company shipped soybeans with Ostrava Rail under a contract that required any claim to be brought within six months. Pellham sued nine months after the loss.
+
+HN1[ ] A contractual limitations period of six months is reasonable between merchants of comparable bargaining power. Pellham asks us to hold that any period shorter than the statutory four years is void. We will not do so. The statute permits the parties to reduce the period of limitation to not less than one year, but that provision governs only sales of goods, not carriage.n3
+
+HN2[ ] A party waives arbitration only by conduct that is inconsistent with the right to arbitrate and that prejudices its opponent. Ostrava answered the complaint and moved to compel arbitration within sixty days. That is not waiver.
+
+Page 4 of 9
+Pellham Grain Co. v. Ostrava Rail, LLC
+
+[*517] The judgment of the Court of Appeals is affirmed.
+
+Concur by: TRASK
+
+Concur
+
+TRASK, J., concurring.
+
+I agree that the judgment should be affirmed. I write separately because I would hold that any limitations clause between merchants is enforceable as written.
+
+Dissent by: BELLWEATHER
+
+Dissent
+
+BELLWEATHER, C.J., with whom HOLLIS, J., joins, dissenting.
+
+A contractual limitations period of six months is unreasonable as a matter of law when the loss is not discoverable within that time.
+
+Footnotes
+
+n3 The parties agree that the sales article does not apply.

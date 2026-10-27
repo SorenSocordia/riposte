@@ -2,8 +2,8 @@
   "name": "riposte-adapters",
   "version": "0.0.1",
   "private": true,
-  "description": "Hold adapters: the delivery surface for Riposte's gate and autonomy rungs. A Claude Code PreToolUse hook mode (off by default), a LangGraph AgentMiddleware.wrap_tool_call and an OpenAI Agents tool_input_guardrail. Record and advise surface; gate and autonomy hold a FAIL or ABSTAIN until a person resolves it.",
-  "author": "Tucker Anderson",
+  "description": "Hold adapters: the delivery surface for Riposte's gate and autonomy rungs. A Claude Code PreToolUse hook mode (off by default), a LangGraph AgentMiddleware.wrap_tool_call and an OpenAI Agents tool_input_guardrail. Record and advise surface; gate and autonomy hold a FAIL or ABSTAIN until a person resolves it. Also: Riposte verdicts as Langfuse, Braintrust and UK AISI Inspect scores, and as SARIF 2.1.0 for GitHub code scanning.",
+  "author": "E. Tucker Anderson",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SorenSocordia/riposte.git",
@@ -13,16 +13,19 @@
   "type": "module",
   "main": "src/index.ts",
   "bin": {
-    "riposte-action": "bin/riposte-action.mjs"
+    "riposte-action": "bin/riposte-action.mjs",
+    "riposte-score": "bin/riposte-score.mjs",
+    "riposte-sarif": "bin/riposte-sarif.mjs",
+    "riposte-loop-run": "bin/riposte-loop-run.mjs"
   },
   "scripts": {
-    "build": "node scripts/build-bin.mjs",
+    "build": "node scripts/build-bin.mjs && node scripts/build-loop.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "test:py": "python -m pytest python/tests -q -p no:cacheprovider -p no:recording"
   },
   "dependencies": {
-    "riposte-verify": "0.0.1",
+    "riposte-verify": "0.7.2",
     "riposte-ai": "0.0.1"
   },
   "devDependencies": {

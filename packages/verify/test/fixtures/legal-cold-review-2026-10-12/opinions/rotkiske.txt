@@ -1,0 +1,13 @@
+ROTKISKE v. KLEMM et al.
+589 U.S. 8 (2019)
+CERTIORARI TO THE UNITED STATES COURT OF APPEALS FOR THE THIRD CIRCUIT
+No. 18-328. Argued October 16, 2019. Decided December 10, 2019.
+
+JUSTICE THOMAS delivered the opinion of the Court.
+The Fair Debt Collection Practices Act permits private parties to sue debt collectors who violate the Act within one year from the date on which the violation occurs. The question presented is whether the discovery rule delays the beginning of the limitations period until the plaintiff knows or reasonably should know of the violation. We hold that, absent the application of an equitable doctrine, the statute of limitations in § 1692k(d) begins to run on the date on which the alleged FDCPA violation occurs, not the date on which the violation is discovered.
+Rotkiske's position rests on a different footing. In his view, the general discovery rule should apply. A statute of limitations under the FDCPA begins to run when the plaintiff discovers the violation. We disagree.
+Rotkiske also contends that the limitations period begins when the violation is discovered by a reasonably diligent plaintiff. That reading is foreclosed by the text.
+We must presume that a legislature says in a statute what it means and means in a statute what it says there. Atextual judicial supplementation is particularly inappropriate when, as here, Congress has shown that it knows how to adopt the omitted language or provision.
+
+JUSTICE GINSBURG, dissenting.
+In my view, the discovery rule should govern where the defendant's fraudulent concealment delayed the plaintiff's suit, and the Court of Appeals erred in holding otherwise.

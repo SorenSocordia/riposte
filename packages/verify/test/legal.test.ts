@@ -4,9 +4,15 @@
  * court opinions are public domain; these are illustrative, not verbatim reproductions of any specific case).
  */
 import { describe, it, expect } from 'vitest'
-import { verifyCitation, verifyCitations } from '../src/legal/index'
+import { verifyCitation as verifyCitationAt, verifyCitations as verifyCitationsAt, type OpinionSources, type VerifyCitationsOptions } from '../src/legal/index'
 import type { Citation } from '../src/legal/index'
 import type { Verdict } from '../src/index'
+
+/** 2026-10-05: this file documents the rules as engines 0.0.1 to 0.5.0 read them, so it names engine 0.5.0. Engine 0.6.0
+ *  binds each opinion text to its cite and words its answers by the supplied text: test/legal-060.test.ts. */
+const LEGACY_ENGINE = '0.5.0'
+const verifyCitation = (c: Citation, s: OpinionSources, r?: string) => verifyCitationAt(c, s, r, LEGACY_ENGINE)
+const verifyCitations = (c: Citation[], s: OpinionSources, o: VerifyCitationsOptions = {}) => verifyCitationsAt(c, s, { engine: LEGACY_ENGINE, ...o })
 
 const NOW = () => new Date('2026-09-22T00:00:00Z')
 const claim = (v: Verdict, id: string) => {

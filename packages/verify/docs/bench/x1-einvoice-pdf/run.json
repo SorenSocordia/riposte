@@ -1,0 +1,112 @@
+{
+  "format": "bench-run/1",
+  "id": "x1-einvoice-pdf",
+  "prereg": "PREREG.md",
+  "results": "results/results.json",
+  "spec": "spec.json",
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "not_shipped": [
+    {
+      "file": "corpus/manifest.json",
+      "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+      "reason": "the corpus manifest, pinned in PREREG.md section 2. Its licence note for each base sample names the authors' working folder, which the export's word filter refuses. The 60 PDFs it lists are not in this tree either: they are rendered from public Peppol BIS 3.0 samples whose publisher's documentation restricts redistributing modified copies. Each PDF's sha256 is in corpus/render-receipt.json, which ships"
+    },
+    {
+      "file": "dist/cli.js",
+      "sha256": "60d9d0f737cd33305c85447441c87d153aedb6c2c22cef96761a773482d8c522",
+      "reason": "the engine build the run called (engine 0.0.1), pinned in PREREG.md section 2. A build output is not shipped, and the package's source in this tree has changed since, so a build made now will not have this sha256"
+    },
+    {
+      "file": "docs/examples/peppol-en16931.ruleset.json",
+      "sha256": "0a3cd5a52e6a835a8649ac8fa831bce47906ae77e5be2bdb85a70d1a9a0cd81c",
+      "reason": "the shipped ruleset (P) 0.1.0, pinned in PREREG.md section 2. Not copied into this folder: the same bytes ship in this tree at packages/verify/docs/examples/peppol-en16931.ruleset.json and at packages/verify/test/fixtures/golden-rulesets/peppol-en16931.ruleset.v0.1.0.json; compare its sha256 there"
+    },
+    {
+      "file": "lib/render.mjs",
+      "sha256": "ae0b573fafd79ea3411ab2f66e6a483fdd6c6dca58aa1308c55918328cc1a4c9",
+      "reason": "imported by lib/extract.mjs for the path of the poppler tool, and the corpus renderer. The prereg does not pin it. It names a folder in the authors' home directory, which the export's word filter refuses, so it does not ship (nor lib/fmt.mjs, which only it imports)"
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "Its harness, scorer, extractor, supplement ruleset and render receipt ship in this folder byte for byte, as its prereg pins them. The 60 rendered PDFs and their manifest do not: the PDFs are rendered from public Peppol samples whose publisher restricts redistributing modified copies, and the manifest names the authors' folders. The run also called an engine build that a build of today's source does not reproduce."
+  },
+  "blind_basis": "PREREG.sha256 holds the prereg's sha256 with no time of its own; the time 2026-10-03T09:18:31Z was added to it on 2026-10-05 from the list's file-system time. The prereg says it was written after the corpus was rendered (corpus/render-receipt.json records 09:15:26Z) and before any extraction or engine run on it. The list, the added time and the prereg are the authors' own, and the corpus and its planted defects were made by the authors",
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "91e055f30e8286e2fa2d4c7d2e9c71100e9d1d08a106ffef17d2f865ac4f26c0",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "fef4fff2da288ed445b52c09e1c81f56ff22cf09874a6b4cac2e92101db75fb2",
+      "from": "PREREG.sha256",
+      "from_sha256": "6a4eef2c536631cf2a9b9c9d87bf1f11c523eed47b8364946c4450c56767eccc",
+      "note": "a dated time line appended 2026-10-05 (the authors' own record); the hash line above it is unchanged"
+    },
+    {
+      "file": "results/results.json",
+      "sha256": "4feea855b1a7043eb0a774e39ac8119b51b649dbc08a4fbb9155f3d4df592f3e",
+      "from": "out/run1/results.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "503d9dca4d891a4b3cf6e5dc2c8a5cdeb95ecdeccd1fa735efa309516e133337",
+      "from": "the run spec written when the tables were first emitted",
+      "from_sha256": "5eae7ecca39ef5faf45eb683fb19397ab44ef806d46806f37a884d92cd76d4b2",
+      "note": "a row note named a private path; it now names the package-relative file; audit statement added from the run's files; on 2026-10-05 the audit statement says \"audited\" where it said \"hand-audited\": the auditor was an AI agent; on 2026-10-06 the title states that the preregistered primary bar failed (11 of 20 planted defects certified PASS under ruleset 0.1.0); the rows are unchanged"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "e932056ecc472bbe5750423ca95ed2b1aa5a282577949093967feb9296785ad4",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "69be2efb51664ce1b38dd8766fad96b73914e91f791435353dbe54143574cfc2",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    },
+    {
+      "file": "run.mjs",
+      "sha256": "82e533959b23462caae11f52d30a1308f3c09f9bb806c98cde5eace0c9cc885c",
+      "from": "run.mjs",
+      "note": "the run's harness, pinned by sha256 in PREREG.md section 2; shipped byte for byte. It reads the corpus PDFs and calls the engine build at the authors' layout, neither of which is in this tree, so it does not rerun from here"
+    },
+    {
+      "file": "score.mjs",
+      "sha256": "103df3794cffabc204e089686990d2b6f36050a1a3ac0d08bab9e1a0c2149264",
+      "from": "score.mjs",
+      "note": "the run's scorer, pinned by sha256 in PREREG.md section 2; shipped byte for byte. It wrote results/results.json from the run's per-document files, which are not in this tree"
+    },
+    {
+      "file": "lib/extract.mjs",
+      "sha256": "470fb72882fd280d378bc75a05742b5bdb25dcda8a72fb07c3b8636e3a11576b",
+      "from": "lib/extract.mjs",
+      "note": "the blind extractor, pinned by sha256 in PREREG.md section 2; shipped byte for byte. It needs pdfjs-dist 5.4.296, poppler and Tesseract 5.4 installed"
+    },
+    {
+      "file": "rulesets/x1-supplement.ruleset.json",
+      "sha256": "af4956020143fdc92fd3f26ee1ce8c60ebb72a506f6fb7e3cbe69f1ea8a6c607",
+      "from": "rulesets/x1-supplement.ruleset.json",
+      "note": "the supplement ruleset (S), pinned by sha256 in PREREG.md section 2; shipped byte for byte"
+    },
+    {
+      "file": "corpus/render-receipt.json",
+      "sha256": "1fefac4cccb98873ccbf8cfd745fa5fe5171d552cda7dc39ba036f3dff632a71",
+      "from": "corpus/render-receipt.json",
+      "note": "the render receipt, pinned by sha256 in PREREG.md section 2; shipped byte for byte: the sha256 of each of the 60 rendered PDFs"
+    },
+    {
+      "file": "lib/compare.mjs",
+      "sha256": "5f72375daf404db3885aeecb00d8617bc50b7c4104e013ff742f1041a4b6907f",
+      "from": "lib/compare.mjs",
+      "note": "imported by score.mjs. The prereg does not pin it: these are the bytes in the run's folder, whose file time (the authors' own record) is before the run"
+    }
+  ]
+}

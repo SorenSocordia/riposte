@@ -2,16 +2,16 @@
  * Reference in-memory Ledger. Deterministic given an injected clock. A production store (Postgres, DynamoDB, an
  * append-only log) implements the same `Ledger` interface; nothing else in the product changes.
  *
- * SCALE (ledger-scale lane, 2026-09-28). Measured before: a book stopped working at about 40k verdicts, because every
+ * SCALE (2026-09-28). Measured before: a book stopped working at about 40k verdicts, because every
  * whole-book read went through ONE string, and every read re-hashed the whole book. Now:
- *   F2   `snapshot()` hands out the chain by reference (point-in-time arrays of the ledger's own objects), with no string
+ *   -    `snapshot()` hands out the chain by reference (point-in-time arrays of the ledger's own objects), with no string
  *        in between; `chainJSONL()` stays for small books and throws ChainExportTooLarge (named) past one string's ceiling.
- *   F5b  after a content check, the verified prefix is remembered (chain.ts certifyPrefix), so a later check re-hashes only
+ *   -    after a content check, the verified prefix is remembered (chain.ts certifyPrefix), so a later check re-hashes only
  *        the events appended since, and says so (`check.reused`: "verified through seq N at T"). A check of an unchanged
  *        book returns the same verified read. `{ full: true }` re-hashes everything; a reopened ledger always does, first.
- *   F5c  the door's decision list, the key registry and the committed-sample keys are kept incrementally (indexed once per
+ *   -    the door's decision list, the key registry and the committed-sample keys are kept incrementally (indexed once per
  *        appended event), instead of re-walking and cloning the chain on every decide / reviewSigned / commitSample.
- * THE TRUST F5b ADDS, stated: between checks, the process's own memory. The chain arrays are private at runtime (#), the
+ * THE TRUST THE VERIFIED PREFIX ADDS, stated: between checks, the process's own memory. The chain arrays are private at runtime (#), the
  * events are frozen, and an event or payload handed in as a different object is re-hashed; a payload object mutated IN
  * PLACE after it was verified is not seen until a full check.
  *
@@ -125,7 +125,7 @@ interface Slim {
 
 export class MemoryLedger implements Ledger {
   /**
-   * Records keyed by (tenant, verdict_id). F-A (opinion lane, 2026-09-28): keyed by verdict id alone, a second tenant's
+   * Records keyed by (tenant, verdict_id). Before 2026-09-28, keyed by verdict id alone, a second tenant's
    * RECORD of the same verdict id inherited the first tenant's review, wrote that reviewer and note into its own payload on
    * the chain, and replaced the first tenant's record. A review now never crosses tenants.
    */
@@ -145,7 +145,7 @@ export class MemoryLedger implements Ledger {
   private readonly now: () => Date
   /**
    * Append-only event log (each event frozen) + a parallel array of each event's original payload (immutable across
-   * overwrites). Private at runtime (#): the verified prefix (F5b) relies on nothing outside this class replacing an element.
+   * overwrites). Private at runtime (#): the verified prefix relies on nothing outside this class replacing an element.
    */
   readonly #chain: LedgerEvent[] = []
   readonly #payloads: PayloadStore
@@ -156,9 +156,9 @@ export class MemoryLedger implements Ledger {
   /** The registry's root key(s). When set, the key registry on the book anchors every signer once it is in force (registry.ts). */
   private readonly rootKeys?: RootKeys
 
-  /** F5b: the last verified read under the ledger's own anchors, and the chain it was read at. */
+  /** The last verified read under the ledger's own anchors, and the chain it was read at. */
   #bookCache?: { length: number; head: string; book: DecisionBook }
-  /** F5c: the door's decision list (as the chain holds them: no `via`), the key registry and committed sample keys, indexed up to #indexed. */
+  /** The door's decision list (as the chain holds them: no `via`), the key registry and committed sample keys, indexed up to #indexed. */
   readonly #doorList: DecisionEntry<BookDecision>[] = []
   readonly #registry: KeyRegistry
   readonly #sampleKeys = new Map<string, number>()
@@ -206,7 +206,7 @@ export class MemoryLedger implements Ledger {
    * opens (the read side — voice, opinions — excludes anything the door would now refuse). Decision events (GRANT,
    * DECLINE, POLICY_REVISION, KEY_*, CANARY_*) and SAMPLE events change no record; they live on the chain and are read (and
    * re-verified) by decisionBook(). A signed REVIEW replays exactly as an unsigned one (its `review` has the same shape).
-   * Nothing here is verified: the first content check of a reopened ledger re-hashes every event (F5b).
+   * Nothing here is verified: the first content check of a reopened ledger re-hashes every event.
    */
   private hydrate(events: LedgerEvent[], payloads: unknown[]): void {
     for (let i = 0; i < events.length; i++) this.#replay(events[i]!, payloads[i])
@@ -223,7 +223,7 @@ export class MemoryLedger implements Ledger {
     if (p.type === 'RECORD' && p.verdict) {
       // FIX (2026-09-28): a re-RECORD of a reviewed verdict used to drop the review on reopen. record() carries it, so
       // replay must too, or a reopened ledger reports fewer reviews (and a different overturn rate) than the live one.
-      // F-A: only the SAME tenant's earlier review is carried, and the record's `verdict.ledger` is rebuilt from that
+      // Only the SAME tenant's earlier review is carried, and the record's `verdict.ledger` is rebuilt from that
       // review. A chain written before the fix may carry another tenant's reviewer in this payload: the payload stays
       // (the past is immutable, and its hash is on the chain), but the record never shows it.
       const tenant = p.tenant_id!
@@ -246,7 +246,7 @@ export class MemoryLedger implements Ledger {
       this.latestOwner.set(id, tenant)
       this.#recorded.add(id)
     } else if (p.type === 'REVIEW' && p.verdict_id && p.review) {
-      // A REVIEW names its tenant since F-A; a legacy one reviewed the verdict's latest owner (the only record there was).
+      // A REVIEW names its tenant since 2026-09-28; a legacy one reviewed the verdict's latest owner (the only record there was).
       const tenant = p.tenant_id ?? this.latestOwner.get(p.verdict_id)
       if (this.#disk) {
         const s = tenant !== undefined ? this.#slims.get(rk(tenant, p.verdict_id)) : undefined
@@ -302,7 +302,7 @@ export class MemoryLedger implements Ledger {
   }
 
   /**
-   * F5c: bring the door's indexes up to the head: the decision list (each entry as the chain holds it), the key registry
+   * Bring the door's indexes up to the head: the decision list (each entry as the chain holds it), the key registry
    * (folded exactly as decisions.ts registryOf replays it) and the committed sample keys. O(events appended since).
    */
   #index(): void {
@@ -339,7 +339,7 @@ export class MemoryLedger implements Ledger {
     const retentionDays = opts.retention_days ?? DEFAULT_RETENTION_DAYS
     const retention_until = new Date(recordedAt.getTime() + retentionDays * 86400_000).toISOString()
     const recorded_at = recordedAt.toISOString()
-    const existing = this.#disk ? this.#slims.get(rk(opts.tenant_id, verdict.verdict_id)) : this.records.get(rk(opts.tenant_id, verdict.verdict_id)) // F-A: the same tenant's earlier record only
+    const existing = this.#disk ? this.#slims.get(rk(opts.tenant_id, verdict.verdict_id)) : this.records.get(rk(opts.tenant_id, verdict.verdict_id)) // the same tenant's earlier record only
     const stored: Verdict = {
       ...verdict,
       ledger: { tenant_id: opts.tenant_id, retention_until, ...(existing?.review ? { reviewer: this.reviewerOf(existing.review) } : {}) },
@@ -387,13 +387,13 @@ export class MemoryLedger implements Ledger {
       review: full,
       verdict: { ...rec.verdict, ledger: { tenant_id: rec.tenant_id, retention_until: rec.retention_until, reviewer: this.reviewerOf(full) } },
     }
-    // The REVIEW names the tenant whose record it reviews (F-A), so a replay never attributes it to another tenant.
+    // The REVIEW names the tenant whose record it reviews, so a replay never attributes it to another tenant.
     this.append('REVIEW', verdict_id, { type: 'REVIEW', verdict_id, tenant_id: rec.tenant_id, review: full, ...(signed ? { signed } : {}) }, full.decided_at)
     this.records.set(rk(rec.tenant_id, verdict_id), updated)
     return updated
   }
 
-  /** The key registry at the head (kept incrementally, F5c; the read side re-verifies it in full). */
+  /** The key registry at the head (kept incrementally; the read side re-verifies it in full). */
   private registry(): KeyRegistry {
     this.#index()
     return this.#registry
@@ -510,7 +510,7 @@ export class MemoryLedger implements Ledger {
 
   /**
    * Payload hashes, event headers against their hashed payloads, and every decision re-verified (readDecisionBook). After a
-   * check, only the events appended since are re-hashed (F5b; the result's `reused` says so); `{ full: true }` re-hashes all.
+   * check, only the events appended since are re-hashed (the result's `reused` says so); `{ full: true }` re-hashes all.
    */
   verifyContent(opts: ContentCheckOptions = {}): ChainCheck {
     return this.decisionBook(opts.full ? { full: true } : {}).check
@@ -535,7 +535,7 @@ export class MemoryLedger implements Ledger {
   }
 
   /**
-   * F2: the chain as it stands now, by reference: fresh arrays (the caller may edit its copy; the book never changes) holding
+   * The chain as it stands now, by reference: fresh arrays (the caller may edit its copy; the book never changes) holding
    * the ledger's own event objects (frozen) and payload objects (not to be mutated). When this ledger has verified a prefix,
    * the snapshot carries that certificate (chain.ts), so a reader of it (readDecisionBook, openSnapshot) re-hashes only what
    * came after; a copy edited at any verified position is re-hashed in full.
@@ -564,8 +564,8 @@ export class MemoryLedger implements Ledger {
     const clean = JSON.parse(canonicalize(signed)) as SignedDecision<BookDecision>
     const d = clean.decision
     if (!isBookDecisionKind(d.kind)) throw new DecisionRefused(`a ${String(d.kind)} is not a decision event: append a signed review with reviewSigned`)
-    // N5 (CLI lane, 2026-09-28): nothing is decided on a book that does not verify. Every caller gets the refusal, not
-    // only the ones that dry-run first. (F5b: re-hashes only what was appended since the last check.)
+    // 2026-09-28: nothing is decided on a book that does not verify. Every caller gets the refusal, not
+    // only the ones that dry-run first. (It re-hashes only what was appended since the last check.)
     const whole = this.decisionBook()
     if (!whole.ok) {
       const at = whole.check.brokenAt !== undefined ? ` at event ${whole.check.brokenAt}` : ''
@@ -580,9 +580,9 @@ export class MemoryLedger implements Ledger {
       const auth = authorizeSigner(reg, seq, d.kind, d.signer_id, clean.public_key, this.trustedKeys, decisionTenant(d))
       if (!auth.ok) throw new DecisionRefused(auth.reason ?? 'the signer is not anchored')
     }
-    // P1 (security-fix, D-ANCHOR): on an anchored ledger a decline is checked against the ANCHORED grant in force, what every
+    // D-ANCHOR (security fix): on an anchored ledger a decline is checked against the ANCHORED grant in force, what every
     // reader's proposal is made under, so the door reads the verified entries (they carry `via`). `whole` is the check above
-    // (F5b: cached or incremental), so this costs no further walk of the book. DECISION P1-SCOPE (ledger-scale; fork: here):
+    // (cached or incremental), so this costs no further walk of the book. DECISION P1-SCOPE (fork: here):
     // with no anchors at all nothing on the book has effect for any reader, and the door checks the book AS WRITTEN (its own
     // list, no `via`), so an unanchored copy still takes a well-formed decision as a signature.
     const anchored = this.trustedKeys !== undefined || this.rootKeys !== undefined
@@ -609,7 +609,7 @@ export class MemoryLedger implements Ledger {
   }
 
   /**
-   * Verify the book and read it (readDecisionBook). F5b: under the ledger's own anchors, an unchanged book returns its last
+   * Verify the book and read it (readDecisionBook). Under the ledger's own anchors, an unchanged book returns its last
    * verified read (its check's `reused` covers every event); otherwise only the events appended since the last verified read
    * are re-hashed. `full: true` forgets what was verified and re-hashes everything. Explicit anchors read afresh (the hash
    * layer still reuses the verified prefix: anchors do not change a hash).

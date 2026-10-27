@@ -1,5 +1,5 @@
 /**
- * External anchoring (2026-09-28, anchor lane): signed checkpoints of the chain head, and the attack they exist for.
+ * External anchoring (2026-09-28): signed checkpoints of the chain head, and the attack they exist for.
  *   - THE INSIDER REWRITE: an old verdict is changed and the whole chain recomputed, so the book verifies internally; checked
  *     against independently held checkpoints it fails at the first anchored position the rewrite touches.
  *   - FORGED CHECKPOINTS are refused (wrong key, unanchored witness, altered body, a key_admin key without the witness role).

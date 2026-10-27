@@ -37,14 +37,14 @@ export interface TwinRoll {
 /**
  * document   (v0.1) a field's concepts bind anywhere in the document, first concept in priority order
  * statement  (v0.2) only concepts the filing's presentation linkbase places on a face statement can bind; needs
- *            `TwinOptions.presentation` (else every claim ABSTAINs with NO_PRESENTATION_LINKBASE)
+ *            `TwinOptions.presentation` (else every claim is INSUFFICIENT_DATA with NO_PRESENTATION_LINKBASE)
  */
 export type TwinBindingMode = 'document' | 'statement'
 /**
  * exact     (v0.1) PASS iff |value| equals the most precise fact of the binding concept and period (± tolerance)
  * decimals  (v0.2) PASS iff |value| equals ANY consistent duplicate of that fact (± tolerance), e.g. the statement's
  *           figure in thousands when a note repeats it to the dollar; a value that differs but lies inside the binding
- *           fact's own declared rounding (0.5 × 10^−decimals) is ABSTAIN (ROUNDED_BINDING), never a FAIL
+ *           fact's own declared rounding (0.5 × 10^−decimals) is INSUFFICIENT_DATA (ROUNDED_BINDING), never a FAIL
  */
 export type TwinMatchingMode = 'exact' | 'decimals'
 /**
@@ -52,7 +52,7 @@ export type TwinMatchingMode = 'exact' | 'decimals'
  * scope-variants  (v0.2.1) a field's family also holds each listed concept's us-gaap scope variants (the concept's
  *                 name + a SCOPE_VARIANT_SUFFIXES suffix), at lower priority than every listed concept; a statement-
  *                 anchored map binds whichever family member the linkbase places on the face. For a `roll` field the
- *                 statement's own cash roll decides between face lines that disagree; when it cannot, ABSTAIN
+ *                 statement's own cash roll decides between face lines that disagree; when it cannot, INSUFFICIENT_DATA
  *                 (AMBIGUOUS_LINE)
  */
 export type TwinFamilyMode = 'map' | 'scope-variants'
@@ -95,7 +95,7 @@ export interface TwinConceptMap {
   scale?: TwinScaleMode
   /**
    * the reading of the presentation linkbase a statement-anchored map requires (parseTwinPresentation's `links`);
-   * default 'v0.2'. A map that requires 'strict' ABSTAINs every claim (NO_PRESENTATION_LINKBASE) on any other reading.
+   * default 'v0.2'. A map that requires 'strict' answers INSUFFICIENT_DATA for every claim (NO_PRESENTATION_LINKBASE) on any other reading.
    */
   links?: 'v0.2' | 'strict'
 }

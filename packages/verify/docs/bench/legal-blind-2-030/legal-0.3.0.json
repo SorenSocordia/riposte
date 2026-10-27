@@ -1,0 +1,286 @@
+{
+  "about": "POST-HOC regression, not a blind number: legal@0.2.0 against legal@0.3.0 on the 40 items of this set (headed sources as shipped), engine 0.6.0, run 2026-10-05 by lane T3-C after the set had been seen. Every outcome is the same under both rules.",
+  "same_outcomes": true,
+  "rows": [
+    {
+      "id": "L2-01",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Branzburg v. Hayes. The corresponding passage there reads: \"Citizens generally are not constitutionally immune from grand jury subpoenas;\"."
+    },
+    {
+      "id": "L2-02",
+      "label": "known-bad/altered",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Blair v. United States. The corresponding passage there reads: \"■ The personal sacrificó involved is a part of the necessary contribution of the individual to the welfare of the public.\"."
+    },
+    {
+      "id": "L2-03",
+      "label": "control",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Norvell v. Apodaca; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-04",
+      "label": "known-bad/elided",
+      "r020": "ABSTAIN:SELECTIVE_QUOTE",
+      "r030": "ABSTAIN:SELECTIVE_QUOTE",
+      "why030": "the quoted words appear in the opinion text supplied for Lear, Inc. v. Adkins, but the text the quotation's ellipsis omits (\"not be repressed by worthless patents\") carries a negation. This may be a selective quotation that inverts the passage — cannot certify"
+    },
+    {
+      "id": "L2-05",
+      "label": "control",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Environmental Protection Agency v. Mink; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-06",
+      "label": "known-bad/fabricated",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Flast v. Cohen; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the text is 3 words, too fe"
+    },
+    {
+      "id": "L2-07",
+      "label": "control",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for United States v. Vuitch; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the text is 5 word"
+    },
+    {
+      "id": "L2-08",
+      "label": "known-bad/bracket-changed",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation alters the meaning of the opinion text supplied for Morey v. Doud: the bracket [reasonable] stands for \"purposes\", and \"reasonable\" is not \"purposes\", an inflection of it, or a pronoun or referent. The passage there reads: \"based on differences t"
+    },
+    {
+      "id": "L2-09",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Dent v. West Virginia. The corresponding passage there reads: \"Reliance must be placed upon the assur-anee given by his license, issued by an authority competent to judge in that respect, th"
+    },
+    {
+      "id": "L2-10",
+      "label": "known-bad/altered",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Metropolis Theatre Co. v. City of Chicago. The corresponding passage there reads: \"The problems of government are practical ones and may justify, if they do not require, rough accommodations"
+    },
+    {
+      "id": "L2-11",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears verbatim in the opinion text supplied for Pointer v. Texas: the same words, in the same letter case."
+    },
+    {
+      "id": "L2-12",
+      "label": "known-bad/elided",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Roman v. Sincock; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the text is 3 words, too "
+    },
+    {
+      "id": "L2-13",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears verbatim in the opinion text supplied for United States v. Philadelphia National Bank: the same words, in the same letter case."
+    },
+    {
+      "id": "L2-14",
+      "label": "known-bad/fabricated",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Eastern Railroad Presidents Conference v. Noerr Motor Freight, Inc.; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest "
+    },
+    {
+      "id": "L2-15",
+      "label": "control",
+      "r020": "ABSTAIN:SELECTIVE_QUOTE",
+      "r030": "ABSTAIN:SELECTIVE_QUOTE",
+      "why030": "elided condition: the quotation's ellipsis omits \". This congressional policy is rooted in the same concepts of American federalism that have prov … , 401 U. S. 37 (1971). As this Court emphasized only last Term in Rewis v. United States, supra,\" from the opin"
+    },
+    {
+      "id": "L2-16",
+      "label": "known-bad/bracket-changed",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Sullivan v. Little Hunting Park, Inc.; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the "
+    },
+    {
+      "id": "L2-17",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Commissioner v. Culbertson. The corresponding passage there reads: \"the first principle of income taxation: that income must be taxed to him who earns it.\"."
+    },
+    {
+      "id": "L2-18",
+      "label": "known-bad/altered",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Logan v. United States; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-19",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation alters the meaning of the opinion text supplied for Nelson v. George: the bracket [Kentucky] stands for \"North Carolina\", and \"Kentucky\" is not \"North Carolina\", an inflection of it, or a pronoun or referent. The passage there reads: \"present eff"
+    },
+    {
+      "id": "L2-20",
+      "label": "known-bad/elided",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Smith v. Hooey; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the text is 3 words, too fe"
+    },
+    {
+      "id": "L2-21",
+      "label": "control",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Ahrens v. Clark; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the text is 4 words, too f"
+    },
+    {
+      "id": "L2-22",
+      "label": "known-bad/fabricated",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Blair v. United States; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-23",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears verbatim in the opinion text supplied for Dandridge v. Williams: the same words, in the same letter case."
+    },
+    {
+      "id": "L2-24",
+      "label": "known-bad/bracket-changed",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Barry v. United States ex rel. Cunningham; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in "
+    },
+    {
+      "id": "L2-25",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears verbatim in the opinion text supplied for Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment: the same words, in the same letter case."
+    },
+    {
+      "id": "L2-26",
+      "label": "known-bad/altered",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Zizzo v. United States; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-27",
+      "label": "control",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Cook v. Calhoun; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-28",
+      "label": "known-bad/elided",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Indiana v. Kentucky. The corresponding passage there reads: \"When a great river is the boundary betAveen two nations or States, if the original property is in neither, and there be no conven"
+    },
+    {
+      "id": "L2-29",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears verbatim in the opinion text supplied for Michigan v. Wisconsin: the same words, in the same letter case."
+    },
+    {
+      "id": "L2-30",
+      "label": "known-bad/fabricated",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for McGowan v. Maryland; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted. The longest run of its words found in the text is 3 words, t"
+    },
+    {
+      "id": "L2-31",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Madden v. Kentucky ex rel. Commissioner. The corresponding passage there reads: \"— The broad discretion as to classification possessed by a legislature in the field of taxation has long been"
+    },
+    {
+      "id": "L2-32",
+      "label": "known-bad/bracket-changed",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Mayer v. City of Chicago; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-33",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Choctaw, Oklahoma & Gulf Railroad v. Mackey. The corresponding passage there reads: \"The mere fact that property is used, among others, by the United States as an instrument for éffecting it"
+    },
+    {
+      "id": "L2-34",
+      "label": "known-bad/altered",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Rice v. Olson. The corresponding passage there reads: \"The policy of leaving Indians free from state jurisdiction and control is deeply rooted in the Nation’s history.\"."
+    },
+    {
+      "id": "L2-35",
+      "label": "control",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation is not found as quoted in the opinion text supplied for Carpenter v. Shaw. The corresponding passage there reads: \"Doubtful expressions are to be resolved in favor of the weak and defenseless people who are the wards of the nation, dependent upon"
+    },
+    {
+      "id": "L2-36",
+      "label": "known-bad/elided",
+      "r020": "ABSTAIN:SELECTIVE_QUOTE",
+      "r030": "ABSTAIN:SELECTIVE_QUOTE",
+      "why030": "the quoted words appear in the opinion text supplied for Warren Trading Post Co. v. Arizona Tax Commission, but the text the quotation's ellipsis omits (\"without state control\") carries a negation. This may be a selective quotation that inverts the passage — c"
+    },
+    {
+      "id": "L2-37",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears in the opinion text supplied for American Power & Light Co. v. Securities & Exchange Commission, read with the quotation conventions it uses: an ellipsis stands for \", however,\"; quotation marks not compared."
+    },
+    {
+      "id": "L2-38",
+      "label": "known-bad/fabricated",
+      "r020": "ABSTAIN:SPAN_NOT_FOUND",
+      "r030": "ABSTAIN:SPAN_NOT_FOUND",
+      "why030": "the quotation was not found in the opinion text supplied for Chevron Oil Co. v. Huson; it may be fabricated, or the supplied text may be incomplete. Not confirmed — do not rely on this citation as quoted."
+    },
+    {
+      "id": "L2-39",
+      "label": "control",
+      "r020": "PASS",
+      "r030": "PASS",
+      "why030": "The quotation appears verbatim in the opinion text supplied for Norton v. Shelby County: the same words, in the same letter case."
+    },
+    {
+      "id": "L2-40",
+      "label": "known-bad/bracket-changed",
+      "r020": "FAIL",
+      "r030": "FAIL",
+      "why030": "The quotation alters the meaning of the opinion text supplied for Chicot County Drainage District v. Baxter State Bank: the bracket [reasonable] stands for \"attention\", and \"reasonable\" is not \"attention\", an inflection of it, or a pronoun or referent. The pas"
+    }
+  ]
+}

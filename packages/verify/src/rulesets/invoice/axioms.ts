@@ -20,6 +20,7 @@
 
 import type { ComputationalAxiom } from '../../kernel/types.js'
 import type { AxiomRegistry } from '../../kernel/axiom-registry.js'
+import type { RemedyTable } from '../../verdict/remedy.js'
 
 /** One cent. Documented per-rule in the ruleset and emitted in each verdict's computation.tolerance. */
 export const CURRENCY_TOLERANCE = 0.01
@@ -121,4 +122,97 @@ export const INVOICE_CORE_CODES: readonly string[] = [
 /** Register the invoice axioms into a registry instance (idempotent — register() overwrites by id). */
 export function registerInvoiceAxioms(registry: AxiomRegistry): void {
   for (const axiom of INVOICE_AXIOMS) registry.register(axiom)
+}
+
+/**
+ * Remedies, declared next to the laws (2026-10-02; docs/REMEDIES.md). What lawfully answers each rule's FAIL, read from what
+ * actually makes it fail. Can't-tell claims take the remedies their own insufficiency implies (verdict/remedy.ts) unless a
+ * rule declares its own. A remedy never changes a verdict: re-reading or supplying an operand is a new check, and a ruling
+ * covers this verdict only.
+ */
+export const INVOICE_REMEDIES: RemedyTable = {
+  SUM_INT: {
+    fail: [
+      { kind: 'recompute-with', operand: { source: 'invoice', role: 'SUBTOTAL', path: 'subtotal' },
+        detail: 'The line amounts sum to {asserted}; the subtotal says {expected} (the lines are off by {variance}). Re-read the subtotal and every line amount: a dropped, doubled or misread line is the usual cause.' },
+      { kind: 'authority', authority: 'ap-supervisor',
+        detail: 'If the document itself does not foot, a person with AP authority may rule to proceed on it as stated, or send it back to the vendor for a corrected one. The ruling covers this verdict only.' },
+    ],
+  },
+  TOTAL_INT: {
+    fail: [
+      { kind: 'recompute-with', operand: { source: 'invoice', role: 'GRAND_TOTAL', path: 'total' },
+        detail: 'Subtotal + tax + service charge − discount is {expected}; the total says {asserted} (off by {variance}). Re-read the total, the tax, any service charge and any discount.' },
+      { kind: 'missing-operand', operand: { source: 'invoice', role: 'SERVICE_CHARGE', path: 'service_charge' },
+        detail: 'A charge the total includes but the extraction did not carry (shipping, handling, a fee) closes the gap only if the document states it: extract it as service_charge.' },
+      { kind: 'transform', transform: 'tax-inclusive-subtotal', operand: { source: 'invoice', role: 'SUBTOTAL', path: 'subtotal' },
+        detail: 'If the document says its prices include tax, read the subtotal as tax-inclusive, so the tax is not added twice.' },
+      { kind: 'authority', authority: 'ap-supervisor',
+        detail: 'A person with AP authority may rule to pay the total as stated, or send the invoice back. The ruling covers this verdict only.' },
+    ],
+  },
+  TAX_INT: {
+    fail: [
+      { kind: 'recompute-with', operand: { source: 'invoice', role: 'TAX_AMOUNT', path: 'tax' },
+        detail: 'Subtotal × tax rate is {expected}; the tax says {asserted}. Re-read the tax and the rate.' },
+      { kind: 'authority', authority: 'tax-reviewer',
+        detail: 'The rule taxes the whole subtotal at one rate. Exempt lines, several rates or another taxable base are outside it: a person with tax authority rules, for this verdict only.' },
+    ],
+  },
+  MATH_INT: {
+    fail: [
+      { kind: 'recompute-with', operand: { source: 'invoice', path: 'line_items[{line}]' },
+        detail: 'Line {line}: unit price × quantity is {expected}; the amount says {asserted}. Re-read the quantity, unit price and amount. A line discount or another unit of measure is the usual cause; if the document is wrong, the vendor reissues it.' },
+      { kind: 'authority', authority: 'ap-supervisor',
+        detail: 'A person with AP authority may accept line {line} as stated, for this verdict only.' },
+    ],
+  },
+  RATE_SUP: {
+    fail: [
+      { kind: 'authority', authority: 'contract-owner',
+        detail: 'Billed at {op:RATE_APPLIED} against the contracted {op:RATE_CONTRACTED}. The contract owner may approve the difference for this verdict only; that sets no new rate.' },
+      { kind: 'missing-operand', operand: { source: 'contract', role: 'RATE_CONTRACTED' },
+        detail: 'A contract amendment at the billed rate, supplied as the contract reference: the invoice is then checked as a new verdict.' },
+    ],
+  },
+  AMT_CAP: {
+    fail: [
+      { kind: 'authority', authority: 'budget-owner',
+        detail: 'The amount {asserted} is over the contracted limit {expected}. The budget owner may approve the overrun for this verdict only.' },
+      { kind: 'missing-operand', operand: { source: 'contract', role: 'CONTRACTED_LIMIT' },
+        detail: 'An amendment raising the limit, supplied as the contract reference: the invoice is then checked as a new verdict.' },
+    ],
+  },
+  TIME_ORD: {
+    fail: [
+      { kind: 'missing-operand', operand: { source: 'contract', role: 'CONTRACT_END' },
+        detail: 'The service date {asserted} is outside the contract term. An extension or renewal that covers it, supplied as the contract reference, is checked as a new verdict.' },
+      { kind: 'authority', authority: 'contract-owner',
+        detail: 'The contract owner may approve work outside the term, for this verdict only.' },
+    ],
+  },
+  QTY_MATCH: {
+    fail: [
+      { kind: 'missing-operand', operand: { source: 'evidence', role: 'ACTUAL_QUANTITY' },
+        detail: 'Billed {asserted}; the delivery evidence shows {expected}. Evidence for the remaining units (a later delivery ticket or receipt) is checked as a new verdict.' },
+      { kind: 'authority', authority: 'buyer',
+        detail: 'The buyer may approve paying units the evidence does not show, for this verdict only.' },
+    ],
+  },
+  DUP_PROHIB: {
+    abstain: [
+      { kind: 'missing-operand', operand: { source: 'history', role: 'PRIOR_CLAIM_IDS', path: 'prior_invoice_ids' }, when: ['FIELD_MISSING'],
+        detail: 'The invoice numbers already processed (prior_invoice_ids; an empty list means none), and the invoice number itself, so the duplicate check can run.' },
+    ],
+    fail: [
+      { kind: 'authority', authority: 'ap-controller',
+        detail: 'Invoice {asserted} is already in the history. Paying it again is lawful only if the earlier booking was voided or credited: the controller rules, for this verdict only.' },
+    ],
+  },
+  DUP_NEAR: {
+    fail: [
+      { kind: 'authority', authority: 'ap-clerk',
+        detail: 'A prior invoice number differs from {asserted} only by formatting or a revision suffix. A person confirms this is a new invoice, not a re-issue, for this verdict only.' },
+    ],
+  },
 }

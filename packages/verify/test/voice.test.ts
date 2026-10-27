@@ -144,7 +144,7 @@ describe('assessVoice', () => {
         } else if (ei < gi) {
           demotions++
           expect(a.proposal).toMatchObject({ kind: 'DEMOTION_PROPOSAL', from: granted, status: 'PROPOSED', requires_human_signature: true })
-          // E4 (security fix): was `urgent: true` on every demotion; urgent is now exactly basis === 'failure'.
+          // Security fix (2026-09-28): was `urgent: true` on every demotion; urgent is now exactly basis === 'failure'.
           expect((a.proposal as { urgent: boolean; basis: string }).urgent).toBe((a.proposal as { basis: string }).basis === 'failure')
           expect(levelRank(a.proposal!.to)).toBe(gi - 1)      // one rung down: symmetric
         } else {

@@ -1,0 +1,13 @@
+DORSETT HOLDINGS, LLC v. MERIDIAN TRUST CO.
+604 U.S. 318
+Supreme Court of the United States
+Decided March 21, 2025
+Syllabus
+The limitations period for a breach of trust claim runs from the date of breach, not from discovery.
+JUSTICE HALVORSEN announced the judgment of the Court and delivered an opinion, in which THE CHIEF JUSTICE and JUSTICE ABERNATHY join.
+The question is when the six-year limitations period begins to run on a claim that a trustee breached a duty of prudence. Petitioner asks us to hold that the period begins only when the beneficiary discovers the breach. We decline to do so. The statute’s text ties the period to the date of the last action constituting the breach, and a court may not graft a discovery rule onto a statute whose text forecloses one.
+Because petitioner filed suit more than six years after the last transaction it challenges, its claim is untimely. The judgment of the Court of Appeals is affirmed.
+JUSTICE PRYCE, with whom JUSTICE OKAFOR joins, concurring in the judgment.
+I agree that petitioner’s claim is untimely, but I would rest that conclusion on the narrower ground that petitioner had actual knowledge of the transaction more than six years before suit.
+JUSTICE LINDQVIST, with whom JUSTICE MARCH and JUSTICE TELLER join, dissenting.
+A discovery rule is the default for claims sounding in fraud or concealment, and nothing in the statute displaces it.

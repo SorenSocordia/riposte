@@ -1,0 +1,1960 @@
+{
+ "auditor": "Claude Opus 5.5 (claude-opus-5-5), agent audit, same agent as harness author",
+ "protocol": "PREREG Amendment A6",
+ "seed": 1105236109,
+ "prereg_sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+ "fail": [
+  {
+   "n": 1,
+   "index": 162867,
+   "case": "4508048695_00170",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR3 (08-20, 09-07, 09-11); 3 clears, after a block removal"
+  },
+  {
+   "n": 2,
+   "index": 13705,
+   "case": "4507004389_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1 02-05; IR 09-06 00:23 and 10-04, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 3,
+   "index": 218114,
+   "case": "4508066050_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1 12-06; IR2 2019-01-17 3 min apart; neither cleared by log end"
+  },
+  {
+   "n": 4,
+   "index": 248119,
+   "case": "4508075135_00070",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 2019-01-16 never cleared (awaiting goods at log end)"
+  },
+  {
+   "n": 5,
+   "index": 178517,
+   "case": "4508053645_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR3 within 4 min (04:19, 04:22, 04:23); 1 clear: two unpaid"
+  },
+  {
+   "n": 6,
+   "index": 156515,
+   "case": "4508046830_00070",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR3; 3 clears, after two block removals"
+  },
+  {
+   "n": 7,
+   "index": 46492,
+   "case": "4507014386_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 09-19 00:32 never cleared"
+  },
+  {
+   "n": 8,
+   "index": 172265,
+   "case": "4508051516_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR paid after block removal"
+  },
+  {
+   "n": 9,
+   "index": 211374,
+   "case": "4508063975_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "vendor debit memo; GR1; IR3 with 1 cancel: net 2; 2 clears, one after block removal"
+  },
+  {
+   "n": 10,
+   "index": 187124,
+   "case": "4508056287_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (10-08, 10-12); both cleared; no block"
+  },
+  {
+   "n": 11,
+   "index": 6549,
+   "case": "4507002187_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 12 IR in 28 min on 04-26 (distinct minutes), 1 block removal, 1 clear, 1 cancel on 12-20: 11 net IR stand, 10 unpaid"
+  },
+  {
+   "n": 12,
+   "index": 46286,
+   "case": "4507014338_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 09-19 00:32 never cleared"
+  },
+  {
+   "n": 13,
+   "index": 125668,
+   "case": "4507037369_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 22 min apart, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 14,
+   "index": 8319,
+   "case": "4507002695_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "only GR cancelled 3 h later (net 0); IR1 paid after block removal; qty change + delivery-indicator change"
+  },
+  {
+   "n": 15,
+   "index": 56743,
+   "case": "4507017351_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR cleared after block removal; IR 12-20 never cleared"
+  },
+  {
+   "n": 16,
+   "index": 156616,
+   "case": "4508046846_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "vendor debit memo (dated before PO); GR1; IR3 with 1 cancel: net 2; block removal value 1777 = 2x item; 2 clears"
+  },
+  {
+   "n": 17,
+   "index": 6553,
+   "case": "4507002187_00070",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 21 IR (07-20 x2, 07-26 x19, distinct minutes), 2 clears; same PO as #11"
+  },
+  {
+   "n": 18,
+   "index": 30667,
+   "case": "4507009453_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, price change, block removed, cleared; IR 12-20 13:16 never cleared"
+  },
+  {
+   "n": 19,
+   "index": 23473,
+   "case": "4507007358_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 10-16 00:22 never cleared"
+  },
+  {
+   "n": 20,
+   "index": 140108,
+   "case": "4507041912_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 (09-03, 09-04); block removal value 576 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 21,
+   "index": 29061,
+   "case": "4507009027_00160",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR3 (03-22, 03-23, 05-17), 3 clears, one after block removal"
+  },
+  {
+   "n": 22,
+   "index": 35025,
+   "case": "4507010917_00160",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "three qty changes; GR1; IR cleared; IR 09-24 00:21 never cleared"
+  },
+  {
+   "n": 23,
+   "index": 94241,
+   "case": "4507027854_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (05-24, 05-25), 1 clear: one unpaid"
+  },
+  {
+   "n": 24,
+   "index": 163849,
+   "case": "4508048968_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 2019-01-03 + block removal, not cleared by log end"
+  },
+  {
+   "n": 25,
+   "index": 83899,
+   "case": "4507024785_00180",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR 05-07, IR 12-12 01:36, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 26,
+   "index": 206964,
+   "case": "4508062548_00040",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR 11-23 cleared; IR 12-10 cleared 2019-01-04; no block"
+  },
+  {
+   "n": 27,
+   "index": 71338,
+   "case": "4507021384_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1 04-11; IR 10-11 00:20, IR 12-17, block removed, 1 clear 2019-01-03: one unpaid"
+  },
+  {
+   "n": 28,
+   "index": 11469,
+   "case": "4507003700_00150",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service: GR1+SES1; IR3, block removed, 2 clears: one unpaid"
+  },
+  {
+   "n": 29,
+   "index": 10336,
+   "case": "4507003370_00050",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR2 (02-01, 02-19), 2 vendor invoices, block removed, both cleared"
+  },
+  {
+   "n": 30,
+   "index": 39279,
+   "case": "4507012102_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; IR, GR, block removed, IR; 2 clears (one after a second block removal)"
+  },
+  {
+   "n": 31,
+   "index": 36908,
+   "case": "4507011474_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1 02-28; IR 08-30 00:31, IR 2019-01-14, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 32,
+   "index": 225301,
+   "case": "4508068213_00060",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR cancelled 3 min after posting (net 0); delivery-indicator change; IR 2019-01-14 never cleared"
+  },
+  {
+   "n": 33,
+   "index": 93145,
+   "case": "4507027564_00130",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 3 min apart (05:48, 05:51), block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 34,
+   "index": 174435,
+   "case": "4508052202_00080",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR 11-19 cleared after block removal; IR 2019-01-14 + block removal, not cleared by log end"
+  },
+  {
+   "n": 35,
+   "index": 143120,
+   "case": "4508042805_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 10-02 never cleared (still awaiting goods at log end)"
+  },
+  {
+   "n": 36,
+   "index": 196621,
+   "case": "4508059392_00060",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 2019-01-10 never cleared"
+  },
+  {
+   "n": 37,
+   "index": 157569,
+   "case": "4508047123_00030",
+   "label": "UNCLEAR",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; vendor debit memo; IR 09-20 09:41, Cancel Subsequent Invoice 12:44 with no subsequent invoice in the trace; 2 clears. The cancel may reverse the only IR, which the harness does not net"
+  },
+  {
+   "n": 38,
+   "index": 238334,
+   "case": "4508072261_00130",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1 2019-01-03; IR2 7 min apart 01-08; neither cleared by log end"
+  },
+  {
+   "n": 39,
+   "index": 230332,
+   "case": "4508069817_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (12-27, 12-28); block removal value 7523 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 40,
+   "index": 67113,
+   "case": "4507020184_00160",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; IR, GR, block removed, cleared; IR 09-11 cleared"
+  },
+  {
+   "n": 41,
+   "index": 241665,
+   "case": "4508073255_00150",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, block removed, IR; neither cleared by log end"
+  },
+  {
+   "n": 42,
+   "index": 41739,
+   "case": "4507012918_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR 09-20 00:32, IR 10-09, IR 12-17 cancelled 7 min later: net 2; vendor debit memo 12-17; 2 clears"
+  },
+  {
+   "n": 43,
+   "index": 61849,
+   "case": "4507018867_00160",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR 04-06 cleared; IR 06-04 cleared 06-28 after block removal"
+  },
+  {
+   "n": 44,
+   "index": 84018,
+   "case": "4507024825_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR, price change, block removed, cleared; IR 12-12 01:36 never cleared"
+  },
+  {
+   "n": 45,
+   "index": 76627,
+   "case": "4507022831_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, qty change, GR, block removed, cleared; IR 10-26 00:25 never cleared"
+  },
+  {
+   "n": 46,
+   "index": 189814,
+   "case": "4508057188_00010",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR 11-23 cleared; IR 12-07 cleared after block removal"
+  },
+  {
+   "n": 47,
+   "index": 64888,
+   "case": "4507019565_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR; delivery-indicator, qty, price changes; block removed; cleared; IR 12-20 never cleared"
+  },
+  {
+   "n": 48,
+   "index": 148252,
+   "case": "4508044183_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 07-31 paid 08-30 after block removal: paid with no receipt"
+  },
+  {
+   "n": 49,
+   "index": 54304,
+   "case": "4507016631_00070",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "three qty changes + price change; GR1; IR cleared; IR 12-20 never cleared"
+  },
+  {
+   "n": 50,
+   "index": 137705,
+   "case": "4507041201_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "2 vendor invoices; IR2 (09:27, 10:28) then GR1; block removal value 6270 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 51,
+   "index": 225553,
+   "case": "4508068326_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR2 same day; neither cleared by log end"
+  },
+  {
+   "n": 52,
+   "index": 176342,
+   "case": "2000052931_00006",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "EC PO: no goods receipt; IR 12-27 never cleared (awaiting goods at log end)"
+  },
+  {
+   "n": 53,
+   "index": 180679,
+   "case": "4508054249_00120",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 1 h apart; 1 clear: one unpaid"
+  },
+  {
+   "n": 54,
+   "index": 116582,
+   "case": "4507034498_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, block removed, IR 07-26; 1 clear: one unpaid"
+  },
+  {
+   "n": 55,
+   "index": 19242,
+   "case": "4507006074_00400",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, qty change, block removed, IR, block removed, 2 clears"
+  },
+  {
+   "n": 56,
+   "index": 59522,
+   "case": "4507018179_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "2 vendor invoices; GR1; IR 04-05; four price changes; IR 06-28; block removed; 2 clears"
+  },
+  {
+   "n": 57,
+   "index": 106002,
+   "case": "4507031233_00060",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR2 2 min apart (06:10, 06:12) then GR1; block removal value 422 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 58,
+   "index": 86256,
+   "case": "4507025409_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared after block removal; IR 12-20 never cleared"
+  },
+  {
+   "n": 59,
+   "index": 80980,
+   "case": "4507023985_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR, price change, block removed, cleared; IR 12-12 01:36 never cleared"
+  },
+  {
+   "n": 60,
+   "index": 155359,
+   "case": "4508046399_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 3 min apart (14:57, 15:00), 1 clear: one unpaid"
+  },
+  {
+   "n": 61,
+   "index": 32100,
+   "case": "4507009930_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 09-27 00:22 never cleared"
+  },
+  {
+   "n": 62,
+   "index": 141601,
+   "case": "4508042339_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 07-27 paid 08-30 after block removal: paid with no receipt"
+  },
+  {
+   "n": 63,
+   "index": 99510,
+   "case": "4507029330_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (05-28, 06-06), 1 clear: one unpaid"
+  },
+  {
+   "n": 64,
+   "index": 196619,
+   "case": "4508059392_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "price change; no goods receipt; IR 2019-01-10 never cleared"
+  },
+  {
+   "n": 65,
+   "index": 32898,
+   "case": "4507010214_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared after block removal; IR 08-30 00:31 never cleared"
+  },
+  {
+   "n": 66,
+   "index": 60515,
+   "case": "4507018438_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1 04-03; IR 10-03 00:20 and 09:09, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 67,
+   "index": 42785,
+   "case": "4507013199_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "two qty changes; GR1; IR 03-10 cleared; IR 08-23 cleared after block removal"
+  },
+  {
+   "n": 68,
+   "index": 144741,
+   "case": "4508043169_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 (08-20, 09-28) each after a vendor invoice; 1 clear: one unpaid"
+  },
+  {
+   "n": 69,
+   "index": 59218,
+   "case": "4507018095_00170",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 10-05 00:25 never cleared"
+  },
+  {
+   "n": 70,
+   "index": 130398,
+   "case": "4507039012_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared after block removal; IR 2019-01-17 01:18 never cleared"
+  },
+  {
+   "n": 71,
+   "index": 123146,
+   "case": "4507036573_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; vendor debit memo; IR3 with 1 cancel: net 2; 3 clears"
+  },
+  {
+   "n": 72,
+   "index": 67160,
+   "case": "4507020191_00080",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR cleared; IR 12-20 never cleared"
+  },
+  {
+   "n": 73,
+   "index": 33866,
+   "case": "4507010515_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR2; IR3 (05-08, 05-23, 12-20), 2 clears: one unpaid"
+  },
+  {
+   "n": 74,
+   "index": 216554,
+   "case": "4508065627_00330",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 1 h apart; neither cleared by log end"
+  },
+  {
+   "n": 75,
+   "index": 85700,
+   "case": "4507025265_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service framework after-GR: price change; GR2 (+SES); IR4; 2 clears: two unpaid"
+  },
+  {
+   "n": 76,
+   "index": 71344,
+   "case": "4507021384_00110",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "same pattern as #27 (same PO)"
+  },
+  {
+   "n": 77,
+   "index": 37826,
+   "case": "4507011756_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR cleared; IR 09-21 00:14 never cleared"
+  },
+  {
+   "n": 78,
+   "index": 152222,
+   "case": "4508045450_00110",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; vendor debit memo; IR3 with 1 cancel: net 2; 3 clears"
+  },
+  {
+   "n": 79,
+   "index": 231237,
+   "case": "4508070099_00470",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; IR2 1 h apart, then GR1; block removal value 538 = 2x item; no clear"
+  },
+  {
+   "n": 80,
+   "index": 42698,
+   "case": "4507013184_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR cleared; IR 12-20 13:31 never cleared"
+  },
+  {
+   "n": 81,
+   "index": 155066,
+   "case": "4508046299_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR 09-26 cleared; IR 12-10, block removed 12-14, not cleared by log end"
+  },
+  {
+   "n": 82,
+   "index": 170309,
+   "case": "4508050795_00100",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "price change; GR1; IR2 15 min apart; 1 clear: one unpaid"
+  },
+  {
+   "n": 83,
+   "index": 161409,
+   "case": "4508048353_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 09-05; delivery-indicator change; paid 12-17 after block removal: paid with no receipt"
+  },
+  {
+   "n": 84,
+   "index": 9668,
+   "case": "4507003139_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; second IR 08-20 00:21 never cleared"
+  },
+  {
+   "n": 85,
+   "index": 144345,
+   "case": "4508043046_00270",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR2; IR3; block removal value 20687 = 3x item; 2 clears: one unpaid"
+  },
+  {
+   "n": 86,
+   "index": 21769,
+   "case": "4507006861_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 10-17 00:25 never cleared"
+  },
+  {
+   "n": 87,
+   "index": 54358,
+   "case": "4507016636_00250",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; 2 vendor invoices; GR1; IR2 same day (10:48, 12:36), 1 clear: one unpaid"
+  },
+  {
+   "n": 88,
+   "index": 66862,
+   "case": "4507020092_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR, price change, IR paid after block removal, then the only GR cancelled 09-27: paid invoice with receipt reversed"
+  },
+  {
+   "n": 89,
+   "index": 87891,
+   "case": "4507025962_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, block removed, cleared; IR 12-10 01:30 never cleared"
+  },
+  {
+   "n": 90,
+   "index": 170143,
+   "case": "4508050757_00100",
+   "label": "UNCLEAR",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1 but two service entry sheets (09:24, 09:25); IR2 both cleared. The second sheet may be a receipt the log did not mirror as a GR; the harness counts sheets only when no GR exists"
+  },
+  {
+   "n": 91,
+   "index": 79446,
+   "case": "4507023487_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR record/cancel/record = net 1; IR2 (06-20, 06-26), 1 clear: one unpaid"
+  },
+  {
+   "n": 92,
+   "index": 6014,
+   "case": "4507002016_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR record/cancel/record/cancel/record = net 1; IR2 (04-13, 12-20), 1 clear; qty+price change"
+  },
+  {
+   "n": 93,
+   "index": 77473,
+   "case": "4507023045_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "subcontracting: qty change; GR1; IR cleared; IR 10-19 never cleared"
+  },
+  {
+   "n": 94,
+   "index": 198555,
+   "case": "4508059983_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 10-10, delivery-indicator change; never cleared"
+  },
+  {
+   "n": 95,
+   "index": 119936,
+   "case": "4507035555_00030",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR, IR, cleared 09-28; then the only GR cancelled 11-30 + delivery-indicator change: paid invoice with receipt reversed"
+  },
+  {
+   "n": 96,
+   "index": 67084,
+   "case": "4507020175_00080",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR2 (07-23, 07-24); both cleared, one after block removal"
+  },
+  {
+   "n": 97,
+   "index": 34554,
+   "case": "4507010779_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 09-27 00:22 never cleared"
+  },
+  {
+   "n": 98,
+   "index": 108775,
+   "case": "4507032075_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared after block removal; IR 12-20 never cleared"
+  },
+  {
+   "n": 99,
+   "index": 155009,
+   "case": "4508046284_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR then IR, the GR cancelled 4 h later (net 0); qty change; IR paid after block removal: paid with no standing receipt"
+  },
+  {
+   "n": 100,
+   "index": 156508,
+   "case": "4508046829_00030",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 (07:36, 07:59); both cleared in one minute; no block"
+  },
+  {
+   "n": 101,
+   "index": 50762,
+   "case": "4507015628_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty+price changes; IR, GR, block removed, cleared; IR 10-16 00:22 never cleared"
+  },
+  {
+   "n": 102,
+   "index": 203502,
+   "case": "4508061534_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 (12-18, 12-20), block removed 2019-01-15, neither cleared"
+  },
+  {
+   "n": 103,
+   "index": 34922,
+   "case": "4507010903_00080",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "two qty changes; GR1; IR cleared; IR 09-25 00:28 never cleared"
+  },
+  {
+   "n": 104,
+   "index": 40235,
+   "case": "4507012433_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "third-party: GR1; IR cleared; IR 08-31 00:11 never cleared"
+  },
+  {
+   "n": 105,
+   "index": 130255,
+   "case": "4507038928_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "price+qty change; IR, block removed, GR, IR; 1 clear: one unpaid"
+  },
+  {
+   "n": 106,
+   "index": 41499,
+   "case": "4507012828_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 09-20 00:32 never cleared"
+  },
+  {
+   "n": 107,
+   "index": 71047,
+   "case": "4507021328_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service framework after-GR: GR1+SES; IR2 (04-24, 05-08), 1 clear: one unpaid"
+  },
+  {
+   "n": 108,
+   "index": 69135,
+   "case": "4507020766_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "vendor invoice dated 2017 before PO (vendor side); GR1; IR cleared; IR 10-12 00:23 never cleared"
+  },
+  {
+   "n": 109,
+   "index": 234367,
+   "case": "4508071074_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 11-29 paid 2019-01-04 after block removal: paid with no receipt"
+  },
+  {
+   "n": 110,
+   "index": 23339,
+   "case": "4507007305_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR2; IR3 on 03-29 (10:58, 11:00, 11:11), block removed, 1 clear: two unpaid"
+  },
+  {
+   "n": 111,
+   "index": 58990,
+   "case": "4507018081_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared after block removal; IR 12-20 never cleared"
+  },
+  {
+   "n": 112,
+   "index": 176379,
+   "case": "2000052965_00001",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "EC PO: GR1 2019-01-07; IR2 (01-10, 01-11), neither cleared by log end"
+  },
+  {
+   "n": 113,
+   "index": 159086,
+   "case": "4508047561_00200",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (09-27, 10-04); both cleared; no block"
+  },
+  {
+   "n": 114,
+   "index": 51923,
+   "case": "4507015914_00160",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR3 (04-06, 05-21, 05-30), 3 clears, one after block removal"
+  },
+  {
+   "n": 115,
+   "index": 54179,
+   "case": "4507016563_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; qty change; IR cleared; IR 12-20 13:30 never cleared"
+  },
+  {
+   "n": 116,
+   "index": 115702,
+   "case": "4507034288_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 same day, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 117,
+   "index": 80542,
+   "case": "4507023819_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, block removed; second IR 05-10; 1 clear: one unpaid"
+  },
+  {
+   "n": 118,
+   "index": 200971,
+   "case": "4508060781_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (10-29, 11-27), block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 119,
+   "index": 191338,
+   "case": "4508057728_00360",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR2 1 min apart (15:54, 15:55); block removal value 7967 = 2x item; no clear"
+  },
+  {
+   "n": 120,
+   "index": 10789,
+   "case": "4507003501_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR2 2 min apart then GR1; block removal carries value 1912 = 2x item; 1 clear; qty change"
+  },
+  {
+   "n": 121,
+   "index": 29255,
+   "case": "4507009079_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 10-10 00:23 never cleared"
+  },
+  {
+   "n": 122,
+   "index": 31526,
+   "case": "4507009798_00250",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "IR before GR, block removed; second IR 03-08; both cleared"
+  },
+  {
+   "n": 123,
+   "index": 119937,
+   "case": "4507035555_00040",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "same as #95 (sibling item, GR cancelled 11-30 after payment)"
+  },
+  {
+   "n": 124,
+   "index": 49617,
+   "case": "4507015328_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR2; IR3 (16:36, 16:48, 12-20), block removed, 1 clear: two unpaid"
+  },
+  {
+   "n": 125,
+   "index": 115964,
+   "case": "4507034356_00050",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR 06-20 cleared; vendor invoice 08-07; IR 08-28 cleared; no block"
+  },
+  {
+   "n": 126,
+   "index": 133250,
+   "case": "4507039745_00030",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR 09-05, IR 11-12, each cleared after a block removal"
+  },
+  {
+   "n": 127,
+   "index": 135203,
+   "case": "4507040372_00150",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "2 vendor invoices; GR1; IR 09-05, IR 11-08, each cleared after a block removal"
+  },
+  {
+   "n": 128,
+   "index": 33954,
+   "case": "4507010570_00080",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 4 min apart (04:57, 05:01), 1 vendor invoice, 1 clear: one unpaid"
+  },
+  {
+   "n": 129,
+   "index": 61060,
+   "case": "4507018584_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 12-20 13:14 never cleared"
+  },
+  {
+   "n": 130,
+   "index": 55893,
+   "case": "4507017103_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (06-15, 07-16), 1 clear: one unpaid"
+  },
+  {
+   "n": 131,
+   "index": 14595,
+   "case": "4507004659_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "vendor debit memo; GR1; IR, cancel, reversal cleared, IR, price change, IR: net 2; 3 clears"
+  },
+  {
+   "n": 132,
+   "index": 97428,
+   "case": "4507028732_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR, GR, IR, block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 133,
+   "index": 35912,
+   "case": "4507011190_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR2 (03-15, 04-03), 2 vendor invoices, block removed, both cleared"
+  },
+  {
+   "n": 134,
+   "index": 127656,
+   "case": "4507038071_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR2 (05:11, 09:28), both cleared in one minute"
+  },
+  {
+   "n": 135,
+   "index": 29461,
+   "case": "4507009128_00130",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR2 (03:32, 04:53) then GR1; block removal value 1388 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 136,
+   "index": 222993,
+   "case": "4508067616_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 11-22 paid 2019-01-10 after block removal: paid with no receipt"
+  },
+  {
+   "n": 137,
+   "index": 55737,
+   "case": "4507017013_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared after block removal; IR 10-10 00:23 never cleared"
+  },
+  {
+   "n": 138,
+   "index": 13359,
+   "case": "4507004294_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR paid after block removal; second IR 09-06 00:23 never cleared"
+  },
+  {
+   "n": 139,
+   "index": 58868,
+   "case": "4507018027_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 10-01 00:28 never cleared"
+  },
+  {
+   "n": 140,
+   "index": 81054,
+   "case": "4507024033_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR2 (07-06, 08-08); both cleared, second after block removal"
+  },
+  {
+   "n": 141,
+   "index": 167349,
+   "case": "4508049934_00060",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; storage-location and delivery-indicator changes; IR 10-09 paid 2019-01-04 after block removal: paid with no receipt"
+  },
+  {
+   "n": 142,
+   "index": 105184,
+   "case": "4507030982_00180",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "2 vendor invoices; GR1; IR2 (07-06, 07-20), block removed, both cleared"
+  },
+  {
+   "n": 143,
+   "index": 19222,
+   "case": "4507006074_00200",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "after-GR: GR1; IR 02-23 cleared; qty change; IR 06-12 cleared after block removal"
+  },
+  {
+   "n": 144,
+   "index": 206833,
+   "case": "4508062505_00010",
+   "label": "FALSE",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR record/cancel/record/cancel/cancel/record: two cancels in the same minute (15:17) while only one GR stood, so one is a duplicate log line; netted correctly 1 GR stands and matches the 1 IR (paid after block removal)"
+  },
+  {
+   "n": 145,
+   "index": 7216,
+   "case": "4507002389_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 (07-31 00:09, 10-26), block removed, 1 clear: one unpaid; sibling of #170"
+  },
+  {
+   "n": 146,
+   "index": 157075,
+   "case": "4508047023_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 8 min apart, 1 clear: one unpaid"
+  },
+  {
+   "n": 147,
+   "index": 191192,
+   "case": "4508057650_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "third-party: IR, GR, IR, block removed; 1 clear: one unpaid"
+  },
+  {
+   "n": 148,
+   "index": 109343,
+   "case": "4507032190_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; 2 vendor invoices; IR2 (06-27, 06-28), 1 clear: one unpaid"
+  },
+  {
+   "n": 149,
+   "index": 138572,
+   "case": "4507041477_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "third-party: IR2 (08:48, 09:40) then GR1; 1 clear: one unpaid"
+  },
+  {
+   "n": 150,
+   "index": 191059,
+   "case": "4508057604_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 11-07, block removed 12-18, not cleared by log end"
+  },
+  {
+   "n": 151,
+   "index": 5907,
+   "case": "4507001996_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR2; IR3 (2 on 03-16, 1 on 12-20), 1 clear; three qty changes"
+  },
+  {
+   "n": 152,
+   "index": 172239,
+   "case": "4508051508_00010",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 09-05 paid 09-28 after block removal: paid with no receipt"
+  },
+  {
+   "n": 153,
+   "index": 71811,
+   "case": "4507021450_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; vendor debit memo; IR4 with 1 cancel (reversal cleared): net 3; 3 clears"
+  },
+  {
+   "n": 154,
+   "index": 119805,
+   "case": "4507035527_00140",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 2019-01-08 01:28 never cleared"
+  },
+  {
+   "n": 155,
+   "index": 65327,
+   "case": "4507019699_00130",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 2 min apart (14:52, 14:54), 1 clear: one unpaid"
+  },
+  {
+   "n": 156,
+   "index": 41058,
+   "case": "4507012686_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "after-GR: GR1; IR cleared; IR 12-20 13:15 never cleared"
+  },
+  {
+   "n": 157,
+   "index": 133300,
+   "case": "4507039751_00110",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; 3 vendor invoices; IR3, 1 clear: two unpaid"
+  },
+  {
+   "n": 158,
+   "index": 77448,
+   "case": "4507023035_00020",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "price+qty changes; vendor debit memo; GR1; IR3 with 1 cancel: net 2; 2 clears; IR 12-20 never cleared"
+  },
+  {
+   "n": 159,
+   "index": 191354,
+   "case": "4508057740_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "after-GR: GR1; IR2 (11-05, 11-12), block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 160,
+   "index": 77975,
+   "case": "4507023132_00050",
+   "label": "UNCLEAR",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; vendor debit memo; IR2 (05-14, 05-15); Cancel Subsequent Invoice 05-22 with no subsequent invoice in the trace; 1 clear. The cancel may reverse the second IR, which the harness does not net"
+  },
+  {
+   "n": 161,
+   "index": 227529,
+   "case": "4508068979_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 2019-01-08 never cleared"
+  },
+  {
+   "n": 162,
+   "index": 88130,
+   "case": "4507026022_00250",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR cleared; IR 12-20 never cleared"
+  },
+  {
+   "n": 163,
+   "index": 14760,
+   "case": "4507004727_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR before GR, block removed, cleared; IR 09-06 00:23 never cleared"
+  },
+  {
+   "n": 164,
+   "index": 23304,
+   "case": "4507007289_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR cleared; IR 10-16 00:22 never cleared"
+  },
+  {
+   "n": 165,
+   "index": 125655,
+   "case": "4507037360_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR2 (same day); 2 vendor invoices; IR3 (06-27 x2, 06-28), 1 clear: two unpaid"
+  },
+  {
+   "n": 166,
+   "index": 1681,
+   "case": "4507000770_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR 06-14 cleared, IR 12-20 never cleared; qty change before GR"
+  },
+  {
+   "n": 167,
+   "index": 69522,
+   "case": "4507020889_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "third-party: GR1; IR2 (04-30, 06-13), 1 clear: one unpaid"
+  },
+  {
+   "n": 168,
+   "index": 233809,
+   "case": "4508070866_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 2019-01-09 never cleared"
+  },
+  {
+   "n": 169,
+   "index": 183164,
+   "case": "4508054914_00070",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 2 min apart; 1 clear: one unpaid"
+  },
+  {
+   "n": 170,
+   "index": 7214,
+   "case": "4507002389_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 (07-31 00:09, 10-26), block removed, 1 clear: one unpaid"
+  },
+  {
+   "n": 171,
+   "index": 11182,
+   "case": "4507003623_00150",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 (01-26, 01-29), 1 clear: one unpaid"
+  },
+  {
+   "n": 172,
+   "index": 110594,
+   "case": "4507032509_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; vendor debit memo; IR4 with 1 cancel (reversal cleared): net 3; 3 clears"
+  },
+  {
+   "n": 173,
+   "index": 71349,
+   "case": "4507021384_00160",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "same pattern as #27 (same PO)"
+  },
+  {
+   "n": 174,
+   "index": 132040,
+   "case": "4507039410_00030",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR record/cancel/record = net 1; IR cleared; IR 2019-01-17 01:18 never cleared"
+  },
+  {
+   "n": 175,
+   "index": 191336,
+   "case": "4508057728_00340",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "two qty changes; GR1; IR2 2 min apart; block removal value 11951 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 176,
+   "index": 228815,
+   "case": "4508069339_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 11-22 paid 2019-01-04 after block removal: paid with no receipt"
+  },
+  {
+   "n": 177,
+   "index": 226317,
+   "case": "4508068551_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "price change; GR 12-10 cancelled 2019-01-07 (net 0); IR 01-09 never cleared"
+  },
+  {
+   "n": 178,
+   "index": 186001,
+   "case": "4508055866_00130",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 (10-01, 10-09); 1 clear: one unpaid"
+  },
+  {
+   "n": 179,
+   "index": 115347,
+   "case": "4507034204_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service framework after-GR: GR1+SES; IR3 (06-12, 06-19, 06-20) each after a vendor invoice; 1 clear: two unpaid"
+  },
+  {
+   "n": 180,
+   "index": 150501,
+   "case": "4508044911_00150",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "IR, GR, block removed, IR 09-12, block removed; both cleared"
+  },
+  {
+   "n": 181,
+   "index": 108132,
+   "case": "4507031821_00160",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; 3 vendor invoices; IR3, 2 clears: one unpaid"
+  },
+  {
+   "n": 182,
+   "index": 28236,
+   "case": "4507008744_00010",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR 03-12 cleared; IR 07-02 cleared after block removal"
+  },
+  {
+   "n": 183,
+   "index": 41304,
+   "case": "4507012777_00180",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "only GR cancelled 32 min later (net 0); IR paid 05-24 after block removal: paid with no standing receipt"
+  },
+  {
+   "n": 184,
+   "index": 70813,
+   "case": "4507021275_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR cleared; IR 12-20 never cleared"
+  },
+  {
+   "n": 185,
+   "index": 88882,
+   "case": "4507026257_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "IR3 (09:46, 09:58, 11:09) then GR1; block removal value 23548 = 3x item; 1 clear: two unpaid"
+  },
+  {
+   "n": 186,
+   "index": 96934,
+   "case": "4507028553_00070",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 (07-26, 08-06), both cleared, each after a block removal"
+  },
+  {
+   "n": 187,
+   "index": 189452,
+   "case": "4508057065_00130",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; 2 vendor invoices; IR2 (12-28, 12-31), neither cleared by log end"
+  },
+  {
+   "n": 188,
+   "index": 38711,
+   "case": "4507011965_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "third-party: IR, GR, block removed, cleared; IR 08-31 00:11 never cleared"
+  },
+  {
+   "n": 189,
+   "index": 117671,
+   "case": "4507034895_00140",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR2 (08-06, 08-07), 1 clear: one unpaid"
+  },
+  {
+   "n": 190,
+   "index": 46969,
+   "case": "4507014552_00110",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 one minute apart (06:09, 06:10: separate postings), 1 vendor invoice, 1 clear: one unpaid"
+  },
+  {
+   "n": 191,
+   "index": 249785,
+   "case": "4508075683_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "no goods receipt; IR 2019-01-17 never cleared (awaiting goods at log end)"
+  },
+  {
+   "n": 192,
+   "index": 105906,
+   "case": "4507031186_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "2 vendor invoices; IR2 (09:51, 10:09) then GR1; block removal value 11578 = 2x item; both cleared"
+  },
+  {
+   "n": 193,
+   "index": 170303,
+   "case": "4508050795_00040",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 30 min apart; block removal value 1334 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 194,
+   "index": 172240,
+   "case": "4508051508_00020",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR paid after block removal (same PO as #152)"
+  },
+  {
+   "n": 195,
+   "index": 61628,
+   "case": "4507018804_00090",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "vendor debit memo; GR1; IR2, cleared, cancel+re-enter; net 2; 3 clears"
+  },
+  {
+   "n": 196,
+   "index": 16453,
+   "case": "4507005312_00030",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "GR1; IR2 (02-14, 02-24), 2 vendor invoices, both cleared same minute, no block"
+  },
+  {
+   "n": 197,
+   "index": 180608,
+   "case": "4508054222_00050",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "qty change; GR1; IR2 16 min apart; 1 clear: one unpaid"
+  },
+  {
+   "n": 198,
+   "index": 184511,
+   "case": "4508055421_00010",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "GR1; IR2 (10:22, 11:30); block removal value 3890 = 2x item; 1 clear: one unpaid"
+  },
+  {
+   "n": 199,
+   "index": 226009,
+   "case": "4508068462_00010",
+   "label": "CONFIRMED",
+   "secondary": "NO_VISIBLE_REASON",
+   "note": "no goods receipt at all; IR 12-04 paid 2019-01-04 after block removal: paid with no receipt"
+  },
+  {
+   "n": 200,
+   "index": 211612,
+   "case": "4508064047_00100",
+   "label": "CONFIRMED",
+   "secondary": "VISIBLE_REASON",
+   "note": "service after-GR: GR1+SES; IR cleared; IR 2019-01-16 never cleared"
+  }
+ ],
+ "pass": [
+  {
+   "n": 1,
+   "index": 132832,
+   "case": "4507039633_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 2,
+   "index": 10198,
+   "case": "4507003321_00030",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 3,
+   "index": 18677,
+   "case": "4507005944_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 4,
+   "index": 159298,
+   "case": "4508047629_00001",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 5,
+   "index": 67774,
+   "case": "4507020330_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 6,
+   "index": 105400,
+   "case": "4507031044_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 7,
+   "index": 164510,
+   "case": "4508049156_00130",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 8,
+   "index": 157412,
+   "case": "4508047100_00050",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 9,
+   "index": 191203,
+   "case": "4508057660_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 10,
+   "index": 78630,
+   "case": "4507023321_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 11,
+   "index": 57290,
+   "case": "4507017520_00160",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 12,
+   "index": 36809,
+   "case": "4507011440_00060",
+   "label": "OK",
+   "note": "GR4, IR1"
+  },
+  {
+   "n": 13,
+   "index": 13067,
+   "case": "4507004196_00590",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 14,
+   "index": 101340,
+   "case": "4507030036_00120",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 15,
+   "index": 27912,
+   "case": "4507008646_00150",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 16,
+   "index": 141827,
+   "case": "4508042414_00001",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 17,
+   "index": 64259,
+   "case": "4507019410_00120",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 18,
+   "index": 163345,
+   "case": "4508048863_00070",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 19,
+   "index": 226597,
+   "case": "4508068677_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 20,
+   "index": 121709,
+   "case": "4507036073_00090",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 21,
+   "index": 35205,
+   "case": "4507010990_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 22,
+   "index": 212188,
+   "case": "4508064270_00330",
+   "label": "OK",
+   "note": "GR1; IR1 not cleared"
+  },
+  {
+   "n": 23,
+   "index": 234719,
+   "case": "4508071212_00050",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 24,
+   "index": 105581,
+   "case": "4507031098_00001",
+   "label": "OK",
+   "note": "service: 15 GR (values vary) and 20 SES; IR2 at 202 and 118, each matching a GR value; 2 clears"
+  },
+  {
+   "n": 25,
+   "index": 58317,
+   "case": "4507017830_00080",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 26,
+   "index": 159832,
+   "case": "4508047832_00030",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 27,
+   "index": 55679,
+   "case": "4507016992_00290",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 28,
+   "index": 135224,
+   "case": "4507040382_00020",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 29,
+   "index": 191116,
+   "case": "4508057624_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 30,
+   "index": 11143,
+   "case": "4507003618_00020",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 31,
+   "index": 68324,
+   "case": "4507020513_00070",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 32,
+   "index": 99269,
+   "case": "4507029282_00040",
+   "label": "OK",
+   "note": "GR cancelled and invoice cancelled (both net 0); invoice had been paid, reversal cleared 2019-01-10"
+  },
+  {
+   "n": 33,
+   "index": 40767,
+   "case": "4507012552_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 34,
+   "index": 150195,
+   "case": "4508044802_00250",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 35,
+   "index": 208253,
+   "case": "4508063000_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 36,
+   "index": 95045,
+   "case": "4507028024_00130",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 37,
+   "index": 177873,
+   "case": "4508053394_00270",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 38,
+   "index": 92357,
+   "case": "4507027338_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 39,
+   "index": 135534,
+   "case": "4507040459_00010",
+   "label": "OK",
+   "note": "GR1; IR 2019-01-01 not cleared"
+  },
+  {
+   "n": 40,
+   "index": 148410,
+   "case": "4508044250_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 41,
+   "index": 22662,
+   "case": "4507007121_00040",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 42,
+   "index": 120310,
+   "case": "4507035695_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 43,
+   "index": 22118,
+   "case": "4507006939_00180",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 44,
+   "index": 222202,
+   "case": "4508067375_00030",
+   "label": "OK",
+   "note": "GR, cancel, GR 2019-01-10 (net 1); IR 01-17"
+  },
+  {
+   "n": 45,
+   "index": 185842,
+   "case": "4508055818_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 46,
+   "index": 132560,
+   "case": "4507039583_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 47,
+   "index": 38212,
+   "case": "4507011833_00190",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 48,
+   "index": 219695,
+   "case": "4508066587_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 49,
+   "index": 93617,
+   "case": "4507027691_00010",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  },
+  {
+   "n": 50,
+   "index": 21726,
+   "case": "4507006834_00050",
+   "label": "OK",
+   "note": "GR1, IR1 (no cancellations)"
+  }
+ ]
+}

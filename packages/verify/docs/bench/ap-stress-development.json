@@ -1,0 +1,90 @@
+{
+  "format": "bench-table/1",
+  "id": "ap-stress-development",
+  "title": "AP stress study: wrong decisions on the four development seeds",
+  "prereg": {
+    "path": "SCOPE.md",
+    "sha256": "247788a398707b8bb16b27649acda60a58d04faa5735a7f33a7f71f62f72ce36",
+    "frozen_sha256": "247788a398707b8bb16b27649acda60a58d04faa5735a7f33a7f71f62f72ce36",
+    "amendments": [],
+    "stamp": {
+      "status": "stamped after the run",
+      "proofs": [
+        {
+          "proof": "SCOPE.md.tsr",
+          "covers": "SCOPE.md",
+          "gen_time": "2026-10-14T17:53:56Z",
+          "serial": "00cb48b2e3039b711503e3e7d0e889cf98",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "misses of the AP stress study's development rounds (2026-09-23), transcribed on 2026-10-05 from the authors' stress write-up",
+    "date": "2026-10-05",
+    "engine_version": null,
+    "ruleset": null,
+    "report": {
+      "name": "FINDINGS.md",
+      "sha256": "a90095e2a55beb464097e5aa7738c87b16da17ad2c26598abef6ea42dd05d94e"
+    },
+    "spec_sha256": "e2dd09a7b0293705f574c2a113bd502528fd22fdc8260c1df1f0d02a8241e508",
+    "not_shipped": [
+      {
+        "file": "STRESS-RESULTS.md",
+        "sha256": "6e041c5571f6673b50c2bb2f7f0358755a07053aac094a488179431f669115e9",
+        "reason": "the authors' stress write-up of 2026-09-23, the record of the development rounds; it names the authors' working folders, so it does not ship. The provenance archive bench/ap-blind/PROVENANCE.md quotes it under \"The development seeds\", with this sha256"
+      }
+    ],
+    "rerun": {
+      "from_tree": "partly",
+      "detail": "The four development seeds rerun from this tree with the shipped harness on today's AP pack: npx tsx bench/ap/stress.ts for the default seed, and the same with --seed fresh1, fresh2 or fresh3. No development rows ship to compare with, so a rerun shows today's decisions; RERUN-2026-10-05.md in this folder records them on that day's pack, 0 wrong on every seed. The five misses were found on the pack of 2026-09-23 and are transcribed from the authors' write-up, which names their working folders and does not ship (its sha256 is under Hashed, not shipped)."
+    }
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "default-T061",
+      "kind": "development-seed",
+      "description": "default seed, case T061: a false hold. OCR-style noise turned \"Shipping and handling\" into \"Shippign and handling\", the line was not recognised as freight, and its amount was ignored, so a good invoice failed the total check. The write-up names T061 and T087 and one wrong decision each under OCR letter noise and under all perturbations combined, without pairing them",
+      "post_hoc": true,
+      "fixed_by": "2026-09-23 / an amount the parser cannot classify makes the total check abstain; this seed re-run on engine 0.6.0: 0 wrong",
+      "date": "2026-09-23"
+    },
+    {
+      "id": "default-T087",
+      "kind": "development-seed",
+      "description": "default seed, case T087: a false hold with the same cause as T061: the misspelt freight line was not recognised and its amount was ignored, so a good invoice failed the total check (one of the two default-seed wrong decisions; see T061)",
+      "post_hoc": true,
+      "fixed_by": "2026-09-23 / an amount the parser cannot classify makes the total check abstain; this seed re-run on engine 0.6.0: 0 wrong",
+      "date": "2026-09-23"
+    },
+    {
+      "id": "fresh1-T084",
+      "kind": "development-seed",
+      "description": "fresh1 seed, case T084: a false hold. The total \"$1 555.63\", with a space as the thousands separator, was read as 555.63, so a good invoice failed the total check. Each of the three fresh seeds gave this one wrong decision, on the same case, after the first fix",
+      "post_hoc": true,
+      "fixed_by": "2026-09-23 / a space-grouped amount after a currency sign is one number, an unanchored one abstains; re-run on 0.6.0: 0 wrong",
+      "date": "2026-09-23"
+    },
+    {
+      "id": "fresh2-T084",
+      "kind": "development-seed",
+      "description": "fresh2 seed, case T084: a false hold. The total \"$1 555.63\", with a space as the thousands separator, was read as 555.63, so a good invoice failed the total check. Each of the three fresh seeds gave this one wrong decision, on the same case, after the first fix",
+      "post_hoc": true,
+      "fixed_by": "2026-09-23 / a space-grouped amount after a currency sign is one number, an unanchored one abstains; re-run on 0.6.0: 0 wrong",
+      "date": "2026-09-23"
+    },
+    {
+      "id": "fresh3-T084",
+      "kind": "development-seed",
+      "description": "fresh3 seed, case T084: a false hold. The total \"$1 555.63\", with a space as the thousands separator, was read as 555.63, so a good invoice failed the total check. Each of the three fresh seeds gave this one wrong decision, on the same case, after the first fix",
+      "post_hoc": true,
+      "fixed_by": "2026-09-23 / a space-grouped amount after a currency sign is one number, an unanchored one abstains; re-run on 0.6.0: 0 wrong",
+      "date": "2026-09-23"
+    }
+  ],
+  "blind": false,
+  "label": "transcribed"
+}

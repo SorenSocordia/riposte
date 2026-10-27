@@ -1,0 +1,38 @@
+{
+  "spec": "bench-spec/1",
+  "id": "sci-r0-rotation-curve",
+  "title": "Galaxy rotation curve recompute from pinned public tables (NGC 3198)",
+  "adapter": "items",
+  "label": "demo",
+  "blind": false,
+  "files": { "result": "scratch/recompute-result.json", "jwst": "scratch/jwst-header-checks.json" },
+  "run": { "id": "SCI-R0 recompute (one galaxy, one telescope file)", "date": "2026-10-04", "engine_version": null, "ruleset": null },
+  "rows": [
+    {
+      "claim": "C1: the observed curve is flat within 10 km/s beyond 10 kpc",
+      "items": "result:verdicts", "where": { "_key": "C1", "verdict": { "$ne": "INSUFFICIENT" } }, "hit": { "verdict": "PASS" }, "method": "wilson",
+      "bar": { "text": "C1: PASS if max over rows beyond R of |V_obs - median| <= 10 km/s; INSUFFICIENT if fewer than 5 rows", "test": { "k": { "eq": "$n" } } },
+      "note": "a demonstration, not a blind test: the thresholds were set by someone expecting a PASS",
+      "reported": { "k": 1, "n": 1 }
+    },
+    {
+      "claim": "C2: the observed velocity exceeds the baryonic prediction by at least 30 km/s at every row beyond 10 kpc",
+      "items": "result:verdicts", "where": { "_key": "C2", "verdict": { "$ne": "INSUFFICIENT" } }, "hit": { "verdict": "PASS" }, "method": "wilson",
+      "bar": { "text": "C2: PASS if min over rows beyond R of (V_obs - V_bar) >= 30 km/s", "test": { "k": { "eq": "$n" } } },
+      "reported": { "k": 1, "n": 1 }
+    },
+    {
+      "claim": "C3: the published V_flat replays from the rows within 1 km/s",
+      "items": "result:verdicts", "where": { "_key": "C3", "verdict": { "$ne": "INSUFFICIENT" } }, "hit": { "verdict": "PASS" }, "method": "wilson",
+      "bar": { "text": "C3: PASS if |V_f(recomputed) - V_flat(Table1)| <= 1.0 km/s", "test": { "k": { "eq": "$n" } } },
+      "reported": { "k": 1, "n": 1 }
+    },
+    { "claim": "telescope file header checks passing (FITS and pipeline conventions)", "items": "jwst:checks", "where": {}, "hit": { "verdict": "PASS" }, "method": "wilson", "note": "checks and tolerances written before running, outside the prereg", "reported": { "k": 22, "n": 24 } }
+  ],
+  "misses": [
+    { "id": "table1-layout", "kind": "data-defect", "description": "the published SPARC Table1 does not match its own byte layout: the header declares 113-byte rows with Vflat at bytes 87-91, every data row is 131 bytes, and standard readers fail; read by whitespace as a stated parser-only amendment", "post_hoc": false },
+    { "id": "J9-pixel-area", "kind": "data-finding", "description": "two header keywords state the same pixel area to different precision (relative difference 1.1e-4 against a tolerance of 1e-5 set before running); finding or tolerance choice is a ruleset-design question", "post_hoc": false },
+    { "id": "F5-no-checksum", "kind": "data-finding", "description": "no CHECKSUM or DATASUM on any header unit of the telescope file (an optional convention); integrity rests on the archive's md5, which matches", "post_hoc": false },
+    { "id": "err-docs-looser", "kind": "docs-defect", "description": "the pipeline documentation says ERR combines two variance terms; in the file ERR squared equals the sum of three (VAR_FLAT included) to 2.9e-7, and the two-term form misses by up to 3.9%", "post_hoc": false }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "riposte.ap-input/0.1.0",
+  "bill": {
+    "invoice_number": "SES-20488",
+    "vendor": {
+      "name": "Summit Electrical Supply"
+    },
+    "purchase_order_number": "PO-7740",
+    "currency": "USD",
+    "amount": "4350.00",
+    "line_items": [
+      {
+        "purchase_order_line_item_id": "l1",
+        "quantity": 3,
+        "unit_price": "1450.00",
+        "amount": "4350.00"
+      }
+    ]
+  },
+  "purchase_order": {
+    "id": "po-7740",
+    "purchase_order_number": "PO-7740",
+    "currency": "USD",
+    "freight_allowed": false,
+    "vendor": {
+      "name": "Summit Electrical Supply"
+    },
+    "line_items": [
+      {
+        "id": "l1",
+        "description": "400A panelboard, 42 circuit",
+        "quantity": 8,
+        "unit_price": "1450.00"
+      },
+      {
+        "id": "l2",
+        "description": "THHN 12 AWG copper, ft",
+        "quantity": 5000,
+        "unit_price": "0.85"
+      },
+      {
+        "id": "l3",
+        "description": "EMT fittings set",
+        "quantity": 40,
+        "unit_price": "61.00"
+      }
+    ]
+  },
+  "item_receipts": [
+    {
+      "purchase_order_id": "po-7740",
+      "line_items": [
+        {
+          "purchase_order_line_item_id": "l1",
+          "quantity": 4
+        },
+        {
+          "purchase_order_line_item_id": "l2",
+          "quantity": 2000
+        },
+        {
+          "purchase_order_line_item_id": "l3",
+          "quantity": 40
+        }
+      ]
+    }
+  ],
+  "payment_history": [
+    {
+      "invoice_number": "SES-20417",
+      "vendor": "Summit Electrical Supply",
+      "purchase_order_number": "PO-7740",
+      "amount": "5800.00",
+      "paid_at": "2026-09-12"
+    }
+  ]
+}

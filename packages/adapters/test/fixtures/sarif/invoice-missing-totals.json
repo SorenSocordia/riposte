@@ -1,0 +1,16 @@
+{
+  "invoice_number": "HL-2050",
+  "vendor": "Harbor Lane Consulting",
+  "currency": "USD",
+  "invoice_date": "2026-09-15",
+  "line_items": [
+    {
+      "description": "Consulting",
+      "quantity": 10,
+      "unit_price": 150
+    }
+  ],
+  "totals": {
+    "tax_rate": 0.0825
+  }
+}

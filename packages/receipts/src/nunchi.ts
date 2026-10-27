@@ -22,6 +22,7 @@
 import { hashOf } from 'riposte-verify'
 import type { ClaimsResult } from './claims.js'
 import type { DoneResult } from './done.js'
+import type { CheckOutcome } from './outcome.js'
 
 export type Moment = 'pre-action' | 'done-claim' | 'mid-flow'
 export type Audience = 'solo' | 'pr' | 'auditor'
@@ -47,7 +48,8 @@ export const SOFTENERS: readonly string[] = ['heads-up', 'worth a look', 'please
 export interface DeliveryFinding {
   /** the claim id (verdict findings), `kind#n` (closing claims) or `source:path` (done checks) */
   id: string
-  status: 'FAIL' | 'ABSTAIN'
+  /** INSUFFICIENT_DATA: can't tell (the check could not run). Facts v0 wrote ABSTAIN here. */
+  status: 'FAIL' | 'INSUFFICIENT_DATA'
   field: string
   /** what is wrong or could not be checked, in the checker's own words */
   statement: string
@@ -60,12 +62,17 @@ export interface DeliveryFinding {
 }
 
 export interface DeliveryFacts {
-  facts_version: 'nunchi-facts-v0'
+  /**
+   * v1 (2026-10-06): can't tell is INSUFFICIENT_DATA, the verdict's own word, in `outcome` and in each finding's `status`. v0 wrote
+   * ABSTAIN there, so the same verdict's facts, and their hash, differ between the two versions; a v0 hash on an older receipt
+   * was taken over v0 facts.
+   */
+  facts_version: 'nunchi-facts-v1'
   source: 'action_notice' | 'claims' | 'done'
   /** what was checked, e.g. `tool mcp__bank__transfer` */
   subject: string
   verdict_id?: string
-  outcome: 'PASS' | 'FAIL' | 'ABSTAIN'
+  outcome: CheckOutcome
   /** what happens to the action. The rung's handling, decided before delivery; never changed by it. */
   action: 'HOLD' | 'SURFACE' | 'PROCEED'
   /** the rung the action ran under (action notices) */
@@ -118,18 +125,18 @@ function evidenceLine(e: NoticeLike['findings'][number]['evidence'][number]): st
 /** The facts of one action notice (verify's actionNotice). */
 export function factsFromNotice(notice: NoticeLike, subject: string): DeliveryFacts {
   return {
-    facts_version: 'nunchi-facts-v0',
+    facts_version: 'nunchi-facts-v1',
     source: 'action_notice',
     subject,
     verdict_id: notice.verdict_id,
-    outcome: notice.outcome === 'INSUFFICIENT_DATA' ? 'ABSTAIN' : notice.outcome,
+    outcome: notice.outcome,
     action: notice.action,
     level: notice.level,
     pass_handling: notice.handling.PASS,
     in_flow: notice.handling.delivery === 'in-flow',
     findings: notice.findings.map((f) => ({
       id: f.claim_id,
-      status: f.outcome === 'FAIL' ? 'FAIL' as const : 'ABSTAIN' as const,
+      status: f.outcome === 'FAIL' ? 'FAIL' as const : 'INSUFFICIENT_DATA' as const,
       field: f.field,
       statement: f.outcome === 'INSUFFICIENT_DATA' && f.insufficiency ? `${f.insufficiency.reason}: ${f.insufficiency.detail}` : f.explanation,
       ...(f.expected !== undefined ? { values: `asserted ${json(f.asserted)} · expected ${json(f.expected)}${f.variance !== undefined ? ` · variance ${f.variance}` : ''}` } : {}),
@@ -152,14 +159,14 @@ export function factsFromClaims(result: ClaimsResult, opts: { action?: DeliveryF
     const ev = c.evidence
     findings.push({
       id: `${c.kind}#${i}`,
-      status: c.status === 'CONTRADICTED' ? 'FAIL' : 'ABSTAIN',
+      status: c.status === 'CONTRADICTED' ? 'FAIL' : 'INSUFFICIENT_DATA',
       field: c.kind,
       statement: `"${c.claim}": ${c.reason}`,
       evidence: ev ? [`${ev.tool}${ev.command ? `: ${ev.command}` : ''}${ev.at ? ` @ ${ev.at}` : ''}: ${ev.excerpt}`] : [],
     })
   })
   return {
-    facts_version: 'nunchi-facts-v0',
+    facts_version: 'nunchi-facts-v1',
     source: 'claims',
     subject: opts.subject ?? 'closing claims',
     outcome: result.outcome,
@@ -172,7 +179,7 @@ export function factsFromClaims(result: ClaimsResult, opts: { action?: DeliveryF
 /** The facts of a "done" check (checkDone) against the real state. */
 export function factsFromDone(result: DoneResult, opts: { action?: DeliveryFacts['action']; in_flow?: boolean } = {}): DeliveryFacts {
   return {
-    facts_version: 'nunchi-facts-v0',
+    facts_version: 'nunchi-facts-v1',
     source: 'done',
     subject: `done claim "${result.claim}"`,
     outcome: result.outcome,
@@ -180,7 +187,7 @@ export function factsFromDone(result: DoneResult, opts: { action?: DeliveryFacts
     in_flow: opts.in_flow ?? true,
     findings: result.results.filter((r) => r.outcome !== 'PASS').map((r) => ({
       id: `${r.source}:${r.path}`,
-      status: r.outcome === 'FAIL' ? 'FAIL' as const : 'ABSTAIN' as const,
+      status: r.outcome === 'FAIL' ? 'FAIL' as const : 'INSUFFICIENT_DATA' as const,
       field: r.path,
       statement: r.detail,
       evidence: r.source in result.observed ? [`${r.source} observed ${result.observed[r.source]}`] : [],

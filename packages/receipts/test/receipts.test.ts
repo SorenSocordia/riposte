@@ -115,20 +115,20 @@ describe('gate', () => {
     expect(g.outcome).toBe('HOLD')
     expect(g.decided).toBe('hold')
   })
-  it('ABSTAIN: not confident enough to act', async () => {
+  it('INSUFFICIENT_DATA: not confident enough to act', async () => {
     const g = gate(req, await contentModel('pay', 0.55)(req), pay)
-    expect(g.outcome).toBe('ABSTAIN')
+    expect(g.outcome).toBe('INSUFFICIENT_DATA')
     expect(g.reasons.join('\n')).toMatch(/confidence 0\.550 < 0\.8/)
   })
-  it('ABSTAIN: confident, but the decision flips when only the option order changes', async () => {
+  it('INSUFFICIENT_DATA: confident, but the decision flips when only the option order changes', async () => {
     const f = await flipProbe(positionBiased, req)
     const res = await positionBiased(req) // identity order puts 'pay' first -> 'pay' @ 0.9
     const g = gate(req, res, pay, undefined, f)
     expect(g.decided).toBe('pay')
-    expect(g.outcome).toBe('ABSTAIN')
+    expect(g.outcome).toBe('INSUFFICIENT_DATA')
     expect(g.reasons.join('\n')).toMatch(/flips under option reordering/)
   })
-  it('HOLD dominates ABSTAIN: a demonstrated failure outranks a missing fact', async () => {
+  it('HOLD dominates INSUFFICIENT_DATA: a demonstrated failure outranks a missing fact', async () => {
     const g = gate(req, await contentModel('pay', 0.55)(req), pay, { extraction: badInvoice, options: { now: NOW } })
     expect(g.outcome).toBe('HOLD')
   })
@@ -184,7 +184,7 @@ describe('receipts', () => {
 
   it('guard: position-biased model is flip-probed and abstained, with the evidence in the receipt', async () => {
     const { gate: g, receipt } = await guard(positionBiased, req, { question: 'decision', allow: ['pay'] }, { flip: true, now: NOW })
-    expect(g.outcome).toBe('ABSTAIN')
+    expect(g.outcome).toBe('INSUFFICIENT_DATA')
     expect(receipt.flip!.decision!.stable).toBe(false)
     expect(receipt.flip!.decision!.seed_orders).toHaveLength(6)
   })

@@ -1,0 +1,30 @@
+KeyCite Yellow Flag - Negative Treatment
+Distinguished by Pruitt Supply Co. v. Ostrander Mills, 8th Cir., March 3, 2021
+912 F.3d 455
+United States Court of Appeals, Eighth Circuit.
+HARBORLINE LOGISTICS, LLC, Plaintiff-Appellee,
+v.
+CALLOWAY GRAIN COMPANY, Defendant-Appellant.
+No. 18-2231
+Filed January 9, 2019
+Synopsis
+Background: Shipper sued grain merchant for breach of a transportation agreement. The district court denied the merchant's motion to compel arbitration, and the merchant appealed.
+Holding: The Court of Appeals held that a narrow arbitration clause did not reach claims under a later, separate rate addendum.
+West Headnotes (2)
+[1] Alternative Dispute Resolution - Scope of agreement
+A clause limited to disputes arising under the agreement is narrow and is not presumed to reach a later contract.
+[2] Alternative Dispute Resolution - Presumptions
+The presumption of arbitrability yields to plain contract language.
+Opinion
+KELLAND, Circuit Judge.
+[1] The question is whether a dispute over the 2017 rate addendum falls within the arbitration clause of the 2014 master agreement. *458 "[A]rbitration is a matter of contract and a party cannot be required to submit to arbitration any dispute which he has not agreed so to submit." United Steelworkers v. Warrior & Gulf Navigation Co., 363 U.S. 574, 582 (1960). Calloway argues that the presumption of arbitrability resolves every doubt about scope in its favor. We disagree. The presumption applies only where the clause is ambiguous as to scope; it does not apply where the parties have chosen narrow language.
+[2] The 2014 clause reaches "any controversy arising under this Agreement." Language of that kind is narrow, and it does not extend to disputes that merely relate to the parties' broader dealings. The rate addendum was negotiated separately, was signed by different officers, and contains its own forum-selection clause naming the state courts of
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 3
+Harborline Logistics, LLC v. Calloway Grain Company, 912 F.3d 455 (2019)
+101 U.C.C. Rep.Serv.2d 88
+Polk County. *459 Where a later agreement contains its own forum clause and is silent about arbitration, a court should not read the earlier clause into it unless the parties clearly intended that result. The district court did not err in denying the motion to compel.
+Affirmed.
+STRAND, Circuit Judge, dissenting.
+The addendum is not a separate agreement at all; it amends the price term of the master agreement, and a dispute about price arises under the agreement it amends. I would reverse.
+All Citations
+912 F.3d 455, 101 U.C.C. Rep.Serv.2d 88

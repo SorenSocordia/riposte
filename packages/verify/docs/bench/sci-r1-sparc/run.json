@@ -1,0 +1,105 @@
+{
+  "format": "bench-run/1",
+  "id": "sci-r1-sparc",
+  "prereg": "PREREG.md",
+  "results": "results",
+  "spec": "spec.json",
+  "amendment_text": [
+    {
+      "sha256": "0dd18b4f9229647c4e0d3d806acba0913d1d371eb3c22de50f9f7f18fc0c9be7",
+      "from": "PREREG.md:224-244"
+    },
+    {
+      "sha256": "e4c1dd5c8aae384d8efc41ac9438155959075a442caaa91516839e2ab7afd983",
+      "from": "PREREG.md:245-257"
+    },
+    {
+      "sha256": "e899fe92b2205e55231f2f7fe9ef51299ca1bcffd8e1dc885b4e1e66bb5999a1",
+      "from": "PREREG.md:258-266"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The run's scripts are not in this tree. Its inputs are public: the SPARC rotation-curve and mass-model files and two arXiv papers, each named by URL and sha256 in PREREG.md and not redistributed here."
+  },
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "e899fe92b2205e55231f2f7fe9ef51299ca1bcffd8e1dc885b4e1e66bb5999a1",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "d7ec0ba817c52b5beabcfad1fee1e6aa697f8182a3df816943072f91521a6d68",
+      "from": "PREREG.sha256"
+    },
+    {
+      "file": "results/out/summary.json",
+      "sha256": "efb53d380155f7379c04cbee18c7416f37a93cb7160ca9e1f20fd64038f0aefe",
+      "from": "out/summary.json"
+    },
+    {
+      "file": "results/out/claims.tsv",
+      "sha256": "a82c805bc6fba989581b8c35941f762a97140943f906c86ea8b04387f7cb9e3e",
+      "from": "out/claims.tsv"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "6081d38857d092cf08dade40d0e35196c74619caeb3bad238070e3fd8a117b76",
+      "from": "the run spec written when the tables were first emitted"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "3a2af4e921c6d0e979538482351e6cf430eb26e4caebaa4215f77203155180d3",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "ec9ddedc702fe66b0074720f07498afbfb8465c48fff53eabd679cd570362563",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ],
+  "not_shipped": [
+    {
+      "file": "data/Rotmod_LTG.zip",
+      "sha256": "0a80cc90714828cc28b7dd57923576714d209f2490328c087c4a4ad607faf588",
+      "reason": "a public SPARC download, pinned in PREREG.md line 28 with its URL (astroweb.case.edu/SPARC/Rotmod_LTG.zip). Not redistributed here: fetch it from that URL and compare its sha256"
+    },
+    {
+      "file": "data/SPARC_Lelli2016c.mrt",
+      "sha256": "5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243",
+      "reason": "a public SPARC download, pinned in PREREG.md line 29 with its URL. Not redistributed here: fetch it and compare its sha256"
+    },
+    {
+      "file": "data/MassModels_Lelli2016c.mrt",
+      "sha256": "9108994b12cc401b94a1768beca61c53ec354779385c9c9cc571049f3043244c",
+      "reason": "a public SPARC download, pinned in PREREG.md line 30 with its URL. Not redistributed here: fetch it and compare its sha256"
+    },
+    {
+      "file": "papers/mcgaugh2016-rar-1609.05917.pdf",
+      "sha256": "80357e5b689f1ae7c087359ff936a4543ad09bd4619498026d9e0bcf828fe8a8",
+      "reason": "a public arXiv paper (1609.05917), pinned in PREREG.md line 31. Not redistributed here: the copy is at arxiv.org"
+    },
+    {
+      "file": "papers/mcgaugh2016-rar-1609.05917.eprint",
+      "sha256": "e2388620c02cacbcb3935e4c5db3b348a11f56702ffc630b08f8ccf430c4cba7",
+      "reason": "the same paper's LaTeX e-print, pinned in PREREG.md line 32. Not redistributed here: arxiv.org/e-print/1609.05917"
+    },
+    {
+      "file": "papers/sparc-1606.09251.pdf",
+      "sha256": "d089215877213661e40965543ee7e05736619082ad16d95e65ec059029588c63",
+      "reason": "the SPARC paper (arXiv 1606.09251), pinned in PREREG.md line 33. The prereg gives it no file name; this name is ours. Not redistributed here"
+    },
+    {
+      "file": "papers/btfr-1512.04543.pdf",
+      "sha256": "750465eb6e09a3c4af2de6eaccd7ca8e664c38ee1cc16c0dbc8200328148963c",
+      "reason": "the BTFR paper (arXiv 1512.04543), pinned in PREREG.md line 34. The prereg gives it no file name; this name is ours. Not redistributed here"
+    }
+  ]
+}

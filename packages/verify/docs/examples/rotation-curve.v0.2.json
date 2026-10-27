@@ -1,0 +1,74 @@
+{
+  "id": "rotation-curve-sparc",
+  "version": "0.2.0",
+  "domain": "astronomy/galaxy-kinematics",
+  "name": "DEMO, never a benchmark: a SPARC rotation-curve table (one galaxy's rotmod file and its Table1 row) checked against the claims of rotation-curve-sparc@0.1.0, with its free choices on a choice ledger (engine 0.5.0). (C1) the observed curve is flat within 10 km/s beyond 10 kpc; (C2) the observed velocity exceeds the baryonic one by at least 30 km/s at every row beyond 10 kpc, at the stellar mass-to-light ratios UPS_DISK and UPS_BUL; (C3) the published V_flat replays from the rows, by the procedure VF_ALGORITHM names, within 1 km/s; (C4) inside the data, the flat-curve model's mass at the last row is within 15% of the observed curve's; (C5) past the data, the flat-curve model's mass at twice the last radius, which the engine reports as counsel, never as a verdict. Every number the checks depend on that the table does not fix is a choice slot: stated by the document with a quoted span, or supplied, and named.",
+  "sources": {
+    "SPARC-PAPER": "Lelli, McGaugh & Schombert 2016, AJ 152, 157, https://doi.org/10.3847/0004-6256/152/6/157 (arXiv:1606.09251v1, PDF sha256 d089215877213661e40965543ee7e05736619082ad16d95e65ec059029588c63): eq. (2) for V_bar; Sect. 5.3.1 (page 9) for the mass-to-light ratios the mass models adopt, quoted from a pdftotext 4.00 -enc UTF-8 extraction of that PDF (sha256 b5f5912b3341fff6fedd7eaa44424eac443fb9e4d9fc8905415c88393f460a9d), which drops the solar-unit glyphs",
+    "SPARC-BTFR": "Lelli, McGaugh & Schombert 2016, ApJL 816, L14, https://doi.org/10.3847/2041-8205/816/1/L14 (arXiv:1512.04543v1, PDF sha256 750465eb6e09a3c4af2de6eaccd7ca8e664c38ee1cc16c0dbc8200328148963c): Sect. 2.2, the V_f algorithm, pinned in this build as sparc.vflat@1",
+    "SPARC-ROTMOD": "https://astroweb.case.edu/SPARC/Rotmod_LTG.zip (sha256 0a80cc90714828cc28b7dd57923576714d209f2490328c087c4a4ad607faf588); one <galaxy>_rotmod.dat member per galaxy (NGC3198_rotmod.dat sha256 17b774ad11e7dd745a067073b76f1909d4de32fa87616df12b64da3f225cf953)",
+    "SPARC-TABLE1": "https://astroweb.case.edu/SPARC/SPARC_Lelli2016c.mrt (sha256 5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243). Its byte-by-byte description declares 113-byte rows and its rows are 131 bytes, so it is read by splitting on whitespace, a stated narrowing",
+    "SPARC-TABLE2": "https://astroweb.case.edu/SPARC/MassModels_Lelli2016c.mrt (sha256 9108994b12cc401b94a1768beca61c53ec354779385c9c9cc571049f3043244c), Note (3): Vdisk and Vbul are given for M/L = 1 solMass/solLum at [3.6]",
+    "GM-SUN": "IAU 2015 Resolution B3, nominal solar mass parameter GM_sun = 1.3271244e20 m^3 s^-2; with 1 kpc = 3.0856775814913673e19 m, G M_sun = 4.30091727e-6 kpc (km/s)^2, the value astropy.constants gives"
+  },
+  "lineArrayKeys": ["rows"],
+  "tolerance": { "rel": 0, "absCap": 0 },
+  "provenance_kinds": ["page", "archive"],
+  "choices": [
+    { "id": "UPS_DISK", "kind": "ratio", "load_bearing": true, "name": "the stellar mass-to-light ratio of the disk at 3.6 um (M_sun/L_sun), which scales Vdisk in V_bar (C2)", "default": { "value": 0.5, "source": "SPARC-PAPER Sect. 5.3.1 (page 9): the mass models adopt a disk mass-to-light ratio of 0.5" } },
+    { "id": "UPS_BUL", "kind": "ratio", "load_bearing": true, "name": "the stellar mass-to-light ratio of the bulge at 3.6 um (M_sun/L_sun), which scales Vbul in V_bar (C2)", "default": { "value": 0.7, "source": "SPARC-PAPER Sect. 5.3.1 (page 9): the mass models adopt a bulge mass-to-light ratio of 0.7" } },
+    { "id": "VF_ALGORITHM", "kind": "algorithm", "load_bearing": true, "name": "the procedure that turns the rows into V_f (C3, FLAT_PART_ROWS, C4, C5)", "default": { "value": "sparc.vflat@1", "source": "SPARC-BTFR Sect. 2.2, the procedure SPARC's Table1 V_flat comes from, pinned in this build as sparc.vflat@1" } },
+    { "id": "FLAT_MODEL", "kind": "model_form", "load_bearing": true, "name": "the form of the curve past its rows: flat at V_f (C4 tests it inside the data; C5 uses it past the data)", "default": { "value": "flat: V(R) = V_f", "source": "supplied by this ruleset: the simplest form the flat part suggests; SPARC states no form for the curve beyond its last row" }, "governs": ["C4_FLAT_MODEL_AT_RLAST", "C5_FLAT_MODEL_MASS_2RLAST"] },
+    { "id": "G_KPC", "kind": "units", "load_bearing": true, "name": "G M_sun in kpc (km/s)^2, which turns V^2 R into a mass in M_sun (C5)", "default": { "value": 0.00000430091727, "source": "GM-SUN: IAU 2015 nominal GM_sun in kpc (km/s)^2, as astropy.constants gives it; the document states no constant" } },
+    { "id": "QC_FLAGS", "kind": "flags", "load_bearing": false, "not_applicable": "SPARC's rotmod rows carry no per-value quality flag. Table1's per-galaxy quality flag Q (1 to 3) is a selection criterion, not a per-value flag, and this per-galaxy demo does not read it" }
+  ],
+  "fields": {
+    "GALAXY": { "paths": ["galaxy"], "kind": "identifier", "term": "the galaxy the rotmod file is for (its file name) [SPARC-ROTMOD]" },
+    "GALAXY_T1": { "paths": ["table1.galaxy"], "kind": "identifier", "term": "the galaxy of the Table1 row read (Galaxy) [SPARC-TABLE1]" },
+    "UNIT_RAD": { "paths": ["units.rad"], "kind": "identifier", "term": "the unit of Rad, as the rotmod header's unit line prints it [SPARC-ROTMOD]" },
+    "UNIT_VOBS": { "paths": ["units.vobs"], "kind": "identifier", "term": "the unit of Vobs, as the rotmod header's unit line prints it [SPARC-ROTMOD]" },
+    "UNIT_VBAR_COLS": { "paths": ["units.vgas_vdisk_vbul"], "kind": "identifier", "term": "the one unit Vgas, Vdisk and Vbul share; reported only when the three agree [SPARC-ROTMOD]" },
+    "DIST_ROTMOD": { "paths": ["distance_mpc"], "kind": "quantity", "term": "the distance on the rotmod header line \"# Distance = ... Mpc\" [SPARC-ROTMOD]" },
+    "DIST_T1": { "paths": ["table1.d_mpc"], "kind": "quantity", "term": "Table1 D, the distance (Mpc) [SPARC-TABLE1]" },
+    "VFLAT_T1": { "paths": ["table1.vflat"], "kind": "quantity", "term": "Table1 Vflat, the published flat velocity (km/s) [SPARC-TABLE1]" },
+    "RAD": { "paths": ["rad"], "kind": "quantity", "line": true, "term": "Rad, the galactocentric radius (kpc) [SPARC-ROTMOD]" },
+    "VOBS": { "paths": ["vobs"], "kind": "quantity", "line": true, "term": "Vobs, the observed circular velocity (km/s) [SPARC-ROTMOD]" },
+    "VGAS": { "paths": ["vgas"], "kind": "quantity", "line": true, "term": "Vgas, the gas contribution including helium (km/s); may be negative [SPARC-ROTMOD, SPARC-TABLE2]" },
+    "VDISK": { "paths": ["vdisk"], "kind": "quantity", "line": true, "term": "Vdisk, the stellar disk contribution at M/L = 1 (km/s) [SPARC-TABLE2 Note 3]" },
+    "VBUL": { "paths": ["vbul"], "kind": "quantity", "line": true, "term": "Vbul, the bulge contribution at M/L = 1 (km/s) [SPARC-TABLE2 Note 3]" }
+  },
+  "row_sets": {
+    "OUTER": [{ "left": "RAD", "op": ">=", "right": "10" }]
+  },
+  "line_computed": {
+    "VBAR": "sqrt(abs(VGAS) * VGAS + doc.UPS_DISK * abs(VDISK) * VDISK + doc.UPS_BUL * abs(VBUL) * VBUL)",
+    "EXCESS": "VOBS - VBAR",
+    "DEV": "abs(VOBS - doc.VMED_OUTER)"
+  },
+  "computed": {
+    "VMED_OUTER": "median(VOBS, OUTER)",
+    "R_LAST": "max(RAD)",
+    "R_TWICE": "2 * R_LAST"
+  },
+  "algorithms": {
+    "VFLAT_REPLAY": { "algorithm": "sparc.vflat@1", "inputs": { "rad": "RAD", "v": "VOBS" }, "output": "vflat", "choice": "VF_ALGORITHM" },
+    "VFLAT_RIN": { "algorithm": "sparc.vflat@1", "inputs": { "rad": "RAD", "v": "VOBS" }, "output": "r_inner", "choice": "VF_ALGORITHM" }
+  },
+  "checks": [
+    { "code": "GALAXY_XREF", "compare": "identifier", "field": "galaxy", "left": "GALAXY", "op": "=", "right": "GALAXY_T1", "name": "The rotmod file and the Table1 row are for the same galaxy [SPARC-ROTMOD, SPARC-TABLE1]" },
+    { "code": "UNITS_RAD", "compare": "member", "field": "units.rad", "left": "UNIT_RAD", "op": "=", "right": "kpc", "in": ["kpc"], "name": "Rad is in kpc [SPARC-ROTMOD]" },
+    { "code": "UNITS_VOBS", "compare": "member", "field": "units.vobs", "left": "UNIT_VOBS", "op": "=", "right": "km/s", "in": ["km/s"], "name": "Vobs is in km/s [SPARC-ROTMOD]" },
+    { "code": "UNITS_VBAR_COLS", "compare": "member", "field": "units.vgas_vdisk_vbul", "left": "UNIT_VBAR_COLS", "op": "=", "right": "km/s", "in": ["km/s"], "name": "Vgas, Vdisk and Vbul are in km/s [SPARC-ROTMOD]" },
+    { "code": "DIST_XREF", "field": "distance_mpc", "left": "DIST_ROTMOD", "op": "=", "right": "DIST_T1", "tol": 0, "exact_tolerance": true, "name": "The rotmod distance equals Table1 D: the mass-model columns scale with distance, so a difference means the two tables describe different models [SPARC-ROTMOD, SPARC-TABLE1]" },
+    { "code": "RAD_INCREASING", "scope": "line", "field": "rad", "applies_if": [{ "neighbour": "prev" }], "left": "RAD - prev(RAD)", "op": ">=", "right": "0", "tol": 0, "exact_tolerance": true, "name": "Rad does not decrease from the row before" },
+    { "code": "RAD_DISTINCT", "scope": "line", "field": "rad", "applies_if": [{ "neighbour": "prev" }], "left": "RAD", "op": "!=", "right": "prev(RAD)", "tol": 0, "exact_tolerance": true, "name": "Rad differs from the row before (with RAD_INCREASING: strictly increasing, so the outermost rows are the last)" },
+    { "code": "NMIN_BEYOND_R", "field": "rows", "left": "count(RAD, OUTER)", "op": ">=", "right": "5", "tol": 0, "exact_tolerance": true, "name": "At least 5 rows lie at Rad >= 10 kpc, so no single row decides C1 or C2" },
+    { "code": "C1_FLAT", "field": "vobs", "left": "max(DEV, OUTER)", "op": "<=", "right": "10", "tol": 0, "exact_tolerance": true, "name": "C1: every row at Rad >= 10 kpc lies within 10 km/s of the median Vobs of those rows (left: the largest deviation)" },
+    { "code": "C1_ROWS_VS_PUBLISHED", "scope": "line", "field": "vobs", "applies_if": [{ "left": "RAD", "op": ">=", "right": "10" }], "left": "abs(VOBS - doc.VFLAT_T1)", "op": "<=", "right": "10", "tol": 0, "exact_tolerance": true, "name": "C1, per row, against the published value: each row at Rad >= 10 kpc lies within 10 km/s of Table1 Vflat [SPARC-TABLE1]" },
+    { "code": "C2_EXCESS", "field": "vobs", "left": "min(EXCESS, OUTER)", "op": ">=", "right": "30", "tol": 0, "exact_tolerance": true, "name": "C2: at every row with Rad >= 10 kpc, Vobs - V_bar >= 30 km/s, V_bar = sqrt(|Vgas|Vgas + UPS_DISK |Vdisk|Vdisk + UPS_BUL |Vbul|Vbul) (left: the smallest excess) [SPARC-PAPER eq. (2), Sect. 5.3.1; SPARC-TABLE2 Note 3]" },
+    { "code": "C3_VFLAT_REPLAY", "field": "table1.vflat", "left": "VFLAT_REPLAY", "op": "=", "right": "VFLAT_T1", "tol": 1, "exact_tolerance": true, "name": "C3: V_f recomputed from the rows by the procedure VF_ALGORITHM names equals the published Table1 Vflat within 1 km/s [SPARC-BTFR Sect. 2.2, SPARC-TABLE1]" },
+    { "code": "FLAT_PART_ROWS", "scope": "line", "field": "vobs", "applies_if": [{ "left": "RAD", "op": ">=", "right": "doc.VFLAT_RIN" }], "left": "abs(VOBS - doc.VFLAT_REPLAY)", "op": "<=", "right": "10", "tol": 0, "exact_tolerance": true, "name": "Every row from the innermost row the algorithm included outward lies within 10 km/s of the recomputed V_f" },
+    { "code": "C4_FLAT_MODEL_AT_RLAST", "scope": "line", "field": "vobs", "applies_if": [{ "left": "RAD", "op": ">=", "right": "doc.R_LAST" }], "support": { "field": "RAD", "max_of": "RAD" }, "left": "abs((doc.VFLAT_REPLAY * doc.VFLAT_REPLAY) / (VOBS * VOBS) - 1)", "op": "<=", "right": "0.15", "tol": 0, "exact_tolerance": true, "name": "C4 (model, inside the data): at the last measured radius the flat-curve model's enclosed mass, V_f^2 R / G, lies within 15% of the observed curve's, V_obs^2 R / G (left: |ratio - 1|)" },
+    { "code": "C5_FLAT_MODEL_MASS_2RLAST", "field": "mass", "support": { "field": "R_TWICE", "max_of": "RAD" }, "left": "VFLAT_REPLAY * VFLAT_REPLAY * R_TWICE / G_KPC / 10000000000", "op": ">=", "right": "40", "tol": 0, "exact_tolerance": true, "name": "C5 (model, past the data): the flat-curve model's enclosed mass at twice the last measured radius, V_f^2 (2 R_last) / G, is at least 4e11 M_sun (left: the mass in 1e10 M_sun). It lies past the measured support, so the engine reports it as counsel" }
+  ]
+}

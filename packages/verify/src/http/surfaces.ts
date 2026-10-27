@@ -26,6 +26,7 @@ import {
 } from '../verdict/voice.js'
 import { actionNotice, renderActionNotice, type ActionNotice } from '../verdict/notices.js'
 import { verifyAction, type ActionSources, type ProposedAction } from '../action/index.js'
+import { fieldsProblem } from '../action/equivalence.js'
 import { hashOf } from '../verdict/canonical.js'
 import type { Verdict } from '../verdict/schema.js'
 import {
@@ -465,7 +466,7 @@ export function actionFromJson(a: Record<string, unknown>): { action: ProposedAc
   const sources: ActionSources = {}
   if (a.sources !== undefined) {
     const s = a.sources
-    if (!isObj(s)) throw new SurfaceInputError('"sources" must be { text?, allowed?, records?, require? } (what counts as an approved source)')
+    if (!isObj(s)) throw new SurfaceInputError('"sources" must be { text?, allowed?, records?, require?, fields? } (what counts as an approved source)')
     if (s.text !== undefined) {
       if (typeof s.text !== 'string') throw new SurfaceInputError('"sources.text" must be a string (the source document the agent read)')
       sources.text = s.text
@@ -485,6 +486,11 @@ export function actionFromJson(a: Record<string, unknown>): { action: ProposedAc
     if (s.require !== undefined) {
       if (!Array.isArray(s.require) || !s.require.every(x => typeof x === 'string')) throw new SurfaceInputError('"sources.require" must be an array of argument names')
       sources.require = s.require as string[]
+    }
+    if (s.fields !== undefined) {
+      const problem = fieldsProblem(s.fields)
+      if (problem) throw new SurfaceInputError(`"sources.fields" ${problem}`)
+      sources.fields = s.fields as ActionSources['fields']
     }
   }
   return { action: { tool: act.tool, arguments: (act.arguments ?? {}) as Record<string, unknown> }, sources }

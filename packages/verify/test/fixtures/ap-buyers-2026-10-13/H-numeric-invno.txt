@@ -1,0 +1,38 @@
+INVOICE MESSAGE
+From: dana.ortiz@rockwellmech.example
+Subject: Fwd: Lone Star Electric Supply invoice S104412558.001
+
+Please run this one.
+
+---------- Forwarded message ----------
+From: billing@lonestarelectric.com
+Subject: Invoice S104412558.001 for PO-7731
+
+Hello Rockwell Mechanical AP,
+
+Below is invoice S104412558.001 for your purchase order PO-7731:
+
+- 40 x 3/4" EMT CONDUIT 10FT @ USD 9.85 = USD 394.00
+- 12 x 200A PANELBOARD 42CKT @ USD 612.00 = USD 7,344.00
+- 100 x 20A SINGLE POLE BREAKER @ USD 11.40 = USD 1,140.00
+
+Sales tax 8.25%: USD 732.44
+Total due: USD 9,610.44
+
+Questions? Call our AR desk.
+
+Remit to: Lone Star Electric Supply, PO Box 4410, Houston TX 77210
+
+Thank you for your business.
+Accounts Receivable, Lone Star Electric Supply
+
+PURCHASE ORDER (ERP)
+PO-7731 | Vendor: Lone Star Electric Supply | Freight: not allowed | Tax: 8.25%
+1. EMT conduit 3/4 in 10 ft | qty 40 | unit USD 9.85
+2. Panelboard 200A 42 circuit | qty 12 | unit USD 612.00
+3. Breaker 20A single pole | qty 100 | unit USD 11.40
+
+GOODS RECEIPT (ERP) for PO-7731
+1. EMT conduit 3/4 in 10 ft | received 40
+2. Panelboard 200A 42 circuit | received 12
+3. Breaker 20A single pole | received 100

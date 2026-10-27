@@ -112,10 +112,10 @@ describe('model attestation — which model actually answered', () => {
     expect(a.outcome).toBe('FAIL')
   })
 
-  it('a floating alias cannot be attested against — ABSTAIN, and say what actually answered', () => {
+  it('a floating alias cannot be attested against — INSUFFICIENT_DATA, and say what actually answered', () => {
     for (const declared of ['opus', 'Sonnet', 'claude-3-5-sonnet-latest']) {
       const a = attest(transcript(reply('claude-opus-5')), { declared })
-      expect(a.outcome).toBe('ABSTAIN')
+      expect(a.outcome).toBe('INSUFFICIENT_DATA')
       expect(a.reasons[0]).toMatch(/floating alias/)
       expect(a.reasons[1]).toMatch(/claude-opus-5/)
     }
@@ -137,9 +137,9 @@ describe('model attestation — which model actually answered', () => {
     expect(a.reasons.join(' ')).toMatch(/1 event\(s\) carried no model/)
   })
 
-  it('nothing to attest → ABSTAIN, never PASS', () => {
-    expect(attest(transcript(user('hi'), noise())).outcome).toBe('ABSTAIN')
-    expect(attest(transcript(reply('<synthetic>'))).outcome).toBe('ABSTAIN')
+  it('nothing to attest → INSUFFICIENT_DATA, never PASS', () => {
+    expect(attest(transcript(user('hi'), noise())).outcome).toBe('INSUFFICIENT_DATA')
+    expect(attest(transcript(reply('<synthetic>'))).outcome).toBe('INSUFFICIENT_DATA')
     expect(attestModels([]).reasons[0]).toMatch(/no replies/)
   })
 
@@ -173,13 +173,16 @@ describe('riposte-attest CLI', () => {
   }
   const read = (p: string) => { const f = files[p]; if (f === undefined) throw new Error('ENOENT'); return f }
 
-  it('exit 0 PASS · 1 FAIL · 2 ABSTAIN · 3 usage', () => {
+  it('exit 0 PASS · 1 FAIL · 2 INSUFFICIENT_DATA · 3 usage', () => {
     expect(attestCli(['steady.jsonl', '--declared', 'claude-opus-4-8'], read).code).toBe(0)
     const fail = attestCli(['breach.jsonl', '--declared', 'claude-opus-4-8'], read)
     expect(fail.code).toBe(1)
     expect(JSON.parse(fail.out).switches).toHaveLength(1)
     expect(fail.err).toMatch(/^FAIL: /)
-    expect(attestCli(['steady.jsonl', '--declared', 'opus'], read).code).toBe(2)
+    const alias = attestCli(['steady.jsonl', '--declared', 'opus'], read)
+    expect(alias.code).toBe(2)
+    expect(alias.err).toMatch(/^INSUFFICIENT_DATA: /)
+    expect(alias.out + alias.err).not.toContain('ABSTAIN')
     expect(attestCli(['--declared'], read).code).toBe(3)
     expect(attestCli(['missing.jsonl'], read)).toMatchObject({ code: 3, err: expect.stringMatching(/cannot read/) })
     expect(attestCli(['a.jsonl', 'b.jsonl'], read).code).toBe(3)

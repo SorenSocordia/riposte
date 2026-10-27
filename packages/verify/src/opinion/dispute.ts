@@ -12,7 +12,7 @@
  * ruling cannot manufacture data. Reachable from any single FAIL: every notice carries its own dispute path. Pure and
  * deterministic.
  *
- * TENANT SCOPE (2026-09-28, W4): with `scope: { tenant_id }` the precedent, the prior ruling and the disputed verdict are
+ * TENANT SCOPE (2026-09-28): with `scope: { tenant_id }` the precedent, the prior ruling and the disputed verdict are
  * read from that tenant's records only (see snapshot.ts). Another tenant's reviews, reviewer ids and notes are never
  * cited, so a hosted, shared book can serve disputes. The subject records the resolved precedent rule, so a person's
  * signed ruling on this opinion can later be checked against the book alone (ruling.ts, statute.ts).

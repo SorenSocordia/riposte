@@ -1,0 +1,69 @@
+[
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "afterFileEdit",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "file_path": "/work/app/src/date.ts",
+    "edits": [
+      {
+        "old_string": "return parse(s)",
+        "new_string": "return parse(s.trim())"
+      }
+    ]
+  },
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "postToolUse",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "tool_name": "Shell",
+    "tool_input": {
+      "command": "npm test",
+      "working_directory": "/work/app"
+    },
+    "tool_output": "{\"exitCode\":0,\"stdout\":\"\\n RUN  v4.1.11 /work/app\\n\\n Test Files  5 passed (5)\\n      Tests  62 passed (62)\\n\"}",
+    "tool_use_id": "tool_test_1",
+    "cwd": "/work/app",
+    "duration": 4810
+  },
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "afterAgentResponse",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "text": "Fixed the date parser. All 62 tests pass."
+  },
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "stop",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "status": "completed",
+    "loop_count": 0
+  }
+]

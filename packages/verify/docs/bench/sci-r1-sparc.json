@@ -1,0 +1,283 @@
+{
+  "format": "bench-table/1",
+  "id": "sci-r1-sparc",
+  "title": "A published galaxy relation replayed across a whole catalogue (SPARC, 175 galaxies)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "e899fe92b2205e55231f2f7fe9ef51299ca1bcffd8e1dc885b4e1e66bb5999a1",
+    "frozen_sha256": "36387beeba608af71c92b2d93e60bfa54df06b61327441985cabdac480089e7f",
+    "amendments": [
+      {
+        "sha256": "0dd18b4f9229647c4e0d3d806acba0913d1d371eb3c22de50f9f7f18fc0c9be7",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-04T03:48:50Z",
+        "note": "amendment1",
+        "text": "### Amendment 1 (2026-10-04T03:48Z): solver only. No weight, cut, tolerance, claim or threshold changed.\n\n- **What happened.** Run 1 (summary kept as `out/run1-summary-ODR-DID-NOT-MOVE.json`, sha256 `b7d64ec0…1e54`) returned\n  g† = 1.0 exactly, sd 0, ODR info 21 (\"Problem is not full rank at solution\") for the primary fit, variants (i), (iv),\n  (v) and all 400 island fits. Run 1 therefore produced **no** measurement of g†. Its \"A FAIL\" is void.\n- **Cause, isolated.** In this install (scipy 1.14.1, Anaconda base) scipy.odr fails whenever a per-point `sy` (or\n  `we`) array is supplied. Even `sy = ones(n)`, which must equal the unweighted fit, returns the start value, while the\n  unweighted call returns 1.1363 and the `sx`-only call returns 1.1598. Analytic Jacobians, rescaling, 2-D weight\n  shapes and shifting x to O(1) do not help.\n- **Fix.** The weighted fit minimises the identical ODR objective directly: chi²(b) = sum over rows of\n  min over t of [ ((y − log10 F(10^t; b))/σ_y)² + ((t − x)/σ_x)² ]. The inner minimisation is a vectorised\n  Gauss-Newton iteration per row (the ODRPACK inner step), checked against a two-stage dense grid. The outer\n  minimisation over b is bounded scalar minimisation on log b. σ(b) is reported from the curvature\n  (Δchi² = 1), and also scaled by sqrt(chi²/dof) as ODRPACK's sd_beta is.\n- **Validation gate (must pass before the A verdict counts).** The direct solver must reproduce scipy.odr within\n  1e-3 in b in the two configurations scipy handles: unweighted (σ_x = σ_y = 1) and σ_x-only (σ_y = 1).\n- **Disclosure.** Before writing this amendment the author ran a slow brute-force version of the same objective on\n  the primary sample and saw b ≈ 1.098, which is outside the ±0.10 tolerance. The amendment changes only the solver.\n  The weights, sample, tolerance and headline rule above stay as frozen. The A verdict is decided by the frozen rule\n  on the validated solver's value, whatever side of the line it lands.\n",
+        "text_from": "PREREG.md:224-244"
+      },
+      {
+        "sha256": "e4c1dd5c8aae384d8efc41ac9438155959075a442caaa91516839e2ab7afd983",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-04T03:53:56Z",
+        "note": "amendment2",
+        "text": "### Amendment 2 (2026-10-04T03:53Z): implementation only, written after run 2. No decisive rule changed.\n\n- **What happened.** In run 2 (summary kept as `out/run2-summary-islands-at-bound.json`) the direct solver's search\n  interval for b was [0.3, 3.0]. The random-island fits ran into the upper bound (median b = 2.97, max 3.00). Their\n  rms values are therefore not the rms at the island's own best fit.\n- **Fix.** The search interval becomes [0.01, 100] for every direct fit (primary, variants, islands); the vertical\n  least-squares variant's interval becomes log10 b in [-2, 2]. The primary fit (b = 1.0989, interior) must not move;\n  that is checked and reported.\n- **Added, POST HOC, not decisive:** for each island draw, the best-case vertical rms over all b (least squares in y),\n  so the islands contrast is also read against the islands' most favourable fit; the count of island fits that still\n  touch a bound; and, for the all-175 outlier list, the hypergeometric probability of seeing at least the observed\n  number of paper-excluded galaxies in the top ten, given their share among galaxies with n >= 3.\n",
+        "text_from": "PREREG.md:245-257"
+      },
+      {
+        "sha256": "e899fe92b2205e55231f2f7fe9ef51299ca1bcffd8e1dc885b4e1e66bb5999a1",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-04T03:56:22Z",
+        "note": "amendment3",
+        "text": "### Amendment 3 (2026-10-04T03:56Z): one POST HOC control added after run 3. Not decisive. Nothing above changed.\n\n- **Gap found in my own control.** Section 7 names the worry as \"the shared 1/R in both axes\", but the frozen islands\n  compute g_bar' at the partner's own radius, which removes the shared 1/R as well as the galaxy-specific link. So the\n  frozen contrast cannot tell \"tightness from shared R\" apart from \"tightness from coupling\".\n- **Added, POST HOC, not decisive: shared-R islands.** Same partners and draws as the frozen contrast (random\n  derangement and matched-luminosity, 200 each), but g_bar' = V_bar,j²(x·R_max,j) / R_i: the partner's baryonic\n  velocity at the matched normalised radius, divided by the host's own radius, so both axes share 1/R_i. If these\n  islands also come out far looser than the real data, the shared 1/R is not what makes the relation tight.",
+        "text_from": "PREREG.md:258-266"
+      }
+    ],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:24Z",
+          "serial": "00ac6b4393dce7a2ce94bc02751d25c3fd",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "SCI-R1 run 4 (final; frozen results identical to run 3)",
+    "date": "2026-10-04",
+    "engine_version": null,
+    "ruleset": null,
+    "results": {
+      "path": "results",
+      "sha256": "42264a2304464a570cd41aa7bde0d6b7892b5775aa732ea9388e14ce0bdaf19b"
+    },
+    "spec_sha256": "6081d38857d092cf08dade40d0e35196c74619caeb3bad238070e3fd8a117b76",
+    "not_shipped": [
+      {
+        "file": "data/Rotmod_LTG.zip",
+        "sha256": "0a80cc90714828cc28b7dd57923576714d209f2490328c087c4a4ad607faf588",
+        "reason": "a public SPARC download, pinned in PREREG.md line 28 with its URL (astroweb.case.edu/SPARC/Rotmod_LTG.zip). Not redistributed here: fetch it from that URL and compare its sha256"
+      },
+      {
+        "file": "data/SPARC_Lelli2016c.mrt",
+        "sha256": "5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243",
+        "reason": "a public SPARC download, pinned in PREREG.md line 29 with its URL. Not redistributed here: fetch it and compare its sha256"
+      },
+      {
+        "file": "data/MassModels_Lelli2016c.mrt",
+        "sha256": "9108994b12cc401b94a1768beca61c53ec354779385c9c9cc571049f3043244c",
+        "reason": "a public SPARC download, pinned in PREREG.md line 30 with its URL. Not redistributed here: fetch it and compare its sha256"
+      },
+      {
+        "file": "papers/mcgaugh2016-rar-1609.05917.pdf",
+        "sha256": "80357e5b689f1ae7c087359ff936a4543ad09bd4619498026d9e0bcf828fe8a8",
+        "reason": "a public arXiv paper (1609.05917), pinned in PREREG.md line 31. Not redistributed here: the copy is at arxiv.org"
+      },
+      {
+        "file": "papers/mcgaugh2016-rar-1609.05917.eprint",
+        "sha256": "e2388620c02cacbcb3935e4c5db3b348a11f56702ffc630b08f8ccf430c4cba7",
+        "reason": "the same paper's LaTeX e-print, pinned in PREREG.md line 32. Not redistributed here: arxiv.org/e-print/1609.05917"
+      },
+      {
+        "file": "papers/sparc-1606.09251.pdf",
+        "sha256": "d089215877213661e40965543ee7e05736619082ad16d95e65ec059029588c63",
+        "reason": "the SPARC paper (arXiv 1606.09251), pinned in PREREG.md line 33. The prereg gives it no file name; this name is ours. Not redistributed here"
+      },
+      {
+        "file": "papers/btfr-1512.04543.pdf",
+        "sha256": "750465eb6e09a3c4af2de6eaccd7ca8e664c38ee1cc16c0dbc8200328148963c",
+        "reason": "the BTFR paper (arXiv 1512.04543), pinned in PREREG.md line 34. The prereg gives it no file name; this name is ours. Not redistributed here"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The run's scripts are not in this tree. Its inputs are public: the SPARC rotation-curve and mass-model files and two arXiv papers, each named by URL and sha256 in PREREG.md and not redistributed here."
+    }
+  },
+  "rows": [
+    {
+      "claim": "A (decisive): the fitted acceleration scale within 0.10 of the published 1.20 (1e-10 m s^-2)",
+      "n": 1,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.793451
+      ],
+      "method": "wilson",
+      "verdict": "FAIL",
+      "bar": {
+        "text": "A: |g_dagger - 1.20| <= 0.10 under the preregistered weights",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": "not blind: the published values were known when the tolerances were set; fitted 1.0989, off by 0.1012; five reasonable weightings span 0.97 to 1.16"
+    },
+    {
+      "claim": "S-v (decisive): vertical rms scatter within 0.02 dex of the published 0.13",
+      "n": 1,
+      "k": 1,
+      "rate": 1,
+      "ci95": [
+        0.206549,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "S-v: |rms_vertical - 0.13| <= 0.02 dex",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "S-o: orthogonal rms scatter within 0.02 dex of the published 0.13",
+      "n": 1,
+      "k": 1,
+      "rate": 1,
+      "ci95": [
+        0.206549,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "S-o: |rms_orthogonal - 0.13| <= 0.02 dex",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "headline: A and S-v together",
+      "n": 1,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.793451
+      ],
+      "method": "wilson",
+      "verdict": "FAIL",
+      "bar": {
+        "text": "headline: PASS only if A and S-v both PASS",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "C3: published V_flat replays from the rows, or both agree no flat part exists (all galaxies)",
+      "n": 175,
+      "k": 175,
+      "rate": 1,
+      "ci95": [
+        0.97852,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; a per-galaxy verdict rule, not an aggregate bar"
+    },
+    {
+      "claim": "C1: flat beyond R_flat, among galaxies decided (all galaxies)",
+      "n": 97,
+      "k": 76,
+      "rate": 0.783505,
+      "ci95": [
+        0.691598,
+        0.853813
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "C2: baryonic excess at least 2 errV at every outer row, among galaxies decided (all galaxies)",
+      "n": 97,
+      "k": 89,
+      "rate": 0.917526,
+      "ci95": [
+        0.845623,
+        0.957618
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "C1, science sample, among galaxies decided",
+      "n": 88,
+      "k": 68,
+      "rate": 0.772727,
+      "ci95": [
+        0.674857,
+        0.847783
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    }
+  ],
+  "misses": [
+    {
+      "id": "table1-layout",
+      "kind": "data-defect",
+      "description": "SPARC Table1 layout defect re-confirmed: the declared byte read fails on all 175 rows; read by whitespace",
+      "post_hoc": false
+    },
+    {
+      "id": "odr-weights-broken",
+      "kind": "tool-defect",
+      "description": "scipy.odr per-point weights are broken in this install (scipy 1.14.1): any per-point sy returns the start value with info 21, so run 1 measured nothing; replaced by a direct solver behind a validation gate (Amendment 1, with the brute-force value disclosed)",
+      "post_hoc": false
+    },
+    {
+      "id": "island-bound",
+      "kind": "defect",
+      "description": "the islands solver bound was too narrow in run 2 (random-island fits touched b = 3); widened in Amendment 2, primary fit unchanged to 1e-8",
+      "post_hoc": false
+    },
+    {
+      "id": "islands-design-gap",
+      "kind": "method",
+      "description": "the frozen islands control removed the shared 1/R along with the galaxy coupling; a shared-radius variant was added post hoc (Amendment 3)",
+      "post_hoc": true
+    },
+    {
+      "id": "row-count-drift",
+      "kind": "unexplained",
+      "description": "sample rows do not reproduce exactly: 3168 before the precision cut against the paper's 3149, and 2700 after it against 2693; the 153 galaxies match; unexplained",
+      "post_hoc": false
+    },
+    {
+      "id": "weights-unspecified",
+      "kind": "spec-gap",
+      "description": "the acceleration scale replay is weighting-sensitive at the 10% level and the letter does not state its fit weights, so a byte-exact replay of the parameter is not possible from the paper alone",
+      "post_hoc": false
+    }
+  ],
+  "blind": false,
+  "label": "post-hoc"
+}

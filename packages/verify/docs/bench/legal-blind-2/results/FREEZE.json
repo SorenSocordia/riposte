@@ -1,0 +1,16 @@
+{
+  "frozen_utc": "2026-10-05T14:26:32.173Z",
+  "distinct": false,
+  "limits": {
+    "ellipsisChars": 600,
+    "bracketChars": 40,
+    "bracketExtraWords": 2,
+    "minPieceWords": 3,
+    "minLiteralWords": 4,
+    "anchorWords": 4,
+    "correspondingSimilarity": 0.8,
+    "nearestSimilarity": 0.5
+  },
+  "moved": [],
+  "sha256": "f423e0458128bbb1b86b174a584f27031d3a41a3ca9a5d2ca2b0dcfa2ed38634"
+}

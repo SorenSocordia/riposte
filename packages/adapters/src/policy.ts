@@ -17,12 +17,20 @@
  *
  * A tool that is not listed passes through untouched: the adapters only ever act on declared actions.
  *
- * DECISION (fork point: when the ledger lane's signed GRANT event lands): the rung is read from this file. Once a grant is a
+ * DECISION (fork point: when the ledger's signed GRANT event lands): the rung is read from this file. Once a grant is a
  * signed chain event, `level` should be resolved from the book of record, with this file's value as a cross-check that
  * refuses to run on a mismatch.
  */
 import { VOICE_LADDER, type VoiceLevel } from 'riposte-verify'
 import { AUDIENCES, DEFAULT_TIERS, type Audience } from 'riposte-ai'
+import { didYouMean } from './degraded.js'
+
+/** "; got 'gaet', did you mean gate?" when the value is a string close to one of the options (2026-10-05). */
+const got = (v: unknown, options: readonly string[]): string => {
+  if (typeof v !== 'string') return ''
+  const m = didYouMean(v, options)
+  return `; got '${v}'${m ? `, did you mean ${m}?` : ''}`
+}
 
 export const ACTION_POLICY_VERSION = 'riposte-action-policy-v0'
 
@@ -108,8 +116,8 @@ export function lintActionPolicy(x: unknown): PolicyLintResult {
     if (typeof a.tool !== 'string' || !a.tool) errors.push(`${at}.tool must be a tool name`)
     else if (seen.has(a.tool)) errors.push(`${at}.tool "${a.tool}" is declared twice`)
     else seen.add(a.tool)
-    if (!(VOICE_LADDER as readonly unknown[]).includes(a.level)) errors.push(`${at}.level must be one of ${VOICE_LADDER.join(' | ')} (a rung a person set)`)
-    if (typeof a.tier !== 'string' || !tiers.includes(a.tier)) errors.push(`${at}.tier must be one of the declared tiers (${tiers.join(', ')})`)
+    if (!(VOICE_LADDER as readonly unknown[]).includes(a.level)) errors.push(`${at}.level must be one of ${VOICE_LADDER.join(' | ')} (a rung a person set)${got(a.level, VOICE_LADDER)}`)
+    if (typeof a.tier !== 'string' || !tiers.includes(a.tier)) errors.push(`${at}.tier must be one of the declared tiers (${tiers.join(', ')})${got(a.tier, tiers)}`)
     if (a.workflow !== undefined && typeof a.workflow !== 'string') errors.push(`${at}.workflow must be a string`)
     if (a.set_by !== undefined && typeof a.set_by !== 'string') errors.push(`${at}.set_by must be a string`)
     if (a.sources !== undefined) {

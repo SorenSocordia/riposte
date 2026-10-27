@@ -1,0 +1,306 @@
+{
+  "spec": "bench-spec/1",
+  "id": "x2-legal-blind",
+  "title": "Verbatim legal quotation check, blind",
+  "adapter": "items",
+  "label": "blind",
+  "blind": true,
+  "items": "rows",
+  "run": {
+    "id": "X2 blind run (58 items)",
+    "date": "2026-10-03",
+    "engine_version": {
+      "$from": "engine_version"
+    },
+    "ruleset": "legal@0.0.1",
+    "dist_sha256": {
+      "$from": "verify_dist_sha256"
+    }
+  },
+  "hash_list_note": "PREREG.sha256 holds two hash sets, 42 seconds apart (2026-10-03T10:49:49Z and 10:50:31Z). The first was superseded before any engine call, when the run's own integrity check stopped on CRLF line endings in the opinion texts. Three lines changed between the sets and one was added: PREREG.md (its re-hash note added), items/MANIFEST.json (the per-text hashes, after the texts were rewritten with LF line endings and the manifest made to hash raw bytes), harness/build_manifest.py (the script that builds that manifest), and a new line for the script that fetched the texts. The first manifest's bytes were not kept, so this tree cannot show that no item changed between the two sets; that rests on the authors' re-hash note in PREREG.md. The run is held to the second set.",
+  "rows": [
+    {
+      "claim": "known-bad citations certified PASS",
+      "where": {
+        "set": "known-bad"
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "Primary bar: 0 PASS on the 20 known-bad items",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "supplementary false quotations certified PASS",
+      "where": {
+        "set": "supplementary"
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "the primary rule, reported the same way for the 18 supplementary items",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 18
+      }
+    },
+    {
+      "claim": "fabricated cases not abstained (FAIL or PASS)",
+      "where": {
+        "subset": "fabricated-case"
+      },
+      "hit": {
+        "outcome": {
+          "$ne": "ABSTAIN"
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "Secondary, fabricated-case subset (5): must ABSTAIN; the bar is 0 FAIL and 0 PASS",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 5
+      }
+    },
+    {
+      "claim": "propositions abstained OUT_OF_RULESET_SCOPE",
+      "where": {
+        "subset": "proposition"
+      },
+      "hit": {
+        "outcome": "ABSTAIN",
+        "reason": "OUT_OF_RULESET_SCOPE"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "Secondary, proposition subset (2): ABSTAIN OUT_OF_RULESET_SCOPE",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "reported": {
+        "k": 2,
+        "n": 2
+      }
+    },
+    {
+      "claim": "false quotations of real cases FAILed (against ABSTAIN)",
+      "where": {
+        "set": "known-bad",
+        "subset": "false-quote"
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "note": "no bar: FAIL and ABSTAIN are both correct non-PASS answers",
+      "reported": {
+        "k": 6,
+        "n": 13
+      }
+    },
+    {
+      "claim": "controls (genuine quotations) PASS",
+      "where": {
+        "set": "control"
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "note": "controls: rates reported, no bar",
+      "reported": {
+        "k": 6,
+        "n": 20
+      }
+    },
+    {
+      "claim": "controls (genuine quotations) FAIL",
+      "where": {
+        "set": "control"
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "note": "every non-PASS audited by the run's author, an AI agent; 11 are false FAILs (see misses)",
+      "reported": {
+        "k": 14,
+        "n": 20
+      }
+    },
+    {
+      "claim": "supplementary false quotations FAILed",
+      "where": {
+        "set": "supplementary"
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 8,
+        "n": 18
+      }
+    }
+  ],
+  "misses_from": [
+    {
+      "where": {
+        "id": [
+          "KB01",
+          "KB03",
+          "KB04",
+          "KB05",
+          "KB09",
+          "SP01",
+          "SP03",
+          "SP07",
+          "SP13",
+          "SP18"
+        ]
+      },
+      "id": "${id}-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "${id}: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    }
+  ],
+  "misses": [
+    {
+      "id": "CT01",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT01: FAIL on a genuine quotation: a period inside the closing quote where the opinion continues with a comma",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT02",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT02: FAIL on a genuine quotation: nested quotation marks changed",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT03",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT03: FAIL on a genuine quotation: bracketed substitutions",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT05",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT05: FAIL on a genuine quotation: the opinion's own '[.]' was dropped",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT06",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT06: FAIL on a genuine quotation: the quoting opinion omitted the cited opinion's internal ellipsis",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT09",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT09: FAIL on a genuine quotation: a bracketed letter ('serv[e]')",
+      "post_hoc": false
+    },
+    {
+      "id": "CT10",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT10: FAIL on a genuine quotation: nested quotation marks changed",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT11",
+      "kind": "false-fail (convention and text artifact)",
+      "description": "CT11: FAIL on a genuine quotation: an ellipsis and nested marks, plus a soft hyphen in the PDF text layer",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT14",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT14: FAIL on a genuine quotation: a bracketed capital ('[I]t')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT16",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT16: FAIL on a genuine quotation: the '(cleaned up)' parenthetical",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT18",
+      "kind": "false-fail (convention and text artifact)",
+      "description": "CT18: FAIL on a genuine quotation: brackets and changed marks, plus an OCR source reading 'plaintiffs' for 'plaintiff's'",
+      "post_hoc": false
+    },
+    {
+      "id": "CT08",
+      "kind": "undetermined",
+      "description": "CT08: FAIL on a quotation with brackets and an ellipsis plus a comma the OCR source lacks; undetermined without a second copy of the opinion",
+      "post_hoc": false
+    },
+    {
+      "id": "CT12",
+      "kind": "label-error",
+      "description": "CT12: a control labelled genuine, but the quoting opinion dropped 'a' from 'entitled to a judgment' (Celotex); the engine's FAIL was correct",
+      "post_hoc": false
+    },
+    {
+      "id": "CT19",
+      "kind": "label-error",
+      "description": "CT19: a control labelled genuine, but the quoting opinion dropped 'the' from 'favorable to the plaintiff' (Keys v. Humana); the engine's FAIL was correct",
+      "post_hoc": false
+    },
+    {
+      "id": "anchor-not-word-bounded",
+      "kind": "defect",
+      "description": "the anchor search was not word-bounded: SP07's anchor matched inside \"attorney's\"",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (pieces sit on word boundaries)"
+    },
+    {
+      "id": "prediction-3",
+      "kind": "prediction",
+      "description": "prediction 3 (KB16 would FAIL on a short anchor) was wrong: KB16 abstained",
+      "post_hoc": false
+    }
+  ],
+  "audit": "the run's author, an AI agent (Claude Opus 5.5 (claude-opus-5-5)), audited every PASS and every non-PASS control against the opinion text (prereg, Outcomes and bars); no person labelled"
+}

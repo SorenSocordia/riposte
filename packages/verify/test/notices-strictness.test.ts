@@ -1,8 +1,8 @@
 /**
- * A notice is never softer than its verdict (the delivery lane's finding F1, fixed 2026-09-28). A partially grounded
+ * A notice is never softer than its verdict (fixed 2026-09-28). A partially grounded
  * action — the amount allow-listed, the account number with no declared source — is INSUFFICIENT_DATA by
  * `verifyAction` ("execute only when every value is grounded"). It must not read PASS / PROCEED at any rung.
- * Also F2: a boolean rule bit is never rendered as "expected false".
+ * Also: a boolean rule bit is never rendered as "expected false".
  */
 import { describe, it, expect } from 'vitest'
 import { verifyAction, actionNotice, verdictFindings, renderFindings } from '../src/index'
@@ -10,7 +10,7 @@ import { verifyAction, actionNotice, verdictFindings, renderFindings } from '../
 const now = () => new Date('2026-09-28T09:00:00Z')
 const transfer = { tool: 'mcp__bank__transfer', arguments: { to_account: '110-234-5678', amount: 500 } }
 
-describe('a notice is never softer than its verdict (F1)', () => {
+describe('a notice is never softer than its verdict', () => {
   const partial = verifyAction(transfer, { allowed: { amount: [500] } }, { now })
   it('the producer says INSUFFICIENT_DATA, and so does the notice, at every rung', () => {
     expect(partial.outcome).toBe('INSUFFICIENT_DATA')
@@ -39,7 +39,7 @@ describe('a notice is never softer than its verdict (F1)', () => {
   })
 })
 
-describe('boolean rule bits are not rendered as "expected" (F2)', () => {
+describe('boolean rule bits are not rendered as "expected"', () => {
   it('a grounding miss never reads "expected false"', () => {
     const wrong = verifyAction(transfer, { allowed: { to_account: ['220-000-1111'], amount: [500] } }, { now })
     const text = renderFindings(verdictFindings(wrong)).join('\n')

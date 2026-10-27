@@ -1,0 +1,835 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:riposte:ap-input:0.1.0",
+  "title": "Riposte AP input 0.1.0",
+  "description": "A bill, its purchase order and its item receipts as structured data, for the three-way match (ruleset ap-structured@0.1.0). Optional: payment history (enables the duplicate check) and the model decision the gate checks.",
+  "type": "object",
+  "required": [
+    "schema",
+    "bill",
+    "purchase_order",
+    "item_receipts"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "riposte.ap-input/0.1.0"
+    },
+    "bill": {
+      "$ref": "#/$defs/bill"
+    },
+    "purchase_order": {
+      "$ref": "#/$defs/purchase_order"
+    },
+    "item_receipts": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "$ref": "#/$defs/item_receipt"
+      }
+    },
+    "payment_history": {
+      "anyOf": [
+        {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "#/$defs/payment"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "decision": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/decision"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "\\S"
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 1024
+    },
+    "date": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "\\S"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217"
+    },
+    "minor_amount": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "additionalProperties": false,
+      "description": "Minor units, as Ramp's CurrencyAmount: amount 12034 with currency_code USD is 120.34.",
+      "properties": {
+        "amount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "string",
+              "pattern": "^-?[0-9]{1,17}$"
+            }
+          ]
+        },
+        "currency_code": {
+          "$ref": "#/$defs/currency"
+        },
+        "minor_unit_conversion_rate": {
+          "anyOf": [
+            {
+              "enum": [
+                1,
+                10,
+                100,
+                1000,
+                10000
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "money": {
+      "description": "A JSON number or a decimal string in major units, or an amount in minor units.",
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": -1000000000000,
+          "maximum": 1000000000000
+        },
+        {
+          "type": "string",
+          "pattern": "^-?[0-9]{1,15}(\\.[0-9]{1,6})?$"
+        },
+        {
+          "$ref": "#/$defs/minor_amount"
+        }
+      ]
+    },
+    "price": {
+      "description": "A non-negative money value.",
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000000000
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9]{1,15}(\\.[0-9]{1,6})?$"
+        },
+        {
+          "type": "object",
+          "required": [
+            "amount"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "amount": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]{1,17}$"
+                }
+              ]
+            },
+            "currency_code": {
+              "$ref": "#/$defs/currency"
+            },
+            "minor_unit_conversion_rate": {
+              "anyOf": [
+                {
+                  "enum": [
+                    1,
+                    10,
+                    100,
+                    1000,
+                    10000
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "quantity": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000000000
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9]{1,15}(\\.[0-9]{1,6})?$"
+        }
+      ]
+    },
+    "vendor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tax_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "bill_line": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchase_order_line_item_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "memo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit_price": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/price"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/money"
+        },
+        "discount_amount": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/money"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "discount_rate": {
+          "anyOf": [
+            {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^-?[0-9]{1,15}(\\.[0-9]{1,6})?$"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "bill": {
+      "type": "object",
+      "required": [
+        "invoice_number",
+        "vendor",
+        "amount",
+        "line_items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "invoice_number": {
+          "$ref": "#/$defs/id"
+        },
+        "vendor": {
+          "$ref": "#/$defs/vendor"
+        },
+        "purchase_order_number": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/currency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/money"
+        },
+        "freight": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/money"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tax": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/money"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issued_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "line_items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/bill_line"
+          }
+        }
+      }
+    },
+    "po_line": {
+      "type": "object",
+      "required": [
+        "id",
+        "unit_price"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "external_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit_price": {
+          "$ref": "#/$defs/price"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/money"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "taxable": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "description": "false: this line is not taxed. Absent or true: taxed when the purchase order states a tax_rate."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "invoiced_quantity_to_date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "purchase_order": {
+      "type": "object",
+      "required": [
+        "purchase_order_number",
+        "line_items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchase_order_number": {
+          "$ref": "#/$defs/id"
+        },
+        "vendor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/vendor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/currency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "freight_allowed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "tax_rate": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "The purchase order's tax terms as a fraction (0.0825 is 8.25%). 0 states that no tax is due, so tax billed holds (hold_total); absent, the order does not say, so tax billed goes to a person."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "line_items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/po_line"
+          }
+        }
+      }
+    },
+    "receipt_line": {
+      "type": "object",
+      "required": [
+        "purchase_order_line_item_id",
+        "quantity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchase_order_line_item_id": {
+          "$ref": "#/$defs/id"
+        },
+        "quantity": {
+          "$ref": "#/$defs/quantity"
+        }
+      }
+    },
+    "item_receipt": {
+      "type": "object",
+      "required": [
+        "line_items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "item_receipt_number": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchase_order_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "received_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "line_items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/receipt_line"
+          }
+        }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": [
+        "invoice_number"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "invoice_number": {
+          "$ref": "#/$defs/id"
+        },
+        "vendor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "vendor_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "vendor_tax_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchase_order_number": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "no_purchase_order": {
+          "anyOf": [
+            {
+              "type": "boolean",
+              "description": "true: the invoice was booked without a purchase order (a non-PO bill), so the PO balance check does not count it against any order. Never with purchase_order_number."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/money"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "paid_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "pay",
+            "hold"
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "hold_duplicate",
+                "hold_no_po",
+                "hold_quantity",
+                "hold_price",
+                "hold_line_math",
+                "hold_total"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 4000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

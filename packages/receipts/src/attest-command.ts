@@ -3,14 +3,16 @@
  *
  *   riposte-attest <transcript.jsonl> [--declared <exact-id>] [--allow <exact-id>]... [--allow-silent-switch]
  *   riposte-attest --declared <exact-id> < hook-input.json        (no path: reads {"transcript_path": …} from stdin)
+ *   riposte-attest monitor …                                      (the model-switch monitor: ./attest-monitor-command.ts)
  *
- * Prints the attestation as JSON. Exit: 0 PASS · 1 FAIL · 2 ABSTAIN · 3 usage error.
+ * Prints the attestation as JSON. Exit: 0 PASS · 1 FAIL · 2 INSUFFICIENT_DATA (can't tell) · 3 usage error.
  * Reads only the model / id / timestamp / command fields of the transcript, never message content.
  */
 import { attestModels, eventsFromClaudeCodeTranscript, type AttestPolicy } from './model-attest.js'
 
-export const ATTEST_USAGE = 'riposte-attest <transcript.jsonl> [--declared <exact-id>] [--allow <exact-id>]... [--allow-silent-switch]'
-const CODES = { PASS: 0, FAIL: 1, ABSTAIN: 2 } as const
+export const ATTEST_USAGE = 'riposte-attest <transcript.jsonl> [--declared <exact-id>] [--allow <exact-id>]... [--allow-silent-switch]\n' +
+  'riposte-attest monitor run|parse|anchor|synth|tiers …   (the model-switch monitor: provider exports, evidence tiers, a monthly report)'
+const CODES = { PASS: 0, FAIL: 1, INSUFFICIENT_DATA: 2 } as const
 
 export interface AttestArgs { path?: string; policy: AttestPolicy; help?: boolean; error?: string }
 export interface CliResult { code: number; out: string; err: string }

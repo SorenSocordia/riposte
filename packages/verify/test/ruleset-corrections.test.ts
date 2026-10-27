@@ -20,7 +20,7 @@ const NOW = () => new Date('2026-09-28T00:00:00Z')
 const AFTER = {
   peppol: json('..', 'docs', 'examples', 'peppol-en16931.ruleset.json'),
   zatca: json('..', 'docs', 'examples', 'zatca-ksa.ruleset.json'),
-  // pinned to the frozen 0.1.0 bytes (D1 pattern, E-INVOICE-2 2026-09-28): the live KSeF file moved on to 0.2.0 (DoZaplaty)
+  // pinned to the frozen 0.1.0 bytes (pinned 2026-09-28): the live KSeF file moved on to 0.2.0 (DoZaplaty)
   ksef: json('fixtures', 'golden-rulesets', 'ksef-fa3.ruleset.v0.1.0.json'),
 }
 const BEFORE = {
@@ -206,7 +206,8 @@ describe('engine additions (additive: rulesets that use none of them are byte-id
     expect(line(0.12345, 123.45).outcome).toBe('PASS')
     expect(line('0.12345', 123.45).outcome).toBe('PASS')
     expect(line('€1,234.50', 1234500).outcome).toBe('PASS') // two decimals: the amount parser, exact
-    expect(line('€1,234.567', 1234567).insufficiency).toMatchObject({ reason: 'UNPARSEABLE' }) // would need rounding
+    // engine 0.1.0: would need rounding, so unparseable. Engine 0.2.0 reads a formatted string whole and exactly (fixv-redteam)
+    expect(verifyDeclarative({ items: [{ q: 1000, p: '€1,234.567', n: 1234567 }] }, rs, { now: NOW, engine: '0.1.0' }).claims[0]!.insufficiency).toMatchObject({ reason: 'UNPARSEABLE' })
     const amt: DeclarativeRuleset = { ...rs, fields: { ...rs.fields, P: { paths: ['p'], line: true } } }
     expect(run({ items: [{ q: 1000, p: 0.12345, n: 123.45 }] }, amt).claims[0]!.outcome).toBe('FAIL') // 'amount' still rounds (0.12)
   })

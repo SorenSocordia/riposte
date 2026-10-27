@@ -1,0 +1,76 @@
+{
+ "N_all": 1385119,
+ "N_nonfinite": 0,
+ "N_eq_9999": 0,
+ "N_eq_fill_-9999": 0,
+ "N_valid": 1385119,
+ "C0_band": [
+  1187500,
+  1250000
+ ],
+ "C0": "FAIL",
+ "dt_mld_valid_rows_outside_declared_range": 0,
+ "dt_mld_min_max_valid": [
+  0.19873759112150605,
+  1974.1936083140042
+ ],
+ "status_values": {
+  "0.0": 521748,
+  "1.0": 863371
+ },
+ "distinct_floats": 11415,
+ "da_mld_valid": 1385119,
+ "da_mld_outside_declared_range": 0,
+ "da_mld_minmax": [
+  0.09916446971361584,
+  1968.0502346606802
+ ],
+ "dt_mlt_valid": 1385119,
+ "dt_mlt_outside_declared_range": 0,
+ "dt_mlt_minmax": [
+  -2.08123517036438,
+  38.68193435668945
+ ],
+ "da_mlt_valid": 1385119,
+ "da_mlt_outside_declared_range": 0,
+ "da_mlt_minmax": [
+  -2.08123517036438,
+  38.68193435668945
+ ],
+ "ta_mld_valid": 1385119,
+ "ta_mld_outside_declared_range": 0,
+ "ta_mld_minmax": [
+  0.09916446971361584,
+  1971.5434796439117
+ ],
+ "tt_mld_valid": 1385119,
+ "tt_mld_outside_declared_range": 0,
+ "tt_mld_minmax": [
+  0.9933253375501279,
+  1974.4341108023564
+ ],
+ "profiledate_valid": 1385119,
+ "profiledate_outside_declared_range": 0,
+ "profiledate_minmax": [
+  730486.123275463,
+  736773.3222222222
+ ],
+ "profilelat_valid": 1385119,
+ "profilelat_outside_declared_range": 0,
+ "profilelat_minmax": [
+  -80.001,
+  89.784
+ ],
+ "profilelon_valid": 1385119,
+ "profilelon_outside_declared_range": 0,
+ "profilelon_minmax": [
+  -179.999,
+  180.0
+ ],
+ "profilenumber_valid": 1385119,
+ "profilenumber_outside_declared_range": 0,
+ "profilenumber_minmax": [
+  0.0,
+  999.0
+ ]
+}

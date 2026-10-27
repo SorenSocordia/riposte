@@ -5,7 +5,7 @@
  * every signed decision re-verified) and REBUILDS the records from it, so every record the opinion cites is provably the
  * ledger's. Records supplied without a chain are usable, but every premise resting on them is marked unverified.
  *
- * THE TENANT SCOPE (2026-09-28, W4): on a hosted book shared by several tenants, `openSnapshot(s, { scope })` still verifies
+ * THE TENANT SCOPE (2026-09-28): on a hosted book shared by several tenants, `openSnapshot(s, { scope })` still verifies
  * the whole chain (its hashes cover every tenant) but keeps only the tenant's own records and decisions. A REVIEW event is
  * attributed to the tenant that owned the verdict when it was reviewed (the tenant of the latest RECORD before it), so a
  * verdict id two tenants both recorded never carries one tenant's review into the other's view. Every opinion built on a

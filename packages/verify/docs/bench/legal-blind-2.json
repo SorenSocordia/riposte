@@ -1,0 +1,535 @@
+{
+  "format": "bench-table/1",
+  "id": "legal-blind-2",
+  "title": "Verbatim legal quotation check, second blind set (40 quotations from 1973 opinions)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "27cbb26aa8e5ca9e85b01a6deb5d353cc2ff91e5c1e228aa2c2ae92565cba7aa",
+    "frozen_sha256": "27cbb26aa8e5ca9e85b01a6deb5d353cc2ff91e5c1e228aa2c2ae92565cba7aa",
+    "amendments": [],
+    "lab_paths": true,
+    "stamp": {
+      "status": "stamped after the run",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T18:07:30Z",
+          "serial": "4008ca3072c1f19d2385f0f6c4848fef",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "legal-blind-2: half A under three rules, the tuning search on half A, then half B once (40 items, one citation per verdict)",
+    "date": "2026-10-05T14:26:10Z",
+    "engine_version": "0.6.0",
+    "ruleset": "legal@0.0.1 + legal@0.1.0 + legal@0.2.0",
+    "results": {
+      "path": "results",
+      "sha256": "ab33d57af56e193057419156664a8ca6c9d1c7695ff5abddd9b56277f49b1666"
+    },
+    "spec_sha256": "8367d8ef9689402370bb5ff072b78dff923c6c622689f26acdcadb0438c907c0",
+    "not_shipped": [
+      {
+        "file": "harness/build.mjs",
+        "sha256": "bcdad000334617aa84632923c189b82f8885bd909463ab7c601311f3e360e0ab",
+        "reason": "the script that built the set from the public texts. It names the authors' internal folders and a private user-agent string, so the export that assembles this public tree refuses it, and it is withheld. What it produced ships: the 39 opinion texts in sources/opinions/ (and the same texts without their header line in sources/opinions-unheaded/), each pinned by sha256 in items/MANIFEST.json, and the items themselves. The raw Caselaw Access Project files it read (about 48 MB of JSON) are not shipped; each is pinned by URL, fetch time and sha256 in sources/fetch-log.jsonl. rerun.mjs reruns every step of the run from the shipped texts with the package's engine and compares the outcomes with results/."
+      },
+      {
+        "file": "src/legal/index.ts",
+        "sha256": "35137247097483ca6da2c67de178e8a79cf74ac1ef7bd42e790546c02a843f36",
+        "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+      },
+      {
+        "file": "src/legal/quotation.ts",
+        "sha256": "9f5ffee86ab252c380d4111b23e142fd077d3c2919f97249c15532e90e4225e7",
+        "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+      },
+      {
+        "file": "src/legal/binding.ts",
+        "sha256": "02816bb723291150d5fdff4ed105d6cd26717a987a6faf3e293602e25b72cc3d",
+        "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+      },
+      {
+        "file": "src/version.ts",
+        "sha256": "9ad7ccf53c401d3c01129a3891fe34e6d506d7d5747dee0987d3133a3309ae5b",
+        "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+      }
+    ],
+    "shipped_edited": [
+      {
+        "file": "harness/run.ts",
+        "recorded_sha256": "9078818b096bfee73b9d3948c8556d2b63c974f3ea1b4d7d7e1c945b375b8817",
+        "sha256": "89183de7552d281226b7720ab6326ea96a4e71ecdf9ae2adc97cc54dd590bd1a",
+        "reason": "the run's harness. One comment line, the run command, named the authors' private folder and was replaced; the code is unchanged. The original does not ship, so the difference cannot be checked here."
+      },
+      {
+        "file": "items/EXCLUDED.json",
+        "recorded_sha256": "b3de36d5011d71f91f685821f8a440f6a909b507cf22a3ba370c0db3d38f0196",
+        "sha256": "7023f7fbdad3a78377dc4e41151a1b7a634abf7b8eaaac7f3ecc89a04937bab2",
+        "reason": "the exclusion list. One entry of its sources list named the authors' private folder and now names the first blind set's manifest in this tree; the names and cites it excludes are unchanged. The original does not ship, so the difference cannot be checked here."
+      }
+    ],
+    "rerun": {
+      "from_tree": "yes",
+      "detail": "The 39 opinion texts ship in sources/ (headed and unheaded), pinned by sha256 in items/MANIFEST.json. From the repository root, after npm install && npm run build, node packages/verify/docs/bench/legal-blind-2/rerun.mjs reruns half A, the tuning search, half B and the unheaded step with the package's engine and compares every case with results/; on 2026-10-06 every outcome the table counts was identical (160 of 160, and the tuning search's values and chosen limits). Two things differ and the script says so: the verdict ids and some explanation wording, because today's engine is not the build the run used (its sources are hashed below), and rerun.mjs was written after the run in place of harness/run.ts, which imports the authors' working tree. The script that built the texts from the raw Caselaw Access Project files does not ship (it names the authors' folders); the raw files are pinned by URL, time and sha256 in sources/fetch-log.jsonl.",
+      "identical": "outcomes"
+    },
+    "blind_basis": "PREREG.sha256 records the prereg's sha256 at 2026-10-05T14:00:36Z, and sources/fetch-log.jsonl records all 110 fetches of the opinion texts between 14:03:28Z and 14:06:31Z, after it; the built set and the harness were hashed at 14:26:01Z, nine seconds before the run. Both files were written by the authors, and the AI agent that wrote the prereg also built the set and audited it"
+  },
+  "rows": [
+    {
+      "claim": "H11a (primary): legal@0.2.0, half B: known-bad quotations certified PASS",
+      "n": 10,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.277533
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "H11a (primary): legal@0.2.0 certifies no known-bad item: 0 PASS among the 10 half-B known-bads",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "legal@0.2.0, half B: genuine quotations FAILed (false FAIL)",
+      "n": 10,
+      "k": 1,
+      "rate": 0.1,
+      "ci95": [
+        0.017876,
+        0.404151
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; H11b (descriptive): compare legal@0.0.1's row below; n = 10 cannot separate them"
+    },
+    {
+      "claim": "legal@0.2.0, half B: genuine quotations PASS",
+      "n": 10,
+      "k": 5,
+      "rate": 0.5,
+      "ci95": [
+        0.236593,
+        0.763407
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.2.0, half B: genuine quotations abstained",
+      "n": 10,
+      "k": 4,
+      "rate": 0.4,
+      "ci95": [
+        0.16818,
+        0.687327
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; all four are label errors in the set's own extraction (see the misses); every rule abstained on them"
+    },
+    {
+      "claim": "legal@0.0.1, half B: known-bad quotations certified PASS",
+      "n": 10,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.277533
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.0.1, half B: genuine quotations FAILed (false FAIL)",
+      "n": 10,
+      "k": 3,
+      "rate": 0.3,
+      "ci95": [
+        0.107791,
+        0.603222
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; H11b's comparison row"
+    },
+    {
+      "claim": "legal@0.0.1, half B: genuine quotations PASS",
+      "n": 10,
+      "k": 3,
+      "rate": 0.3,
+      "ci95": [
+        0.107791,
+        0.603222
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.1.0, half B: known-bad quotations certified PASS",
+      "n": 10,
+      "k": 2,
+      "rate": 0.2,
+      "ci95": [
+        0.056682,
+        0.509838
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; prediction P2, written from the code before any run: 0.1.0 passes at least one bracket-changed known-bad (L2-08, L2-40)"
+    },
+    {
+      "claim": "legal@0.1.0, half B: genuine quotations FAILed (false FAIL)",
+      "n": 10,
+      "k": 1,
+      "rate": 0.1,
+      "ci95": [
+        0.017876,
+        0.404151
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.1.0, half B: genuine quotations PASS",
+      "n": 10,
+      "k": 5,
+      "rate": 0.5,
+      "ci95": [
+        0.236593,
+        0.763407
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "H11c: tuning on half A produced a distinct candidate rule",
+      "n": 1,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.793451
+      ],
+      "method": "wilson",
+      "verdict": "FAIL",
+      "bar": {
+        "text": "H11c: the legal@0.3.0 candidate beats legal@0.2.0 on half B; if no limit moves, there is no distinct 0.3.0 candidate and H11c is \"does not beat\"",
+        "test": {
+          "k": {
+            "eq": 1
+          }
+        }
+      },
+      "note": "no limit moved on half A (results/FREEZE.json, distinct false), so the preregistered tuned candidate did not exist: by the prereg, does not beat. The legal@0.3.0 shipped later is a different change, not tuned on this set (table legal-blind-2-030)"
+    },
+    {
+      "claim": "legal@0.2.0, both halves: known-bad quotations certified PASS",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; H11a, also reported on all 20; half A was the tuning half and no limit moved, so legal@0.2.0 is the same rule on both"
+    },
+    {
+      "claim": "legal@0.2.0, both halves: genuine quotations FAILed (false FAIL)",
+      "n": 20,
+      "k": 7,
+      "rate": 0.35,
+      "ci95": [
+        0.181191,
+        0.567146
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; six of the seven are OCR artifacts in the public texts; one is a bracket the quoting opinion used to change a state's name"
+    },
+    {
+      "claim": "legal@0.2.0, both halves: genuine quotations PASS",
+      "n": 20,
+      "k": 7,
+      "rate": 0.35,
+      "ci95": [
+        0.181191,
+        0.567146
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.1.0, both halves: known-bad quotations certified PASS",
+      "n": 20,
+      "k": 2,
+      "rate": 0.1,
+      "ci95": [
+        0.027866,
+        0.301034
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.0.1, both halves: known-bad quotations certified PASS",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.0.1, both halves: genuine quotations FAILed (false FAIL)",
+      "n": 20,
+      "k": 10,
+      "rate": 0.5,
+      "ci95": [
+        0.299298,
+        0.700702
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.2.0, half B, audited view: genuine quotations PASS, label errors set apart",
+      "n": 6,
+      "k": 5,
+      "rate": 0.833333,
+      "ci95": [
+        0.436497,
+        0.969947
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; post-hoc: the label-error classes come from the run author's audit (an AI agent); shown beside the blind number, never in its place"
+    },
+    {
+      "claim": "legal@0.2.0, half B, audited view: genuine quotations FAILed, label errors set apart",
+      "n": 6,
+      "k": 1,
+      "rate": 0.166667,
+      "ci95": [
+        0.030053,
+        0.563503
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; post-hoc, as above; the one FAIL is an OCR artifact in the source (L2-09)"
+    },
+    {
+      "claim": "sources that bind to their cite without the header line (legal@0.2.0)",
+      "n": 40,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.087622
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; PREREG section 7, descriptive: all 40 name their parties; none prints its own reporter citation, so a public opinion text abstains unless the caller supplies the caption and cite line"
+    }
+  ],
+  "misses": [
+    {
+      "id": "L2-03",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-03: a genuine-quotation item whose label is wrong: the quotation is from a federal appeals opinion in 454 F. 2d (a short form \"454 F. 2d, at 584\" the citation filter missed), and the next U.S. cite was the quoting case's own certiorari grant, so the source is the wrong opinion. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-05",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-05: a genuine-quotation item whose label is wrong: the cite taken is the quoting case's own certiorari grant (405 U.S. 974): the source is an order, not the quoted opinion. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-07",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-07: a genuine-quotation item whose label is wrong: the cite taken names the case the quotation is about (\"upheld in Vuitch\", 402 U.S. 62), not the quotation's source. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-21",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-21: a genuine-quotation item whose label is wrong: the quotation is a statute (28 U.S.C. § 2241(a)); the statute citation was not filtered, so the source is the wrong text. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-27",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-27: a genuine-quotation item whose label is wrong: the cite taken is an order setting argument (409 U.S. 974), not the quoted opinion. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "citation-filter",
+      "kind": "harness defect",
+      "description": "the build harness's \"next citation\" filter let order cites, a statute and a cite inside the quoted subject through; it caused all five label errors. A next set should take only a citation that directly follows the closing mark and exclude orders and memorandum decisions",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-01",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-01 (half A): FAIL on a genuine quotation under every rule: the quoting opinion's OCR reads \"[c'jitizens\" for \"[c]itizens\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-17",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-17 (half A): FAIL on a genuine quotation under every rule: the quoting opinion's OCR reads \"the-first\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-31",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-31 (half A): FAIL on a genuine quotation under every rule: the source's OCR reads \"largé\" (and \"hot intended\")",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-33",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-33 (half A): FAIL on a genuine quotation under every rule: the source's OCR reads \"éffecting\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-35",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-35 (half A): FAIL on a genuine quotation under every rule: the quoting opinion's OCR reads \"[djoubtful\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-09",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-09 (half B): FAIL on a genuine quotation under every rule: the source's OCR reads \"assur-anee\" for \"assurance\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-15",
+      "kind": "abstain (meaning-guard false positive)",
+      "description": "L2-15 (half A): legal@0.2.0 abstains on a genuine quotation because its meaning guard reads \"provided\" in the omitted text (\"concepts ... that have provided the basis\") as a condition; there it is a verb (legal@0.0.1 FAILs it; legal@0.1.0 passes it)",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-19",
+      "kind": "false-fail (disclosed substantive bracket)",
+      "description": "L2-19 (half A): the quoting opinion substitutes \"[Kentucky]\" for \"North Carolina\" and \"[Alabama]\" for \"California\", disclosed by brackets; legal@0.2.0 FAILs a bracket that replaces a word with a different word, by design (legal@0.0.1 FAILs it too; legal@0.1.0 passes it)",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-37",
+      "kind": "false-fail (quotation convention, legal@0.0.1 only)",
+      "description": "L2-37 (half B): legal@0.0.1 FAILs a genuine quotation with an ellipsis and inner single quotation marks",
+      "post_hoc": false,
+      "fixed_by": "legal@0.1.0 and legal@0.2.0 read it (rules that predate this set)",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-39",
+      "kind": "false-fail (text artifact, legal@0.0.1 only)",
+      "description": "L2-39 (half B): legal@0.0.1 FAILs a genuine quotation whose source prints \"duties ;\" with a space before the semicolon",
+      "post_hoc": false,
+      "fixed_by": "legal@0.1.0 and legal@0.2.0 read it (rules that predate this set)",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-08",
+      "kind": "false-pass (legal@0.1.0 bracket hole)",
+      "description": "L2-08 (half B): legal@0.1.0 PASSes a bracket-changed known-bad: \"[reasonable]\" accepted for \"purposes\" (legal@0.2.0 FAILs it)",
+      "post_hoc": false,
+      "fixed_by": "legal@0.2.0 (its meaning guard predates this set)",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-40",
+      "kind": "false-pass (legal@0.1.0 bracket hole)",
+      "description": "L2-40 (half B): legal@0.1.0 PASSes a bracket-changed known-bad: \"[reasonable]\" accepted for \"attention\" (legal@0.2.0 FAILs it)",
+      "post_hoc": false,
+      "fixed_by": "legal@0.2.0 (its meaning guard predates this set)",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "H11c-no-candidate",
+      "kind": "hypothesis not met",
+      "description": "H11c: tuning three limits on half A moved none (half-A loss J was 9 at every point the searches evaluated), so the preregistered tuned candidate did not exist; by the prereg, H11c does not beat. (The legal@0.3.0 shipped later is a different change, not tuned on this set.)",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "generator-scope",
+      "kind": "scope",
+      "description": "the known-bad operators (altered, elided, fabricated, bracket-changed) produce neither a later opinion's text that cites the case nor a condition cut off at the start or end of a quotation; an outside reviewer's 26-citation brief found eight such quotations legal@0.2.0 passed (three wrong-opinion, five edge or untriggered conditions), so this set's 0 of 20 known-bad passes measures its generator, not those kinds",
+      "post_hoc": true,
+      "fixed_by": "legal@0.3.0 (caption binding and edge-cut condition guards)",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "unheaded-binding",
+      "kind": "data-limit",
+      "description": "0 of the 40 public opinion texts print their own reporter citation; without the header line the harness added, every item abstains under strict binding (results/binding-unheaded.json)",
+      "post_hoc": true,
+      "date": "2026-10-05"
+    }
+  ],
+  "blind": true,
+  "label": "blind",
+  "audit": "the run's author, an AI agent (Claude Opus 5.5 (claude-opus-5-5)), classed every genuine quotation that did not PASS and every known-bad that PASSed, under every rule, against the texts (prereg section 6); no person labelled"
+}

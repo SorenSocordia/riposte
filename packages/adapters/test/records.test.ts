@@ -39,7 +39,7 @@ describe('the policy declares records', () => {
 })
 
 describe('checkAction holds the mix-and-match', () => {
-  it('at gate: the mix-and-match is held (FAIL), the correct tuple goes to review, a partial tuple is held (ABSTAIN)', () => {
+  it('at gate: the mix-and-match is held (FAIL), the correct tuple goes to review, a partial tuple is held (INSUFFICIENT_DATA)', () => {
     expect([check('gate', MIXED).disposition, check('gate', MIXED).verdict.outcome]).toEqual(['hold', 'FAIL'])
     expect([check('gate', INVOICE_B).disposition, check('gate', INVOICE_B).verdict.outcome]).toEqual(['review', 'PASS'])
     expect([check('gate', { amount: 500 }).disposition, check('gate', { amount: 500 }).verdict.outcome]).toEqual(['hold', 'INSUFFICIENT_DATA'])

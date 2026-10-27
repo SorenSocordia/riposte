@@ -11,7 +11,8 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { verify } from '../src/index'
+import { verify, INVOICE_RULESET } from '../src/index'
+import type { Ruleset } from '../src/rulesets/types'
 import { cordSampleToCases, cordToExtraction, type CordSampleFile } from '../src/bench/adapters/cord'
 
 const NOW = () => new Date('2026-09-22T00:00:00Z')
@@ -61,10 +62,31 @@ describe('the verifier on real CORD receipts', () => {
   })
 
   it('the footing check (Σ line prices = subtotal) holds on every sampled real receipt', () => {
+    // 2026-10-05: this fact is the lenient reading's, so it is pinned to engine 0.5.0. Under engine 0.6.0 the
+    // built-in rulesets read strictly (src/rulesets/strict.ts; red-team F14), and "75,000" with nothing in the receipt to settle
+    // its format is unreadable, not 75000: see the next test.
     for (const c of cases) {
-      const v = verify(c.extraction, { now: NOW })
+      const v = verify(c.extraction, { now: NOW, engine: '0.5.0' })
       const sum = v.claims.find(x => x.claim_id === 'document.SUM_INT')
       expect(sum?.outcome, `${c.name} SUM_INT`).toBe('PASS')
+    }
+  })
+
+  it('engine 0.6.0 reads strictly: an unsettled "58,000" and a garbled "40,000." abstain, naming why; "number_locale": "en" settles the format, never the garble', () => {
+    // The built-in ruleset with the engine handed to compute(), as verify() does from engine 0.6.0 (test/builtin-strict-v060.test.ts).
+    // Measured on the five sample receipts, 2026-10-05: cord-0 carries a line amount "40,000." (a trailing period); cord-1 to cord-4
+    // write every amount as "58,000" or "43.636", one separator and three digits, with nothing in the receipt to settle which.
+    const strict: Ruleset = { ...INVOICE_RULESET, compute: (input) => INVOICE_RULESET.compute({ ...input, engine: '0.6.0' }) }
+    const sumOf = (x: Json) => verify(x, { now: NOW, ruleset: strict }).claims.find(c => c.claim_id === 'document.SUM_INT')!
+    for (const c of cases) {
+      const s = sumOf(c.extraction)
+      expect(s.outcome, c.name).toBe('INSUFFICIENT_DATA')
+      expect(s.insufficiency!.reason, c.name).toBe('UNPARSEABLE')
+      expect(s.insufficiency!.detail, c.name).toContain(c.name === 'cord-0' ? '"40,000.", which does not read as one number (it holds characters that are not part of a number)'
+        : 'nothing in the document settles its number format (declare "number_locale": "en" or "de", or send JSON numbers)')
+      const declared = verify({ ...c.extraction, number_locale: 'en' }, { now: NOW, ruleset: strict })
+      expect(declared.claims.find(x => x.claim_id === 'document.SUM_INT')?.outcome, `${c.name} SUM_INT, number_locale en`).toBe(c.name === 'cord-0' ? 'INSUFFICIENT_DATA' : 'PASS')
+      expect(declared.claims.find(x => x.claim_id === 'document.TOTAL_INT')?.outcome, `${c.name} TOTAL_INT, number_locale en`).not.toBe('FAIL')
     }
   })
 

@@ -1,5 +1,5 @@
 /**
- * A person's decisions as signed ledger events (wave 2, ledger lane, 2026-09-28). The design ruling is the spec:
+ * A person's decisions as signed ledger events (2026-09-28). The design ruling is the spec:
  *   - ONLY A PERSON MOVES A RUNG, BOTH WAYS. The rung is read from the book of record (the GRANT in force), never a flag;
  *     nothing an agent can do (record, review, assess, forge, tamper, pass a flag) moves it. Property-tested.
  *   - GRANT (rung, policy version hash, tier, bounds, who, when), DECLINE (a "keep it" that is not re-raised until the
@@ -472,7 +472,7 @@ describe('PROPERTY (the design ruling, on the book of record): only a person mov
         expect(a.handling).toEqual(ACTION_HANDLING[expected])
         if (!moved) expect(a.level).toBe(prev)                                    // nothing but a person's grant moved it
         if (a.proposal?.kind === 'PROMOTION_PROPOSAL') { tally.promote++; expect(levelRank(a.proposal.to)).toBe(levelRank(expected) + 1) }
-        // E4 (security fix): `urgent` was true on every demotion; it is now exactly basis === 'failure'.
+        // Security fix (2026-09-28): `urgent` was true on every demotion; it is now exactly basis === 'failure'.
         if (a.proposal?.kind === 'DEMOTION_PROPOSAL') { tally.demote++; expect(levelRank(a.proposal.to)).toBe(levelRank(expected) - 1); expect(a.proposal.urgent).toBe(a.proposal.basis === 'failure') }
         if (a.book!.declined) tally.suppressed++
         prev = a.level

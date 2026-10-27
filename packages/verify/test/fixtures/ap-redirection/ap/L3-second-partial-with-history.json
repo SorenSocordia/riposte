@@ -1,0 +1,84 @@
+{
+  "schema": "riposte.ap-input/0.1.0",
+  "bill": {
+    "invoice_number": "SES-20533",
+    "vendor": {
+      "name": "Summit Electrical Supply",
+      "id": "V-1022"
+    },
+    "purchase_order_number": "PO-7740",
+    "currency": "USD",
+    "line_items": [
+      {
+        "purchase_order_line_item_id": "pol-1",
+        "quantity": 20,
+        "unit_price": "289.00",
+        "amount": "5780.00"
+      }
+    ],
+    "tax": "476.85",
+    "amount": "6256.85"
+  },
+  "purchase_order": {
+    "id": "po-7740",
+    "purchase_order_number": "PO-7740",
+    "vendor": {
+      "name": "Summit Electrical Supply",
+      "id": "V-1022"
+    },
+    "currency": "USD",
+    "freight_allowed": false,
+    "tax_rate": 0.0825,
+    "line_items": [
+      {
+        "id": "pol-1",
+        "description": "MC cable 12/2 250ft roll",
+        "quantity": 40,
+        "unit_price": "289.00",
+        "invoiced_quantity_to_date": 20
+      },
+      {
+        "id": "pol-2",
+        "description": "EMT conduit 3/4 in 10 ft",
+        "quantity": 500,
+        "unit_price": "6.85"
+      },
+      {
+        "id": "pol-3",
+        "description": "400A panelboard",
+        "quantity": 2,
+        "unit_price": "4850.00"
+      }
+    ]
+  },
+  "item_receipts": [
+    {
+      "id": "rcv-1",
+      "purchase_order_id": "po-7740",
+      "received_at": "2026-09-20",
+      "line_items": [
+        {
+          "purchase_order_line_item_id": "pol-1",
+          "quantity": 40
+        },
+        {
+          "purchase_order_line_item_id": "pol-2",
+          "quantity": 500
+        },
+        {
+          "purchase_order_line_item_id": "pol-3",
+          "quantity": 2
+        }
+      ]
+    }
+  ],
+  "payment_history": [
+    {
+      "invoice_number": "SES-20417",
+      "vendor": "Summit Electrical Supply",
+      "purchase_order_number": "PO-7740",
+      "amount": "6256.85",
+      "paid_at": "2026-09-25"
+    }
+  ]
+}

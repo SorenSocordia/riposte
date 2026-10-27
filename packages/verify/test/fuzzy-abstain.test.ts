@@ -1,6 +1,6 @@
 /**
  * Honesty rule 3: a DETERMINISTIC verdict is never issued on a field that was only GUESSED by fuzzy name-matching.
- * This is the binding-layer half of pre-registered claim W1 — a wrong-but-plausible field is exactly how a
+ * This is the binding-layer half of the pre-registered claim (zero hallucinated verdicts) — a wrong-but-plausible field is exactly how a
  * confident lie gets into a verdict.
  */
 import { describe, it, expect } from 'vitest'

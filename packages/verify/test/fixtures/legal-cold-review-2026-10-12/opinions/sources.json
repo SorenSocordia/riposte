@@ -1,0 +1,7 @@
+{
+  "550 U.S. 544": { "file": "twombly-westlaw.txt", "source": "judge's mock of a Westlaw PDF via pdftotext, typed from memory", "retrieved_at": "2026-10-12" },
+  "477 U.S. 317": { "file": "celotex-lexis.txt", "source": "judge's mock of a Lexis download, typed from memory", "retrieved_at": "2026-10-12" },
+  "539 U.S. 444": { "file": "bazzle.txt", "source": "judge's mock, public-archive layout, typed from memory", "retrieved_at": "2026-10-12" },
+  "589 U.S. 8": { "file": "rotkiske.txt", "source": "judge's mock, public-archive layout, typed from memory", "retrieved_at": "2026-10-12" },
+  "509 U.S. 579": { "file": "daubert.txt", "source": "judge's mock, public-archive layout, typed from memory", "retrieved_at": "2026-10-12" }
+}

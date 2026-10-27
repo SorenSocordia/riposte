@@ -1,6 +1,6 @@
 /**
- * Verifiable random selection — which verdicts a person must review, drawn from the book itself (2026-09-28,
- * evidence-integrity lane).
+ * Verifiable random selection — which verdicts a person must review, drawn from the book itself
+ * (2026-09-28).
  *
  * The problem it answers (AS 2315 .39: "Sample items should be selected in such a way that the sample can be expected to be
  * representative of the population … all items in the population should have an opportunity to be selected"): an overturn

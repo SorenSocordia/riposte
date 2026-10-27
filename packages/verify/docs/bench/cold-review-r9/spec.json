@@ -1,0 +1,374 @@
+{
+  "spec": "bench-spec/1",
+  "id": "cold-review-r9",
+  "title": "Cold review, round 9: defects found by four cold readers (AI agents that had not worked on this tree)",
+  "adapter": "transcribed",
+  "label": "transcribed",
+  "blind": false,
+  "run": {
+    "id": "review round 9: four reports written on 2026-10-14; rows written on 2026-10-19 from the reports",
+    "date": "2026-10-14"
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "r9-01",
+      "kind": "docs-defect",
+      "description": "J1 (controller), J2 (platform engineer), J3 (legal operations), J4 (methods reviewer): README.md:65, :73 and :74 and packages/receipts/PILOT.md:20 still read [ENTITY], [PRICE] and [SUPPORT-TERMS], and README.md:76-77 offers the code as is; no purchase order, vendor intake, engagement letter or pilot on a firm's own data can proceed, and the row is open from every round since r2 (packages/verify/docs/MISSES.md:231)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-02",
+      "kind": "method",
+      "description": "J1 (controller), J2 (platform engineer), J4 (methods reviewer): no signed, tagged release, no public CI and no install without IT: README.md:50-56 asks for git, Node 20 and a source build, .github/workflows/ holds examples only and docs/doors/engineers.md:114 says the CI history is not public, and nothing anchors the record outside the authors' hands (packages/verify/docs/MISSES.md:9-10); rows r4-02 and r6-02 are still open",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-03",
+      "kind": "method",
+      "description": "J2 (platform engineer), J3 (legal operations): README.md:59-61 says engine 0.7.1 \"is an open label, so a verdict issued under it can still change on a later 0.7.1 build\"; a verdict was expected to bind a build identity (a commit or a dist hash), not a version label that can mean two builds",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-04",
+      "kind": "engine",
+      "description": "J1 (controller): an announced change of payment details with no instruction verb was approved, exit 0: \"Our controller will send the payment instructions separately; please wait for her email.\" (v04) and \"Please do not use the account on file; we will call you with the replacement.\" (v05)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / ruleset ap-threeway@0.3.0, the default from engine 0.7.2, sends a sentence that names an account, bank, lockbox, routing or remittance detail as closed, changed, new, updated or replaced, or that promises to call, send or confirm payment instructions, to the controller, and an approve says \"none was found\" only when no sentence names payment at all; packages/verify/CHANGELOG.md, 0.7.2: \"Ruleset ap-threeway@0.3.0, the default for a new emailed-bill verdict from engine 0.7.2\""
+    },
+    {
+      "id": "r9-05",
+      "kind": "engine",
+      "description": "J1 (controller): first-stage wire-fraud sentences were approved, exit 0: \"transitioning to a different financial partner ... please reply to this email so our controller can confirm the current wiring information\" (t02), \"Please reply to confirm the current wiring information before releasing payment.\" (v01) and \"We are moving to a new financial partner this week.\" (v02), while docs/doors/accounts-payable.md:62 says every sentence is read for an instruction about where payment goes and the misses ledger had no row on a remittance miss",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-06",
+      "kind": "engine",
+      "description": "J1 (controller): a pay application whose stated retainage is cut from 10% to 5% across the board, with no explanation, PASSes 44 of 44, exit 0, against last month's at 10%, halving retainage from 27,482.50 to 13,741.25; the engine noticed (\"the previous application stated 10%\") and passed it, and the rate change sits on the two documents the check already compares",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-07",
+      "kind": "message-defect",
+      "description": "J1 (controller): the retainage sentence on that application does not state the rate applied (\"the retainage rate applied to the total completed and stored\"), where the control says \"is 10%\", so the reader divided to find 5%; docs/doors/accounts-payable.md:45-46 says it always says how the retainage was read (packages/verify/src/rulesets/pay-app/index.ts:327)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-08",
+      "kind": "engine",
+      "description": "J1 (controller): a \"Subtotal: USD 6,818.00\" line sends a clean bill to a person (\"is not a line item, the total, freight, or a known stray\"), while nearly every supply-house invoice prints a subtotal; packages/verify/docs/AP-INPUT.md:240-244 describes the rule without warning that \"Subtotal:\" trips it",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / ruleset ap-threeway@0.3.0 reads four supply-house habits: a pole count (\"1P\"), a subtotal line that is the lines' sum, a distributor's invoice number after the word \"invoice\", and a unit price per thousand or per hundred; packages/verify/CHANGELOG.md, 0.7.2: \"Four supply-house habits that sent a clean bill to a person for a reason of reading\""
+    },
+    {
+      "id": "r9-09",
+      "kind": "message-defect",
+      "description": "J1 (controller): an approve names the remit-to line but not the address, so a fraudulent Dallas box (t04) and the Houston box on file (t06) print identical approves; the address quoted on the approve was expected, so a clerk can compare it without opening the email (packages/verify/docs/AP-INPUT.md:315-316 promises only the line)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-10",
+      "kind": "engine",
+      "description": "J1 (controller): a silent change of the remit-to PO Box (Houston to Dallas, with no \"new\" wording) is approved, exit 0, as packages/verify/docs/AP-INPUT.md:296-317 documents; the reader wants it flagged",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-11",
+      "kind": "message-defect",
+      "description": "J1 (controller): a domain is printed as an address: \"the domain the purchase order names for Gulf Coast Electrical Supply is ar@gulfcoastelectric.com\", where gulfcoastelectric.com was expected",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-12",
+      "kind": "message-defect",
+      "description": "J1 (controller): a duplicate hold prints \"Grounding: billed GCE-55140, expected GCE-55140\", where \"expected\" has no meaning on a duplicate, and says \"under the same vendor id (V-1022)\" while the bill carried V-2290 (V-1022 is the purchase order's id)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-13",
+      "kind": "message-defect",
+      "description": "J1 (controller): replaying an approve without --history prints \"carried, not checked: read (... --strict refuses them)\", while with the files supplied --strict verified: not one consistent statement",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-14",
+      "kind": "message-defect",
+      "description": "J1 (controller): the pay-app replay's remedy says \"missing-operand history:PREVIOUS_COMPLETED_TO_DATE → G703_PREV\" for a figure that is present and wrong, where the FAIL at issue time said \"does not match last month's completed to date\"",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-15",
+      "kind": "docs-defect",
+      "description": "J1 (controller): docs/doors/accounts-payable.md:33-36 says how to replay an emailed and a structured bill, the pay-application paragraph (:41-46) does not, and the pay-app JSON carries no inputs; the working command was guessed",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-16",
+      "kind": "engine",
+      "description": "J1 (controller): a resubmission with the same vendor, the same PO and the same total under a new number (GCE-55099-R) is cleared by an AP clerk (packages/verify/docs/AP-INPUT.md:190), the exact shape of a duplicate a clerk once cleared, where the controller was expected, as for an exact duplicate",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-17",
+      "kind": "docs-defect",
+      "description": "J1 (controller): docs/doors/accounts-payable.md:16-18 asks for the email followed by purchase-order and goods-receipt blocks pasted from the ERP, and bills arrive as PDF attachments; that PDFs are not read at all is said only by implication (README.md:9-11)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-18",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:6-7 says the product is not a fraud check, while docs/doors/accounts-payable.md:62-75 reads every sentence for payment redirection and grades sender domains; clerks will treat the second as the first",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-19",
+      "kind": "message-defect",
+      "description": "J1 (controller): a wire price 1.9% over the PO is approved with \"all checks passed\" on screen; the variance is only in the JSON (disclosed at docs/doors/accounts-payable.md:59-60)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-20",
+      "kind": "engine",
+      "description": "J1 (controller): a genuine bill sent through a billing platform's domain goes to the controller, a false stop, fairly worded",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-21",
+      "kind": "docs-defect",
+      "description": "J1 (controller): docs/doors/accounts-payable.md:62-75 is two paragraphs of very long sentences, and packages/verify/docs/AP-INPUT.md:296-317 had to be read twice to learn that a changed remit-to box is approved, not flagged",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-22",
+      "kind": "engine",
+      "description": "J2 (platform engineer): a signed, hash-chained ledger entry rewritten as \"decision\":\"EXECUTE\",\"decision\":\"HOLD\" verifies with the pinned key, exit 0, \"OK: 5 entries ... 5 signed\": JSON keeps the last value, so the hash re-derives, while a first-wins reader, a grep or a SIEM sees EXECUTE on a bill the gate held; the replay path refuses repeated keys for exactly this reason, and docs/doors/engineers.md:78 says the chain catches an edit inside the file",
+      "post_hoc": false,
+      "fixed_by": "2026-10-19 / `riposte-ledger verify` reads each line with the engine's strict JSON reader, so a key written twice breaks the chain at that entry (exit 1), naming the line and the JSON path; packages/verify/CHANGELOG.md, 0.7.2 Security (2026-10-19): \"The receipt ledger refuses an entry that reads two ways\""
+    },
+    {
+      "id": "r9-23",
+      "kind": "engine",
+      "description": "J2 (platform engineer): the head record stores the file's byte count, and an edited file 22 bytes longer verified OK without noting the mismatch, while riposte-ledger --help says the record catches a rewrite that left it behind",
+      "post_hoc": false,
+      "fixed_by": "2026-10-19 / verify compares the head record's byte count with the file's length up to the entry the record names; packages/verify/CHANGELOG.md, 0.7.2 Security (2026-10-19): \"The head record's byte count is checked\""
+    },
+    {
+      "id": "r9-24",
+      "kind": "engine",
+      "description": "J2 (platform engineer): the command line has no sign command (docs/doors/engineers.md:69-70), so producing a signed verdict, the thing --trusted-key pins, needs code written against the library, and an unsigned verdict proves computation, not origin",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / `riposte-ledger sign` signs a verdict into the engine's envelope and prints the issuer fingerprint, and `riposte-ledger verify-signature` checks it offline; packages/verify/CHANGELOG.md, 0.7.2: \"signs a verdict, or a replay bundle's verdict, into the\""
+    },
+    {
+      "id": "r9-25",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): README.md:54 says plain npm install works under npm 11.6.2 and fails under npm 10.9.x; a lockfile that installs on the current LTS npm without a peer-dependency override was expected",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-26",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): folder mode replays the legal bundles and refuses the Peppol file because it is a bare verdict (the replay instructions, REPLAYERS.md:66), and why one pack ships two formats had to be worked out",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-27",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): serve --help says \"up to 16 more wait\", while under 20 concurrent requests 2 ran, 14 waited and 4 got an immediate 503",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-28",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): a verdict relabelled to engine 0.0.1 printed \"expected f4beaacd…\" naming remedy_table_hash, which packages/verify/docs/REPLAY.md:15 says applies from engine 0.2.0, and the \"expected\" value is not the id the engine derives (reachable only by forging)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-29",
+      "kind": "method",
+      "description": "J2 (platform engineer), J4 (methods reviewer): npm test exits non-zero on a loaded machine: four receipts tests (among them the 20,000-row ledger in test/ledger-file.test.ts) and four verify HTTP tests (http-check-budget.test.ts twice, http-host-and-content-type.test.ts, http-replay-exit-host-charset.test.ts) hit hard 60 s timeouts and pass when run alone, and the suite ran past 15 minutes; load-tolerant timeouts or a documented note were expected",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-30",
+      "kind": "engine",
+      "description": "J3 (legal operations): five designation styles pass a dissent's words as \"verbatim... Found in the majority opinion\": \"MOLINA, J. (dissenting):\", \"MOLINA, J., dissents and votes to reverse in the following opinion:\", \"Judge MOLINA, dissenting.\", \"Dissenting Opinion by Judge Molina\" and \"MOLINA, Circuit Judge, dissenting from the denial of rehearing en banc:\" (5 of 11 probed); one answer prints \"The sentence before it reads: 'VANTREESE, J. (dissenting):'\" beside its majority label (S10); packages/verify/docs/LEGAL.md:49-50 says such words are never passed as the majority's, and LEGAL.md:87-88 says legal@0.5.3 closed the class, when it closed listed styles",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / legal@0.5.4 reads six more designation styles as ending the majority; the ninth round's probe of twelve styles and twelve lead-ins answers 0 PASS; packages/verify/CHANGELOG.md, Legal rule 0.5.4: \"Six designation styles (2026-10-14).\""
+    },
+    {
+      "id": "r9-31",
+      "kind": "engine",
+      "description": "J3 (legal operations): the lead-in \"Tamberly's brief states that\" passed a party's words as the court's",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / legal@0.5.4 reads \"Tamberly's brief states that\" as opening a party's view, and \"That rule no longer holds.\" as the court speaking again; packages/verify/CHANGELOG.md, Legal rule 0.5.4: \"A headnote-marked sentence, a filing as speaker, the court judging a rule (2026-10-14).\""
+    },
+    {
+      "id": "r9-32",
+      "kind": "engine",
+      "description": "J3 (legal operations): the lead-in \"In Halvey, the Appellate Division held that\" passed another court's holding as the court's (S09), while \"In Bexley, the Fifth Circuit held that\" was caught",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-33",
+      "kind": "engine",
+      "description": "J3 (legal operations): an order whose caption carries only its Westlaw number (2025 WL 1188234) never binds, so all 9 quotations against it answer can't tell, \"the caption of the supplied text does not print the reporter citation\", with a remedy that describes the layout the file already had; the same file with an F. Supp. 3d cite bound at once, and no page says a Westlaw number cannot bind (--bind parties is at packages/verify/docs/LEGAL.md:357-362)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / legal@0.5.4 reads a Westlaw or Lexis database number as a caption's citation line, so the nine quotations against the order cited by its Westlaw number are checked; packages/verify/CHANGELOG.md, Legal rule 0.5.4: \"Database numbers (2026-10-14).\""
+    },
+    {
+      "id": "r9-34",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): the court's own holding, \"That rule no longer holds.\" after \"Arden contends that…\", answered can't tell with the reason \"found as someone else's position, not the court's\" (L05): the safe direction, a false reason",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / legal@0.5.4 reads \"Tamberly's brief states that\" as opening a party's view, and \"That rule no longer holds.\" as the court speaking again; packages/verify/CHANGELOG.md, Legal rule 0.5.4: \"A headnote-marked sentence, a filing as speaker, the court judging a rule (2026-10-14).\""
+    },
+    {
+      "id": "r9-35",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): right answers with wrong reasons: the frame \"Were we writing on a clean slate, we would conclude that\" was reported as an elided negation pointing at an earlier sentence's \"not\" (S08), and a lead-in hold quoted the previous sentence's \"Corvane insists that…\" instead of \"Pellham, by contrast, suggests that\" (S04)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-36",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): a PASS says the text \"does not name their source here\" while the New York-style parenthetical \"(Gorham v Lisle Mills, 31 NY3d 204, 209 [2018])\" follows the quotation directly (S07)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-37",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): words found in a headnote, a syllabus or a dissent carry the reason code SPAN_NOT_FOUND, the code of a possibly fabricated quotation (W05, W06, P03 to P05 against D09); the prose is right, but anyone routing on the JSON code treats \"in the dissent\" like \"may be fabricated\"",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-38",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): README.md:9-11 says the engine reads text itself in two places, one of them \"a document filed in an arbitration case\", and no door covers the arbitration path or says whether it touches a firm's filings",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-39",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): docs/doors/legal.md:67-72 says to supply opinion text files but does not show the cite-to-file map; the sources.json shape was learned from packages/verify/docs/examples/legal-opinions/sources.json and LEGAL-TEXT.md:14",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-40",
+      "kind": "method",
+      "description": "J3 (legal operations): docs/doors/legal.md:90-91 says \"the default changed five times in eight days (legal@0.4.0 to legal@0.5.3)\", so a pilot would test a moving target",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-41",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations), J4 (methods reviewer): both showcase legal bundles are engine-0.0.1 verdicts that today's default rule reads differently (CT04's PASS and KB02's FAIL both become can't tell; the replay instructions, REPLAYERS.md:51-56), KB02 being a FAIL the engine now says it should not have made, and its frozen text calls the case \"a real authority\", which the engine never checks",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-42",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): machine terms (gate_status, PASS-WITH-OPEN, \"remedy (recompute-with)\") leak into an attorney-facing report",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-43",
+      "kind": "method",
+      "description": "J3 (legal operations): the vendor's blind number excludes the whose-words classes by its own statement (packages/verify/docs/LEGAL.md:321-325), and no false-PASS rate measured by lawyers on real downloads covers dissents, concurrences, plurality parts, party positions and lower-court holdings (docs/doors/legal.md:93; LEGAL-TEXT.md:98-99)",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-44",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): packages/verify/docs/BENCH.md:61 says engine \"0.6.0, the label today's build carries, is still open\", while README.md:59, docs/doors/methods.md:48 and the bench check output say 0.7.1; a generated page was expected to agree with the build it describes",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-45",
+      "kind": "method",
+      "description": "J4 (methods reviewer): blind-shipping-1's engine and pilot-tool pins did not match the published tree: PREREG.md:27 pins packages/verify/src/ at a01d117b… (216 files) where the shipped tree gives abdefc87…, and :32 pins packages/receipts/src/ at 172175e7… (64 files) where the shipped tree has 59 files and gives 6790e0bd…; the AP pack, legal and both ruleset pins matched, exit.ts was dated after the hash, section 11 held no amendment, the prereg's own stop rule (section 10) voids a run on a tree that fails its pins, and docs/doors/methods.md:135-136 promised a later source change needs an amendment",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / Amendment 1 re-pinned the engine and the pilot tool to the shipped tree, hashed and stamped before any data; packages/verify/docs/bench/blind-shipping-1/PREREG.md, Amendment 1: \"Amendment 1 (2026-10-14, before any data; the pins of the shipped tree)\""
+    },
+    {
+      "id": "r9-46",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): blind-shipping-1/PREREG.sha256:1 ended \"not yet stamped\" while PREREG.md.tsr sits beside it and verifies at 2026-10-14T01:55:28Z",
+      "post_hoc": false,
+      "fixed_by": "2026-10-14 / the hash list's header names the refill, Amendment 1 and the stamped first filing, and no longer says \"not yet stamped\"; packages/verify/docs/bench/blind-shipping-1/PREREG.sha256, header: \"amendment 1 (2026-10-14) corrects the engine and pilot-tool pins to the shipped tree\""
+    },
+    {
+      "id": "r9-47",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): docs/doors/methods.md:91-94 calls AP run 1 \"blind by the authors' records only\", while bench/ap/PREREG.NOTE.md:21-22 says the header's own time places the freeze about six minutes after run 1, and its table shows the prereg last written 0.5 s before the results; the two do not reconcile",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-48",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): the stress files are named stress-*-holdout1..5.jsonl while docs/doors/methods.md:95-100 and packages/verify/docs/BENCH.md:83-86 say they are not a holdout and were re-banked after changes made with their results in view: the file name is a label that does not mean what it says",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-49",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): docs/doors/methods.md:134 and docs/doors/legal.md:95 say DigiCert signed the prereg \"before any of its data exists\", while its data (two public repositories, Supreme Court briefs on a public docket, a partner's closed month) exists; the honest phrase is \"before any of it is in the maintainers' hands\"",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-50",
+      "kind": "message-defect",
+      "description": "J4 (methods reviewer): a mistyped --input got \"did you mean --inputs?\", a valid flag that hashes a different object, so the replay of a verdict just made failed with input_hash does not match; the documented flag is --extraction (docs/doors/engineers.md:12), and the mismatch message was expected to name the flag the verdict type needs",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-51",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): a first tally of the stress rows read 0 decided because their got is a string while run 1's is an object; no schema note in bench/ap/README.md says so",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-52",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): packages/verify/docs/BENCH.md is 1,365 lines and the outside-the-rule list in bench check's output runs to dozens of entries; that every default legal rule from 0.4.0 to 0.5.3 is post-hoc came from the bench check output, not the README",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-53",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer), J4 (methods reviewer): README.md:81-82 says every defect logged in each round of cold review is in the misses ledger, which cannot be checked: 20 of 22 tables re-tally only, and packages/verify/docs/MISSES.md:8-10 says a row can be removed undetectably",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-54",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): SECURITY.md:8, \"Acknowledged within one business day, by a person\", could not be verified, with no entity behind the clock",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-55",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): packages/verify/docs/bench/blind-shipping-1/PREREG.md:3 says \"Written 2026-10-06, before any document in this run exists in the maintainers' hands\", while PREREG.sha256:1 says the text was refilled on 2026-10-13 and PREREG.sha256:3 that it was hashed at 2026-10-14T01:53:08Z: the stamped text has no one date of record",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-56",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): the docs are dense and repeat themselves: the replay instructions handed out with the review copy (REPLAYERS.md:9-27) pack half a dozen exceptions into their first two paragraphs, which the reader understood by running the tool, not by reading them",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-57",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): the legal pages are dense and long: packages/verify/docs/LEGAL.md runs to 454 lines",
+      "post_hoc": false
+    },
+    {
+      "id": "r9-58",
+      "kind": "method",
+      "description": "J1 (controller): no construction ERP export has been read (docs/doors/accounts-payable.md:13 and :124, packages/receipts/PILOT.md:148), and Sage 300 CRE and Foundation have no field list (accounts-payable.md:126-127); the missing piece the reader names is a shadow pilot on one closed month of its own Viewpoint Vista or Sage 300 CRE export and its sub-tier pay applications",
+      "post_hoc": false
+    }
+  ]
+}

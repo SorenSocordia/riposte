@@ -4,20 +4,20 @@
  * reopened ledger rehydrates to the identical head hash (so `verifyContent()` still passes). For a single-node deployment
  * this IS the system of record; a larger deployment swaps a DB-backed `Ledger` behind the same interface.
  *
- * SCALE (ledger-scale lane, 2026-09-28):
- *   F4b  a reopen STREAMS the file (8 MiB chunks, split on newline bytes) instead of reading it into one string, which
+ * SCALE (2026-09-28):
+ *   -    a reopen STREAMS the file (8 MiB chunks, split on newline bytes) instead of reading it into one string, which
  *        failed past ~645 MiB (≈40k verdicts). The parse is the same as parseChainJSONL's, line for line.
- *   F4a  appends go through ONE held file descriptor (opened on the first append, `writeSync` per event, `close()` or
+ *   -    appends go through ONE held file descriptor (opened on the first append, `writeSync` per event, `close()` or
  *        `using` to release it) instead of opening and closing the file per event. The bytes are identical.
- *   F2   writeChainJSONL / writeChainFile stream a chain export (the same bytes as `chainJSONL()`) without one giant string.
+ *   -    writeChainJSONL / writeChainFile stream a chain export (the same bytes as `chainJSONL()`) without one giant string.
  *
  * DURABILITY POLICY (stated, unchanged by the held fd): an event's line is handed to the operating system before `record()`
  * (or review / decide / commitSample) returns, so a crash of THIS PROCESS never loses a returned event. By default nothing
  * is fsync'ed (as appendFileSync never did): a power loss or an OS crash can lose the last events the OS had not flushed,
  * and can leave the last line torn. `fsync: true` calls fsyncSync after every event, so a returned event is on stable
- * storage (at the cost of one flush per event). Either way a torn last line never bricks the book (R5, below).
+ * storage (at the cost of one flush per event). Either way a torn last line never bricks the book (TORN TAIL, below).
  *
- * R5 (red team, 2026-09-28): a crash mid-append leaves a partial last line. It used to make the WHOLE book unopenable.
+ * TORN TAIL (2026-09-28): a crash mid-append leaves a partial last line. It used to make the WHOLE book unopenable.
  * Now a reopen detects it (the last non-blank line does not parse; a legitimate export whose last line merely lacks its
  * newline is not torn) and opens the book READ-ONLY: every event before the torn line reads and verifies, the torn bytes stay
  * on disk untouched, and any append throws TornTailError, which tells the operator what to do. `repairTornTail(path)` backs
@@ -118,12 +118,12 @@ export class LedgerReadOnly extends Error {
   }
 }
 
-// ── the streamed read (F4b) ──────────────────────────────────────────────────────────────────────────────────────────
+// ── the streamed read ───────────────────────────────────────────────────────────────────────────────────────────────
 
 export interface ChainFile extends ChainSnapshot {
   /** File size in bytes. */
   bytes: number
-  /** Whether the file ends with a newline (a chain export does not: N1). */
+  /** Whether the file ends with a newline (a chain export does not). */
   endsWithNewline: boolean
   /** Present when the last line is torn (only with `allowTornTail`). `events` holds every whole event before it. */
   torn?: TornTail
@@ -158,8 +158,8 @@ interface ScanTail {
 }
 
 /**
- * The streamed scan (F4b), one whole line at a time: `onEntry` gets each event, its payload, and the line's raw bytes (valid
- * only during the call) and byte offset. The torn-tail and corruption rules are R5's (see readChainFile).
+ * The streamed scan, one whole line at a time: `onEntry` gets each event, its payload, and the line's raw bytes (valid
+ * only during the call) and byte offset. The torn-tail and corruption rules are readChainFile's.
  */
 function scanLines(path: string, onEntry: (event: LedgerEvent, payload: unknown, raw: Buffer, offset: number) => void, chunkBytes = 8 * 1024 * 1024): ScanTail {
   let lineNo = 0
@@ -245,7 +245,7 @@ export interface FileLedgerOptions {
 /** A file-backed ledger: the Ledger, plus where it lives, whether it can be written, and its write handle's release. */
 export interface FileLedger extends Ledger {
   readonly path: string
-  /** Set when the book's last line is torn (R5): the book is read-only until repairTornTail(path). */
+  /** Set when the book's last line is torn: the book is read-only until repairTornTail(path). */
   readonly torn: TornTail | undefined
   /** True when opened read-only, or when the book has a torn tail. */
   readonly readOnly: boolean
@@ -256,7 +256,7 @@ export interface FileLedger extends Ledger {
   [Symbol.dispose](): void
 }
 
-/** The write side of a file ledger: one held descriptor, the lazy N1 newline, and the states that refuse a write. */
+/** The write side of a file ledger: one held descriptor, the lazy final newline, and the states that refuse a write. */
 class AppendStore {
   fd: number | undefined
   constructor(
@@ -381,14 +381,14 @@ function FileBackedLedger(): FileLedgerClass {
  *
  * A book whose last line is torn opens READ-ONLY (`torn` says where; any append throws TornTailError); a book with an
  * unparseable line before its last throws LedgerFileCorrupt. Nothing is verified at open: the first content check of the
- * reopened ledger re-hashes every event (F5b never carries across a reopen).
+ * reopened ledger re-hashes every event (a verified prefix never carries across a reopen).
  */
 export function openFileLedger(path: string, opts: FileLedgerOptions = {}): FileLedger {
   if (opts.payloads === 'disk') return openDiskLedger(path, opts)
   const read = existsSync(path) ? scanChainFile(path) : undefined
   const dir = dirname(path)
   if (dir && dir !== '.' && !opts.readOnly) mkdirSync(dir, { recursive: true })
-  // N1 (CLI lane, 2026-09-28): `chainJSONL()` has no final newline. Appending onto such an export would fuse the last event
+  // 2026-09-28: `chainJSONL()` has no final newline. Appending onto such an export would fuse the last event
   // and the first new one onto one line, and the book would stop parsing. The missing newline is written lazily, before the
   // first append, so merely opening a book never changes its bytes.
   const needsNewline = read !== undefined && read.bytes > 0 && !read.endsWithNewline
@@ -400,7 +400,7 @@ export function openFileLedger(path: string, opts: FileLedgerOptions = {}): File
 /**
  * The disk mode's open: the same scan, streamed straight into the ledger (no array of payloads is ever built). Each RECORD's
  * line is located (offset, length, sha256 of its bytes) and its payload dropped once its record is indexed; every other
- * payload is kept. The write side starts where the scan ended, with the same N1 newline and R5 torn-tail state.
+ * payload is kept. The write side starts where the scan ended, with the same final-newline and torn-tail state.
  */
 function openDiskLedger(path: string, opts: FileLedgerOptions): FileLedger {
   const exists = existsSync(path)
@@ -424,7 +424,7 @@ function openDiskLedger(path: string, opts: FileLedgerOptions): FileLedger {
   return ledger
 }
 
-// ── repair (R5) ──────────────────────────────────────────────────────────────────────────────────────────────────────
+// ── repair ──────────────────────────────────────────────────────────────────────────────────────────────────────
 
 export interface RepairReport {
   /** False when there was nothing to repair (the last line is whole). */
@@ -445,7 +445,7 @@ export interface RepairReport {
 }
 
 /**
- * Repair a torn last line (R5): back the book up (`<path>.torn-<time>.bak`, never overwriting), truncate it to the end of
+ * Repair a torn last line: back the book up (`<path>.torn-<time>.bak`, never overwriting), truncate it to the end of
  * its last whole line, and append what was removed (bytes, sha256, base64) to `<path>.repairs.jsonl`. Run it with the book
  * closed. Refuses a book whose unparseable line is not the last (LedgerFileCorrupt: that is corruption, not a crash). A book
  * whose last line is whole is left untouched.
@@ -480,7 +480,7 @@ export function repairTornTail(path: string, opts: { now?: () => Date } = {}): R
   return report
 }
 
-// ── the streamed export (F2) ─────────────────────────────────────────────────────────────────────────────────────────
+// ── the streamed export ──────────────────────────────────────────────────────────────────────────────────────────────
 
 /** A chain to export: a ledger (its snapshot) or a snapshot. */
 export type ChainSource = Pick<Ledger, 'snapshot'> | ChainSnapshot

@@ -1,0 +1,90 @@
+{
+  "format": "bench-run/1",
+  "id": "r4-peppol-posthoc",
+  "prereg": "PREREG.md",
+  "results": "results/results.json",
+  "spec": "spec.json",
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The run scored the e-invoice PDF run's per-document extractions under ruleset 0.2.0 with that run's scorer and engine 0.0.1. The extractions and the 60 rendered PDFs are not in this tree. The harness files its prereg pins ship in x1-einvoice-pdf/."
+  },
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "91e055f30e8286e2fa2d4c7d2e9c71100e9d1d08a106ffef17d2f865ac4f26c0",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "4ae3121ce7ab785976109d677f68278103134fefb9159b8835724de93b7fe85e",
+      "from": "PREREG.sha256",
+      "from_sha256": "6a4eef2c536631cf2a9b9c9d87bf1f11c523eed47b8364946c4450c56767eccc",
+      "note": "a dated time line appended 2026-10-05 (the authors' own record); the hash line above it is unchanged"
+    },
+    {
+      "file": "results/results.json",
+      "sha256": "3be1408c1916ef7acc574a4797c1e2fb3ff2fadc417d4fe03452934084d95ac3",
+      "from": "results.json of the post-hoc re-run, written outside the X1 run folder"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "1c33a99d6442daaccafb28265c42aff1ffb2c2bb3289fb727775e8728a2c98ff",
+      "from": "the run spec written when the tables were first emitted",
+      "from_sha256": "c5b177445981b4e55c6adc72546af4619ae4116764de6d23c487de86584d05ac",
+      "note": "audit statement added from the run's files; on 2026-10-06 the first row's bar is marked as reused from the e-invoice PDF run's prereg, so the row reads post-hoc and has no verdict of its own; the counts and every other field are unchanged"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "d64d836e65992b3d1d4ea80df3392278d5600ace1e00df9bf0b0fe4553e59465",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "5eb9d08d9908a60abe6e2b7dde7d1106e741493598e0bad6beced2fcaab20a61",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ],
+  "not_shipped": [
+    {
+      "file": "corpus/manifest.json",
+      "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+      "reason": "the e-invoice corpus manifest, pinned in PREREG.md section 2 (this run reuses that prereg). It does not ship: the e-invoice PDF run's folder, x1-einvoice-pdf/, lists the same file with the reason"
+    },
+    {
+      "file": "corpus/render-receipt.json",
+      "sha256": "1fefac4cccb98873ccbf8cfd745fa5fe5171d552cda7dc39ba036f3dff632a71",
+      "reason": "the render receipt, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/corpus/render-receipt.json"
+    },
+    {
+      "file": "lib/extract.mjs",
+      "sha256": "470fb72882fd280d378bc75a05742b5bdb25dcda8a72fb07c3b8636e3a11576b",
+      "reason": "the blind extractor, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/lib/extract.mjs"
+    },
+    {
+      "file": "rulesets/x1-supplement.ruleset.json",
+      "sha256": "af4956020143fdc92fd3f26ee1ce8c60ebb72a506f6fb7e3cbe69f1ea8a6c607",
+      "reason": "the supplement ruleset, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/rulesets/x1-supplement.ruleset.json"
+    },
+    {
+      "file": "run.mjs",
+      "sha256": "82e533959b23462caae11f52d30a1308f3c09f9bb806c98cde5eace0c9cc885c",
+      "reason": "the e-invoice run's harness, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/run.mjs"
+    },
+    {
+      "file": "score.mjs",
+      "sha256": "103df3794cffabc204e089686990d2b6f36050a1a3ac0d08bab9e1a0c2149264",
+      "reason": "the e-invoice run's scorer, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/score.mjs"
+    },
+    {
+      "file": "dist/cli.js",
+      "sha256": "60d9d0f737cd33305c85447441c87d153aedb6c2c22cef96761a773482d8c522",
+      "reason": "the engine build the e-invoice run called (engine 0.0.1), pinned in PREREG.md section 2. A build output does not ship, and the source in this tree has changed since, so a build made now will not have this sha256"
+    }
+  ]
+}

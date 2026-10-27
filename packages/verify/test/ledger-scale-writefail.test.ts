@@ -1,5 +1,5 @@
 /**
- * R5 from inside the process: a write that fails PART-WAY through a line (a full disk mid-append) leaves a torn tail on
+ * The torn-tail rules from inside the process: a write that fails PART-WAY through a line (a full disk mid-append) leaves a torn tail on
  * disk. The file ledger must see it as one: the event never joins the in-memory book, every later append is refused with
  * TornTailError (appending after a torn line would bury it in the middle, which is corruption), and a reopen finds the torn
  * tail and opens read-only until repairTornTail. `node:fs` is wrapped so one chosen write stops half-way (two shapes, below).

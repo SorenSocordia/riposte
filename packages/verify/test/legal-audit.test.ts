@@ -3,7 +3,12 @@
  * to make a tamper-evident, independently-verifiable signed artifact a filer can attach.
  */
 import { describe, it, expect } from 'vitest'
-import { verifyCitations, renderCitationAudit, generateSigningKeypair, signVerdict, verifyEnvelope, type Citation, type OpinionSources } from '../src/index'
+import { verifyCitations as verifyCitationsAt, renderCitationAudit, generateSigningKeypair, signVerdict, verifyEnvelope, type Citation, type OpinionSources, type VerifyCitationsOptions } from '../src/index'
+
+/** 2026-10-05: this file documents the rules as engines 0.0.1 to 0.5.0 read them, so it names engine 0.5.0. Engine 0.6.0
+ *  binds each opinion text to its cite and words its answers by the supplied text: test/legal-060.test.ts. */
+const LEGACY_ENGINE = '0.5.0'
+const verifyCitations = (c: Citation[], s: OpinionSources, o: VerifyCitationsOptions = {}) => verifyCitationsAt(c, s, { engine: LEGACY_ENGINE, ...o })
 
 const NOW = () => new Date('2026-09-22T00:00:00Z')
 const sources: OpinionSources = {

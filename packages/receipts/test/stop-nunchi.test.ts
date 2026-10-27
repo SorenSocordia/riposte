@@ -16,12 +16,16 @@ import { fileURLToPath } from 'node:url'
 // plain JS, shared with the pre-change capture script (tests are not part of the tsc project)
 import { FILES, INPUTS, OPTIONS, ENVS, readFixture } from './fixtures/stop-hook-cases.mjs'
 import {
-  AUDIENCES, DEFAULT_TIERS, NUNCHI_UNSET_TIER, SOFTENERS, STOP_SEND_BACK, factTokens, hookOptionsFromEnv, stopHook, stopReceipt,
+  AUDIENCES, DEFAULT_TIERS, NUNCHI_UNSET_TIER, SOFTENERS, STOP_SEND_BACK, factTokens, hookOptionsFromEnv, stopHook, stopReceipt, readCheckOutcome,
   type Audience, type DeliveryFacts, type HookDecision, type StopHookOptions,
 } from '../src/index.js'
 
 interface BinCase { status: number; stdout: string; stderr: string; bodies: Record<string, unknown>[] }
-const golden = JSON.parse(readFileSync(fileURLToPath(new URL('./fixtures/stop-hook-default-golden.json', import.meta.url)), 'utf8')) as {
+// The golden stays as captured. One word moved on purpose since (2026-10-06): can't tell was written "outcome": "ABSTAIN" and is
+// now "outcome": "INSUFFICIENT_DATA", the verdict's own word. The golden is read through that one rename (readCheckOutcome, the
+// same reader an old receipt goes through); every other byte must still match.
+const goldenText = readFileSync(fileURLToPath(new URL('./fixtures/stop-hook-default-golden.json', import.meta.url)), 'utf8')
+const golden = JSON.parse(goldenText, (k, v) => (k === 'outcome' ? readCheckOutcome(v) ?? v : v)) as {
   stopHook: Record<string, HookDecision>; hookOptionsFromEnv: Record<string, unknown>; bin: Record<string, BinCase>
 }
 const inputs = INPUTS as Record<string, string>
@@ -31,6 +35,14 @@ const read = readFixture as (p: string) => string
 const plain = <T>(x: T): T => JSON.parse(JSON.stringify(x)) as T
 
 describe('the default is byte-identical to the pre-change hook', () => {
+  it('apart from the one retired word: the golden says ABSTAIN where the hook now writes INSUFFICIENT_DATA', () => {
+    expect(goldenText.match(/"outcome": "ABSTAIN"/g)).toHaveLength(21)
+    const unbacked = Object.keys(golden.stopHook).find((k) => golden.stopHook[k]!.result?.outcome === 'INSUFFICIENT_DATA')!
+    const [i, o] = unbacked.split('|') as [string, string]
+    const now = stopHook(inputs[i]!, read, options[o]!)
+    expect(now.result?.outcome).toBe('INSUFFICIENT_DATA')
+    expect(JSON.stringify(now)).not.toContain('ABSTAIN')
+  })
   it('stopHook: every input × option set (code, stderr, result, wouldBlock, skipped)', () => {
     const keys = Object.keys(golden.stopHook)
     expect(keys).toHaveLength(Object.keys(inputs).length * Object.keys(options).length)
@@ -47,6 +59,9 @@ describe('the default is byte-identical to the pre-change hook', () => {
     const dir = mkdtempSync(join(tmpdir(), 'riposte-stop-golden-'))
     const fwd = (s: string) => s.split('\\').join('/')
     const scrub = (s: string) => s.split(fwd(dir)).join('<DIR>').split(dir).join('<DIR>')
+    // The ENOENT text names the file as the platform writes paths: '<DIR>\missing.jsonl' where the golden was captured
+    // (Windows), '<DIR>/missing.jsonl' on Linux. Both sides are compared with forward slashes inside a scrubbed path.
+    const seps = (s: string) => s.replace(/<DIR>((?:[\\/][^\s'"\\/]+)+)/g, (_m, p: string) => `<DIR>${p.split('\\').join('/')}`)
     try {
       for (const [name, text] of Object.entries(FILES as Record<string, string>)) writeFileSync(join(dir, name), text)
       let bodies = 0
@@ -59,7 +74,7 @@ describe('the default is byte-identical to the pre-change hook', () => {
         const d = stopHook(stdin, (p) => readFileSync(p, 'utf8'), env.opts)
         const problems = env.problems.map((p) => `riposte-claims: ${p}\n`).join('')
         expect(d.code, k).toBe(g.status)
-        expect(scrub(problems + d.stderr), k).toBe(g.stderr)
+        expect(seps(scrub(problems + d.stderr)), k).toBe(seps(g.stderr))
         const written = d.result?.claims.length ? [JSON.parse(scrub(JSON.stringify(stopReceipt(d, env.mode, env.opts.strict === true))))] : []
         expect(written, k).toEqual(g.bodies)
         bodies += written.length

@@ -1,0 +1,15 @@
+# H11 prereg hashed before the set was built and before any engine call (T2-C, tank r2)
+27cbb26aa8e5ca9e85b01a6deb5d353cc2ff91e5c1e228aa2c2ae92565cba7aa *PREREG.md
+# body (above the footer line): bfaf202aab0f5b5155c5d8b994c9637dfa4a71941f06beb875ae465812c1259e
+hashed 2026-10-05T14:00:36Z
+# second block: the built set and the harness, hashed 2026-10-05T14:26:01Z, before the first engine call
+27cbb26aa8e5ca9e85b01a6deb5d353cc2ff91e5c1e228aa2c2ae92565cba7aa *PREREG.md
+92fa5cfbed24bfc936b722fbc32622142c01e79105d29295b0fcd0d2a91fc4e7 *PREREG-CLARIFICATIONS.md
+d8550982fb54ca697e5a441e9e631d3e5d00158298eb57e99f65960a8c6e6499 *items/MANIFEST.json
+b3de36d5011d71f91f685821f8a440f6a909b507cf22a3ba370c0db3d38f0196 *items/EXCLUDED.json
+bcdad000334617aa84632923c189b82f8885bd909463ab7c601311f3e360e0ab *harness/build.mjs
+9078818b096bfee73b9d3948c8556d2b63c974f3ea1b4d7d7e1c945b375b8817 *harness/run.ts
+35137247097483ca6da2c67de178e8a79cf74ac1ef7bd42e790546c02a843f36 *src/legal/index.ts
+9f5ffee86ab252c380d4111b23e142fd077d3c2919f97249c15532e90e4225e7 *src/legal/quotation.ts
+02816bb723291150d5fdff4ed105d6cd26717a987a6faf3e293602e25b72cc3d *src/legal/binding.ts
+9ad7ccf53c401d3c01129a3891fe34e6d506d7d5747dee0987d3133a3309ae5b *src/version.ts

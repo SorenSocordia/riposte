@@ -1,0 +1,5 @@
+# Re-issued 2026-10-05 beside PREREG.sha256, which is left exactly as it was written. That list names these two files by
+# their paths in the authors' working folders; this one names them as they sit in this folder. Same hashes, same time.
+c50c51a9b98784167554154564be3f54f9b16d977eadce2a8e7c0ce63c52656a *PREREG.md
+2a09e4f8c9a12af7e0f36b54d50a868ad586bfb66aa7277980011008563fa145 *harness/run.mjs  (not shipped)
+hashed 2026-10-03T16:18:15Z

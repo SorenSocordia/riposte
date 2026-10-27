@@ -1,0 +1,28 @@
+INVOICE
+Invoice number: Snippet1
+Issue date: 2017-11-13
+Due date: 2017-12-01
+Currency: EUR
+Seller: SupplierOfficialName Ltd
+Buyer: Buyer Official Name
+Line items
+# = =Item Qty Unit Price Per Allow. Charge Net VAT
+1 item name 10 XBX 410.00 1 101.00 1.00 4,000.00 S 25%
+2 item name 10 C62 200.00 2 - - 1,000.00 E0%
+3 item name 10 C62 100.00 - 101.00 1.00 900.00 S 25%
+Document allowances and charges
+Charge Cleaning 200.00 S 25%
+Allowance Discount 200.00 S 25%
+VAT breakdown
+Category Rate Taxable amount VAT amount
+S) 25% 4,900.00 1,225.00
+E 0% 1,000.00 0.00
+Sum of line net amounts EUR 5,900.00
+Document allowances EUR 20
+Document charges EU 20 —E
+Total without VAT E ten
+VAT total i °225.0
+VAT total in accounting currency Ss 324.00
+Total with VAT EUR 7,125.00
+Paid amount EUR 1,000.00
+Amount due for payment EUR 6,125.00

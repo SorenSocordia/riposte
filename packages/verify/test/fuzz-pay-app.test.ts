@@ -1,5 +1,5 @@
 /**
- * Seeded generative fuzzing for the pay-app ruleset — W1 (never a hallucinated verdict) under adversarial shapes:
+ * Seeded generative fuzzing for the pay-app ruleset — the pre-registered claim (never a hallucinated verdict) under adversarial shapes:
  * $-strings, EU strings, percent strings, bare fractions, negatives, nulls, junk types, missing columns, alternate
  * vocabularies, a schedule of values that isn't an array, duplicate item numbers, junk history documents.
  *

@@ -1,0 +1,7 @@
+{
+  "988 F.4th 1201": { "file": "marlowe-wl.txt", "source": "fictional Westlaw-shaped mock typed by judge legal-ops r10", "retrieved_at": "2026-10-19" },
+  "2026 WL 774512": { "file": "marlowe-wl.txt", "source": "same fictional mock, keyed by WL number", "retrieved_at": "2026-10-19" },
+  "77 Wm.3d 512": { "file": "pellham-lexis.txt", "source": "fictional Lexis-shaped mock", "retrieved_at": "2026-10-19" },
+  "76 Wm.3d 880": { "file": "fennick-lexis.txt", "source": "fictional Lexis-shaped mock, plurality named only in Judges line", "retrieved_at": "2026-10-19" },
+  "311 Car. 640": { "file": "carrow-wl.txt", "source": "fictional state-court mock, OPINION ANNOUNCING THE JUDGMENT heading", "retrieved_at": "2026-10-19" }
+}

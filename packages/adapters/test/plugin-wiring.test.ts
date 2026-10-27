@@ -1,8 +1,8 @@
 /**
  * The Claude Code plugin's hooks.json (plugins/riposte/hooks/hooks.json) registers the action
- * hook. These tests hold the staged wiring to its promises: the Stop hook is byte-for-byte what it was, the action hook is
- * narrow (MCP tools only), it is OFF unless RIPOSTE_ACTION_HOOK says otherwise (and then the engine never loads), and when
- * on it records only to the plugin's own ledger.
+ * hook. These tests hold the staged wiring to its promises: the Stop hook is byte-for-byte what it was, the action hook
+ * sees every tool (matcher ".*" since 2026-10-04; it was "mcp__.*"), it is OFF unless RIPOSTE_ACTION_HOOK
+ * says otherwise (and then the engine never loads), and when on it records only to the plugin's own ledger.
  */
 import { describe, expect, it } from 'vitest'
 import { spawnSync } from 'node:child_process'
@@ -37,15 +37,18 @@ describe('the plugin hooks.json', () => {
     expect(raw.startsWith(STOP_BYTES)).toBe(true)
     expect(hooks.hooks.Stop).toHaveLength(1)
   })
-  it('registers the action hook on MCP tools only, pointing at the off-gate, with the plugin ledger named explicitly', () => {
+  // 2026-10-04: the matcher widened from "mcp__.*" to ".*" so governance gates EVERY tool call,
+  // not only MCP tools. ".*" is a regex, like "mcp__.*" was. Do not "fix" it to a literal "*": new RegExp('*') throws, which
+  // crashes check-plugin's smoke and this test. The action policy stays narrow by itself (an undeclared tool is skipped).
+  it('registers the action hook on every tool, pointing at the off-gate, with the plugin ledger named explicitly', () => {
     expect(Object.keys(hooks.hooks).sort()).toEqual(['PreToolUse', 'Stop'])
     const pre = hooks.hooks.PreToolUse!
     expect(pre).toHaveLength(1)
-    expect(pre[0]!.matcher).toBe('mcp__.*')
+    expect(pre[0]!.matcher).toBe('.*')
     expect(pre[0]!.hooks).toEqual([{ type: 'command', command: ACTION_COMMAND, timeout: 15 }])
     const m = new RegExp(pre[0]!.matcher!)
     for (const t of ['mcp__bank__transfer', 'mcp__plugin_riposte_riposte__ap_gate']) expect(m.test(t), t).toBe(true)
-    for (const t of ['Bash', 'Edit', 'Write', 'Read', 'WebFetch', 'Task']) expect(m.test(t), t).toBe(false)
+    for (const t of ['Bash', 'Edit', 'Write', 'Read', 'WebFetch', 'Task']) expect(m.test(t), t).toBe(true)
   })
 })
 
@@ -73,9 +76,11 @@ describe('the registered command, run the way the plugin runs it', () => {
         expect([r.status, r.stdout, r.stderr]).toEqual([0, '', ''])
       }
       expect(existsSync(join(s.data, 'receipts.jsonl'))).toBe(false)
+      // a misspelled mode is not off (2026-10-05): the gate hands over, and with no engine beside it the gate itself
+      // holds the transfer on the safest rung (exit 0, a typed deny)
       const odd = s.run({ RIPOSTE_ACTION_HOOK: 'enforce' })
-      expect([odd.status, odd.stdout]).toEqual([0, ''])
-      expect(odd.stderr).toMatch(/staying off/)
+      expect([odd.status, JSON.parse(odd.stdout).hookSpecificOutput.permissionDecision]).toEqual([0, 'deny'])
+      expect(odd.stderr).toMatch(/governance degraded, policy\.error/)
     } finally { rmSync(s.dir, { recursive: true, force: true }) }
   })
 

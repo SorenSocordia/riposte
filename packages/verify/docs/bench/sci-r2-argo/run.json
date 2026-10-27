@@ -1,0 +1,91 @@
+{
+  "format": "bench-run/1",
+  "id": "sci-r2-argo",
+  "prereg": "PREREG.md",
+  "results": "results",
+  "spec": "spec.json",
+  "amendment_text": [
+    {
+      "sha256": "3e5b40cd4daeb6a903898ea1bc96015a27e8b01c1aee57aff8030d6c13314b79",
+      "from": "PREREG.md:149-172"
+    },
+    {
+      "sha256": "b4a7b76da5ee5bd00ad129f816dbb5e99ac23feba5d33f205f85dcff88340860",
+      "from": "PREREG.md:173-190"
+    },
+    {
+      "sha256": "a18ddc52d356065570ea1450e38ce04d9033aecadf6d4e633e599d5218102123",
+      "from": "PREREG.md:191-193"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The run's scripts are not in this tree, nor the copies of the seawater and gsw Python packages it used. Its inputs are public Argo files from data-argo.ifremer.fr and mixedlayer.ucsd.edu, named in PREREG.md; their sha256s were recorded in a manifest in the run's folder, which does not ship."
+  },
+  "blind_basis": "PREREG.sha256 records the prereg's sha256 at 2026-10-04T03:45:19Z, and the prereg says the data folder was empty when it was written; the manifest of the downloads, with their times, stayed in the run's folder and does not ship. It is blind to the values only: the method was known. The list and the prereg were written by the authors",
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "a18ddc52d356065570ea1450e38ce04d9033aecadf6d4e633e599d5218102123",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "5462b91821fccd9a855b7af2416013dd7b70e099741993271b48701c702f9c53",
+      "from": "PREREG.sha256"
+    },
+    {
+      "file": "results/scratch/c0-result.json",
+      "sha256": "fda9cdea0f9891a6df52a8424edb4466b097bc984b1312647f5fba7c706a8609",
+      "from": "scratch/c0-result.json"
+    },
+    {
+      "file": "results/scratch/recompute-result.json",
+      "sha256": "d88923590c987ba02bb9c01bc51d74e48ea2f9ef1b80845fd4160d6ed9625fe3",
+      "from": "scratch/recompute-result.json"
+    },
+    {
+      "file": "results/scratch/formal-checks.json",
+      "sha256": "3fedb32ab3f89bb1c178231ac401cbd472eb967ab1a5015674173669ee9718ae",
+      "from": "scratch/formal-checks.json"
+    },
+    {
+      "file": "results/scratch/a2-tempthreshold-19021.json",
+      "sha256": "868cf476461afd97b20252957de9e46f4cecfface7434c6a090910d524e63531",
+      "from": "scratch/a2-tempthreshold-19021.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "4d2a62043b6f9b975a289ad166e63a7336db39a4b413d7a5062d68fe0a79605d",
+      "from": "the run spec written when the tables were first emitted"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "c76408c4f16770f99fc208112e47ad4a8bcd8fc75fce3bd278b2fac0bdd14eb2",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "365032077ce5247f1c86ccaa113ba4a7abfed6c29e5ca29ecc9f71634f161e16",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ],
+  "not_shipped": [
+    {
+      "file": "vendor/seawater-wheel",
+      "sha256": "765aa6b6a82db3d4e9232313420e4d665218d8863a383f5bc4dd49d5f1f0c1d1",
+      "reason": "the seawater Python package as the run used it, pinned in PREREG.md line 101. A third party's package, not redistributed here; the prereg names its version"
+    },
+    {
+      "file": "vendor/gsw-sdist",
+      "sha256": "ffe8496c61bb3cf488316f6444234a69f7cd6884fb04ff7b4889a773fbed4f44",
+      "reason": "the gsw Python package source as the run used it, pinned in PREREG.md line 165. A third party's package, not redistributed here; the prereg names its version"
+    }
+  ]
+}

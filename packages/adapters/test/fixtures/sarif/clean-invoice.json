@@ -1,0 +1,52 @@
+{
+  "extraction": {
+    "invoice_number": "HL-2041",
+    "vendor": "Harbor Lane Consulting",
+    "currency": "USD",
+    "invoice_date": "2026-09-15",
+    "prior_invoice_ids": [
+      "HL-2039",
+      "HL-2040"
+    ],
+    "line_items": [
+      {
+        "description": "Consulting",
+        "quantity": 10,
+        "unit_price": 150,
+        "amount": 1500
+      }
+    ],
+    "totals": {
+      "subtotal": 1500,
+      "tax_rate": 0.0825,
+      "tax": 123.75,
+      "total": 1623.75
+    }
+  },
+  "references": {
+    "contract": {
+      "rates": [
+        {
+          "rate": 150
+        }
+      ],
+      "max_amount": 5000,
+      "effective_date": "2026-01-01",
+      "expiration_date": "2026-12-31"
+    },
+    "evidence": [
+      {
+        "line_items": [
+          {
+            "description": "Consulting",
+            "quantity": 10
+          }
+        ],
+        "totals": {
+          "total": 1500
+        },
+        "date": "2026-09-15"
+      }
+    ]
+  }
+}

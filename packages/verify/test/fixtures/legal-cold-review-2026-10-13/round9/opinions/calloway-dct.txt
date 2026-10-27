@@ -1,0 +1,12 @@
+CALLOWAY PRECISION, INC. v. NORTHGATE COMPONENTS CORP.
+2025 WL 1188234
+United States District Court, D. Minnesota.
+April 18, 2025
+MEMORANDUM OPINION AND ORDER
+TORVALD, District Judge.
+Northgate moves to exclude the testimony of Calloway’s damages expert and for partial summary judgment on lost profits. The motion to exclude is granted in part.
+An expert’s lost-profits opinion is admissible only if it rests on a reliable method applied to sufficient facts, and an opinion that assumes the conclusion it purports to prove does not meet that standard. Calloway’s expert assumed that every lost order would have been filled at full margin, but he did not account for the capacity constraints the record documents.
+Northgate’s position is that any lost-profits testimony is speculative as a matter of law for a business with less than three years of operating history. The Court rejects that view. No such categorical rule exists in this Circuit, and a new business may recover lost profits if it proves them with reasonable certainty.
+Northgate also relies on the older formulation that the profits of a new business are “too remote and speculative to be recovered.” That formulation no longer reflects the law of this Circuit.
+Calloway, for its part, would have the Court treat the expert’s margin assumption as a question of weight for the jury rather than admissibility. That framing goes too far. Questions of weight are for the jury, but a district court must still ensure that an expert’s method reliably fits the facts of the case.
+Summary judgment is appropriate where there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law. Because a jury could find lost profits with reasonable certainty on a properly limited model, summary judgment on that element is DENIED.

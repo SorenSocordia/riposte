@@ -1,0 +1,26 @@
+113 S.Ct. 2786
+Supreme Court of the United States
+William DAUBERT, et ux., etc., et al., Petitioners,
+v.
+MERRELL DOW PHARMACEUTICALS, INC.
+509 U.S. 579
+No. 92-102.
+Argued March 30, 1993.
+Decided June 28, 1993.
+Synopsis
+Holdings: The Supreme Court held that the Frye general acceptance test survives the adoption of the Federal Rules of Evidence.
+West Headnotes (2)
+[1] Evidence
+Expert testimony must be generally accepted in the relevant scientific community to be admitted.
+[2] Evidence
+Cross-examination is the only remedy for shaky expert evidence.
+Opinion
+Justice BLACKMUN delivered the opinion of the Court.
+*589 [1] Nothing in the text of this Rule establishes "general acceptance" as an absolute prerequisite to admissibility. That austere standard, absent from, and incompatible with, the Federal Rules of Evidence, should not be applied in federal trials. But this does not mean that the Rules themselves place no limits on the admissibility of purportedly scientific evidence. Nor is the trial judge disabled from screening such evidence. To the contrary, under the Rules the trial judge must ensure that any and all scientific testimony or evidence admitted is not only relevant, but reliable.
+*593 Many factors will bear on the inquiry, and we do not presume to set out a definitive checklist or test. The inquiry envisioned by Rule 702 is, we emphasize, a flexible one.
+*596 [2] Vigorous cross-examination, presentation of contrary evidence, and careful instruction on the burden of proof are the traditional and appropriate means of attacking shaky but admissible evidence.
+It is so ordered.
+Chief Justice REHNQUIST, with whom Justice STEVENS joins, concurring in part and dissenting in part.
+I do not doubt that Rule 702 confides to the judge some gatekeeping responsibility in deciding questions of the admissibility of proffered expert testimony. But I do not think it imposes on them either the obligation or the authority to become amateur scientists in order to perform that role.
+All Citations
+509 U.S. 579, 113 S.Ct. 2786, 125 L.Ed.2d 469

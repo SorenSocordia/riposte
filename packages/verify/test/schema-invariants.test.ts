@@ -1,5 +1,5 @@
 /**
- * Schema invariants — pre-registered claim W1 (no hallucinated verdicts by construction) enforced as tests.
+ * Schema invariants — the pre-registered claim (no hallucinated verdicts by construction) enforced as tests.
  * These run over every fixture, with and without references. A violation anywhere is a kill.
  */
 import { describe, it, expect } from 'vitest'
@@ -28,7 +28,7 @@ function verdicts(): Array<[string, Verdict]> {
   return out
 }
 
-describe('schema invariants (W1: zero hallucinated verdicts by construction)', () => {
+describe('schema invariants (zero hallucinated verdicts by construction)', () => {
   for (const [name, v] of verdicts()) {
     describe(name, () => {
       it('verdict header is well-formed and asserts the determinism contract', () => {

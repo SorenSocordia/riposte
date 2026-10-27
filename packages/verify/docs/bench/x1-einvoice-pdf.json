@@ -1,0 +1,341 @@
+{
+  "format": "bench-table/1",
+  "id": "x1-einvoice-pdf",
+  "title": "E-invoice check with extraction from rendered PDFs, blind: the primary bar failed (11 of 20 planted defects certified PASS under ruleset 0.1.0)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "91e055f30e8286e2fa2d4c7d2e9c71100e9d1d08a106ffef17d2f865ac4f26c0",
+    "frozen_sha256": "91e055f30e8286e2fa2d4c7d2e9c71100e9d1d08a106ffef17d2f865ac4f26c0",
+    "amendments": [],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:30Z",
+          "serial": "6379e690f2001b97c7d312892df0fbd4",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "X1 blind run 1 (60 PDFs)",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "peppol-en16931@0.1.0",
+    "dist_sha256": "60d9d0f737cd33305c85447441c87d153aedb6c2c22cef96761a773482d8c522",
+    "results": {
+      "path": "results/results.json",
+      "sha256": "4feea855b1a7043eb0a774e39ac8119b51b649dbc08a4fbb9155f3d4df592f3e"
+    },
+    "spec_sha256": "503d9dca4d891a4b3cf6e5dc2c8a5cdeb95ecdeccd1fa735efa309516e133337",
+    "not_shipped": [
+      {
+        "file": "corpus/manifest.json",
+        "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+        "reason": "the corpus manifest, pinned in PREREG.md section 2. Its licence note for each base sample names the authors' working folder, which the export's word filter refuses. The 60 PDFs it lists are not in this tree either: they are rendered from public Peppol BIS 3.0 samples whose publisher's documentation restricts redistributing modified copies. Each PDF's sha256 is in corpus/render-receipt.json, which ships"
+      },
+      {
+        "file": "dist/cli.js",
+        "sha256": "60d9d0f737cd33305c85447441c87d153aedb6c2c22cef96761a773482d8c522",
+        "reason": "the engine build the run called (engine 0.0.1), pinned in PREREG.md section 2. A build output is not shipped, and the package's source in this tree has changed since, so a build made now will not have this sha256"
+      },
+      {
+        "file": "docs/examples/peppol-en16931.ruleset.json",
+        "sha256": "0a3cd5a52e6a835a8649ac8fa831bce47906ae77e5be2bdb85a70d1a9a0cd81c",
+        "reason": "the shipped ruleset (P) 0.1.0, pinned in PREREG.md section 2. Not copied into this folder: the same bytes ship in this tree at packages/verify/docs/examples/peppol-en16931.ruleset.json and at packages/verify/test/fixtures/golden-rulesets/peppol-en16931.ruleset.v0.1.0.json; compare its sha256 there"
+      },
+      {
+        "file": "lib/render.mjs",
+        "sha256": "ae0b573fafd79ea3411ab2f66e6a483fdd6c6dca58aa1308c55918328cc1a4c9",
+        "reason": "imported by lib/extract.mjs for the path of the poppler tool, and the corpus renderer. The prereg does not pin it. It names a folder in the authors' home directory, which the export's word filter refuses, so it does not ship (nor lib/fmt.mjs, which only it imports)"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "Its harness, scorer, extractor, supplement ruleset and render receipt ship in this folder byte for byte, as its prereg pins them. The 60 rendered PDFs and their manifest do not: the PDFs are rendered from public Peppol samples whose publisher restricts redistributing modified copies, and the manifest names the authors' folders. The run also called an engine build that a build of today's source does not reproduce."
+    },
+    "blind_basis": "PREREG.sha256 holds the prereg's sha256 with no time of its own; the time 2026-10-03T09:18:31Z was added to it on 2026-10-05 from the list's file-system time. The prereg says it was written after the corpus was rendered (corpus/render-receipt.json records 09:15:26Z) and before any extraction or engine run on it. The list, the added time and the prereg are the authors' own, and the corpus and its planted defects were made by the authors"
+  },
+  "rows": [
+    {
+      "claim": "planted defects certified PASS, shipped ruleset (wrong PASS)",
+      "n": 20,
+      "k": 11,
+      "rate": 0.55,
+      "ci95": [
+        0.342085,
+        0.741803
+      ],
+      "method": "wilson",
+      "verdict": "FAIL",
+      "bar": {
+        "text": "B1 (primary): 0 wrong PASS on the 20 planted defects, under the shipped ruleset",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": "dist_sha256 is the verify package's built dist/cli.js, as pinned by the run receipt"
+    },
+    {
+      "claim": "planted defects certified PASS, shipped ruleset plus the preregistered supplement",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; B1's count reported under P+S; B1 binds the shipped ruleset"
+    },
+    {
+      "claim": "planted defects caught, shipped ruleset",
+      "n": 20,
+      "k": 8,
+      "rate": 0.4,
+      "ci95": [
+        0.218806,
+        0.613419
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "planted defects caught, shipped plus supplement",
+      "n": 20,
+      "k": 17,
+      "rate": 0.85,
+      "ci95": [
+        0.639581,
+        0.947632
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "clean invoices certified PASS wrongly, shipped ruleset",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; no numeric bar: any count above zero is a headline miss"
+    },
+    {
+      "claim": "clean invoices correctly PASS, shipped ruleset",
+      "n": 20,
+      "k": 20,
+      "rate": 1,
+      "ci95": [
+        0.838874,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "noisy scans certified PASS wrongly, shipped ruleset",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; no numeric bar: any count above zero is a headline miss"
+    },
+    {
+      "claim": "noisy scans abstained, shipped ruleset",
+      "n": 20,
+      "k": 8,
+      "rate": 0.4,
+      "ci95": [
+        0.218806,
+        0.613419
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; B2: no bar; reported with coverage"
+    },
+    {
+      "claim": "noisy scans false FAIL, shipped ruleset",
+      "n": 20,
+      "k": 1,
+      "rate": 0.05,
+      "ci95": [
+        0.008881,
+        0.236132
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "FAILs on planted documents (FAIL precision, all 60), shipped ruleset",
+      "n": 9,
+      "k": 8,
+      "rate": 0.888889,
+      "ci95": [
+        0.565,
+        0.98011
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "twin false FAIL on correct claims",
+      "n": 946,
+      "k": 1,
+      "rate": 0.001057,
+      "ci95": [
+        0.000186,
+        0.005964
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "B3 (card): twin false FAILs on correct claims < 2%",
+        "test": {
+          "rate": {
+            "lt": 0.02
+          }
+        }
+      },
+      "note": ""
+    }
+  ],
+  "misses": [
+    {
+      "id": "X1-N18-default-zero",
+      "kind": "defect",
+      "description": "unreadable optional totals defaulted to 0 under peppol-en16931@0.1.0: in X1-N18 an allowance and a charge of 200 each were unreadable and cancel in BR-CO-13, so that check would have PASSed on two wrong inputs; only the stamp also hiding the total without VAT prevented it",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0 (distinguish_unreadable); E1 / engine 0.1.0 default"
+    },
+    {
+      "id": "X1-D15-luck",
+      "kind": "near-miss",
+      "description": "X1-D15 was caught by accident under the supplement: the extractor invented the currency SEK from the 'VAT total in accounting currency' row (an OCR-tolerant label match let 'Currency:' match the bare word), and it FAILed only because SEK differs from EUR",
+      "post_hoc": false,
+      "fixed_by": "T1 / extraction contract (a label heads its row segment and is maximal)"
+    },
+    {
+      "id": "X1-N20-false-fail",
+      "kind": "false-fail",
+      "description": "X1-N20 (rotated scan): false FAIL from an OCR misread of 1 as 4 in line 1's charge, with skew dropping two lines",
+      "post_hoc": false
+    },
+    {
+      "id": "X1-N06-false-fail",
+      "kind": "false-fail",
+      "description": "X1-N06 (stamped scan): false FAIL under the supplement, a stamped GBP read as CEN by OCR (R051)",
+      "post_hoc": false
+    },
+    {
+      "id": "X1-D02",
+      "kind": "wrong-pass",
+      "description": "X1-D02 (vat_subtotal): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D04",
+      "kind": "wrong-pass",
+      "description": "X1-D04 (currency): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D05",
+      "kind": "wrong-pass",
+      "description": "X1-D05 (missing): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D07",
+      "kind": "wrong-pass",
+      "description": "X1-D07 (vat_subtotal): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D09",
+      "kind": "wrong-pass",
+      "description": "X1-D09 (currency): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D10",
+      "kind": "wrong-pass",
+      "description": "X1-D10 (missing): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D12",
+      "kind": "wrong-pass",
+      "description": "X1-D12 (vat_subtotal): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D14",
+      "kind": "wrong-pass",
+      "description": "X1-D14 (currency): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D15",
+      "kind": "wrong-pass",
+      "description": "X1-D15 (missing): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D17",
+      "kind": "wrong-pass",
+      "description": "X1-D17 (vat_subtotal): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    },
+    {
+      "id": "X1-D19",
+      "kind": "wrong-pass",
+      "description": "X1-D19 (currency): a planted defect certified PASS under peppol-en16931@0.1.0: ruleset gap (perfect extraction also PASSes)",
+      "post_hoc": false,
+      "fixed_by": "R4 / peppol-en16931@0.2.0"
+    }
+  ],
+  "blind": true,
+  "label": "blind",
+  "audit": "the run's author, an AI agent (Claude Opus 5.5 (claude-opus-5-5)), audited every FAIL and every PASS on the noisy third by reading the rendered page (the prereg section the frozen text calls \"Hand audit\"); no person labelled. The planted defects are known by construction"
+}

@@ -120,9 +120,11 @@ export function proofProblem(x: unknown, opts: { allowReasoned?: boolean } = {})
   if (typeof v.input_hash !== 'string' || !isObj(v.ruleset) || typeof v.engine_version !== 'string') {
     return `verdict ${v.verdict_id} lacks the reproducibility contract (input_hash, ruleset, engine_version)`
   }
-  const expected = deriveVerdictId(v.input_hash, v.ruleset, v.engine_version)
+  // Engine 0.2.0 (2026-10-03): the id derives from the remedy table hash too, when the verdict carries one.
+  const rth = typeof v.remedy_table_hash === 'string' ? v.remedy_table_hash : undefined
+  const expected = deriveVerdictId(v.input_hash, v.ruleset, v.engine_version, rth)
   if (expected !== v.verdict_id) {
-    return `verdict ${v.verdict_id} is not bound to its inputs: its id does not derive from input_hash + ruleset@version + engine_version (expected ${expected})`
+    return `verdict ${v.verdict_id} is not bound to its inputs: its id does not derive from input_hash + ruleset@version + engine_version${rth !== undefined ? ' + remedy_table_hash' : ''} (expected ${expected})`
   }
   for (const c of v.claims) {
     if (c.outcome !== 'PASS' && c.outcome !== 'FAIL') continue
@@ -324,7 +326,7 @@ export function counselFromReasoned(verdict: Verdict, claim_id: string, opts: Re
   if (!claim) throw new ChannelViolation(`verdict ${verdict.verdict_id} has no claim ${claim_id}`)
   if (claim.tier === 'DETERMINISTIC') throw new ChannelViolation(`claim ${claim_id} is DETERMINISTIC: it is a VERDICT finding, not an advisory`)
   if (claim.outcome !== 'PASS' && claim.outcome !== 'FAIL') throw new ChannelViolation(`claim ${claim_id} abstained: there is no finding to advise on`)
-  const bound = typeof verdict.input_hash === 'string' && isObj(verdict.ruleset) && deriveVerdictId(verdict.input_hash, verdict.ruleset, verdict.engine_version) === verdict.verdict_id
+  const bound = typeof verdict.input_hash === 'string' && isObj(verdict.ruleset) && deriveVerdictId(verdict.input_hash, verdict.ruleset, verdict.engine_version, typeof verdict.remedy_table_hash === 'string' ? verdict.remedy_table_hash : undefined) === verdict.verdict_id
   const judges: JudgeResult[] = [
     { judge: 'EVIDENCED', passed: claim.evidence.length > 0, detail: `the finding rests on ${claim.evidence.length} cited cell(s)`, stats: { evidence: claim.evidence.length } },
     { judge: 'BOUND', passed: bound, detail: bound ? 'the verdict it comes from is bound to its inputs (verdict_id re-derives)' : 'the verdict it comes from is not bound to its inputs' },

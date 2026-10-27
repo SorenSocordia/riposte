@@ -11,10 +11,10 @@
  *   verify mine cases.jsonl --schema schema.json          # mine candidate rules from labelled approve/hold cases
  *   verify mine invoice_cases.jsonl --ap --ruleset-out mined.json   # Distil-style AP cases → report + enforceable ruleset
  *   verify twin --html primary.htm --period-end 2024-12-31 --claims claims.json   # agent values vs the filing's iXBRL twin
- *   verify notice verdict.json --level gate               # one action at a rung: every FAIL/ABSTAIN with evidence + dispute path
+ *   verify notice verdict.json --level gate               # one action at a rung: every FAIL/can't tell with evidence + dispute path
  *   verify voice --ledger chain.jsonl --policy policy.json --workflow acme/invoice@0.0.1 --tier low --granted gate
  *   verify voice --from-book --ledger chain.jsonl --policy policy.json --workflow acme/invoice@0.0.1   # the rung from the book
- *   verify opinion --ledger chain.jsonl --policy policy.json --proposal proposal.json   # the courtroom opinion (Markdown)
+ *   verify opinion --ledger chain.jsonl --policy policy.json --proposal proposal.json   # the written opinion (Markdown)
  *   verify opinion --ledger chain.jsonl --dispute <verdict_id> [--claim <claim_id>] [--json]
  *   verify opinion --from-book --ledger chain.jsonl --policy policy.json --workflow acme/invoice@0.0.1 --trusted-keys keys.json
  *   verify replay verdict.json --extraction invoice.json  # RE-PERFORM the check; exit 0 only when the outcome is re-derived
@@ -55,16 +55,27 @@
  * is corruption: refused (exit 1) everywhere.
  */
 
-import { readFileSync, writeFileSync, existsSync, rmSync, statSync } from 'node:fs'
-import { createPrivateKey, createPublicKey } from 'node:crypto'
+import { readFileSync, writeFileSync, existsSync, rmSync, statSync, readdirSync, realpathSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { join, dirname, resolve as resolvePath, basename, relative, isAbsolute } from 'node:path'
+import { createHash, createPrivateKey, createPublicKey } from 'node:crypto'
 import { verify, type VerifyOptions, type Json } from './verify.js'
 import { isDeclarativeRuleset, type DeclarativeRuleset } from './declarative/types.js'
-import type { TolerancePolicy } from './tolerance.js'
+import { toleranceProblem, type TolerancePolicy } from './tolerance.js'
 import { lintRuleset } from './declarative/lint.js'
 import { measureRuleset, renderMeasurement, type LabeledCase } from './declarative/measure.js'
 import type { Verdict } from './verdict/schema.js'
-import { verifyReplay, type ReplayCheck, type ReplayOptions } from './protocol/replay.js'
-import { verifyInvoiceMatch, splitApLayout, type ApDocuments } from './ap/index.js'
+import { verifyReplay, declarativeReplayNeeds, replayNeedsSentence, replayRulesetRef, notReperformedFields, replayInputProblem, type ReplayCheck, type ReplayOptions } from './protocol/replay.js'
+import { isReplayBundle, replayBundles, bundlesFromText, renderCaseReplay, replayReading, strictProblems, strictNotes, notABundleHint, presentedOf, renderGate, renderGateNow, renderAnyRuleNow, carriedKeys, carriedLine, allowedKeys, allowedLine, replayExit, replayAdvice, unknownKeys, unknownKeysReason, ALLOW_UNKNOWN_KEYS_LINE, ISSUED_AT_MISSING, AP_REPLAY_SCOPE, type GateReading } from './protocol/replay-case.js'
+import { AP_DERIVED_KEYS, apDerivable, apDerivedKeysIn, checkApFields, apFieldsHeadline, apDifferenceLine, apFieldsBlock, type ApFieldsCheck } from './protocol/replay-ap.js'
+import { legalScopeLines, parseRulesetRequirement, rulesetRequirementProblem, unappliedRequirements, type RulesetRequirement } from './legal/replay-notice.js'
+import { decodeUtf8Strict, parseJsonStrict, HashInputRefused } from './protocol/hash-input.js'
+import { ENGINE_VERSION, ENGINE_VERSIONS } from './version.js'
+import { answerOf, renderRemedies } from './verdict/remedy.js'
+import { apPolicyOf, parseTaxPolicy, verifyInvoiceMatch, splitApLayout, type ApDocuments, type ApPolicy, type PriorInvoice } from './ap/index.js'
+import { apInputDocuments, apProofOf, validateApInput, verifyBillMatch } from './ap/structured.js'
+import { formatApReport } from './ap/report.js'
+import { formatPayAppReport } from './rulesets/pay-app/report.js'
 import {
   mine, compileRuleset, apCasesToTable, AP_MINE_SCHEMA, parseJsonl, caseTableFromRows,
   type MineSchema, type MineReport, type CompiledRuleset, type DistilApCase,
@@ -91,7 +102,7 @@ import {
 import {
   MemoryLedger, openFileLedger, readChainFile, repairTornTail, writeChainFile, TornTailError, LedgerFileCorrupt, LedgerReadOnly,
   renderTenantReport, signDecision, DecisionRefused, GENESIS, SampleRefused,
-  makeReview, makeKeyRegister, makeKeyRevoke, canaryCommitment, isRole, ROLES, keyFingerprint,
+  makeReview, makeKeyRegister, makeKeyRevoke, canaryCommitment, isRole, ROLES, keyFingerprint, legacyKeyFingerprint,
   type Ledger, type SignedDecision, type TrustedKeys, type DecisionEntry, type TenantReportOptions, type RootKeys, type Role,
   type BookDecision, type Signable, type CanarySealDecision, type FileLedger, type RepairReport, type ChainSnapshot,
 } from './ledger/index.js'
@@ -103,6 +114,18 @@ import { monthPeriod, declarationsOverridden } from './ledger/report.js'
 import { makeCosign, grantInForce, noEffect as bookNoEffect, successionNotice, loosens, type GrantDecision, type GrantSignatures } from './ledger/decisions.js'
 import { successionReplay, checkSuccessionReplay, successionGrant, type SuccessionReplayResult } from './ledger/succession.js'
 import { generateSigningKeypair, verifyEnvelope, type SignedVerdict } from './protocol/envelope.js'
+import { gateLabel, gateStatus, gateStatusOpen, heldSuspectClaims, openClaims, gateHeadline } from './verdict/aggregation.js'
+import { scopeLines } from './verdict/scope.js'
+import { verdictExit, apExit } from './verdict/exit.js'
+import { openCase, fileMove, caseStatus, replayCase, loadCase, CaseRefused } from './arbitration/case.js'
+import { verifyInputs } from './protocol/inputs.js'
+import { resolveDeclarativeRuleset } from './rulesets/declarative.js'
+import { carriedRulesetNames, carriedDefaultVersion } from './protocol/ruleset-names.js'
+import { extractionSchema, legalVersionOf, validateContract, type ContractRuleset } from './extract/schema.js'
+import { compileSchematron } from './compile/compile.js'
+import { compareWithHand, renderComparison } from './compile/compare.js'
+import { markHandEdits } from './compile/diff.js'
+import type { QuoteAssertion } from './textmatch/index.js'
 import { InputRefused, extractionProblem } from './protocol/input.js'
 import { voiceSurface, declarationFromJson, type VoiceSurface } from './http/surfaces.js'
 import { governedRead, governedSignatures, governing } from './http/dual.js'
@@ -118,10 +141,19 @@ const PROCESS_IO: CliIO = { out: s => { process.stdout.write(s) }, err: s => { p
 
 const BUILTIN = new Set(['invoice', 'pay-app'])
 
-interface Args { file?: string; ruleset?: string; labels?: string; inputs?: string; invoice?: string; po?: string; receipt?: string; contract?: string; evidence: string[]; history: string[]; source?: string; help: boolean }
+interface Args { file?: string; files: string[]; ruleset?: string; labels?: string; inputs?: string; input?: string; invoice?: string; po?: string; receipt?: string; contract?: string; evidence: string[]; history: string[]; source?: string; quotes?: string; gate: boolean; allowOpen: boolean; help: boolean; caseDir?: string; parties?: string; archiveFiles: string[]; suppliedChoices?: string; payerRole?: string; unknown: string[] }
 
-function parse(argv: string[]): Args {
-  const a: Args = { evidence: [], history: [], help: false }
+/** The flags parse() reads (for the "did you mean" of an unknown option). */
+const PARSE_FLAGS = ['--ruleset', '--labels', '--inputs', '--input', '--invoice', '--po', '--receipt', '--contract', '--evidence', '--history', '--source', '--quotes', '--gate', '--allow-open', '--case-dir', '--parties', '--archive-file', '--supplied-choices', '--payer-role', '--help'] as const
+
+/** `--name=value` is read as `--name value` (2026-10-05: a stranger typed `--extraction=file`). */
+function splitEquals(argv: readonly string[]): string[] {
+  return argv.flatMap(t => (/^--[A-Za-z][\w-]*=/.test(t) ? [t.slice(0, t.indexOf('=')), t.slice(t.indexOf('=') + 1)] : [t]))
+}
+
+function parse(argv0: string[]): Args {
+  const argv = splitEquals(argv0)
+  const a: Args = { files: [], evidence: [], history: [], gate: false, allowOpen: false, help: false, archiveFiles: [], unknown: [] }
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i] as string
     switch (t) {
@@ -129,6 +161,7 @@ function parse(argv: string[]): Args {
       case '--ruleset': a.ruleset = argv[++i]; break
       case '--labels': a.labels = argv[++i]; break
       case '--inputs': a.inputs = argv[++i]; break
+      case '--input': a.input = argv[++i]; break
       case '--invoice': a.invoice = argv[++i]; break
       case '--po': a.po = argv[++i]; break
       case '--receipt': a.receipt = argv[++i]; break
@@ -136,104 +169,227 @@ function parse(argv: string[]): Args {
       case '--evidence': a.evidence.push(argv[++i] as string); break
       case '--history': a.history.push(argv[++i] as string); break
       case '--source': a.source = argv[++i]; break
-      default: if (!t.startsWith('-') || t === '-') a.file = t
+      case '--quotes': a.quotes = argv[++i]; break
+      case '--gate': a.gate = true; break
+      case '--allow-open': a.allowOpen = true; break
+      case '--case-dir': a.caseDir = argv[++i]; break
+      case '--parties': a.parties = argv[++i]; break
+      case '--archive-file': a.archiveFiles.push(argv[++i] as string); break
+      case '--supplied-choices': a.suppliedChoices = argv[++i]; break
+      // 2026-10-13: who pays a pay application, for the words its report prints (owner prints the AIA title; payer, the default, does not)
+      case '--payer-role': a.payerRole = argv[++i]; break
+      // An option nobody reads is refused (2026-10-05): `--rulset x` used to check the document under the DEFAULT ruleset.
+      default: if (!t.startsWith('-') || t === '-') { a.file = t; a.files.push(t) } else a.unknown.push(t)
     }
   }
   return a
 }
 
-const USAGE = `riposte-verify <extraction.json | -> [options]        verify a document
-  --ruleset invoice|pay-app|<file.json>   built-in name OR a declarative ruleset file (default: invoice)
+/** The version a carried declarative ruleset name resolves to for new verdicts (for the help text; '?' if this build lacks it). */
+function carriedVersion(name: string): string {
+  return carriedDefaultVersion(name) // protocol/ruleset-names.ts: the MCP descriptions read the same function
+}
+
+const USAGE = `riposte-verify <extraction.json | -> [options]        check a document (also: verify check <extraction.json> [options])
+  --ruleset invoice|pay-app|<name>|<file.json>   a built-in name, a declarative ruleset this build carries by name
+                                (peppol-en16931 = ${carriedVersion('peppol-en16931')}, peppol-en16931@0.1.0, e-invoice = peppol-en16931), or a
+                                declarative ruleset file (default: invoice)
   --contract <file.json>        contract / PO reference
   --evidence <file.json>        receipt / delivery evidence (repeatable)
   --history <file.json>         prior document of the same kind (repeatable)
-  --source <file.txt>           source document text (values checked against it)
+  --source <file.txt>           source document text: the passages a declarative ruleset's "quotes" require, and any
+                                --quotes, are checked against it VERBATIM. Read as UTF-8 and hashed byte for byte
+  --quotes <file.json>          passages to find verbatim in --source: [{ "id", "quote", "label"? }]
+  --archive-file <file>         an archive file as bytes (repeatable; engine 0.5.0, declarative): archive provenance whose file
+                                is not text (FITS) is content- and checksum-verified from these bytes (docs/EVIDENCE.md)
+  --supplied-choices <file.json>  values a reviewer supplies for the ruleset's choice slots: { "ID": { "value", "source" } }
+                                (engine 0.5.0, declarative; docs/CHOICES.md); bound into the verdict's inputs
+  --case-dir <dir> --parties <parties.json>   an OPEN verdict (engine 0.3.0, declarative) opens its arbitration case there,
+                                automatically (docs/EVIDENCE.md; then verify case move / status / replay)
+  --gate                        print the gate's own message instead of the headline: the open checks of a PASS-WITH-OPEN,
+                                each struck field of an OPEN (engine 0.3.0: a struck load-bearing field; suspect is a flag,
+                                never a FAIL) with the checks it would unlock, then the verdict's scope lines. The exit code
+                                is the same with or without it (it is the default reading, below)
+  --allow-open                  exit 0 on a PASS-WITH-OPEN verdict whose checks that ran all held and whose open checks each
+                                wait on a reference not given (REFERENCE_NOT_PROVIDED) or a field the document does not carry
+                                (FIELD_MISSING). An open check whose figure is there but unreadable ("1600.0O"), ambiguous or
+                                out of scope, and a struck field (OPEN), stay exit 2, named. Stated on stderr on every run; the
+                                verdict still records gate_status PASS_WITH_OPEN. Not with --gate
+    Prints the verdict (JSON) on stdout and a headline on stderr: PASS, PASS-WITH-OPEN, FAIL or INSUFFICIENT_DATA, with the
+    count of checks behind it. Engine 0.6.0 records the same word in the verdict as gate_status.
+    Fails closed: exit 0 only on a clean PASS (every check ran and held).
+    Exit 0 PASS · 1 FAIL (or HELD-SUSPECT) · 2 PASS-WITH-OPEN, OPEN or INSUFFICIENT_DATA (--allow-open: 0 on a PASS-WITH-OPEN
+    whose open checks each wait on a reference or a field the document does not carry) · 3 usage or an unreadable input
 
-riposte-verify lint --ruleset <file.json>              validate a declarative ruleset
-riposte-verify measure --ruleset <file.json> --labels <set.json>   measured accuracy on a labeled set
+riposte-verify case open --dir <case-dir> --verdict <verdict.json> --inputs <inputs.json> --parties <parties.json> [--document <file>]
+               [--dispute <claim_id>] [--now <iso>]
+riposte-verify case move --dir <case-dir> --move <move.json> [--evidence <file>] [--now <iso>]
+riposte-verify case status --dir <case-dir> [--now <iso>] [--json]
+riposte-verify case replay --dir <case-dir> [--reread]
+    arbitration (docs/EVIDENCE.md): an OPEN verdict (a struck load-bearing field) or a disputed FAIL opens a case; signed
+    moves resolve it: CORRECT (a document the engine reads itself: a PDF, a UBL XML), STRIKE (a field or a document),
+    CORROBORATE (a statement signed by an enrolled source, E0, or an independent document). A move carrying a value is refused
+    and recorded by its hash. Each accepted move records a linked re-verdict (before/after, both replayable). Clock: working
+    days from the parties file (default 5; 2 with a suspect field); expiry is UNSUPPORTED, never PASS. move/status/replay are
+    asynchronous (a PDF re-read). Exit 0 · 1 refused (the reason is printed) · 3 usage
+
+riposte-verify lint --ruleset <file.json | name>       validate a declarative ruleset. Exit 0 clean · 1 errors · 3 usage
+riposte-verify extract-schema <ruleset | legal[@v]> [--validate <envelope.json>]
+    the extraction contract's JSON Schema for a ruleset, generated from its fields block: every field term with its
+    provenance {page, line, raw, reader}, "UNREADABLE" with the readings for a value that could not be read, every field
+    read or named in not_printed. --validate checks an envelope against it. A ruleset with "require_contract": true reads
+    only an envelope that validates. Exit 0 · 1 the envelope breaks the contract (violations printed, first one first) · 3
+riposte-verify compile-ruleset <a.sch> [<b.sch> ...] --structure <structure.tsv | structure.xml> --out <ruleset.json>
+              [--profile <id>] [--version <v>] [--name <text>] [--aliases <aliases.json>] [--scope aliases | <terms.json>]
+              [--sources <sources.json>] [--report <report.json>] [--against <hand-ruleset.json | name>]...
+    compile schematron asserts into a declarative ruleset skeleton (docs/COMPILER.md): every assert becomes an arithmetic,
+    presence or membership check quoting its text and citing {file, sha256, line, pattern, rule context, assert id, flag},
+    or an uncompiled entry in the compile report with its reason; none is dropped. --structure maps XPath to business terms
+    (a TSV of path, cardinality, BT ids, name, default; or the published structure XML with its parts beside it).
+    --aliases adds extraction paths per term; --scope compiles only checks whose terms it lists. --against compares the
+    result with a hand-written ruleset, check by check, and writes <out>.comparison.json and .md.
+    Exit 0 compiled and linted clean · 1 written, but lint found errors · 3 usage or an input it cannot read
+riposte-verify compile-ruleset --diff <compiled.json> <edited.json> --out <file.json>
+    mark every check and field a person changed after compiling hand_edited: true, and list the edits (removals too) in
+    compiled_from.hand_edits. Exit 0 · 3
+riposte-verify measure --ruleset <file.json | name> --labels <set.json>   measured accuracy on a labeled set. Exit 0 · 3
 riposte-verify replay <verdict.json | envelope.json> [--inputs <inputs.json> | --extraction <doc.json> [--ruleset <r>] [--contract <f>]
-              [--evidence <f>]... [--history <f>]... [--source <f.txt>]] [--tolerance <json>] [--document <f>] [--pre <f>]
-              [--filing-summary <f>] [--schema <f>]
-    check a verdict you were handed. The verdict_id binds the INPUTS, not the outcome, so with the inputs the check is
-    RE-PERFORMED here (the engine for the verdict's ruleset) and the recomputed verdict byte-compared with the presented one
-    (issued_at and post-engine annotations aside; the first differing field is named). --inputs is the object the verdict's
-    input_hash commits to; --extraction builds verify()'s from the same flags \`verify <doc>\` takes. --tolerance restates a
-    rounding override the verdict was issued under ({"rel":…,"absCap":…}: input_hash does not commit to it). The twins'
-    inputs commit to the document by hash: --document (and, for twin v0.2+, the linkbase files) re-performs them. A signed
-    envelope's signature is checked too. Exit 0 outcome VERIFIED (re-performed, byte-identical) · 1 FAILED (the binding, the
-    re-performed outcome, or the envelope signature) · 2 structure verified, outcome NOT re-performed (no inputs, or nothing
-    here re-performs them) · 3 not a verdict / usage
+              [--evidence <f>]... [--history <f>]... [--source <file>] [--quotes <f.json>]] [--tolerance <json>] [--document <f>]
+              [--pre <f>] [--filing-summary <f>] [--schema <f>] [--trusted-key <public.pem | keygen.json | fingerprint>] [--strict]
+              [--lenient-remedies] [--require-ruleset <ruleset>@>=<version>]... [--allow-unknown-keys]
+    check a verdict you were handed. Its verdict_id binds the INPUTS, not the outcome, so with the inputs the check is
+    RE-PERFORMED here (the engine for the verdict's ruleset, under the engine version the verdict names) and the recomputed
+    verdict is byte-compared with the presented one; the first differing field is named. A match names the ruleset
+    id@version and the engine that decided it. Not compared, and named on every run: issued_at (a missing one is said to be
+    missing), the fields added after the engine (channel, ledger, declared_accuracy, action_context, case) and
+    document.producer (docs/REPLAY.md). --inputs is the object the verdict's input_hash commits to; --extraction builds it
+    from the same flags \`verify <doc>\` takes. --tolerance restates a rounding override the verdict was issued under
+    ({"rel":…,"absCap":…}). The filing and e-invoice comparisons commit their inputs to the document by hash: --document (and, for a filing at ruleset 0.2 or later, the linkbase
+    files) re-performs them. A signed envelope's signature is checked too, and its key's full fingerprint (sha256 of its DER
+    bytes, as riposte-ledger fingerprint prints it) is printed. --trusted-key pins the key it must be signed with (a public
+    key file, verify keygen's JSON, an inline PEM such as "$(cat k.pub.pem)", or the 64-hex fingerprint; the older form,
+    sha256 of the base64 text, is accepted this release, with a note): any other key, or no signature, FAILS. --strict FAILS as well when something was not re-performed: an annotation field is present, remedies were absent
+    and re-derived, an envelope's key is not pinned with --trusted-key, or issued_at is missing; document.producer is the
+    issuer's label and is reported, not failed. A malformed issued_at, a key repeated in one JSON object, a byte-order mark, a number past the double range,
+    an undeclared annotation member (action_context.approved) or a key a bundle or envelope does not define is refused (exit 3) with or without --strict; --allow-unknown-keys carries such a key, saying so.
+    A verdict of engine 0.0.1 or 0.1.0 that carries no remedies FAILS at remedies: a replayed file must carry what the
+    verdict said. --lenient-remedies (for a verdict issued before remedies existed) compares its core instead and reports
+    the re-derived remedies; --strict still fails it. From engine 0.2.0 a verdict binds its remedies, so no flag applies.
+    A declarative verdict names what it was issued on: always --extraction and --ruleset, and --source, --quotes,
+    --supplied-choices or --archive-file when it says so. Give some but not all and the replay names the flags left out
+    (exit 3) before any hash is compared. Give none and only the structure is checked (exit 2), and the flags are named.
+    When input_hash differs, it prints the recorded and the computed hash and names the input that disagrees where the
+    verdict records it. --ruleset takes a name this build carries: without @version (peppol-en16931) it means the version
+    the verdict names. On a match it prints the headline (PASS, PASS-WITH-OPEN, FAIL, INSUFFICIENT_DATA) and the remedies.
+    A legal verdict under an older rule whose inputs today's default rule reads differently gets a second line ("under
+    today's default legal@<version> this quotation reads can't tell: …"; rule_now in the JSON). --require-ruleset legal@>=0.4.0
+    (any ruleset id; repeatable) FAILS a verdict that names that ruleset at an older version, in words.
+    Exit 0 VERIFIED (re-performed, byte-identical) · 1 FAILED (the binding, the re-performed outcome, the signature, the
+    trusted key, --strict, or --require-ruleset) · 2 structure verified, outcome NOT re-performed (no inputs, or nothing here
+    re-performs them) · 3 not a verdict, a usage error, an input refused or unreadable, or an input the verdict names was left out
+riposte-verify replay <bundle.json | cases.jsonl | folder> [--trusted-key <k>] [--strict] [--lenient-remedies] [--require-ruleset <r>@>=<v>]... [--allow-unknown-keys]
+    a BUNDLE is { "verdict": <verdict or envelope>, "inputs": <its inputs>, "options"?: { "tolerance", "document" } }: it
+    carries its own inputs. A .jsonl holds one bundle per line; a folder, its *.json and *.jsonl files in name order (a
+    folder inside it is not walked, and is named). Each case: MATCH · DIVERGED (the field named) · NOT_REPERFORMED ·
+    REFUSED, with the fields that were not re-performed printed under it. A case whose remedies were deleted DIVERGES at
+    remedies unless --lenient-remedies is given; one whose bundle has a key it does not define is REFUSED (as above). A bare verdict in a folder is refused with the
+    single-verdict command to run instead. A case under a rule older than --require-ruleset asks for is marked REQUIRED.
+    Exit 0 all match · 1 any diverged, a --strict failure, or a --require-ruleset failure · 2 some not re-performed · 3 refused
 riposte-verify reconcile --ledger <chain.jsonl> --population <payments.csv|.jsonl> --mapping <mapping.json> [--format csv|jsonl]
                  [--delimiter ,|;|tab|'|'] [--extractions <docs.json|.jsonl>] [--tenant <id>] [--workflow <id>]... [--ruleset <id>]...
                  [--since <iso>] [--until <iso>] [--rungs <json|file>] [--include-matched] [--policy <policy.json>] [--trusted-keys <k>]
                  [--root-keys <r>] [--json | --md]
-    completeness: did every payment go through the control? The whole book is verified first; then every row of the
+    completeness: did every payment go through the control? The whole ledger is verified first; then every row of the
     customer's payment population lands in one class (MATCHED · MISMATCHED · PAID_DESPITE_HOLD · CHECKED_AFTER_PAYMENT ·
     AMBIGUOUS · BYPASSED · UNREADABLE) and every in-period verdict in one (MATCHED · ORPHAN · AMBIGUOUS · UNKEYED). The
-    mapping declares the columns, keys and book fields (completeness-mapping-v0); --extractions supplies the checked
-    documents a mapping reads book fields from (each used only if its hash is on the book). The population is read as bytes,
-    so the report binds its sha256. Prints the report JSON (--md: the Markdown an auditor reads). Only an anchored GRANT
-    sets a rung (--trusted-keys / --root-keys); --policy is the deployment's declared policy, and a GRANT it does not admit
-    (its tier, max_rung, the signatures autonomy needs there) sets no rung, whatever policy the grant names. Exit 0 clean
-    (every row MATCHED) · 2 exceptions a person must look at (any PAID_DESPITE_HOLD, MISMATCHED, BYPASSED, or any row not
-    MATCHED) · 1 REFUSED (the book does not verify; a mapping or population value it will not read; a corrupt book) · 3 usage
+    mapping declares the columns, keys and ledger fields (completeness-mapping-v0); --extractions supplies the checked
+    documents a mapping reads ledger fields from (each used only if its hash is on the ledger). The population is read as
+    bytes, so the report binds its sha256. Prints the report JSON (--md: the Markdown an auditor reads). Only an anchored
+    GRANT sets a rung (--trusted-keys / --root-keys); --policy is the deployment's declared policy, and a GRANT it does not
+    admit (its tier, max_rung, the signatures autonomy needs there) sets no rung, whatever policy the grant names. Exit 0
+    clean (every row MATCHED) · 2 exceptions a person must look at (any PAID_DESPITE_HOLD, MISMATCHED, BYPASSED, or any row
+    not MATCHED) · 1 REFUSED (the ledger does not verify; a mapping or population value it will not read; a corrupt ledger)
+    · 3 usage
 riposte-verify ledger repair <chain.jsonl>
-    a book whose last line is torn (an append that did not finish: a crash mid-write) reads, but takes no append. This
-    backs the file up (<book>.torn-<time>.bak, never over a file), truncates it to its last whole line, logs what it
-    removed to <book>.repairs.jsonl, and prints exactly what it removed (offset, bytes, sha256, base64). A book whose
-    last line is whole is left alone. Run it with no writer open on the book. Exit 0 repaired (or nothing to repair) ·
+    a ledger whose last line is torn (an append that did not finish: a crash mid-write) reads, but takes no append. This
+    backs the file up (<ledger>.torn-<time>.bak, never over a file), truncates it to its last whole line, logs what it
+    removed to <ledger>.repairs.jsonl, and prints exactly what it removed (offset, bytes, sha256, base64). A ledger whose
+    last line is whole is left alone. Run it with no writer open on the ledger. Exit 0 repaired (or nothing to repair) ·
     1 REFUSED (an unparseable line before the last is corruption, not a torn tail: restore from a backup) · 3
 riposte-verify ledger export <chain.jsonl> --out <file>
-    the book's chain export (the bytes ledger.chainJSONL() gives), streamed: a book of any size. Never over a file (exit
+    the ledger's chain export (the bytes ledger.chainJSONL() gives), streamed: a ledger of any size. Never over a file (exit
     1). Copied as written, not verified (verify report --ledger <file> checks it). Exit 0 · 1 refused · 3
 riposte-verify anchor checkpoint --ledger <chain.jsonl> --key <witness.pem> --signer <witness_id> --out <witness.jsonl | dir/>
                          [--length <n>] [--book-id <id>] [--root-keys <root.pub.pem>]
-    a WITNESS (a party with no write access to the book) signs a checkpoint of the chain head ({length, head, as_of,
+    a WITNESS (a party with no write access to the ledger) signs a checkpoint of the chain head ({length, head, as_of,
     prev_checkpoint}, Ed25519) and appends it to its witness store: a file (one line per checkpoint) or a directory (one
-    file each, never overwritten). Point --out at storage the book's writer cannot rewrite (WORM, another account). The
-    book is verified first, and a book that no longer holds what the store's last checkpoint anchored is never extended.
-    --root-keys: the witness key must be registered on the book with the witness role (not key_admin), or nothing is
+    file each, never overwritten). Point --out at storage the ledger's writer cannot rewrite (WORM, another account). The
+    ledger is verified first, and a ledger that no longer holds what the store's last checkpoint anchored is never extended.
+    --root-keys: the witness key must be registered on the ledger with the witness role (not key_admin), or nothing is
     written. Prints the checkpoint and the witness_keys entry readers anchor it with. Exit 0 signed (or already anchored)
-    · 2 REWRITTEN / TRUNCATED: the book contradicts the store's last checkpoint (its position is named; nothing is
-    signed) · 1 REFUSED (a book that does not verify, not an Ed25519 private key, a position past the book's end, a
+    · 2 REWRITTEN / TRUNCATED: the ledger contradicts the store's last checkpoint (its position is named; nothing is
+    signed) · 1 REFUSED (a ledger that does not verify, not an Ed25519 private key, a position past the ledger's end, a
     store entry that does not verify; nothing is written) · 3 usage
 riposte-verify anchor verify --ledger <chain.jsonl> --witness <witness.jsonl | dir/> (--trusted-keys <witness-keys.json> | --root-keys <root.pub.pem>)
                      [--book-id <id>]
-    the book against its independently held checkpoints. A rewrite that recomputes the whole chain verifies internally,
+    the ledger against its independently held checkpoints. A rewrite that recomputes the whole chain verifies internally,
     and fails here at the first checkpoint whose prefix it touches. --trusted-keys anchors each witness by its public key,
-    held out of band ({"<witness_id>": "<public PEM>"}); --root-keys reads witnesses registered on the book (weaker: a
+    held out of band ({"<witness_id>": "<public PEM>"}); --root-keys reads witnesses registered on the ledger (weaker: a
     rewriter can drop a later revocation). Prints the report JSON; a checkpoint that does not count, and a checkpoint
     missing from the store, are said on stderr. Exit 0 every counted checkpoint held · 2 REWRITTEN / BROKEN / TRUNCATED at
-    an anchored position (named, with the events the change lies in) · 1 REFUSED (no checkpoint counts; the book does
+    an anchored position (named, with the events the change lies in) · 1 REFUSED (no checkpoint counts; the ledger does
     not verify past its last anchored position; a corrupt store) · 3 usage
-riposte-verify ap <layout.txt> | --invoice <f> --po <f> --receipt <f>   AP three-way match (exit 0 approve · 1 hold · 2 abstain)
+riposte-verify ap <layout.txt> | --invoice <f> --po <f> --receipt <f>   AP three-way match
+  --input <ap-input.json | ->           structured input instead (a bill, its PO, item receipts, payment_history;
+                                        docs/AP-INPUT.md), with its replayable proof. Invalid input: exit 3, typed errors
+  --history <history.json>              the invoices already booked, text path: a JSON array ([] = none booked; - reads
+                                        stdin). Without it the duplicate and PO balance checks do not run (exit 2)
+  --price-tolerance <fraction>          unit price allowed over the PO's (default 0.02; "5%" reads 0.05); bound into the proof
+  --freight allow|person, --tax person|allow|rate:<pct>  a PO silent on freight, or (--input) on tax: person (default) or the rule; bound
+  --gate | --allow-open                --gate is the default reading (accepted; it changes nothing). --allow-open exits 0
+                                        only on a bill held because no payment history was given, and says so. Not both
+    Prints the result (JSON) on stdout and, on stderr, the decision with its reasons and the verdict's headline (PASS,
+    PASS-WITH-OPEN, FAIL, INSUFFICIENT_DATA). It fails closed: a bill a check could not run on goes to a person.
+    Exit 0 approve (every check ran) · 1 hold · 2 a person decides · 3 usage or an input that cannot be read
+riposte-verify citations <citations.json> --sources <dir> [--ruleset legal[@version]] [--bind strict|parties] [--json] [--bundle <file>]
+    a brief's citations, each quotation checked verbatim against the opinion text supplied for its cite. A text is used only
+    when its caption names the cite (its parties and reporter citation); otherwise the answer is can't tell (INSUFFICIENT_DATA).
+    It does not check that an authority exists or is good law. <citations.json> is an array of { id, cite?, case_name?, quote?,
+    proposition?, source_key? } or { "citations": [...] }; --sources holds a sources.json manifest or one <key>.txt per text
+    (docs/LEGAL.md). --bind strict (the default) needs the reporter citation and every party in the caption; parties also uses a
+    text whose caption names every party, and each such answer stays open ("bound by parties only"). The report goes to
+    stderr; --json prints the verdict on stdout. --bundle <file> writes { verdict, inputs } for verify replay: it holds every
+    quotation and every opinion text.
+    Exit 0 PASS · 1 FAIL · 2 a citation could not be checked, and none failed · 3 usage or an input that cannot be read
 riposte-verify mine <cases.jsonl> --schema <schema.json>   mine candidate rules from labelled approve/hold cases (JSON report)
   --ap                                  cases are Distil-style AP layouts {id,input,decision}; built-in AP schema unless --schema
   --max-approved-violation-rate <r>     tolerate approved exceptions (default 0 = none)
   --ruleset-out <file>                  also write the compiled ruleset (never over a file: exit 1; enforce: verify <doc> --ruleset <file>)
   --ruleset-id <id>                     id of the compiled ruleset (default "mined")
   --thresholds                          also learn a constant per numeric document field (X <= c, X >= c)
+    Exit 0 · 1 refused (the --ruleset-out file exists) · 3 usage
 
 riposte-verify twin --html <primary.htm> --period-end YYYY-MM-DD --claims <claims.json> [--tolerance 0.5] [--period-tolerance-days 7]
             [--ruleset 0.1|0.2|0.2.1] [--pre <x_pre.xml>] [--filing-summary <FilingSummary.xml>] [--schema <x.xsd>]
-    structured-twin mode (CREDENCE-1): check extracted values against the filing's own inline-XBRL facts. claims.json is
+    compare extracted values with the filing's own inline-XBRL facts. claims.json is
     [{"id","field","value"}] (or {"claims":[...]}). Prints {verdict, judgments, twin}. --ruleset 0.1 (default) binds against
-    the whole document; 0.2 (CREDENCE-2) and 0.2.1 bind only through the face statements named by the filing's presentation
-    linkbase (--pre, --filing-summary, --schema): without one every claim ABSTAINs (NO_PRESENTATION_LINKBASE).
-    Exit 0 PASS · 1 FAIL · 2 ABSTAIN
+    the whole document; 0.2 and 0.2.1 bind only through the face statements named by the filing's presentation linkbase
+    (--pre, --filing-summary, --schema): without one every claim is INSUFFICIENT_DATA (NO_PRESENTATION_LINKBASE).
+    Exit 0 PASS · 1 FAIL · 2 INSUFFICIENT_DATA (can't tell) · 3 usage
 riposte-verify twin-einvoice <invoice.xml> --claims <claims.json> [--profile peppol-bis3|zatca-ksa|ksef-fa3] [--no-consistency]
-    e-invoice twin: check extracted values against the binding e-invoice XML itself (Peppol BIS 3.0, ZATCA, KSeF FA(3)).
+    compare extracted values with the binding e-invoice XML itself (Peppol BIS 3.0, ZATCA, KSeF FA(3)).
     claims.json is [{"id","field","value","currency?"}] (or {"claims":[...]}). Prints {verdict, judgments, consistency,
-    twin}. Exit 0 PASS · 1 FAIL · 2 ABSTAIN
+    twin} as JSON on stdout, and on stderr the headline and one line per claim in words (FAIL, INSUFFICIENT_DATA, PASS).
+    It fails closed, as check does. Exit 0 PASS · 1 FAIL · 2 PASS-WITH-OPEN or INSUFFICIENT_DATA (can't tell) · 3 usage
 riposte-verify notice <verdict.json> [--level record|advise|gate|autonomy] [--json]
-    one action's notice at a rung (default record): every FAIL and ABSTAIN with its evidence and its own dispute path, at
+    one action's notice at a rung (default record): every FAIL and can't tell with its evidence and its own dispute path, at
     every rung. Surfaced at record/advise; held at gate/autonomy. Exit 0 PROCEED · 1 HOLD · 2 SURFACED (not held)
 riposte-verify voice --ledger <chain.jsonl> --policy <policy.json> --workflow <id> --tier <tier> [--granted <level> | --grant <grant.json>] [--bounds <text>] [--surface]
 riposte-verify voice --from-book --ledger <chain.jsonl> --policy <policy.json> --workflow <id> [--tier <tier>] [--trusted-keys <keys.json>] [--root-keys <root.pub.pem>] [--surface]
-    a workflow's voice (record | advise | gate | autonomy) from the book of record. The rung is ALWAYS what a person granted
+    a workflow's voice (record | advise | gate | autonomy) from the ledger. The rung is ALWAYS what a person granted
     (default record); Riposte only PROPOSES: a promotion, or an URGENT demotion with the failing cases listed for dispute.
     --grant names the signer and the policy version + tier the grant was made under. --from-book reads the rung, tier,
-    bounds and policy version from the GRANT in force on the book (a person's signed decision, see verify grant), cites
+    bounds and policy version from the GRANT in force on the ledger (a person's signed decision, see verify grant), cites
     it, and holds back a proposal a person declined until the evidence changes (said on stderr: "Kept at <rung> by
     <person>, <time>; stands until …" / "Not now: <person>, <time>; re-raises when …"); --tier only while nothing is
     granted. Only an ANCHORED signer's decision moves a rung (--trusted-keys / --root-keys). --surface prints the voice
@@ -243,32 +399,32 @@ riposte-verify voice --from-book --ledger <chain.jsonl> --policy <policy.json> -
 riposte-verify opinion --from-book --ledger <chain.jsonl> --policy <policy.json> --workflow <id> [--tier <tier>] [--tenant <id>] [--trusted-keys <keys.json>] [--root-keys <root.pub.pem>] [--json]
 riposte-verify opinion --ledger <chain.jsonl> --policy <policy.json> (--proposal <proposal.json> | --workflow <id> --tier <tier> [--granted <level> | --grant <grant.json>] [--bounds <text>]) [--tenant <id>] [--trusted-keys <keys.json>] [--json]
 riposte-verify opinion --ledger <chain.jsonl> --dispute <verdict_id> [--claim <claim_id>] [--tenant <id>] [--trusted-keys <keys.json>] [--json]
-    the courtroom opinion (Markdown; --json prints the source of truth). Every premise is checked by Riposte's own code.
+    the written opinion (Markdown; --json prints the source of truth). Every premise is checked by Riposte's own code.
     --from-book reads the rung from the GRANT in force (cited as the decision a ruling would amend); a standing decline is
-    DECLINED, never a fresh ask. --tenant reads one tenant's records and decisions on a shared book. Exit 0 · 1 withheld
+    DECLINED, never a fresh ask. --tenant reads one tenant's records and decisions on a shared ledger. Exit 0 · 1 withheld
     (a premise failed its check)
 riposte-verify rule --ledger <chain.jsonl> --dispute <verdict_id> [--claim <claim_id>] --ruling STANDS|SET_ASIDE --reason <text>
             --key <person.pem> --signer <id> [--tenant <id>] [--inputs <inputs.json>] [--note <text>] [--signed-at <iso>] [--trusted-keys <keys.json>]
-    a person's signed ruling on LAW over the dispute opinion Riposte derives from the book (a verified one proposing
+    a person's signed ruling on LAW over the dispute opinion Riposte derives from the ledger (a verified one proposing
     UPHOLD or REFER on a deterministic PASS/FAIL finding). Prints ONE JSON line: \`verify rule … >> rulings.jsonl\`.
     Exit 0 · 1 REFUSED (a withheld opinion, an abstention, a key the trusted keys do not anchor) · 3
 riposte-verify statute --ledger <chain.jsonl> --rulings <rulings.jsonl> --rule <rule_id> --domain <domain> [--outcome FAIL|PASS] [--tenant <id>]
                [--rows-out <rows.jsonl> --schema-out <schema.json>] [--inputs <by-verdict.json>] [--trusted-keys <keys.json>]
-    precedent → statute: every ruling re-verified against the book, the rulings mined as a case table, each candidate rule
+    precedent → statute: every ruling re-verified against the ledger, the rulings mined as a case table, each candidate rule
     returned as COUNSEL (never a VERDICT; a person adopts one by writing it into a ruleset). --rows-out/--schema-out write
-    the table for verify mine (never over a file). Exit 0 · 1 the book did not verify · 3
+    the table for verify mine (never over a file). Exit 0 · 1 the ledger did not verify · 3
 riposte-verify report --ledger <chain.jsonl> [--policy <policy.json>] [--declarations <d.json>] [--tenant <id>] [--month YYYY-MM] [--as-of <iso>] [--trusted-keys <keys.json>] [--root-keys <root.pub.pem>]
-    the tenant book-of-record report (Markdown), the day-1 audit report: volume, the human-overturn rate, per-rule
-    calibration, what Riposte is asking a person to decide (and what a person declined, in words: who, when, what would
-    re-raise it), FAIL/ABSTAIN notices by rung, and tamper-evidence. A workflow's rung is read from the GRANT in force on
-    the book, which the report cites; --declarations ([{workflow_id, consequence_tier, granted?, bounds?}]) covers
-    workflows with no grant, and never overrides one. Exit 0 · 1 the book did not verify
+    the tenant ledger report (Markdown), the day-1 audit report: volume, the human-overturn rate, per-rule calibration,
+    what Riposte is asking a person to decide (and what a person declined, in words: who, when, what would re-raise it),
+    FAIL / INSUFFICIENT_DATA notices by rung, and tamper-evidence. A workflow's rung is read from the GRANT in force on the ledger,
+    which the report cites; --declarations ([{workflow_id, consequence_tier, granted?, bounds?}]) covers workflows with no
+    grant, and never overrides one. Exit 0 · 1 the ledger did not verify
 
-A person's decisions (Ed25519-signed, appended to the book through the ledger's door; only a person moves a rung):
+A person's decisions (Ed25519-signed, appended to the ledger; only a person moves a rung):
 riposte-verify keygen --out <person.pem> [--signer <id>]
     an Ed25519 keypair for local signing: the PRIVATE key to <person.pem> (never overwritten), the public key to
     <person>.pub.pem, and the --trusted-keys entry on stdout. KEY CUSTODY IS THE OPERATOR'S: Riposte keeps no copy; revoke
-    a key on the book with verify key revoke. Exit 0 · 1 refused (a file is already there) · 3 error
+    a key on the ledger with verify key revoke. Exit 0 · 1 refused (a file is already there) · 3 error
 riposte-verify grant --ledger <chain.jsonl> --key <person.pem> --signer <id> --workflow <id> --level record|advise|gate|autonomy
              --tier <tier> --policy <policy.json> [--bounds <text>] [--answers <proposal_id>] [--note <text>] [--signed-at <iso>]
     a person sets a workflow's rung, either direction: a GRANT under the policy version (by hash) and the consequence tier
@@ -278,9 +434,9 @@ riposte-verify grant --ledger <chain.jsonl> --key <person.pem> --signer <id> --w
 riposte-verify grant --cosign <grant_decision_id> --ledger <chain.jsonl> --key <person.pem> --signer <id> [--trusted-keys <k> | --root-keys <r>]
              [--policy <policy.json>] [--note <text>] [--signed-at <iso>]
     a second person's signature on a pending GRANT (a GRANT_COSIGN, riding in a GRANT event: the chain format is unchanged).
-    It names the grant (its decision id, or a unique prefix of 12+ characters) and restates its workflow and level. The door
-    refuses one that would not count: the grant's own signer, a repeat signer, the same key or two ids on one key, a
-    co-signer with no anchored key or a revoked one, an unanchored or superseded grant (exit 1; the book is untouched).
+    It names the grant (its decision id, or a unique prefix of 12+ characters) and restates its workflow and level. The
+    ledger refuses one that would not count: the grant's own signer, a repeat signer, the same key or two ids on one key, a
+    co-signer with no anchored key or a revoked one, an unanchored or superseded grant (exit 1; the ledger is untouched).
     Prints the entry and the grant's signatures ("2 of 2: in force" / "1 of 2: pending"); --policy is the declared policy:
     a GRANT of autonomy needs its tier's count, whatever policy the grant names
 riposte-verify succession --ledger <chain.jsonl> --from <tenant>/<ruleset>@<old> --to <tenant>/<ruleset>@<new> --inputs <inputs.jsonl>
@@ -295,18 +451,18 @@ riposte-verify succession --ledger <chain.jsonl> --from <tenant>/<ruleset>@<old>
     Then it signs a GRANT on --to carrying the replay (at the old rung or below, never above; the same tier; autonomy keeps
     its signature count, so a two-signature tier is pending until co-signed). A change to PASS lets through what the old
     rules held: it needs --loosening-reason. --dry-run prints the replay and the GRANT it would sign and appends nothing
-    (with --key it also asks the door, on a copy). --grant pins the grant you reviewed: refused if another is in force.
-    Exit 0 appended (or dry run) · 1 REFUSED, book untouched (a book that does not verify, nothing in force to carry, a
+    (with --key it also tries the append on a copy). --grant pins the grant you reviewed: refused if another is in force.
+    Exit 0 appended (or dry run) · 1 REFUSED, ledger untouched (a ledger that does not verify, nothing in force to carry, a
     pinned grant no longer in force, a raised rung, a loosening without its reason, a replay that re-performed nothing,
-    a signer the door does not take) · 3 usage
+    a signer the ledger does not accept) · 3 usage
 riposte-verify succession --check <decision_id> --ledger <chain.jsonl> --inputs <inputs.jsonl> [--ruleset <r>] [--tolerance <t>]
                   [--trusted-keys <k>] [--root-keys <r>]
-    anyone holding the documents re-performs the replay a succession on the book carries, over its own span. Exit 0 the
+    anyone holding the documents re-performs the replay a succession on the ledger carries, over its own span. Exit 0 the
     same replay, byte for byte · 1 it differs (each difference named), or the grant carries no succession · 3 usage
 riposte-verify decline --ledger <chain.jsonl> --key <person.pem> --signer <id> --policy <policy.json> (--assessment <assessment.json> | --workflow <id> --proposal <proposal_id> [--tier <tier>])
                --reason <text> [--note <text>] [--signed-at <iso>]
-    a person's "no" to the proposal the BOOK raises now: Riposte reads the book again under --policy and signs a DECLINE only
-    for the live proposal named (by the assessment the person read, verify voice --from-book's output, or by id), so a
+    a person's "no" to the proposal the LEDGER raises now: Riposte reads the ledger again under --policy and signs a DECLINE
+    only for the live proposal named (by the assessment the person read, verify voice --from-book's output, or by id), so a
     doctored assessment file never becomes a signed decline. It moves nothing and stops the re-raise until the evidence
     changes; stderr says it: "Kept at <rung> by <person>, <time>; stands until …" or "Not now: <person>, <time>; re-raises when …"
 riposte-verify revise-policy --ledger <chain.jsonl> --key <person.pem> --signer <id> --from <prior.json> --draft <next.json> --reason <text> [--signed-at <iso>] [--out <policy-next.json>]
@@ -316,10 +472,10 @@ riposte-verify revise-policy --ledger <chain.jsonl> --key <person.pem> --signer 
 riposte-verify revise-policy --ledger <chain.jsonl> --key <person.pem> --signer <id> --revised <policy.json>
     appends a revision already built with revisePolicy. --signer must be the revision's revised_by
   grant | decline | revise-policy | review | canary also take [--trusted-keys <keys.json>] ({"<signer_id>": "<public PEM>" |
-  [...]}) and [--root-keys <root.pub.pem>] (the root public key: the key registry on the book anchors signers).
-  Then only a key anchored to the signer passes the door. Without them the signer is UNANCHORED: the signature proves the
-  key holder decided, not which person, and an unanchored decision moves no rung. The ledger file must exist (an empty
-  file is a new book); a book that does not verify takes no decision. Exit 0 appended · 1 REFUSED (the reason is printed;
+  [...]}) and [--root-keys <root.pub.pem>] (the root public key: the key registry on the ledger anchors signers).
+  Then only a key anchored to the signer is accepted. Without them the signer is UNANCHORED: the signature proves the key
+  holder decided, not which person, and an unanchored decision moves no rung. The ledger file must exist (an empty file
+  is a new ledger); a ledger that does not verify takes no decision. Exit 0 appended · 1 REFUSED (the reason is printed;
   nothing is appended) · 3 usage/error
 
 Evidence integrity (the draw, the queue, signed reviews, the key registry, canaries):
@@ -327,32 +483,231 @@ riposte-verify sample commit --ledger <chain.jsonl> --policy <policy.json> --wor
     the scheduled step (run it daily): commit every closed period's random review draw that is due. The seed is the chain,
     so nobody chooses the sample. Exit 0 committed (or nothing due) · 1 REFUSED · 3
 riposte-verify queue --ledger <chain.jsonl> --policy <policy.json> --workflow <id> [--tier <tier>] [--trusted-keys <k>] [--root-keys <r>]
-    a reviewer's queue: every drawn, still-unreviewed item, oldest first, with its deadline. Exit 0 · 1 the book did not verify
+    a reviewer's queue: every drawn, still-unreviewed item, oldest first, with its deadline. Exit 0 · 1 the ledger did not
+    verify
 riposte-verify review --sign --ledger <chain.jsonl> --key <person.pem> --signer <id> --verdict <verdict_id> --decision UPHELD|OVERTURNED
               [--procedure re-performed|inspected] [--tenant <id>] [--note <text>] [--signed-at <iso>]
-    a person's review as a SIGNED decision (the evidence a rung rests on; an agent can forge neither a clean record nor a slap)
+    a person's review as a SIGNED decision (the evidence a rung rests on; an agent can forge neither a clean record nor a
+    reversal)
 riposte-verify key register --ledger <chain.jsonl> (--root <root.pem> | --key <admin.pem> --signer <id> --root-keys <root.pub.pem>)
                     --subject <id> --public-key <person.pub.pem> --roles key_admin,policy_author,reviewer,grant_signer,witness [--tenants <t1,t2>]
 riposte-verify key revoke --ledger <chain.jsonl> (--root <root.pem> | --key <pem> --signer <id> --root-keys <root.pub.pem>)
                   --subject <id> --public-key <person.pub.pem> --reason <text>
-    the key registry on the book: a key joins with its roles (segregation of duties), or leaves prospectively. Signed by the
-    registry ROOT or a registered key_admin; every reader anchors with --root-keys (the root's public key, held out of band)
+    the key registry on the ledger: a key joins with its roles (segregation of duties), or leaves prospectively. Signed by
+    the registry ROOT or a registered key_admin; every reader anchors with --root-keys (the root's public key, held out of band)
 riposte-verify canary seal --ledger <chain.jsonl> --key <author.pem> --signer <id> --workflow <id> --verdicts <id,id,… | ids.json> --secret-out <secret.json>
 riposte-verify canary reveal --ledger <chain.jsonl> --key <author.pem> --signer <id> --secret <secret.json> [--seal <decision_id>]
-    reviewer attention, measured without telling the reviewer: seal known-bad recorded items (the book holds only a salted
+    reviewer attention, measured without telling the reviewer: seal known-bad recorded items (the ledger holds only a salted
     commitment; the ids and salt go to --secret-out, never overwritten: keep it secret), then the sealer reveals them
 riposte-verify policy lint --policy <policy.json>
     the promotion policy's errors AND warnings (an unreachable bar: a min_n below its zero-miss n; sidedness). Exit 0 · 1 errors
 
-Exit: 0 PASS/ok · 1 FAIL/not-ok · 2 INSUFFICIENT_DATA · 3 error`
+Over HTTP:
+riposte-verify serve [--port N] [--host ADDRESS] [--allow-host NAME]... [--check-timeout-ms N] [--check-heap-mb N] [--check-workers N] [--max-body BYTES]
+    the engine's pure core as a JSON HTTP service (OpenAPI 3.1 at GET /v1/openapi.json), until stopped. --port: default
+    $PORT, else 8080 (0 picks a free port, printed when listening). --host: default 127.0.0.1, this machine only; any
+    other address, such as 0.0.0.0, prints a warning, because the server has no authentication: anyone who can reach the
+    port can call it. A request is answered only when its Host header names localhost, 127.0.0.1, ::1 or the --host
+    address (for 0.0.0.0 or ::, any address of this machine); else 421, and a request with no Host header is 400.
+    --allow-host adds a name, such as the public name a proxy forwards. A request body is read only when sent with
+    Content-Type: application/json, as UTF-8 (a charset other than utf-8 is 415).
+    Each POST is checked in a worker thread under a budget: --check-timeout-ms (default 60000), --check-heap-mb (default
+    512) and --check-workers (checks at once, default 2; up to 16 more wait, each at most the time budget, then 503). A
+    check past its time or heap is stopped and answered 413, "input too large to check within the service's budget; run it
+    with the command line", with x-verify-exit 2; the server stays up. The environment can set them too (VERIFY_CHECK_TIMEOUT_MS, VERIFY_CHECK_HEAP_MB,
+    VERIFY_CHECK_WORKERS); a flag wins.
+    The request body is counted as it streams and capped before it is parsed: 4 MiB (4194304 bytes) by default, 32 MiB on
+    the four routes that carry a whole document (/v1/twin, /v1/opinion, /v1/reconcile, /v1/succession/replay); past the cap
+    the answer is 413, naming the cap. --max-body BYTES (a positive whole number) sets the 4 MiB default, as the environment
+    variable VERIFY_MAX_BODY_BYTES does (the flag wins); neither changes the four routes' 32 MiB.
+    POST /v1/replay sets x-verify-exit to the replay's exit, as \`verify replay\` on a folder gives it (0 every case matched,
+    1 one diverged, 2 one was not re-performed, 3 one was refused), and its status to match: 409 when one diverged, 422 when
+    one was refused, else 200.
+    Exit 3 a usage error, or the port could not be bound
 
-function readJson(path: string): Json {
-  return JSON.parse(readFileSync(path === '-' ? 0 : path, 'utf8')) as Json
+Exit codes are per command (each block above lists its own); 3 is always a usage error or an input that cannot be read.
+Text and JSON inputs are read as UTF-8: invalid UTF-8, a JSON byte-order mark, a JSON number past the double range, a
+JSON number that cannot be represented exactly (9007199254740993 reads as 9007199254740992; write amounts as strings with
+two decimals) and JSON nested more than 256 levels deep ("nesting too deep, limit 256") are refused (exit 3), never hashed.
+
+GLOSSARY
+  verdict         the JSON a check returns: outcome, gate_status (engine 0.6.0), claims, remedies, and the hashes that
+                  bind it to its inputs. A replay re-performs it.
+  bundle          a verdict together with the inputs it is bound to: { "verdict", "inputs", "options"? }
+  envelope        a verdict signed with Ed25519: { "verdict", "alg", "public_key", "signature" }
+  PASS-WITH-OPEN  every check that ran held, but some could not run; a gate holds (recorded as PASS_WITH_OPEN)
+  OPEN            a struck load-bearing field: a value a check needs could not be read or was withdrawn
+  ledger          the hash-chained, append-only file of verdicts and signed decisions (the "book of record";
+                  --from-book reads from it)
+  rung            a workflow's autonomy level, granted by a person: record, advise, gate or autonomy
+  verify twin, verify twin-einvoice
+                  compare extracted values with the document's own machine-readable copy: a filing's inline XBRL,
+                  an e-invoice's XML`
+
+/** The binary this build is installed as: `verify` in the lab, `riposte-verify` in the public tree (the export renames USAGE). */
+const BIN = USAGE.slice(0, USAGE.indexOf(" "))
+
+/**
+ * The first screen (2026-10-05): what a buyer runs first, with each command's exit codes, in 40 lines or fewer. Every
+ * command's own options: `verify <command> --help`; the whole reference: `verify --help all` (USAGE, below).
+ */
+const HELP = `${BIN} checks extracted documents deterministically. Every answer is a verdict anyone can replay.
+
+Start with one of these:
+
+${BIN} ap <layout.txt>                       AP three-way match: invoice, purchase order, goods receipt
+${BIN} ap --input <ap-input.json>            the same, from structured input (docs/AP-INPUT.md)
+    exit 0 approve · 1 hold · 2 abstain (a person decides; also when a check could not run) · 3 usage or unreadable input
+
+${BIN} check <extraction.json> [--ruleset <name | file.json>] [--source <file.txt>] [--allow-open]
+    check extracted values against a ruleset (default: invoice). The verdict is JSON on stdout; the headline on
+    stderr reads PASS, PASS-WITH-OPEN (every check that ran held, some could not run), FAIL or INSUFFICIENT_DATA.
+    \`${BIN} <extraction.json>\` is the same command. It fails closed: only a clean PASS exits 0.
+    exit 0 PASS · 1 FAIL · 2 PASS-WITH-OPEN (--allow-open: 0 when each open check waits on a reference or a missing field) or
+    INSUFFICIENT_DATA · 3 usage error or unreadable input
+
+${BIN} replay <verdict.json> --extraction <file> --ruleset <name | file> [--source <file>]
+${BIN} replay <bundle.json | cases.jsonl | folder>
+    re-perform a verdict you were handed and byte-compare it with the original. --trusted-key pins the signing key;
+    --strict also fails on anything that was not re-performed.
+    exit 0 verified · 1 failed (tampered, foreign inputs, untrusted key) · 2 structure checked, not re-performed
+    · 3 usage error, unreadable input, a key or an annotation member the format does not define, or an input the verdict
+    names was left out
+
+More:
+  ${BIN} <command> --help    one command's options (ap, check, replay, lint, extract-schema, measure, ...)
+  ${BIN} --help all          every command: rulesets, the ledger, signed decisions, reconcile, anchors, filing and e-invoice comparisons
+  ${BIN} --version           this build's version and the engines whose verdicts it replays
+
+Text and JSON inputs are read as UTF-8: a file that is not valid UTF-8, a JSON file that starts with a byte-order
+mark, and a JSON number past the double range (1e999) are refused (exit 3), never hashed.`
+
+/** The verbs a shared note in USAGE applies to ("grant | decline | revise-policy | review | canary also take ..."). */
+const SHARED_NOTE = /^ {2}([a-z-]+(?: \| [a-z-]+)+) also take /
+
+/** USAGE as command blocks, in order: the verbs each block documents and its text. The first block is `check` (verify <doc>). */
+function usageBlocks(): { verbs: string[]; text: string }[] {
+  const out: { verbs: string[]; lines: string[] }[] = []
+  let cur: { verbs: string[]; lines: string[] } | undefined
+  for (const line of USAGE.split('\n')) {
+    const head = /^(?:riposte-)?verify (\S+)/.exec(line)
+    const shared = SHARED_NOTE.exec(line)
+    if (head) {
+      const verb = head[1]!.startsWith('<') ? 'check' : head[1]!
+      if (cur && cur.verbs.length === 1 && cur.verbs[0] === verb && cur.lines.every(l => /^(?:riposte-)?verify /.test(l) || /^\s/.test(l))) cur.lines.push(line)
+      else { cur = { verbs: [verb], lines: [line] }; out.push(cur) }
+    } else if (shared) {
+      cur = { verbs: shared[1]!.split(' | '), lines: [line] }
+      out.push(cur)
+    } else if (cur && /^\s+\S/.test(line)) cur.lines.push(line)
+    else cur = undefined
+  }
+  return out.map(b => ({ verbs: b.verbs, text: b.lines.join('\n') }))
+}
+
+/** One command's help (2026-10-05): its blocks of USAGE, or undefined when there is no such command. */
+function helpFor(verb: string): string | undefined {
+  const blocks = usageBlocks().filter(b => b.verbs.includes(verb))
+  return blocks.length ? `${blocks.map(b => b.text).join('\n')}\n(every command: ${BIN} --help all)` : undefined
+}
+
+/** Print a command's help on stderr (the first screen when it has none of its own). Exit 0. */
+function printHelp(io: CliIO, verb: string): number {
+  io.err(`${helpFor(verb) ?? HELP}\n`)
+  return 0
+}
+
+/**
+ * How the reader can type this CLI again, for the hints a usage error prints (2026-10-05: `see: riposte-verify replay --help`
+ * could not be typed in a source checkout, where nothing by that name is on PATH). Run as `node <path>/cli.js` from a checkout,
+ * a hint names that command, the path relative to the current folder; run from TypeScript, `npx tsx <path>/cli.ts`; installed
+ * (the path runs through node_modules) or called in-process (tests, a host), the binary's name.
+ */
+export function invokedAs(main: string | undefined = process.argv[1], cwd: string = process.cwd()): string {
+  if (!main || !/[\\/]cli\.[cm]?[jt]s$/.test(main) || /[\\/]node_modules[\\/]/.test(main)) return BIN
+  let p = relative(cwd, main)
+  if (!p || isAbsolute(p)) p = main
+  p = p.split(/[\\/]/).join('/')
+  const shown = /[\s"'$`&|;()<>]/.test(p) ? JSON.stringify(p) : p
+  return /\.[cm]?ts$/.test(p) ? `npx tsx ${shown}` : `node ${shown}`
+}
+
+/** The one-line pointer that follows a usage error (never the whole reference). */
+const seeHelp = (verb: string): string => `see: ${invokedAs()} ${verb.split(' ')[0] === 'check' || verb === '' ? 'check' : verb.split(' ')[0]} --help`
+
+/** Edit distance (for "did you mean"). */
+function editDistance(a: string, b: string): number {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array<number>(b.length).fill(0)])
+  for (let j = 1; j <= b.length; j++) d[0]![j] = j
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+    d[i]![j] = Math.min(d[i - 1]![j]! + 1, d[i]![j - 1]! + 1, d[i - 1]![j - 1]! + (a[i - 1] === b[j - 1] ? 0 : 1))
+  }
+  return d[a.length]![b.length]!
+}
+
+/** " (did you mean --ruleset?)" for an unknown option close to a known one, else "". */
+function didYouMean(unknown: string, known: readonly string[]): string {
+  const name = unknown.replace(/=.*$/, '')
+  let best: string | undefined, bestD = 3
+  for (const k of known) { const dd = editDistance(name, k); if (dd < bestD) { best = k; bestD = dd } }
+  return best !== undefined && best !== name ? ` (did you mean ${best}?)` : ''
+}
+
+/** The unknown options of a verb, as one usage line with a suggestion per option. */
+function unknownOptions(unknown: readonly string[], known: readonly string[]): string {
+  return `unknown option(s) ${unknown.map(u => `${u}${didYouMean(u, known)}`).join(', ')}`
+}
+
+/**
+ * A text input, read under the hash contract (2026-10-05; src/protocol/hash-input.ts): the file's bytes decoded as UTF-8
+ * with a FATAL decoder. Bytes that are not UTF-8 are refused with their offset, never replaced by U+FFFD (three source files that
+ * differed in one byte used to share one input_hash). A byte-order mark is kept, as before. `-` (or 0) is stdin.
+ */
+function readText(path: string | 0): string {
+  if (path !== 0 && path !== '-' && isFolder(path)) throw new Error(`${path} is a folder, not a file`)
+  return decodeUtf8Strict(readFileSync(path === '-' ? 0 : path), path === 0 || path === '-' ? 'stdin' : path)
+}
+
+/** True when `path` names a folder (false when it names a file or nothing). */
+function isFolder(path: string): boolean {
+  try { return statSync(path).isDirectory() } catch { return false }
+}
+
+/** A JSON input, read under the hash contract: UTF-8 (readText), no byte-order mark, no number past the double range. */
+function readJson(path: string | 0): Json {
+  return parseJsonStrict(readText(path), path === 0 || path === '-' ? 'stdin' : path) as Json
+}
+
+/**
+ * A declarative ruleset named on the command line (2026-10-03): a name this build carries resolves to its embedded,
+ * verbatim copy (`peppol-en16931` → 0.2.0, `peppol-en16931@0.1.0`, `e-invoice`; rulesets/declarative.ts); anything else is
+ * read as a JSON file. A file whose path is exactly a carried name is read by writing it as a path (`./peppol-en16931`).
+ */
+function readRulesetArg(arg: string): Json {
+  const named = resolveDeclarativeRuleset(arg)
+  if (named !== undefined) return named as unknown as Json
+  // 2026-10-05: a mistyped name used to answer with a raw ENOENT on a file nobody meant
+  if (!existsSync(arg)) throw new ArgRefused(`no ruleset named "${arg}"${didYouMean(arg, knownRulesetNames())}; known: ${knownRulesetNames().join(', ')}; or the path of a ruleset JSON file`)
+  return readJson(arg)
+}
+
+/** A command-line value that names nothing usable (a ruleset name nobody carries, a --source that is not a file): exit 3, said plainly. */
+class ArgRefused extends Error {}
+
+/** Every ruleset name `--ruleset` takes: the built-in ones, then each carried declarative id, id@version and domain name. */
+function knownRulesetNames(): string[] {
+  return [...BUILTIN, ...carriedRulesetNames()]
+}
+
+/** `--source <file>`: the page text, read from a file (2026-10-05: `--source "some text"` used to answer with a raw ENOENT). */
+function readSourceArg(path: string): string {
+  if (path !== '-' && !existsSync(path)) throw new ArgRefused(`--source takes a file path (the source document's text, read as UTF-8); there is no file named ${JSON.stringify(path)}`)
+  return readText(path)
 }
 
 /** A labels file is either an array of {extraction,label} or an object { cases: [...] }. */
 function readLabels(path: string): LabeledCase[] {
-  const raw = JSON.parse(readFileSync(path, 'utf8')) as unknown
+  const raw = readJson(path) as unknown
   const arr = Array.isArray(raw) ? raw : (raw as { cases?: unknown }).cases
   if (!Array.isArray(arr)) throw new Error('labels file must be an array of {extraction,label} or { "cases": [...] }')
   return arr as LabeledCase[]
@@ -360,9 +715,11 @@ function readLabels(path: string): LabeledCase[] {
 
 function runLint(argv: string[], io: CliIO): number {
   const a = parse(argv)
-  if (a.help || !a.ruleset) { io.err(`${USAGE}\n`); return a.help ? 0 : 3 }
+  if (a.help) return printHelp(io, 'lint')
+  if (a.unknown.length) return usageError(io, 'lint', unknownOptions(a.unknown, PARSE_FLAGS))
+  if (!a.ruleset) return usageError(io, 'lint', 'needs --ruleset <file.json | name>')
   let ruleset: DeclarativeRuleset
-  try { ruleset = readJson(a.ruleset) as unknown as DeclarativeRuleset } catch (e) { io.err(`error reading ruleset: ${(e as Error).message}\n`); return 3 }
+  try { ruleset = readRulesetArg(a.ruleset) as unknown as DeclarativeRuleset } catch (e) { io.err(`error reading ruleset: ${(e as Error).message}\n`); return 3 }
   const result = lintRuleset(ruleset)
   io.out(`${JSON.stringify(result, null, 2)}\n`)
   return result.ok ? 0 : 1
@@ -370,10 +727,12 @@ function runLint(argv: string[], io: CliIO): number {
 
 function runMeasure(argv: string[], io: CliIO): number {
   const a = parse(argv)
-  if (a.help || !a.ruleset || !a.labels) { io.err(`${USAGE}\n`); return a.help ? 0 : 3 }
+  if (a.help) return printHelp(io, 'measure')
+  if (a.unknown.length) return usageError(io, 'measure', unknownOptions(a.unknown, PARSE_FLAGS))
+  if (!a.ruleset || !a.labels) return usageError(io, 'measure', 'needs --ruleset <file.json | name> and --labels <set.json>')
   let ruleset: DeclarativeRuleset, cases: LabeledCase[]
   try {
-    ruleset = readJson(a.ruleset) as unknown as DeclarativeRuleset
+    ruleset = readRulesetArg(a.ruleset) as unknown as DeclarativeRuleset
     cases = readLabels(a.labels)
   } catch (e) { io.err(`error reading input: ${(e as Error).message}\n`); return 3 }
   const m = measureRuleset(ruleset, cases)
@@ -383,9 +742,23 @@ function runMeasure(argv: string[], io: CliIO): number {
 
 function runVerify(argv: string[], io: CliIO): number {
   const a = parse(argv)
-  if (a.help || !a.file) { io.err(`${USAGE}\n`); return a.help ? 0 : 3 }
+  if (a.help) return printHelp(io, 'check')
+  if (a.unknown.length) { io.err(`verify: ${unknownOptions(a.unknown, PARSE_FLAGS)}\n${seeHelp('check')}\n`); return 3 }
+  if (!a.file) { io.err(`verify: needs <extraction.json> (or - for stdin)\n${seeHelp('check')}\n`); return 3 }
+  // 2026-10-05: `verify replya x.json` used to check x.json (the last word won); one extraction per call
+  if (a.files.length > 1) { io.err(`verify: one extraction per call (got ${a.files.join(', ')})\n${seeHelp('check')}\n`); return 3 }
+  if (a.gate && a.allowOpen) { io.err(`verify: --gate and --allow-open read an open verdict two ways: give one\n${seeHelp('check')}\n`); return 3 }
+  // 2026-10-13: --payer-role names who pays a pay application; it changes the words of the report, never the verdict
+  if (a.payerRole !== undefined && a.payerRole !== 'owner' && a.payerRole !== 'payer') { io.err(`verify: --payer-role ${JSON.stringify(a.payerRole ?? '')}: give owner (the AIA owner pays this application) or payer (anyone else, the default)\n${seeHelp('check')}\n`); return 3 }
+  if (a.payerRole !== undefined && a.ruleset !== 'pay-app') { io.err(`verify: --payer-role applies to a pay application (--ruleset pay-app)\n${seeHelp('check')}\n`); return 3 }
+  // 2026-10-05: a folder is a replay target, never an extraction (it used to answer with a raw EISDIR)
+  if (a.file !== '-' && isFolder(a.file)) { io.err(`verify: ${a.file} is a folder, not an extraction.\ndid you mean: ${invokedAs()} replay ${a.file}\n`); return 3 }
   let extraction: Json
   try { extraction = readJson(a.file) } catch (e) { io.err(`error reading extraction: ${(e as Error).message}\n`); return 3 }
+  // 2026-10-05: a verdict, an envelope or a bundle handed to check is a replay the caller forgot to ask for, never a fresh
+  // check of the verdict's own fields (it used to answer INSUFFICIENT_DATA, exit 2, with a new verdict about the old one)
+  const verdictLike = verdictShape(extraction)
+  if (verdictLike) { io.err(`verify: ${a.file} looks like ${verdictLike}, not an extraction.\ndid you mean: ${invokedAs()} replay ${a.file}\n`); return 3 }
   // The library's own refusal (src/protocol/input.ts): no document to bind a verdict to.
   const problem = extractionProblem(extraction)
   if (problem) { io.err(`verify: input refused: ${problem}\n`); return 3 }
@@ -393,15 +766,23 @@ function runVerify(argv: string[], io: CliIO): number {
   const opts: VerifyOptions = {}
   try {
     if (a.ruleset) {
-      opts.ruleset = BUILTIN.has(a.ruleset) ? (a.ruleset as 'invoice' | 'pay-app') : (readJson(a.ruleset) as unknown as DeclarativeRuleset)
+      opts.ruleset = BUILTIN.has(a.ruleset) ? (a.ruleset as 'invoice' | 'pay-app') : (readRulesetArg(a.ruleset) as unknown as DeclarativeRuleset)
     }
     const references: NonNullable<VerifyOptions['references']> = {}
     if (a.contract) references.contract = readJson(a.contract)
     if (a.evidence.length) references.evidence = a.evidence.map(readJson)
     if (a.history.length) references.history = a.history.map(readJson)
     if (Object.keys(references).length) opts.references = references
-    if (a.source) opts.source = { text: readFileSync(a.source, 'utf8') }
-  } catch (e) { io.err(`error reading reference: ${(e as Error).message}\n`); return 3 }
+    if (a.quotes && !a.source) throw new Error('--quotes are found in --source: give the source text too')
+    if (a.source) opts.source = { text: readSourceArg(a.source), ...(a.quotes ? { quotes: readQuotes(a.quotes) } : {}) }
+    // Engine 0.5.0: archive bytes and the judge's choice values, declarative rulesets only
+    if ((a.archiveFiles.length || a.suppliedChoices) && !isDeclarativeRuleset(opts.ruleset)) throw new Error('--archive-file and --supplied-choices are read by a declarative ruleset only')
+    if (a.archiveFiles.length) opts.archive_files = a.archiveFiles.map(archiveFileArg)
+    if (a.suppliedChoices) opts.supplied_choices = readJson(a.suppliedChoices) as unknown as NonNullable<VerifyOptions['supplied_choices']>
+  } catch (e) {
+    if (e instanceof ArgRefused) { io.err(`verify: ${e.message}\n${seeHelp('check')}\n`); return 3 }
+    io.err(`error reading reference: ${(e as Error).message}\n`); return 3
+  }
 
   let verdict: Verdict
   try { verdict = verify(extraction, opts) } catch (e) {
@@ -409,123 +790,844 @@ function runVerify(argv: string[], io: CliIO): number {
     throw e
   }
   io.out(`${JSON.stringify(verdict, null, 2)}\n`)
-  return verdict.outcome === 'PASS' ? 0 : verdict.outcome === 'FAIL' ? 1 : 2
+  // Engine 0.3.0: with --case-dir and --parties, an OPEN verdict opens its case automatically (nobody has to ask)
+  if (a.caseDir !== undefined || a.parties !== undefined) {
+    if (!a.caseDir || !a.parties) { io.err('verify: --case-dir and --parties go together (an OPEN verdict opens its case there)\n'); return 3 }
+    if (gateStatusOpen(verdict) === 'OPEN') {
+      if (!isDeclarativeRuleset(opts.ruleset)) io.err('verify: the verdict is OPEN, but a case opens on a declarative verdict only; none opened\n')
+      else {
+        try {
+          const st = openCase({ dir: a.caseDir, verdict, inputs: verifyInputs(extraction, { ruleset: opts.ruleset, ...(opts.source ? { source: opts.source } : {}), ...(opts.supplied_choices ? { supplied_choices: opts.supplied_choices } : {}), ...(opts.archive_files ? { archive_files: opts.archive_files } : {}) }), parties: readJson(a.parties), now: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z') })
+          io.err(`verify: the verdict is OPEN: case ${st.record.case_id} opened in ${a.caseDir} (${st.record.clock.working_days} working days, ${st.record.clock.kind}; deadline ${st.record.clock.deadline})\n`)
+        } catch (e) { io.err(`verify: the verdict is OPEN, but the case did not open: ${(e as Error).message}\n`) }
+      }
+    }
+  }
+  const scope = scopeLines(verdict).map(l => `  ${l}`).join('\n')
+  const closing = scope ? `\n${scope}\n` : '\n'
+  // Engine 0.3.0: a struck load-bearing field leaves the verdict OPEN: not PASS, not FAIL, nothing booked as a FAIL.
+  if (a.gate && gateStatusOpen(verdict) === 'OPEN') {
+    const unlock = new Map((verdict.would_unlock ?? []).map(w => [w.field, w.claims]))
+    const lines = (verdict.struck ?? []).map(s => `${s.field}${s.path !== undefined ? ` (${s.path})` : ''}: ${s.reason}${s.reason === 'suspect' && s.candidates ? ` (${s.candidates.failing} of ${s.candidates.checked} readings one step away fail a check, e.g. ${JSON.stringify(s.candidates.shown[0]?.read_as ?? '?')}; a flag, not a FAIL)` : ''} → unlocks ${(unlock.get(s.field) ?? []).join(', ')}`)
+    io.err(`verify: OPEN: ${verdict.counts?.checks_computed ?? 0} check(s) computed, ${verdict.counts?.checks_struck ?? 0} wait on ${lines.length} struck field(s):\n${lines.map(l => `  ${l}`).join('\n')}\n  Nothing is booked as a FAIL. It resolves by evidence (a CORRECT or CORROBORATE in a case: verify case open), by a STRIKE, or by its clock.${closing}`)
+    return 2
+  }
+  // Engine 0.2.0: a claim held as suspect is booked as a FAIL at the gate (verdict/aggregation.ts), whatever the outcome says.
+  if (a.gate && gateLabel(verdict) === 'HELD-SUSPECT') {
+    const held = heldSuspectClaims(verdict).map(c => `${c.claim_id} (${(c.suspect?.reported ?? []).map(r => `${r.role} ${JSON.stringify(r.raw)}`).join(', ')})`)
+    io.err(`verify: HELD-SUSPECT: ${held.length} check(s) could not read a value, and a reading of it one character away fails the check: ${held.join(', ')}. The gate books it as a FAIL.\n`)
+    return 1
+  }
+  if (a.gate && gateStatus(verdict) === 'PASS-WITH-OPEN') {
+    const open = openClaims(verdict).map(c => `${c.claim_id} (${c.insufficiency?.reason ?? 'undecided'})`)
+    io.err(`verify: PASS-WITH-OPEN: every check that ran held, but ${open.length} could not run: ${open.join(', ')}. A gate holds.${closing}`)
+    return 2
+  }
+  if (a.gate && scope) io.err(`verify: ${gateStatusOpen(verdict)}${closing}`)
+  if (a.gate) return verdict.outcome === 'PASS' ? 0 : verdict.outcome === 'FAIL' ? 1 : 2
+  // 2026-10-05: the headline names the gate status, never a bare PASS when a check could not run.
+  io.err(`verify: ${gateHeadline(verdict)}\n`)
+  // 2026-10-05: fail closed by default. The exit code is the gate's reading: 0 only on a clean PASS. "A CI user wiring exit
+  // codes gets fail-open by default" (a cold reader, cold review round 2): PASS-WITH-OPEN used to exit 0 unless --gate was given.
+  // (verdict/exit.ts: the one reading the CLI, HTTP and MCP share)
+  const reading = verdictExit(verdict, a.allowOpen)
+  if (reading.gate === 'HELD-SUSPECT') io.err(`  exit 1: ${reading.words}\n`)
+  else if (reading.allow_open) io.err(`  ${reading.words.replace('allow-open', '--allow-open')}\n`)
+  else if ((reading.gate === 'PASS-WITH-OPEN' || reading.gate === 'OPEN') && verdict.outcome === 'PASS') {
+    // 2026-10-19: --allow-open stated and not applied (an open check it does not accept, or a struck field): say why, never "pass --allow-open"
+    if (a.allowOpen) io.err(`  exit 2: ${reading.words.replace('allow-open', '--allow-open')}. Supply what they need (--gate names each)\n`)
+    else {
+      // 2026-10-19: --allow-open is suggested only where it would apply; elsewhere the line says it would not, and why
+      const would = verdictExit(verdict, true).exit === 0
+      io.err(`  exit 2: ${reading.words}. Supply what they need (--gate names each)${would ? ', or pass --allow-open to exit 0 on an open verdict' : '; --allow-open would not apply here: it accepts only checks that wait on a reference or a field the document does not carry, with no field struck'}\n`)
+    }
+  }
+  // 2026-10-05: a pay application gets the plain-English block `ap` prints for a bill: each failed or open check, the
+  // fields it read, who may clear it (src/rulesets/pay-app/report.ts). The JSON on stdout is unchanged.
+  if (opts.ruleset === 'pay-app') io.err(formatPayAppReport(verdict, { extraction, ...(a.payerRole === 'owner' ? { payer_role: 'owner' as const } : {}) }))
+  return reading.exit
+}
+
+/**
+ * What a file handed to `check` looks like when it is a replay target (2026-10-05): "a verdict", "a signed envelope" or "a
+ * replay bundle", or undefined for anything else (an extraction). A verdict is what replay.ts would bind: verdict_id, input_hash,
+ * ruleset {id, version} and engine_version.
+ */
+function verdictShape(x: unknown): string | undefined {
+  if (!isObj(x)) return undefined
+  const binds = (v: unknown): boolean => isObj(v) && typeof v.verdict_id === 'string' && typeof v.input_hash === 'string' && typeof v.engine_version === 'string' && isObj(v.ruleset)
+  if (binds(x)) return 'a verdict (it carries verdict_id, input_hash, ruleset and engine_version)'
+  if (isObj(x.verdict) && typeof x.signature === 'string' && typeof x.public_key === 'string') return 'a signed envelope (a verdict with its signature)'
+  if (binds(x.verdict) && 'inputs' in x) return 'a replay bundle (a verdict with its inputs)'
+  return undefined
+}
+
+/** --quotes: [{ id, quote, label? }] (or { quotes: [...] }), non-empty strings. */
+function readQuotes(path: string): QuoteAssertion[] {
+  const raw = readJson(path) as unknown
+  const list: unknown = Array.isArray(raw) ? raw : (raw !== null && typeof raw === 'object' ? (raw as { quotes?: unknown }).quotes : undefined)
+  const ok = Array.isArray(list) && list.every(q => q !== null && typeof q === 'object'
+    && typeof (q as QuoteAssertion).id === 'string' && (q as QuoteAssertion).id.length > 0
+    && typeof (q as QuoteAssertion).quote === 'string' && (q as QuoteAssertion).quote.length > 0
+    && ((q as QuoteAssertion).label === undefined || typeof (q as QuoteAssertion).label === 'string'))
+  if (!ok) throw new Error(`${path}: --quotes is [{ "id", "quote", "label"? }] with non-empty strings`)
+  return list as QuoteAssertion[]
+}
+
+/** --archive-file <path> (engine 0.5.0): the file's bytes as the evaluator takes them, named by the file's base name. */
+function archiveFileArg(path: string): { name: string; base64: string } {
+  return { name: basename(path), base64: readFileSync(path).toString('base64') }
 }
 
 const REPLAY_FLAGS: FlagSpec = {
-  inputs: 'value', extraction: 'value', ruleset: 'value', contract: 'value', evidence: 'multi', history: 'multi', source: 'value',
+  inputs: 'value', extraction: 'value', ruleset: 'value', contract: 'value', evidence: 'multi', history: 'multi', source: 'value', quotes: 'value',
   tolerance: 'value', document: 'value', pre: 'value', 'filing-summary': 'value', schema: 'value',
+  // Engine 0.5.0: with --extraction and a declarative ruleset, the archive bytes and the judge's choice values the verdict bound
+  'archive-file': 'multi', 'supplied-choices': 'value',
+  // 2026-10-05: pin the signing key; fail on anything that was not re-performed
+  'trusted-key': 'value', strict: 'bool',
+  // 2026-10-13: an emailed-bill result read from three files is re-performed from them
+  invoice: 'value', po: 'value', receipt: 'value',
+  // 2026-10-05: accept an engine-0.0.1/0.1.0 verdict whose remedies are absent (compare its core, report the re-derived ones)
+  'lenient-remedies': 'bool',
+  // 2026-10-05: the relying party's floor on the verdict's rule, e.g. legal@>=0.4.0 (legal/replay-notice.ts)
+  'require-ruleset': 'multi',
+  // 2026-10-19: read a bundle or envelope with keys its format does not define as before (carried, not checked) instead of refusing it
+  'allow-unknown-keys': 'bool',
 }
 /** The flags that build verify()'s inputs from the documents themselves (the same flags `verify <doc>` takes). */
-const DOC_FLAGS = ['ruleset', 'contract', 'source'] as const
+const DOC_FLAGS = ['ruleset', 'contract', 'source', 'quotes'] as const
 
 /**
- * `verify replay`: check a verdict someone handed you (red-team R1, 2026-09-28). The verdict_id binds the INPUTS, not the
+ * How a pinned set of fingerprints names `pem`: by its fingerprint ('current'), by the older fingerprint form ('older', still
+ * accepted for this release; 2026-10-05), or not at all (undefined).
+ */
+function trustMatch(trust: ReadonlySet<string>, pem: string): 'current' | 'older' | undefined {
+  const fp = keyFingerprint(pem)
+  if (fp !== undefined && trust.has(fp)) return 'current'
+  const old = legacyKeyFingerprint(pem)
+  return old !== undefined && trust.has(old) ? 'older' : undefined
+}
+
+/** The note printed when --trusted-key matched by the older fingerprint form. */
+const olderFormNote = (fp: string | undefined): string =>
+  `verify replay: note: --trusted-key matched this key by the older fingerprint form (sha256 of the key's base64 text), which this release still accepts; pin ${fp ?? 'the key\'s fingerprint'} instead (sha256 over the key's DER bytes)\n`
+
+/**
+ * `--trusted-key <k>` (2026-10-05): the key a replayed envelope must be signed with, as the set of key fingerprints it names.
+ * `k` is a public key file (a PEM block, or verify keygen's JSON: its public_key and trusted_keys), an inline PEM, or a key
+ * fingerprint (64 hex, as replay prints it: sha256 over the key's DER bytes; the older form, sha256 of the base64 text, is matched
+ * too for this release, trustMatch). A private key is refused: the trusted key is the public half.
+ */
+function readTrustedKeyArg(k: string): Set<string> {
+  const fps = new Set<string>()
+  const addPem = (pem: string): void => {
+    const fp = keyFingerprint(pem)
+    if (fp === undefined) throw new Error('--trusted-key: not an Ed25519 public key')
+    fps.add(fp)
+  }
+  if (/^[0-9a-f]{64}$/i.test(k.trim())) { fps.add(k.trim().toLowerCase()); return fps }
+  const text = k.includes('-----BEGIN') ? k : existsSync(k) ? readText(k) : undefined
+  // 2026-10-05: a prefix is refused on purpose. 12 hex digits are 48 bits, which a determined forger can grind a key to match.
+  if (text === undefined && /^[0-9a-f]{8,63}$/i.test(k.trim())) throw new Error(`--trusted-key ${k}: a fingerprint prefix is not a pin (a key can be ground to match a short prefix): pass the full 64-hex fingerprint, which replay prints on stderr as "signing key fingerprint"`)
+  if (text === undefined) throw new Error(`--trusted-key ${k}: no such file, and not a PEM public key or a 64-hex key fingerprint`)
+  if (/PRIVATE KEY-----/.test(text)) throw new Error('--trusted-key holds a PRIVATE key: pass the PUBLIC key (the .pub.pem verify keygen wrote), and keep the private key to the signer')
+  const t = text.trim()
+  if (t.startsWith('{')) {
+    const raw = parseJsonStrict(t, `--trusted-key ${k}`)
+    const pems: string[] = []
+    if (isObj(raw) && typeof raw.public_key === 'string') pems.push(raw.public_key)
+    const tk = isObj(raw) && isObj(raw.trusted_keys) ? raw.trusted_keys : isObj(raw) && raw.public_key === undefined ? raw : undefined
+    if (tk) for (const v of Object.values(tk)) for (const x of Array.isArray(v) ? v : [v]) if (typeof x === 'string') pems.push(x)
+    if (!pems.length) throw new Error(`--trusted-key ${k}: no public key in it (expected verify keygen's output, or { "<signer>": "<public PEM>" })`)
+    for (const pem of new Set(pems)) addPem(pem)
+    return fps
+  }
+  const blocks = t.match(PEM_PUBLIC) ?? []
+  if (!blocks.length) throw new Error(`--trusted-key ${k}: no -----BEGIN PUBLIC KEY----- block in it`)
+  for (const pem of blocks) addPem(pem)
+  return fps
+}
+
+/** "PASS-WITH-OPEN: 3 of 13 checks could not run", with the AP gate's decision first when there is one (2026-10-05). */
+function replayHeadline(verdict: Verdict, gate?: GateReading): string {
+  const words = gateHeadline(verdict)
+  if (!gate) return words
+  // 2026-10-05: an approve the gate does not pay on (payable not true) reads A PERSON DECIDES (replay-case.ts renderGate)
+  return `${renderGate(gate)} · verdict ${words}`
+}
+
+/**
+ * The FAILED lines for an input_hash that does not match (2026-10-05): what failed, both hashes labelled for what
+ * they are, then one line per thing the replay can say about which input disagrees.
+ */
+function inputMismatchLines(result: ReplayCheck): string[] {
+  const reason = result.reason ?? ''
+  const cut = reason.indexOf('this verdict is not for these inputs')
+  const rest = cut < 0 ? '' : reason.slice(cut + 'this verdict is not for these inputs'.length).replace(/^[:.]\s*/, '')
+  return [
+    'FAILED: input_hash does not match the supplied inputs: this verdict is not for these inputs',
+    `  recorded ${result.recorded_input_hash ?? '?'} (in the verdict)`,
+    `  computed ${result.computed_input_hash ?? result.expected_input_hash ?? '?'} (from the inputs given here)`,
+    ...topLevelClauses(rest).map(s => `  ${s}`),
+  ]
+}
+
+/** A reason split into its clauses at "; " and at sentence ends, never inside parentheses. */
+function topLevelClauses(text: string): string[] {
+  const out: string[] = []
+  let depth = 0, cur = ''
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]!
+    if (ch === '(') depth++
+    else if (ch === ')') depth = Math.max(0, depth - 1)
+    const sentenceEnd = ch === '.' && text[i + 1] === ' ' && /[A-Z]/.test(text[i + 2] ?? '')
+    if (depth === 0 && ((ch === ';' && text[i + 1] === ' ') || sentenceEnd)) { out.push(cur); cur = ''; i++; continue }
+    cur += ch
+  }
+  out.push(cur)
+  return out.map(s => s.trim().replace(/\.$/, '')).filter(Boolean)
+}
+
+/**
+ * `verify replay`: check a verdict someone handed you (2026-09-28). The verdict_id binds the INPUTS, not the
  * outcome, so the binding alone never says the outcome is right. Given the inputs, the check is RE-PERFORMED here and the
  * recomputed verdict byte-compared with the presented one (issued_at and post-engine annotations aside):
  *   exit 0  REPERFORMED     the outcome was re-performed and is byte-identical: the outcome is verified
  *   exit 1  FAILED          the binding does not hold, the re-performed verdict differs (the first differing field is
- *                           named), or a signed envelope's signature does not verify
+ *                           named), a signed envelope's signature does not verify, its key is not the --trusted-key, or a
+ *                           --strict replay found something that was not re-performed
  *   exit 2  STRUCTURE_ONLY  structure verified; outcome NOT re-performed (no inputs, or nothing here can re-perform them)
  *   exit 3  not a verdict, or a usage/input error
  * The file may be a signed envelope ({ verdict, alg, public_key, signature }, signVerdict): its signature is checked too.
+ * The first stderr line of a match is unchanged since 2026-10-04 (the drift bank digests it); what was added on 2026-10-05 follows it.
  */
 function runReplay(argv: string[], io: CliIO): number {
   const verb = 'replay'
   const f = parseFlags(argv, REPLAY_FLAGS, { positional: 1 })
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) return printHelp(io, 'replay')
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const file = f.args[0]
-  if (!file) return usageError(io, verb, 'needs <verdict.json> (a verdict, or a signed envelope)')
-  const docFlags = [...DOC_FLAGS.filter(n => f.v[n] !== undefined), ...(f.multi.evidence ? ['evidence'] : []), ...(f.multi.history ? ['history'] : [])]
+  if (!file) { io.err(`verify replay: needs <verdict.json> (a verdict, a signed envelope, or a bundle), a cases.jsonl, or a folder of bundles\n${helpFor('replay') ?? ''}\n`); return 3 }
+  const strict = f.on.has('strict')
+  const lenientRemedies = f.on.has('lenient-remedies')
+  const allowUnknown = f.on.has('allow-unknown-keys')
+  let trust: Set<string> | undefined
+  try { trust = f.v['trusted-key'] !== undefined ? readTrustedKeyArg(f.v['trusted-key']) : undefined } catch (e) { return inputError(io, verb, e) }
+  // 2026-10-05: --require-ruleset <id>@>=<version>, repeatable; a verdict naming that ruleset at an older version FAILS
+  let reqs: RulesetRequirement[] = []
+  try { reqs = (f.multi['require-ruleset'] ?? []).map(parseRulesetRequirement) } catch (e) { return usageError(io, verb, (e as Error).message) }
+  const docFlags = [...DOC_FLAGS.filter(n => f.v[n] !== undefined), ...(f.multi.evidence ? ['evidence'] : []), ...(f.multi.history ? ['history'] : []), ...(f.multi['archive-file'] ? ['archive-file'] : []), ...(f.v['supplied-choices'] !== undefined ? ['supplied-choices'] : [])]
+  const anyInputFlag = f.v.inputs !== undefined || f.v.extraction !== undefined || docFlags.length > 0
+  // A folder of bundles, or a .jsonl of them: every case replayed on its own inputs (2026-10-02).
+  const isDir = isFolder(file)
+  if (isDir || /\.jsonl$/i.test(file)) {
+    if (anyInputFlag) return usageError(io, verb, 'a folder or .jsonl of bundles carries each case\'s own inputs: give no --inputs / --extraction')
+    return runReplayCases(file, isDir, io, { ...(trust ? { trust } : {}), strict, lenientRemedies, reqs, allowUnknown })
+  }
+  // 2026-10-13: the output of `ap` on an emailed bill, re-performed from the text and payment history it was read from. The
+  // file is read once and shared, so `replay -` (stdin, one stream) reads what it was given
+  let once: { v: unknown } | { e: unknown } | undefined
+  const readOnce = (): unknown => {
+    once ??= (() => { try { return { v: readJson(file) } } catch (e) { return { e } } })()
+    if ('e' in once) throw once.e
+    return once.v
+  }
+  let apText: { verdict: unknown; inputs: unknown; note: string } | null = null
+  try {
+    const t = apTextReplay(file, f, readOnce)
+    // ruled 2026-10-13: a refusal (exit 3) compared none of the files `read` records, so `read` is named as carried, not checked
+    if (t && 'exit' in t) {
+      const unread = t.exit === 3 ? carriedKeys(readOnce()) : []
+      io.err(`${t.message}${unread.length ? `verify replay: ${carriedLine(unread)}\n` : ''}`)
+      return t.exit
+    }
+    apText = t
+  } catch (e) { return inputError(io, verb, asReplayRefusal(e)) }
+  if (!apText && (f.v.invoice !== undefined || f.v.po !== undefined || f.v.receipt !== undefined)) {
+    return usageError(io, verb, '--invoice, --po and --receipt re-perform the output of `ap --invoice --po --receipt` (an emailed bill read from three files); this file is not one')
+  }
+  // 2026-10-04: a declarative verdict names the inputs it was issued with. A call that gives some of them but not all is
+  // told in one line exactly which flags this verdict needs, before any hash is compared: a usage error, never a failed binding.
+  const short = !apText && f.v.inputs === undefined && anyInputFlag ? shortOfInputs(file, f) : undefined
+  if (short !== undefined) { io.err(`verify replay: ${short}\n`); return 3 }
   if (f.v.inputs !== undefined && (f.v.extraction !== undefined || docFlags.length)) {
     return usageError(io, verb, '--inputs is the whole input a verdict is bound to; --extraction [--ruleset/--contract/--evidence/--history/--source] builds it from the documents. Give one, not both')
   }
-  if (f.v.extraction === undefined && docFlags.length) return usageError(io, verb, `${docFlags.map(n => `--${n}`).join(', ')} build verify()'s inputs with --extraction <doc.json>`)
+  if (!apText && f.v.extraction === undefined && docFlags.length) return usageError(io, verb, `${docFlags.map(n => `--${n}`).join(', ')} build verify()'s inputs with --extraction <doc.json>`)
   let raw: unknown, inputs: unknown, opts: ReplayOptions
   try {
-    raw = readJson(file)
-    inputs = f.v.inputs !== undefined ? readJson(f.v.inputs) : f.v.extraction !== undefined ? verifyInputsFrom(f) : undefined
+    raw = apText ? apText.verdict : readOnce()
+    inputs = apText ? apText.inputs : f.v.inputs !== undefined ? readJson(f.v.inputs) : f.v.extraction !== undefined ? verifyInputsFrom(f, presentedVerdict(raw)) : undefined
     opts = replayOptions(f)
-  } catch (e) { return inputError(io, verb, e) }
+    if (lenientRemedies) opts.lenientRemedies = true
+  } catch (e) { return inputError(io, verb, asReplayRefusal(e)) }
+  // 2026-10-13: the keys the file carries outside the verdict and its inputs (replay-case.ts carriedKeys), read off the file as
+  // given: named on the line under the first, listed in the JSON, and refused by --strict
+  // 2026-10-13, ruled: `id` and `note` at a bundle's top level are allowed, named apart; `read` is carried unless the files it
+  // records were given and compared, which is what a non-null apText means
+  const carried = carriedKeys(apText ? readOnce() : raw, { readUsed: apText !== null })
+  const allowed = allowedKeys(apText ? readOnce() : raw)
+  // 2026-10-19: a bundle or a signed envelope with a key its format does not define is refused (exit 3), each key named, before
+  // anything is hashed, unless --allow-unknown-keys says to carry it as before (replay-case.ts unknownKeys). The output of `ap` is
+  // not a bundle: a key it never writes fails its replay below, by name.
+  const unknown = apText ? undefined : unknownKeys(raw)
+  if (unknown && unknown.keys.length && !allowUnknown) {
+    const reason = unknownKeysReason(unknown.kind, unknown.keys)
+    io.out(`${JSON.stringify({ ok: false, status: 'REFUSED', refused: true, reason, unknown_keys: unknown.keys }, null, 2)}\n`)
+    io.err(`verify replay: input refused: ${reason}\n`)
+    return 3
+  }
+  // 2026-10-06: the file `ap --input` writes carries its proof ({ verdict, inputs }) as a member: that is what is replayed,
+  // and the run says so (after its first line). A file whose own verdict is not its proof's is refused as a failed binding.
+  const apProof = !apText && f.v.inputs === undefined && !anyInputFlag ? apProofOf(raw) : null
+  const proofNote = apText ? apText.note : apProof ? 'verify replay: this file is the output of `ap --input`; its proof member (the verdict and the inputs it was issued on) was replayed\n' : ''
+  if (apProof && !apProof.same) { io.err('verify replay: FAILED: the file\'s verdict is not the verdict in its proof member; the file was changed after `ap --input` wrote it\n'); return 1 }
+  if (apProof) raw = apProof.proof
+  // 2026-10-19: the file whose AP fields are compared once its verdict re-performs (protocol/replay-ap.ts): the output of `ap`
+  // (emailed bill or structured input: every derived field, and any key `ap` never writes), or a bundle that states them
+  const apFile: { file: Record<string, unknown>; whole: boolean } | undefined = apText !== null || apProof
+    ? { file: readOnce() as Record<string, unknown>, whole: true }
+    : isReplayBundle(raw) && apDerivedKeysIn(raw).length > 0 && apDerivable(raw) ? { file: raw as unknown as Record<string, unknown>, whole: false } : undefined
+  // A bundle ({ verdict, inputs, options? }) carries its own inputs (2026-10-02).
+  if (isReplayBundle(raw)) {
+    if (anyInputFlag) return usageError(io, verb, 'the bundle carries its own inputs: give no --inputs / --extraction')
+    const b = raw
+    inputs = b.inputs
+    if (isObj(b.options)) {
+      if (opts.tolerance === undefined && isObj(b.options.tolerance)) opts.tolerance = b.options.tolerance as unknown as TolerancePolicy
+      if (opts.document === undefined && typeof b.options.document === 'string') opts.document = b.options.document
+    }
+    raw = b.verdict
+  }
   const envelope = isObj(raw) && isObj(raw.verdict) && typeof raw.signature === 'string' && typeof raw.public_key === 'string'
   const verdict = (envelope ? (raw as { verdict: unknown }).verdict : raw) as Verdict
   if (f.v.extraction !== undefined && f.v.ruleset !== undefined && BUILTIN.has(f.v.ruleset) && isObj(verdict) && isObj(verdict.ruleset) && verdict.ruleset.id !== f.v.ruleset) {
     return usageError(io, verb, `--ruleset ${f.v.ruleset} is not the verdict's ruleset (${String(verdict.ruleset.id)}): a check is re-performed under the ruleset that made it`)
   }
   const result: ReplayCheck = verifyReplay(verdict, inputs, opts)
-  let sig: { alg: string; signature_ok: boolean; key_fingerprint?: string; reason?: string } | undefined
+  let sig: { alg: string; signature_ok: boolean; key_fingerprint?: string; reason?: string; trusted?: boolean; older_fingerprint_form?: true } | undefined
+  // 2026-10-13: the older-fingerprint note is printed under the first line, never before it ("by the trusted key" leads)
+  let olderNote = ''
   if (envelope) {
     const ec = verifyEnvelope(raw as unknown as SignedVerdict)
-    const fp = keyFingerprint(String((raw as { public_key: unknown }).public_key))
-    sig = { alg: String((raw as { alg?: unknown }).alg), signature_ok: ec.signature_ok, ...(fp ? { key_fingerprint: fp } : {}), ...(ec.reason ? { reason: ec.reason } : {}) }
+    const pem = String((raw as { public_key: unknown }).public_key)
+    const fp = keyFingerprint(pem)
+    const match = trust ? trustMatch(trust, pem) : undefined
+    sig = { alg: String((raw as { alg?: unknown }).alg), signature_ok: ec.signature_ok, ...(fp ? { key_fingerprint: fp } : {}), ...(ec.reason ? { reason: ec.reason } : {}), ...(trust ? { trusted: match !== undefined } : {}), ...(match === 'older' ? { older_fingerprint_form: true as const } : {}) }
+    if (match === 'older') olderNote = olderFormNote(fp)
   }
-  io.out(`${JSON.stringify(sig ? { envelope: sig, ...result } : result, null, 2)}\n`)
+  // The answer in the public words, once the outcome was re-performed and matched (the remedies are in reperformed.remedies),
+  // with what a person acts on: the checks that could not run and, for AP, the gate's decision (2026-10-03).
+  const reading = result.status === 'REPERFORMED' ? replayReading(verdict, inputs) : undefined
+  const answer = reading ? { answer: answerOf(verdict.outcome), ...reading } : {}
+  // 2026-10-19: once the verdict re-performed, the AP gate's fields beside it are derived again and compared (protocol/replay-ap.ts).
+  // For the output of `ap`, the keys it never writes (carried, above) are differences too, so they are refused, not carried; a
+  // result whose inputs the gate cannot read again fails closed. A bundle's fields that were compared are no longer carried.
+  let apCheck: ApFieldsCheck | undefined
+  if (apFile && result.status === 'REPERFORMED') {
+    apCheck = checkApFields(apFile.file, verdict, inputs, { whole: apFile.whole, unknown: apFile.whole ? carried : [] })
+    if (!apCheck && apFile.whole) apCheck = { ok: false, differences: [{ field: 'decision', stated: apFile.file.decision, rederived: '(the gate cannot read these inputs again)' }] }
+  }
+  const apFailed = apCheck !== undefined && !apCheck.ok
+  const shownCarried = apCheck === undefined ? carried : apFile?.whole ? [] : carried.filter(k => !(AP_DERIVED_KEYS as readonly string[]).includes(k))
+  // 2026-10-05: what a strict replay fails on, for a verdict that re-performed (only computed, and printed, under --strict)
+  const strictList = strict && result.status === 'REPERFORMED' ? strictProblems(verdict, result.reperformed?.remedies_not_carried === true, envelope && !trust, shownCarried) : []
+  // 2026-10-05: the issuer's producer label is reported under --strict, never failed (replay-case.ts strictNotes)
+  const strictNoteList = strict && result.status === 'REPERFORMED' ? strictNotes(verdict, envelope && trust !== undefined && sig?.trusted === true) : []
+  const strictBlock = strict ? { strict: { ok: result.status === 'REPERFORMED' && strictList.length === 0, problems: strictList, ...(strictNoteList.length ? { notes: strictNoteList } : {}) } } : {}
+  // 2026-10-05: the relying party's floor on the rule, read off the verdict (its id binds ruleset and version)
+  const reqProblem = reqs.length && !result.refused ? rulesetRequirementProblem(reqs, verdict) : undefined
+  const reqUnapplied = reqs.length && !result.refused ? unappliedRequirements(reqs, [verdict]) : []
+  const requireBlock = reqs.length ? { require_ruleset: { ok: reqProblem === undefined, required: reqs.map(r => r.written), ...(reqProblem ? { problem: reqProblem } : {}), ...(reqUnapplied.length ? { not_applied: reqUnapplied.map(r => r.written) } : {}) } } : {}
+  const carriedBlock = { ...(shownCarried.length ? { carried_not_checked: shownCarried } : {}), ...(allowed.length ? { carried_allowed: allowed } : {}) }
+  // 2026-10-19: --allow-unknown-keys is stated in the JSON and on the line under the carried keys, whatever the file carried
+  const allowBlock = allowUnknown ? { allow_unknown_keys: 'stated' } : {}
+  // 2026-10-19: a file whose AP fields differ is a failed replay in the JSON too (status FAILED, ok false, and the differences);
+  // the block is absent on a match, so a genuine file's JSON reads exactly as before
+  const apBlock = apCheck && apFailed ? { ok: false, status: 'FAILED', reason: apFieldsHeadline(apCheck), ap_result: apFieldsBlock(apCheck) } : {}
+  io.out(`${JSON.stringify(sig ? { envelope: sig, ...answer, ...result, ...apBlock, ...carriedBlock, ...strictBlock, ...requireBlock, ...allowBlock } : { ...answer, ...result, ...apBlock, ...carriedBlock, ...strictBlock, ...requireBlock, ...allowBlock }, null, 2)}\n`)
+  // 2026-10-13: what follows the first line, whatever it is: the older-fingerprint note, the keys carried outside the verdict
+  // and its inputs, and a --require-ruleset that applies to no verdict here (REPLAY.md, "The order of the lines")
+  const follow = `${olderNote}${shownCarried.length ? `verify replay: ${carriedLine(shownCarried)}\n` : ''}${allowUnknown ? `verify replay: ${ALLOW_UNKNOWN_KEYS_LINE}\n` : ''}${allowed.length ? `verify replay: ${allowedLine(allowed)}\n` : ''}${reqUnapplied.length ? `verify replay: note: --require-ruleset ${reqUnapplied.map(r => r.written).join(', ')} does not apply: the verdict is ${isObj(verdict) && isObj(verdict.ruleset) ? `${String(verdict.ruleset.id)}@${String(verdict.ruleset.version)}` : 'not of that ruleset'}\n` : ''}`
   // A refusal (the file is not a verdict: nothing could be derived from it) is an input error, not a failed binding.
-  if (result.refused) { io.err(`verify replay: input refused: ${result.reason ?? 'not a verdict'}\n`); return 3 }
-  if (sig && !sig.signature_ok) { io.err(`verify replay: FAILED: the envelope's signature does not verify (${sig.reason ?? 'altered, or another key'})\n`); return 1 }
-  const signed = sig ? ` The envelope's signature verifies (key ${sig.key_fingerprint?.slice(0, 12) ?? '?'}…): the body, outcome included, is what that key holder issued; anchor the key to its holder out of band.` : ''
-  if (result.status === 'FAILED') { io.err(`verify replay: FAILED: ${result.reason ?? 'the verdict does not replay'}\n`); return 1 }
-  if (result.status === 'REPERFORMED') {
-    io.err(`verify replay: outcome VERIFIED: re-performed with ${result.reperformed?.engine} (engine ${verdict.engine_version}) and byte-identical, issued_at aside.${result.reperformed?.annotations?.length ? ` Not re-performed (not the engine's output): ${result.reperformed.annotations.join(', ')}.` : ''}${signed}\n`)
-    return 0
+  if (result.refused) { io.err(`verify replay: input refused: ${result.reason ?? 'not a verdict'}\n${follow}`); return 3 }
+  if (sig && !sig.signature_ok) { io.err(`verify replay: FAILED: the envelope's signature does not verify (${sig.reason ?? 'altered, or another key'})\n${follow}`); return 1 }
+  // 2026-10-05: --trusted-key. A valid signature by another key, or no signature, is not the trusted signer's.
+  if (trust && !sig) { io.err(`verify replay: FAILED: the verdict is not signed, and --trusted-key requires an envelope signed by the trusted key\n${follow}`); return 1 }
+  // 2026-10-05: the full fingerprint, on its own line, so a reader can pin it without digging it out of the JSON
+  const fpLine = sig?.key_fingerprint !== undefined
+    ? `verify replay: signing key fingerprint ${sig.key_fingerprint}${sig.trusted === true ? ' (the trusted key)' : ` (to pin it: --trusted-key ${sig.key_fingerprint})`}\n` : ''
+  if (trust && sig && !sig.trusted) {
+    io.err(`verify replay: FAILED: the envelope is signed by key ${sig.key_fingerprint?.slice(0, 12) ?? '?'}…, which is not the trusted key (${[...trust].map(x => `${x.slice(0, 12)}…`).join(', ')}): its signature verifies, but it proves only that the holder of that other key issued it\n${follow}${fpLine}  trusted: ${[...trust].join(', ')}\n`)
+    return 1
   }
-  io.err(`verify replay: ${result.not_reperformed ?? 'structure verified; outcome NOT re-performed'}.${signed} To re-perform it, pass the inputs (--inputs <inputs.json>, or --extraction <doc.json> with the flags the verdict was made with). Exit 2.\n`)
-  return 2
+  const signed = sig ? (trust
+    ? ` The envelope's signature verifies, by the trusted key (${sig.key_fingerprint?.slice(0, 12) ?? '?'}…).`
+    : ` The envelope's signature verifies (key ${sig.key_fingerprint?.slice(0, 12) ?? '?'}…): the body, outcome included, is what that key holder issued; anchor the key to its holder out of band.`) : ''
+  if (result.status === 'FAILED') {
+    // 2026-10-05: an input_hash refusal on several lines (recorded and computed, then which input); every other kind of
+    // failure keeps its one line.
+    const lines = result.input_ok === false && result.id_ok ? inputMismatchLines(result) : [`FAILED: ${result.reason ?? 'the verdict does not replay'}`]
+    io.err(`${lines.map((l, i) => (i === 0 ? `verify replay: ${l}` : l)).join('\n')}\n${follow}${proofNote}`)
+    return 1
+  }
+  if (result.status === 'REPERFORMED') {
+    // 2026-10-06: a --require-ruleset failure leads, so the head of the log never reads VERIFIED alone
+    if (reqProblem) io.err(`verify replay: FAILED: ${reqProblem}.\n`)
+    // 2026-10-19: the AP fields beside the verdict are not what it derives: FAILED, each field named with what the file states
+    // and what the re-performed verdict derives, then what the verdict really decides. Never "outcome VERIFIED" (exit 1, strict or not).
+    if (apCheck && apFailed) {
+      io.err(`verify replay: FAILED: ${apFieldsHeadline(apCheck)}\n${apCheck.differences.map(d => `  ${apDifferenceLine(d)}\n`).join('')}${follow}${fpLine}${proofNote}verify replay: what the re-performed verdict decides: ${replayHeadline(verdict, reading?.gate)}\n`)
+      return 1
+    }
+    // 2026-10-05: the line names the rule version that decided the outcome (ruleset id@version), and says so when the
+    // verdict carries no issued_at, with or without --strict (--strict also fails it). The drift bank digests this line.
+    io.err(`verify replay: outcome VERIFIED: re-performed with ${result.reperformed?.engine} (ruleset ${verdict.ruleset.id}@${verdict.ruleset.version}, engine ${verdict.engine_version}) and byte-identical${verdict.issued_at === undefined ? `; ${ISSUED_AT_MISSING}` : ', issued_at aside'}.${result.reperformed?.annotations?.length ? ` Not re-performed (not the engine's output): ${result.reperformed.annotations.join(', ')}.` : ''}${signed}\n${follow}${fpLine}${proofNote}`)
+    const rem = renderRemedies(result.reperformed?.remedies)
+    // 2026-10-05: on an AP proof the gate's decision is printed above, so the scope's "a check, not a decision" line
+    // says how the two relate. The verdict's own scope.statements (hashed) are unchanged.
+    // 2026-10-06: a legal verdict states no evidence floor, so its scope line says what it was checked against instead (legal/replay-notice.ts)
+    const sc = (isObj(verdict) && isObj(verdict.ruleset) && verdict.ruleset.id === 'legal' ? legalScopeLines(verdict) : scopeLines(verdict)).map(l => (reading?.gate && l === 'This is a check, not a decision.' ? AP_REPLAY_SCOPE : l))
+    const absent = result.reperformed?.remedies_not_carried ? '\n  remedies absent; re-derived: the verdict carries no remedies (issued before engine 0.2.0 bound them, or removed since); these are this build\'s, and its core matched' : ''
+    // 2026-10-05: today's default legal rule's reading of the same inputs, when it differs (legal/replay-notice.ts); from
+    // 2026-10-06 the same for a declarative or built-in verdict (protocol/rule-now.ts)
+    const ruleNow = reading?.rule_now ? renderAnyRuleNow(reading.rule_now, verdict.engine_version).map(l => `\n  ${l}`).join('') : ''
+    io.err(`verify replay: ${replayHeadline(verdict, reading?.gate)}${reading?.gate_now ? `\n  ${renderGateNow(reading.gate_now)}` : ''}${ruleNow}${rem.length ? `${rem.map(l => `\n  remedy: ${l}`).join('')}` : ''}${absent}${sc.length ? `\n${sc.map(l => `  ${l}`).join('\n')}` : ''}\n`)
+    if (strictNoteList.length) io.err(`${strictNoteList.map(p => `verify replay: strict note: ${p}`).join('\n')}\n`)
+    if (strictList.length) {
+      // 2026-10-13: "in the file", since a key carried beside the verdict is one of the things listed
+      io.err(`verify replay: STRICT: FAILED: the outcome re-performed byte-identical, but not everything in the file was:\n${strictList.map(p => `  ${p}`).join('\n')}\n`)
+      return 1
+    }
+    return reqProblem ? 1 : 0
+  }
+  // 2026-10-04: with no inputs at all, a declarative verdict's exit-2 line names the exact flags it needs.
+  const needs = inputs === undefined ? declarativeReplayNeeds(verdict) : undefined
+  // 2026-10-13: an emailed-bill result written before `ap` recorded what it read: the recipe names the files that re-perform it
+  const apOld = inputs === undefined && apTextResult(raw) !== null
+  const how = needs ? ` ${replayNeedsSentence(needs).replace(/^t/, 'T').replace(': pass ', ': to re-perform it, pass ')} (or --inputs <inputs.json>).`
+    : apOld ? ` To re-perform it: replay ${file} --source <the bill's text file> --history <the payment history file, when one was given>.`
+    : ' To re-perform it, pass the inputs (--inputs <inputs.json>, or --extraction <doc.json> with the flags the verdict was made with).'
+  // 2026-10-06: a --require-ruleset failure leads here too
+  if (reqProblem) io.err(`verify replay: FAILED: ${reqProblem}.\n`)
+  io.err(`verify replay: ${result.not_reperformed ?? 'structure verified; outcome NOT re-performed'}.${signed}${how}${reqProblem ? '' : ' Exit 2.'}\n${follow}${fpLine}${proofNote}`)
+  return reqProblem ? 1 : 2
 }
 
-/** verify()'s inputs from the documents, exactly as `verify <doc> [--ruleset] [--contract] [--evidence]… [--history]… [--source]` binds them. */
-function verifyInputsFrom(f: Flags): Record<string, unknown> {
-  const extraction = readJson(f.v.extraction as string)
-  const rs = f.v.ruleset
-  if (rs !== undefined && !BUILTIN.has(rs)) {
-    const refs = [...(['contract', 'source'] as const).filter(n => f.v[n] !== undefined), ...(f.multi.evidence ? ['evidence'] : []), ...(f.multi.history ? ['history'] : [])]
-    if (refs.length) throw new Error(`a declarative ruleset's verdict is bound to { extraction, ruleset } only, so ${refs.map(n => `--${n}`).join(', ')} cannot be part of it`)
-    return { extraction, ruleset: readJson(rs) }
+/**
+ * A refusal met while a replay reads its files, in the words true of a replay (2026-10-13; replay-case.ts replayAdvice): a
+ * number that cannot be represented exactly is not fixed by writing it as a string, because that changes the input the verdict
+ * is bound to. The error is the same object, its message reworded, so the refusal keeps its class.
+ */
+function asReplayRefusal(e: unknown): unknown {
+  if (e instanceof Error) e.message = replayAdvice(e.message)
+  return e
+}
+
+/** The output of `ap` on an emailed bill (an ap-threeway verdict beside its decision), with its `read` member when it has one; else null. */
+function apTextResult(x: unknown): { verdict: Record<string, unknown>; read: Record<string, unknown> | null } | null {
+  if (!isObj(x) || !isObj(x.verdict) || !isObj(x.verdict.ruleset) || x.verdict.ruleset.id !== 'ap-threeway' || typeof x.decision !== 'string') return null
+  return { verdict: x.verdict, read: isObj(x.read) ? x.read : null }
+}
+
+/**
+ * `replay <result> --source <bill.txt> [--history <history.json>]` (2026-10-13): the output of `ap` on an emailed bill records,
+ * in its `read` member, the sha256 of the text and of the payment history it read (never the documents) and the policy. Given
+ * the same files, the replay rebuilds the inputs ({ ap, policy }) and re-performs the verdict; a file left out is named (exit 3),
+ * and a file that is not the one the result was read from is a failed replay (exit 1), named before any hash is compared. A
+ * result read from three files takes --invoice, --po and --receipt. A result written before `ap` recorded `read` is
+ * re-performed under the default policy when its files are given. Null when the file is not such a result, or the call gives
+ * --inputs or --extraction (the general path answers those).
+ */
+function apTextReplay(file: string, f: Flags, readFile: () => unknown): { exit: number; message: string } | { verdict: unknown; inputs: unknown; note: string } | null {
+  if (f.v.inputs !== undefined || f.v.extraction !== undefined || isFolder(file) || /\.jsonl$/i.test(file)) return null
+  let x: unknown
+  try { x = readFile() } catch { return null }
+  const r = apTextResult(x)
+  if (!r) return null
+  const histories = f.multi.history ?? []
+  const given = { source: f.v.source !== undefined, history: histories.length > 0, invoice: f.v.invoice !== undefined, po: f.v.po !== undefined, receipt: f.v.receipt !== undefined }
+  const anyGiven = Object.values(given).some(Boolean)
+  const refuse = (message: string): { exit: number; message: string } => ({ exit: 3, message: `verify replay: ${message}\n` })
+  const read = r.read
+  if (!read && !anyGiven) return null // the general path: structure verified, with the recipe
+  if (histories.length > 1) return refuse('one --history file: the payment history the result was read with')
+  const three = read?.form === 'three files'
+  const textFlags = three ? ['invoice', 'po', 'receipt'] as const : ['source'] as const
+  const wrong = three ? (given.source ? ['--source'] : []) : [...(given.invoice ? ['--invoice'] : []), ...(given.po ? ['--po'] : []), ...(given.receipt ? ['--receipt'] : [])]
+  if (wrong.length) return refuse(`this result was read from ${three ? 'three files (--invoice, --po, --receipt)' : 'one file (--source)'}: give no ${wrong.join(', ')}`)
+  const historyRead = read ? typeof read.history_sha256 === 'string' : given.history
+  if (read && given.history && !historyRead) return refuse('this result was read with no payment history: give no --history')
+  const missing = [...textFlags.filter((k) => !given[k]).map((k) => `--${k}`), ...(historyRead && !given.history ? ['--history'] : [])]
+  if (missing.length) {
+    const recipe = `${three ? '--invoice <the invoice text> --po <the purchase order text> --receipt <the goods receipt text>' : '--source <the bill\'s text file>'}${historyRead ? ' --history <the payment history file>' : ''}`
+    return refuse(`this is the output of \`ap\` on an emailed bill: it records the sha256 of the text${historyRead ? ' and of the payment history' : ''} it read, never the documents, so the replay needs those files: replay ${file} ${recipe}; this call leaves out ${missing.join(', ')}`)
   }
+  // the files, each against the sha256 the result records
+  const texts: Record<string, string> = {}
+  for (const k of textFlags) texts[k] = readText(f.v[k]!)
+  const historyFile = historyRead ? readPaymentHistoryText(histories[0]!) : null
+  if (read) {
+    const check: [string, string, string][] = [...textFlags.map((k) => [k, texts[k]!, `${k === 'source' ? 'text' : k}_sha256`] as [string, string, string]), ...(historyFile ? [['history', historyFile.text, 'history_sha256'] as [string, string, string]] : [])]
+    for (const [flag, text, key] of check) {
+      const got = textSha256(text), want = read[key]
+      if (typeof want === 'string' && got !== want) {
+        return { exit: 1, message: `verify replay: FAILED: --${flag} ${f.v[flag] ?? histories[0]} is not the ${flag === 'history' ? 'payment history' : 'text'} this result was read from (its sha256 is ${got.slice(0, 12)}…; the result records ${want.slice(0, 12)}…)\n` }
+      }
+    }
+  }
+  const docs = three ? { invoice: texts.invoice!, purchase_order: texts.po!, goods_receipt: texts.receipt! } : splitApLayout(texts.source!)
+  if (!docs) return refuse(`--source ${f.v.source}: the file must contain the "PURCHASE ORDER (ERP)" and "GOODS RECEIPT (ERP)" section markers`)
+  const policy = read && isObj(read.policy) ? read.policy : apPolicyOf(undefined)
   return {
-    extraction,
+    verdict: r.verdict,
+    inputs: { ap: historyFile ? { ...docs, history: historyFile.rows } : docs, policy },
+    note: read
+      ? 'verify replay: this file is the output of `ap` on an emailed bill; it was re-performed from the files given, whose sha256 are the ones it records\n'
+      : 'verify replay: this file is the output of `ap` on an emailed bill and records no sha256 of what it read; it was re-performed from the files given, under the default policy\n',
+  }
+}
+
+/** The verdict a replay file presents: an envelope's body, else the file itself (a bundle is unwrapped later, and takes no flags). */
+function presentedVerdict(raw: unknown): unknown {
+  return isObj(raw) && isObj(raw.verdict) && typeof raw.signature === 'string' && typeof raw.public_key === 'string' ? raw.verdict : raw
+}
+
+/**
+ * The one line a replay prints when it was given some of the inputs a declarative verdict was issued with but not all, or
+ * undefined (not a declarative verdict, nothing missing, or a file that does not read: each reported as before). Flags no
+ * declarative verdict takes (--contract, --evidence, --history) keep their own error.
+ */
+function shortOfInputs(file: string, f: Flags): string | undefined {
+  if (f.v.contract !== undefined || f.multi.evidence || f.multi.history) return undefined
+  let raw: unknown
+  try { raw = readJson(file) } catch { return undefined }
+  if (isReplayBundle(raw)) return undefined
+  const verdict = presentedVerdict(raw)
+  let ruleset: unknown
+  if (f.v.ruleset !== undefined && !BUILTIN.has(f.v.ruleset)) { try { ruleset = readRulesetArg(replayRulesetRef(f.v.ruleset, verdict)) } catch { ruleset = undefined } }
+  const needs = declarativeReplayNeeds(verdict, ruleset)
+  if (!needs) return undefined
+  const given = {
+    extraction: f.v.extraction !== undefined, ruleset: f.v.ruleset !== undefined, source: f.v.source !== undefined, quotes: f.v.quotes !== undefined,
+    'supplied-choices': f.v['supplied-choices'] !== undefined, 'archive-file': f.multi['archive-file']?.length ?? 0,
+  }
+  const line = replayNeedsSentence(needs, given)
+  return line.includes('; this call leaves out ') ? line : undefined
+}
+
+/**
+ * `verify replay <folder | cases.jsonl>`: replay every bundle ({ verdict, inputs, options? }) on its own inputs (2026-10-02).
+ * A folder's *.json and *.jsonl files are read in name order (not recursively: a folder inside it is named, with the command
+ * that replays it). Prints the summary JSON on stdout and one line per case on stderr. Exit 0 every case MATCHes · 1 any
+ * DIVERGED (the field named), or a --strict failure · 2 none diverged but some were not re-performed · 3 a case is not a
+ * bundle, or nothing to replay.
+ * 2026-10-05: every case prints the same disclosure a single replay prints (the fields not re-performed, remedies
+ * absent and re-derived), the headline in gate words, and, for a bare verdict or an extraction, the command to run instead.
+ * The case JSON and the last stderr line (the summary) read exactly as before, so the drift bank's digests do not move.
+ */
+function runReplayCases(path: string, isDir: boolean, io: CliIO, o: { trust?: Set<string>; strict?: boolean; lenientRemedies?: boolean; reqs?: RulesetRequirement[]; allowUnknown?: boolean } = {}): number {
+  const verb = 'replay'
+  const items: { name: string; bundle: unknown }[] = []
+  const skipped: string[] = []
+  try {
+    const entries = isDir ? readdirSync(path).sort() : [path]
+    for (const n of entries) {
+      const fp = isDir ? join(path, n) : n
+      if (isDir && isFolder(fp)) { skipped.push(n); continue }
+      if (isDir && !/\.jsonl?$/i.test(n)) continue
+      const name = isDir ? fp.slice(path.length).replace(/^[\\/]+/, '') : fp
+      let text: string
+      // a file the hash contract refuses (not UTF-8) is a refused case, named, never the end of the whole replay
+      try { text = readText(fp) } catch (e) { items.push({ name, bundle: { __unparseable: (e as Error).message } }); continue }
+      items.push(...bundlesFromText(name, text))
+    }
+  } catch (e) { return inputError(io, verb, asReplayRefusal(e)) }
+  // 2026-10-13: a refused case's words as a replay says them (replay-case.ts replayAdvice)
+  for (const it of items) {
+    const b = it.bundle as { __unparseable?: unknown }
+    if (isObj(b) && typeof b.__unparseable === 'string') b.__unparseable = replayAdvice(b.__unparseable)
+  }
+  if (!items.length) return usageError(io, verb, `${path} holds no bundles (*.json or *.jsonl)${skipped.length ? `; it holds the folder(s) ${skipped.map(s => `${s}/`).join(', ')}, which a folder replay does not walk: replay each on its own (${invokedAs()} replay ${join(path, skipped[0]!)})` : ''}`)
+  const olderMatched = new Set<string>()
+  const s = replayBundles(items, { ...(o.trust ? { isTrusted: (pem: string) => { const m = trustMatch(o.trust!, pem); if (m === 'older') olderMatched.add(keyFingerprint(pem) ?? ''); return m !== undefined } } : {}), ...(o.strict ? { strict: true } : {}), ...(o.lenientRemedies ? { lenientRemedies: true } : {}), ...(o.allowUnknown ? { allowUnknownKeys: true } : {}) })
+  // 2026-10-05: --require-ruleset, per case, read off each presented verdict; the JSON carries it only when asked
+  const reqs = o.reqs ?? []
+  const reqProblems = reqs.length ? s.cases.map((c, i) => (c.result === 'REFUSED' ? undefined : rulesetRequirementProblem(reqs, presentedOf(items[i]!.bundle)))) : []
+  const reqFailed = reqProblems.filter(p => p !== undefined).length
+  const reqUnapplied = reqs.length ? unappliedRequirements(reqs, items.map(it => presentedOf(it.bundle))) : []
+  const reqBlock = reqs.length ? { require_ruleset: { required: reqs.map(r => r.written), failed: reqFailed, ...(reqUnapplied.length ? { not_applied: reqUnapplied.map(r => r.written) } : {}), cases: Object.fromEntries(s.cases.flatMap((c, i) => (reqProblems[i] !== undefined ? [[c.name, reqProblems[i]]] : []))) } } : {}
+  io.out(`${JSON.stringify(skipped.length ? { ...s, skipped_folders: skipped, ...reqBlock } : { ...s, ...reqBlock }, null, 2)}\n`)
+  const needsOf = (v: unknown): string => {
+    const n = declarativeReplayNeeds(v)
+    return n ? n.needs.map(x => x.flag.replace(/ \(or its file\)$/, '')).join(' ') : '--inputs <inputs.json>'
+  }
+  // 2026-10-06: a --require-ruleset failure leads the case lines too (and still closes them)
+  if (reqFailed > 0) io.err(`verify replay: FAILED: ${reqFailed} case(s) were issued under a rule older than --require-ruleset ${reqs.map(r => r.written).join(', ')} asks for (each is marked REQUIRED below)\n`)
+  s.cases.forEach((c, i) => {
+    const bundle = items[i]!.bundle
+    const hint = c.result === 'REFUSED' && isDir && !c.name.includes('#')
+      ? notABundleHint(bundle, join(path, c.name), needsOf, invokedAs()) : undefined
+    io.err(`${renderCaseReplay(c, { verdict: presentedOf(bundle), notReperformed: s.fields_not_reperformed?.[c.name] ?? [], carried: s.carried_not_checked?.[c.name] ?? [], allowed: s.carried_allowed?.[c.name] ?? [], ...(hint ? { hint } : {}) })}${reqProblems[i] !== undefined ? `\n    REQUIRED: ${reqProblems[i]}` : ''}\n`)
+  })
+  for (const d of skipped) io.err(`SKIPPED         ${d}/\n    a folder: a folder replay does not walk into folders. Replay it on its own: ${invokedAs()} replay ${join(path, d)}\n`)
+  // 2026-10-13: the older-fingerprint note after the case lines, never before them (as one verdict prints it under its first line)
+  for (const fp of olderMatched) io.err(olderFormNote(fp || undefined))
+  if (reqUnapplied.length) io.err(`verify replay: note: --require-ruleset ${reqUnapplied.map(r => r.written).join(', ')} applies to no case here (no verdict of that ruleset)\n`)
+  // 2026-10-19: --allow-unknown-keys, stated before the summary line (which stays the last word on the cases)
+  if (o.allowUnknown) io.err(`verify replay: ${ALLOW_UNKNOWN_KEYS_LINE}\n`)
+  io.err(`verify replay: ${s.total} case(s): ${s.matched} match · ${s.diverged} diverged · ${s.not_reperformed} not re-performed · ${s.refused} refused\n`)
+  if (o.strict && (s.strict_failed ?? 0) > 0) io.err(`verify replay: STRICT: FAILED: ${s.strict_failed} matching case(s) carry something that was not re-performed (each is listed above)\n`)
+  if (reqFailed > 0) io.err(`verify replay: FAILED: ${reqFailed} case(s) were issued under a rule older than --require-ruleset ${reqs.map(r => r.written).join(', ')} asks for (each is listed above)\n`)
+  // 2026-10-13: a refused case wins (exit 3): a case that cannot be read is never hidden by a sibling's exit 1 (replayExit)
+  return replayExit(s, reqFailed)
+}
+
+/**
+ * verify()'s inputs from the documents, exactly as `verify <doc> [--ruleset] [--contract] [--evidence]… [--history]… [--source]`
+ * binds them. Since 2026-10-04, a carried ruleset name given without @version means the version `verdict` names.
+ */
+function verifyInputsFrom(f: Flags, verdict?: unknown): Record<string, unknown> {
+  const extraction = readJson(f.v.extraction as string)
+  const rs = f.v.ruleset !== undefined && !BUILTIN.has(f.v.ruleset) ? replayRulesetRef(f.v.ruleset, verdict) : f.v.ruleset
+  // 2026-10-03: the same builder verify() hashes with (protocol/inputs.ts), so a replay binds what `verify <doc>` bound,
+  // including a declarative ruleset's source text (`--source`, and `--quotes` if the verdict was issued with them).
+  if (f.v.quotes !== undefined && f.v.source === undefined) throw new Error('--quotes are found in --source: give the source text too')
+  const source = f.v.source !== undefined ? { text: readSourceArg(f.v.source), ...(f.v.quotes !== undefined ? { quotes: readQuotes(f.v.quotes) } : {}) } : undefined
+  if (rs !== undefined && !BUILTIN.has(rs)) {
+    const refs = [...(f.v.contract !== undefined ? ['contract'] : []), ...(f.multi.evidence ? ['evidence'] : []), ...(f.multi.history ? ['history'] : [])]
+    if (refs.length) throw new Error(`a declarative ruleset's verdict is bound to { extraction, ruleset, source? } only, so ${refs.map(n => `--${n}`).join(', ')} cannot be part of it`)
+    const archive_files = f.multi['archive-file'] ? f.multi['archive-file'].map(archiveFileArg) : undefined
+    const supplied_choices = f.v['supplied-choices'] !== undefined ? readJson(f.v['supplied-choices']) : undefined
+    return verifyInputs(extraction, { ruleset: readRulesetArg(rs), ...(source ? { source } : {}), ...(supplied_choices !== undefined ? { supplied_choices } : {}), ...(archive_files ? { archive_files } : {}) })
+  }
+  if (f.multi['archive-file'] || f.v['supplied-choices'] !== undefined) throw new Error('--archive-file and --supplied-choices are read by a declarative ruleset only')
+  return verifyInputs(extraction, {
     references: {
-      contract: f.v.contract !== undefined ? readJson(f.v.contract) : null,
+      ...(f.v.contract !== undefined ? { contract: readJson(f.v.contract) } : {}),
       evidence: (f.multi.evidence ?? []).map(readJson),
       history: (f.multi.history ?? []).map(readJson),
     },
-    source: f.v.source !== undefined ? { text: readFileSync(f.v.source, 'utf8') } : null,
-  }
+    ...(source ? { source } : {}),
+  })
 }
 
 /** --tolerance <json | file>: the rounding-tolerance override a verdict was issued under. */
 function readTolerance(v: string): TolerancePolicy {
   const t = v.trim()
-  const raw = JSON.parse(t.startsWith('{') ? t : readFileSync(t, 'utf8')) as unknown
-  if (!isObj(raw) || typeof raw.rel !== 'number' || typeof raw.absCap !== 'number' || !(raw.rel >= 0) || !(raw.absCap >= 0)) {
-    throw new Error('--tolerance must be { "rel": <fraction ≥ 0>, "absCap": <amount ≥ 0> } (inline JSON or a file)')
-  }
-  return { rel: raw.rel, absCap: raw.absCap }
+  const raw = (t.startsWith('{') ? parseJsonStrict(t, '--tolerance') : readJson(t)) as unknown
+  // 2026-10-05: the one strict shape (tolerance.ts toleranceProblem), and the override restated whole: roundingCap and
+  // rounding used to be dropped here, so a verdict issued under a capped override could not be restated from the command line
+  const problem = toleranceProblem(raw)
+  if (problem) throw new Error(`--tolerance (inline JSON or a file): ${problem}`)
+  return raw as TolerancePolicy
 }
 
 /** --tolerance <json | file> (the override a verdict was issued under), --document, and the twin linkbase files. */
 function replayOptions(f: Flags): ReplayOptions {
   const o: ReplayOptions = {}
   if (f.v.tolerance !== undefined) o.tolerance = readTolerance(f.v.tolerance)
-  if (f.v.document !== undefined) o.document = readFileSync(f.v.document, 'utf8')
+  if (f.v.document !== undefined) o.document = readText(f.v.document)
   const linkbase = readLinkbase({ ...(f.v.pre !== undefined ? { pre: f.v.pre } : {}), ...(f.v['filing-summary'] !== undefined ? { filingSummary: f.v['filing-summary'] } : {}), ...(f.v.schema !== undefined ? { schema: f.v.schema } : {}) })
   if (Object.keys(linkbase).length) o.presentation = linkbase
   return o
 }
 
-function runAp(argv: string[], io: CliIO): number {
+/** `verify ap --input <json>`: the structured path. The proof ({ verdict, inputs }) replays with `verify replay`. */
+function runApStructured(path: string, io: CliIO, allowOpen = false, policyIn?: ApPolicy): number {
+  let raw: unknown
+  try { raw = readJson(path) } catch (e) {
+    io.err(`${JSON.stringify({ error: `could not read the AP input: ${(e as Error).message}`, code: 'ap_input.not_json' })}\n`)
+    return 3
+  }
+  const checked = validateApInput(raw)
+  if (!checked.ok) { io.err(`${JSON.stringify({ error: 'the AP input does not validate', errors: checked.errors }, null, 2)}\n`); return 3 }
+  // the policy the verdict was made under, every field resolved: the proof's inputs carry exactly what input_hash bound
+  const policy = apPolicyOf(policyIn)
+  const r = verifyBillMatch(checked.input, { policy })
+  const d = apExit(r, allowOpen)
+  io.out(`${JSON.stringify({ ...r, proof: { verdict: r.verdict, inputs: { ap_structured: apInputDocuments(checked.input), policy } }, ...apChoice(d, allowOpen) }, null, 2)}\n`)
+  apHeadline(io, r, d, allowOpen, 'structured input')
+  io.err(formatApReport(r, { documents: apInputDocuments(checked.input) }))
+  return d.exit
+}
+
+/**
+ * The caller's stated choice in the decision object on stdout (2026-10-05: a script reading stdout sees it too), only when
+ * --allow-open was given: `"exit"` is this run's exit code; `"allow_open"` is "stated" when the flag changed it, else "stated, not
+ * applied". The verdict inside is unchanged, and without the flag the object is exactly what it was. (`verify check` prints the
+ * verdict bare, with no wrapper to carry this, so there the choice is said on stderr only.)
+ */
+function apChoice(d: { exit: number; allow_open?: true }, allowOpen: boolean): { exit?: number; allow_open?: string } {
+  return allowOpen ? { exit: d.exit, allow_open: d.allow_open ? 'stated' : 'stated, not applied' } : {}
+}
+
+/**
+ * The AP headline on stderr (2026-10-05), after the JSON on stdout: the decision a person acts on and the verdict's gate
+ * status (never a bare PASS when a check could not run). The readable report follows it (src/ap/report.ts formatApReport: why,
+ * the lines read, what was not checked). 2026-10-05: the decision is read failing closed (verdict/exit.ts apExit), so an
+ * approve on which a check could not run reads A PERSON DECIDES and exits 2. "verify ap printed APPROVE, payable: true, exit 0 on
+ * a bill whose duplicate check never ran, while the library gate said REVIEW" (a cold reader in the controller's role, cold review round 2).
+ *   verify ap: HOLD (hold_quantity) · verdict FAIL: 1 of 12 checks failed
+ *   verify ap: A PERSON DECIDES (every check that ran passed, but ap.duplicate could not run) · verdict PASS-WITH-OPEN: 1 of 12 checks could not run
+ * 2026-10-13: then a labelled line naming the path, "read from: emailed text" or "read from: structured input".
+ */
+function apHeadline(io: CliIO, r: { decision: string; payable?: boolean | null; verdict: Verdict }, d: ReturnType<typeof apExit>, allowOpen: boolean, path: 'emailed text' | 'structured input'): void {
+  const word = d.word.replace('allow-open', '--allow-open') // never APPROVE when the decision is abstain: the flag moves the exit, not the decision
+  // --allow-open is never silently inert: when it changes nothing, it says why (it accepts only a bill held for want of a payment
+  // history: src/ap/decide.ts abstainsOnlyForMissingHistory)
+  const inert = allowOpen && !d.allow_open && d.exit !== 0
+    ? `  --allow-open changes nothing here: the AP gate decided ${r.decision} (exit ${d.exit}). It accepts only a bill held because no payment history was given, with every other check passed; no flag turns any other decision into a payment\n` : ''
+  // 2026-10-13: the path the bill came through, on its own labelled line after the headline block. The headline keeps its
+  // shape byte for byte: scripts and examples parse it
+  io.err(`verify ap: ${word} · verdict ${gateHeadline(r.verdict)}\n${d.allow_open ? `  ${d.words.replace('allow-open', '--allow-open')}\n` : ''}${inert}read from: ${path}\n`)
+}
+
+/**
+ * `ap --price-tolerance <fraction>` (2026-10-05): taken out of argv before the shared parser, which serves every
+ * verb and must keep refusing an option the verb does not read. A fraction from 0 to 1 ("0.05"), or a percent ("5%"); it becomes
+ * the verdict's policy.price_tolerance (src/ap/index.ts apPolicyOf), bound into its input_hash and carried by the proof.
+ */
+function takePriceTolerance(argv0: readonly string[]): { argv: string[]; value?: number; error?: string } {
+  const argv: string[] = []
+  let raw: string | undefined, seen = 0
+  for (let i = 0; i < argv0.length; i++) {
+    const t = argv0[i]!
+    if (t === '--price-tolerance') { seen++; raw = argv0[++i]; continue }
+    if (t.startsWith('--price-tolerance=')) { seen++; raw = t.slice('--price-tolerance='.length); continue }
+    argv.push(t)
+  }
+  if (!seen) return { argv }
+  if (seen > 1) return { argv, error: '--price-tolerance given twice' }
+  if (raw === undefined || raw.startsWith('--')) return { argv, error: '--price-tolerance needs a value: a fraction such as 0.05, or a percent such as 5%' }
+  const m = /^\s*(\d+(?:\.\d+)?|\.\d+)\s*(%?)\s*$/.exec(raw)
+  const v = m ? Number(m[1]) / (m[2] ? 100 : 1) : NaN
+  if (!Number.isFinite(v) || v < 0 || v > 1) return { argv, error: `--price-tolerance ${JSON.stringify(raw)} is not a fraction from 0 to 1 (0.05) or a percent from 0% to 100% (5%)` }
+  return { argv, value: Math.round(v * 1e9) / 1e9 }
+}
+
+/**
+ * `ap --freight allow|person` (2026-10-05): freight billed on a purchase order that does not say whether freight is
+ * allowed. person (the default, the behaviour before): a person decides. allow: the freight is added into the total as an allowed
+ * charge. A PO that says no is never overridden. It becomes the verdict's policy.freight (src/ap/index.ts apPolicyOf), bound into
+ * its input_hash and carried by the proof (only when allow, so a default run hashes as before). Taken out of argv as
+ * --price-tolerance is.
+ */
+function takeFreight(argv0: readonly string[]): { argv: string[]; value?: 'allow' | 'person'; error?: string } {
+  const argv: string[] = []
+  let raw: string | undefined, seen = 0
+  for (let i = 0; i < argv0.length; i++) {
+    const t = argv0[i]!
+    if (t === '--freight') { seen++; raw = argv0[++i]; continue }
+    if (t.startsWith('--freight=')) { seen++; raw = t.slice('--freight='.length); continue }
+    argv.push(t)
+  }
+  if (!seen) return { argv }
+  if (seen > 1) return { argv, error: '--freight given twice' }
+  if (raw !== 'allow' && raw !== 'person') return { argv, error: `--freight ${raw === undefined ? 'needs a value' : JSON.stringify(raw)}: give allow (freight on a PO that does not say is added to the total) or person (a person decides, the default)` }
+  return { argv, value: raw }
+}
+
+/**
+ * `ap --tax person|allow|rate:<pct>` (2026-10-06): tax billed on a purchase order that states no tax terms
+ * (structured input only: the text path reads no tax line). person (the default): a person decides. allow: the tax is accepted as
+ * billed, and the answer says so. rate:8.25%: the tax is checked against that rate. A purchase order that states its tax terms is
+ * never overridden. It becomes the verdict's policy.tax (src/ap/index.ts apPolicyOf), bound into its input_hash and carried by the
+ * proof (never for person, so a default run hashes as before). Taken out of argv as --freight is.
+ */
+function takeTax(argv0: readonly string[]): { argv: string[]; value?: 'person' | 'allow' | { rate: number }; error?: string } {
+  const argv: string[] = []
+  let raw: string | undefined, seen = 0
+  for (let i = 0; i < argv0.length; i++) {
+    const t = argv0[i]!
+    if (t === '--tax') { seen++; raw = argv0[++i]; continue }
+    if (t.startsWith('--tax=')) { seen++; raw = t.slice('--tax='.length); continue }
+    argv.push(t)
+  }
+  if (!seen) return { argv }
+  if (seen > 1) return { argv, error: '--tax given twice' }
+  const p = parseTaxPolicy(raw)
+  return 'error' in p ? { argv, error: p.error } : { argv, value: p.value }
+}
+
+function runAp(argv0: string[], io: CliIO): number {
+  const tx = takeTax(argv0)
+  const fr = takeFreight(tx.argv)
+  const tol = takePriceTolerance(fr.argv)
+  const argv = tol.argv
   const a = parse(argv)
-  if (a.help || (!a.file && !(a.invoice && a.po && a.receipt))) { io.err(`${USAGE}\n`); return a.help ? 0 : 3 }
+  if (a.help) return printHelp(io, 'ap')
+  if (a.unknown.length) return usageError(io, 'ap', unknownOptions(a.unknown, PARSE_FLAGS))
+  if (a.payerRole !== undefined) return usageError(io, 'ap', '--payer-role applies to a pay application (verify <payapp.json> --ruleset pay-app)')
+  if (a.gate && a.allowOpen) return usageError(io, 'ap', '--gate and --allow-open read an open verdict two ways: give one')
+  if (a.files.length > 1) return usageError(io, 'ap', `one layout file per call (got ${a.files.join(', ')})`)
+  if (a.history.length > 1) return usageError(io, 'ap', 'one --history file per call (a JSON array of the invoices already booked)')
+  if (tol.error !== undefined) return usageError(io, 'ap', tol.error)
+  if (fr.error !== undefined) return usageError(io, 'ap', fr.error)
+  if (tx.error !== undefined) return usageError(io, 'ap', tx.error)
+  if (tx.value !== undefined && tx.value !== 'person' && a.input === undefined) return usageError(io, 'ap', '--tax applies to structured input (--input) only: on the text path a taxed bill on a purchase order that states no tax rate goes to a person')
+  const policy = tol.value !== undefined || fr.value !== undefined || tx.value !== undefined ? { ...(tol.value !== undefined ? { price_tolerance: tol.value } : {}), ...(fr.value !== undefined ? { freight: fr.value } : {}), ...(tx.value !== undefined ? { tax: tx.value } : {}) } : undefined
+  // stdin is one stream: at most one input may be read from it (2026-10-05: `--history /dev/stdin` failed on Git Bash; `-` is the way)
+  const fromStdin = [a.file, a.input, a.invoice, a.po, a.receipt, a.history[0]].filter((v) => v === '-').length
+  if (fromStdin > 1) return usageError(io, 'ap', 'only one input can be read from stdin (-): give the others as files')
+  if (a.input !== undefined) {
+    if (a.history.length) return usageError(io, 'ap', 'the structured input carries its own payment_history: give no --history with --input')
+    return runApStructured(a.input, io, a.allowOpen, policy)
+  }
+  if (!a.file && !(a.invoice && a.po && a.receipt)) return usageError(io, 'ap', 'needs <layout.txt>, or --invoice <f> --po <f> --receipt <f>, or --input <ap-input.json>')
   let docs: ApDocuments | null
+  // 2026-10-13: the result records the sha256 of the text it read (and of the history), so `replay` re-performs it from the same
+  // files and names a file that is not the one it was read from (`read` below)
+  let texts: Record<string, string>
   try {
-    docs = a.file ? splitApLayout(readFileSync(a.file, 'utf8'))
-      : { invoice: readFileSync(a.invoice as string, 'utf8'), purchase_order: readFileSync(a.po as string, 'utf8'), goods_receipt: readFileSync(a.receipt as string, 'utf8') }
+    texts = a.file ? { text: readText(a.file) } : { invoice: readText(a.invoice as string), po: readText(a.po as string), receipt: readText(a.receipt as string) }
+    docs = a.file ? splitApLayout(texts.text!) : { invoice: texts.invoice!, purchase_order: texts.po!, goods_receipt: texts.receipt! }
   } catch (e) { io.err(`error reading documents: ${(e as Error).message}\n`); return 3 }
   if (!docs) { io.err('layout file must contain the "PURCHASE ORDER (ERP)" and "GOODS RECEIPT (ERP)" section markers\n'); return 3 }
-  const r = verifyInvoiceMatch(docs)
-  io.out(`${JSON.stringify(r, null, 2)}\n`)
-  return r.decision === 'approve' ? 0 : r.decision === 'abstain' ? 2 : 1
+  // 2026-10-05: the text path states the book as the structured path's payment_history does (`[]` = nothing booked). Without it
+  // the duplicate check does not run, and under engine 0.6.0 the gate sends the bill to a person.
+  let historyText: string | null = null
+  if (a.history.length) {
+    try { const h = readPaymentHistoryText(a.history[0]!); docs = { ...docs, history: h.rows }; historyText = h.text } catch (e) { return usageError(io, 'ap', (e as Error).message) }
+  }
+  let r: ReturnType<typeof verifyInvoiceMatch>
+  try { r = verifyInvoiceMatch(docs, { ...(policy ? { policy } : {}), ...(a.ruleset !== undefined ? { ruleset: a.ruleset } : {}) }) } catch (e) { return usageError(io, 'ap', (e as Error).message) }
+  const d = apExit(r, a.allowOpen)
+  // `read`: what the verdict was read from, by sha256 (never the documents), and the policy it was made under. `replay <result>
+  // --source <bill.txt> [--history <history.json>]` re-performs it from those files (three files: --invoice, --po, --receipt)
+  const read = {
+    form: a.file ? 'one file' : 'three files',
+    ...Object.fromEntries(Object.entries(texts).map(([k, t]) => [`${k}_sha256`, textSha256(t)])),
+    history_sha256: historyText === null ? null : textSha256(historyText),
+    policy: apPolicyOf(policy),
+  }
+  io.out(`${JSON.stringify({ ...r, read, ...apChoice(d, a.allowOpen) }, null, 2)}\n`)
+  apHeadline(io, r, d, a.allowOpen, 'emailed text')
+  io.err(formatApReport(r, { documents: docs }))
+  return d.exit
+}
+
+/**
+ * `verify ap --history <file>`: the invoices already booked, a JSON array of { invoice_number, po_number?, total?, vendor?,
+ * vendor_id?, vendor_tax_id?, paid_on?, no_purchase_order? } (src/ap/index.ts PriorInvoice; `[]` = a known, empty book), read under the hash contract.
+ */
+function readPaymentHistory(path: string): PriorInvoice[] {
+  return readPaymentHistoryText(path).rows
+}
+
+/** The sha256 of a text input's bytes (UTF-8, as read under the hash contract): what an emailed-bill result records it read. */
+const textSha256 = (text: string): string => createHash('sha256').update(Buffer.from(text, 'utf8')).digest('hex')
+
+/** readPaymentHistory, with the file's text (2026-10-13: an emailed-bill result records the sha256 of the history it read). */
+function readPaymentHistoryText(path: string): { rows: PriorInvoice[]; text: string } {
+  let raw: unknown, text: string
+  try { text = readText(path); raw = parseJsonStrict(text, path === '-' ? 'stdin' : path) } catch (e) { throw new Error(`--history ${path}: ${(e as Error).message}`) }
+  const shape = 'a JSON array of the invoices already booked: [{ "invoice_number", "po_number"?, "total"?, "vendor"?, "vendor_id"?, "vendor_tax_id"?, "paid_on"?, "no_purchase_order"? }] ([] = none booked)'
+  if (!Array.isArray(raw)) throw new Error(`--history ${path} must be ${shape}`)
+  const bad = raw.findIndex(x => !isObj(x) || typeof x.invoice_number !== 'string' || x.invoice_number.trim() === '')
+  if (bad >= 0) throw new Error(`--history ${path}: entry [${bad}] has no invoice_number string; the file must be ${shape}`)
+  return { rows: raw as PriorInvoice[], text }
 }
 
 export interface MineArgs {
@@ -577,19 +1679,19 @@ export function mineFromJsonl(text: string, opts: { schema?: MineSchema; ap?: bo
 
 function runMine(argv: string[], io: CliIO): number {
   const a = parseMineArgs(argv)
-  if (a.help) { io.err(`${USAGE}\n`); return 0 }
-  if (a.unknown.length) { io.err(`verify mine: unknown option(s) ${a.unknown.join(', ')}\n${USAGE}\n`); return 3 }
-  if (!a.file || (!a.schema && !a.ap)) { io.err(`verify mine needs <cases.jsonl> and --schema <schema.json> (or --ap)\n${USAGE}\n`); return 3 }
+  if (a.help) { return printHelp(io, 'mine') }
+  if (a.unknown.length) { io.err(`verify mine: unknown option(s) ${a.unknown.join(', ')}\n${seeHelp('mine')}\n`); return 3 }
+  if (!a.file || (!a.schema && !a.ap)) { io.err(`verify mine needs <cases.jsonl> and --schema <schema.json> (or --ap)\n${seeHelp('mine')}\n`); return 3 }
   let rate: number | undefined
   if (a.rate !== undefined) {
     rate = Number(a.rate)
     if (a.rate.trim() === '' || !Number.isFinite(rate) || rate < 0 || rate >= 1) { io.err(`--max-approved-violation-rate must be a number in [0, 1) (got "${a.rate}")\n`); return 3 }
   }
-  // N2 (red-team, 2026-09-28): the compiled ruleset is never written over a file, like keygen's keys (exit 1, refused).
+  // 2026-09-28: the compiled ruleset is never written over a file, like keygen's keys (exit 1, refused).
   if (a.rulesetOut && existsSync(a.rulesetOut)) return refused(io, 'mine', `${a.rulesetOut} already exists: a compiled ruleset is never written over a file (choose another --ruleset-out)`)
   let text: string, schema: MineSchema | undefined
   try {
-    text = readFileSync(a.file === '-' ? 0 : a.file, 'utf8')
+    text = readText(a.file === '-' ? 0 : a.file)
     schema = a.schema ? (readJson(a.schema) as unknown as MineSchema) : undefined
   } catch (e) { io.err(`error reading input: ${(e as Error).message}\n`); return 3 }
   let out: { report: MineReport; compiled: CompiledRuleset }
@@ -702,12 +1804,12 @@ function declarationOf(a: OpinionArgs, snap: LedgerSnapshot): WorkflowDeclaratio
 
 function runVoice(argv: string[], io: CliIO): number {
   const a = parseOpinionArgs(argv)
-  if (a.help) { io.err(`${USAGE}\n`); return 0 }
+  if (a.help) { return printHelp(io, 'voice') }
   const foreign = [...a.unknown, ...(a.tenant !== undefined ? ['--tenant'] : [])]
-  if (foreign.length) { io.err(`verify voice: unknown option(s) ${foreign.join(', ')}\n${USAGE}\n`); return 3 }
-  if (!a.ledger || !a.policy) { io.err(`verify voice needs --ledger <chain.jsonl> and --policy <policy.json>\n${USAGE}\n`); return 3 }
+  if (foreign.length) { io.err(`verify voice: unknown option(s) ${foreign.join(', ')}\n${seeHelp('voice')}\n`); return 3 }
+  if (!a.ledger || !a.policy) { io.err(`verify voice needs --ledger <chain.jsonl> and --policy <policy.json>\n${seeHelp('voice')}\n`); return 3 }
   if (a.fromBook) return runVoiceFromBook(a, io)
-  if (a.trustedKeys !== undefined || a.rootKeys !== undefined) { io.err(`verify voice: --trusted-keys / --root-keys anchor the signers of the decisions on the book; use them with --from-book\n${USAGE}\n`); return 3 }
+  if (a.trustedKeys !== undefined || a.rootKeys !== undefined) { io.err(`verify voice: --trusted-keys / --root-keys anchor the signers of the decisions on the book; use them with --from-book\n${seeHelp('voice')}\n`); return 3 }
   let snap: LedgerSnapshot, policy: PromotionPolicy
   try {
     snap = readSnapshot(a.ledger, io, 'voice')
@@ -755,7 +1857,7 @@ function printSurface(s: VoiceSurface, io: CliIO): number {
 function runVoiceFromBook(a: OpinionArgs, io: CliIO): number {
   const flags = [...(a.granted !== undefined ? ['--granted'] : []), ...(a.grant !== undefined ? ['--grant'] : []), ...(a.bounds !== undefined ? ['--bounds'] : [])]
   if (flags.length) {
-    io.err(`verify voice: --from-book reads the rung, tier and bounds from the GRANT in force on the book, so ${flags.join(', ')} cannot be passed with it (a flag never overrides a person's signed grant)\n${USAGE}\n`)
+    io.err(`verify voice: --from-book reads the rung, tier and bounds from the GRANT in force on the book, so ${flags.join(', ')} cannot be passed with it (a flag never overrides a person's signed grant)\n${seeHelp('voice')}\n`)
     return 3
   }
   let ledger: Ledger, policy: PromotionPolicy, anchors: Anchors
@@ -828,7 +1930,7 @@ const isObj = (x: unknown): x is Record<string, unknown> => x !== null && typeof
 
 /** A trusted-keys file: { "<signer_id>": "<SPKI PEM>" | ["<PEM>", ...] }, or keygen's output ({ trusted_keys: {...} }). */
 function readTrustedKeys(path: string): TrustedKeys {
-  const raw = JSON.parse(readFileSync(path, 'utf8')) as unknown
+  const raw = readJson(path) as unknown
   const keys = isObj(raw) && isObj(raw.trusted_keys) ? raw.trusted_keys : raw
   if (!isObj(keys)) throw new Error('trusted keys must be { "<signer_id>": "<public key PEM>" | ["<PEM>", ...] } (or verify keygen\'s output)')
   for (const [id, k] of Object.entries(keys)) {
@@ -841,8 +1943,8 @@ function runNotice(argv: string[], io: CliIO): number {
   const a = parseOpinionArgs(argv)
   const file = a.unknown.find(t => !t.startsWith('-') || t === '-')
   const unknown = [...a.unknown.filter(t => t !== file), ...bookFlags(a)]
-  if (a.help) { io.err(`${USAGE}\n`); return 0 }
-  if (unknown.length || !file) { io.err(`verify notice needs <verdict.json>${unknown.length ? ` (unknown option(s) ${unknown.join(', ')})` : ''}\n${USAGE}\n`); return 3 }
+  if (a.help) { return printHelp(io, 'notice') }
+  if (unknown.length || !file) { io.err(`verify notice needs <verdict.json>${unknown.length ? ` (unknown option(s) ${unknown.join(', ')})` : ''}\n${seeHelp('notice')}\n`); return 3 }
   let verdict: Verdict
   try { verdict = readJson(file) as unknown as Verdict } catch (e) { io.err(`error reading verdict: ${(e as Error).message}\n`); return 3 }
   if (!verdict || !Array.isArray((verdict as { claims?: unknown }).claims)) { io.err('verify notice: not a verdict (no claims)\n'); return 3 }
@@ -854,27 +1956,27 @@ function runNotice(argv: string[], io: CliIO): number {
 }
 
 /**
- * `verify opinion`: the courtroom opinion. Three questions:
+ * `verify opinion`: the written opinion. Three questions:
  *   --from-book --workflow <wf> [--tier t]      the rung read from the book of record (the GRANT in force; --tier only while
- *                                               nothing is granted): promotionOpinion({ workflow_id }) (SW4)
+ *                                               nothing is granted): promotionOpinion({ workflow_id })
  *   --proposal <p.json> | --workflow --tier ... the flag path (a supplied proposal, or a declared rung)
  *   --dispute <verdict_id> [--claim c]          one finding, disputed
  * Every form takes [--tenant t] (one tenant's records and decisions on a shared book) and [--trusted-keys] [--root-keys].
  */
 function runOpinion(argv: string[], io: CliIO): number {
   const a = parseOpinionArgs(argv)
-  if (a.help) { io.err(`${USAGE}\n`); return 0 }
+  if (a.help) { return printHelp(io, 'opinion') }
   const unknown = [...a.unknown, ...(a.surface ? ['--surface'] : [])]
-  if (unknown.length) { io.err(`verify opinion: unknown option(s) ${unknown.join(', ')}\n${USAGE}\n`); return 3 }
-  if (!a.ledger) { io.err(`verify opinion needs --ledger <chain.jsonl>\n${USAGE}\n`); return 3 }
+  if (unknown.length) { io.err(`verify opinion: unknown option(s) ${unknown.join(', ')}\n${seeHelp('opinion')}\n`); return 3 }
+  if (!a.ledger) { io.err(`verify opinion needs --ledger <chain.jsonl>\n${seeHelp('opinion')}\n`); return 3 }
   if (a.fromBook) {
     const foreign = [
       ...(a.granted !== undefined ? ['--granted'] : []), ...(a.grant !== undefined ? ['--grant'] : []), ...(a.bounds !== undefined ? ['--bounds'] : []),
       ...(a.proposal !== undefined ? ['--proposal'] : []), ...(a.dispute !== undefined ? ['--dispute'] : []), ...(a.claim !== undefined ? ['--claim'] : []),
       ...(a.level !== undefined ? ['--level'] : []),
     ]
-    if (foreign.length) { io.err(`verify opinion: --from-book reads the rung, tier and bounds from the GRANT in force on the book, so ${foreign.join(', ')} cannot be passed with it (a flag never overrides a person's signed grant)\n${USAGE}\n`); return 3 }
-    if (!a.policy || !a.workflow) { io.err(`verify opinion --from-book needs --policy <policy.json> and --workflow <id>\n${USAGE}\n`); return 3 }
+    if (foreign.length) { io.err(`verify opinion: --from-book reads the rung, tier and bounds from the GRANT in force on the book, so ${foreign.join(', ')} cannot be passed with it (a flag never overrides a person's signed grant)\n${seeHelp('opinion')}\n`); return 3 }
+    if (!a.policy || !a.workflow) { io.err(`verify opinion --from-book needs --policy <policy.json> and --workflow <id>\n${seeHelp('opinion')}\n`); return 3 }
   }
   let snap: LedgerSnapshot, anchors: Anchors
   try {
@@ -888,7 +1990,7 @@ function runOpinion(argv: string[], io: CliIO): number {
     if (a.dispute) {
       op = disputeOpinion({ snapshot: snap, verdict_id: a.dispute, ...(a.claim !== undefined ? { claim_id: a.claim } : {}), ...read })
     } else {
-      if (!a.policy) { io.err(`verify opinion needs --policy <policy.json> (or --dispute <verdict_id>)\n${USAGE}\n`); return 3 }
+      if (!a.policy) { io.err(`verify opinion needs --policy <policy.json> (or --dispute <verdict_id>)\n${seeHelp('opinion')}\n`); return 3 }
       const policy = readJson(a.policy) as unknown as PromotionPolicy
       if (a.fromBook) {
         op = promotionOpinion({ snapshot: snap, policy, workflow_id: a.workflow as string, ...(a.tier !== undefined ? { consequence_tier: a.tier } : {}), ...read })
@@ -941,9 +2043,9 @@ export const TWIN_MAPS: Readonly<Record<string, TwinConceptMap>> = { '0.1': FS_C
 /** `verify twin`: wiring only; the twin's logic lives in src/twin/ (CREDENCE-1, CREDENCE-2). */
 function runTwin(argv: string[], io: CliIO): number {
   const a = parseTwinArgs(argv)
-  if (a.help) { io.err(`${USAGE}\n`); return 0 }
-  if (a.unknown.length) { io.err(`verify twin: unknown option(s) ${a.unknown.join(', ')}\n${USAGE}\n`); return 3 }
-  if (!a.html || !a.periodEnd || !a.claims) { io.err(`verify twin needs --html <primary.htm>, --period-end YYYY-MM-DD and --claims <claims.json>\n${USAGE}\n`); return 3 }
+  if (a.help) { return printHelp(io, 'twin') }
+  if (a.unknown.length) { io.err(`verify twin: unknown option(s) ${a.unknown.join(', ')}\n${seeHelp('twin')}\n`); return 3 }
+  if (!a.html || !a.periodEnd || !a.claims) { io.err(`verify twin needs --html <primary.htm>, --period-end YYYY-MM-DD and --claims <claims.json>\n${seeHelp('twin')}\n`); return 3 }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(a.periodEnd)) { io.err(`verify twin: --period-end must be YYYY-MM-DD (got "${a.periodEnd}")\n`); return 3 }
   const version = a.ruleset ?? '0.1'
   const map = Object.prototype.hasOwnProperty.call(TWIN_MAPS, version) ? TWIN_MAPS[version] : undefined
@@ -951,7 +2053,7 @@ function runTwin(argv: string[], io: CliIO): number {
   const statement = (map.binding ?? 'document') === 'statement'
   const linkbase = [...(a.pre !== undefined ? ['--pre'] : []), ...(a.filingSummary !== undefined ? ['--filing-summary'] : []), ...(a.schema !== undefined ? ['--schema'] : [])]
   if (!statement && linkbase.length) {
-    io.err(`verify twin: ${linkbase.join(', ')} belong${linkbase.length === 1 ? 's' : ''} to the statement-anchored twin (--ruleset 0.2 or 0.2.1); v0.1 binds against the whole document and would ignore ${linkbase.length === 1 ? 'it' : 'them'}\n${USAGE}\n`)
+    io.err(`verify twin: ${linkbase.join(', ')} belong${linkbase.length === 1 ? 's' : ''} to the statement-anchored twin (--ruleset 0.2 or 0.2.1); v0.1 binds against the whole document and would ignore ${linkbase.length === 1 ? 'it' : 'them'}\n${seeHelp('twin')}\n`)
     return 3
   }
   const num = (label: string, raw: string | undefined): number | undefined | string => {
@@ -964,8 +2066,8 @@ function runTwin(argv: string[], io: CliIO): number {
   for (const x of [tolerance, periodToleranceDays]) if (typeof x === 'string') { io.err(`verify twin: ${x}\n`); return 3 }
   let html: string, claims: TwinClaim[], linkFiles: TwinPresentationInput = {}
   try {
-    html = readFileSync(a.html, 'utf8')
-    const raw = JSON.parse(readFileSync(a.claims, 'utf8')) as unknown
+    html = readText(a.html)
+    const raw = readJson(a.claims) as unknown
     const arr = Array.isArray(raw) ? raw : (raw as { claims?: unknown })?.claims
     if (!Array.isArray(arr)) throw new Error('claims file must be an array of {id, field, value} or { "claims": [...] }')
     claims = arr as TwinClaim[]
@@ -977,7 +2079,7 @@ function runTwin(argv: string[], io: CliIO): number {
   let r
   try {
     // v0.2+: the filing's own presentation linkbase anchors each field to a face statement. Without one, every claim
-    // ABSTAINs (NO_PRESENTATION_LINKBASE): the statement-anchored twin never falls back to the whole document.
+    // is INSUFFICIENT_DATA (NO_PRESENTATION_LINKBASE): the statement-anchored twin never falls back to the whole document.
     const presentation = statement ? parseTwinPresentation(linkFiles, { links: map.links === 'strict' ? 'strict' : 'v0.2' }) : undefined
     r = verifyAgainstTwin(html, claims, {
       periodEnd: a.periodEnd, map,
@@ -987,16 +2089,16 @@ function runTwin(argv: string[], io: CliIO): number {
     })
   } catch (e) { io.err(`verify twin: ${(e as Error).message}\n`); return 3 }
   io.out(`${JSON.stringify(r, null, 2)}\n`)
-  if (statement && r.twin.presentation == null) io.err(`verify twin: no presentation linkbase was read (--pre / --filing-summary / --schema): the ${map.id}@${map.version} twin binds only through the filing's face statements, so every claim abstains (NO_PRESENTATION_LINKBASE)\n`)
+  if (statement && r.twin.presentation == null) io.err(`verify twin: no presentation linkbase was read (--pre / --filing-summary / --schema): the ${map.id}@${map.version} twin binds only through the filing's face statements, so every claim is can't tell (INSUFFICIENT_DATA, NO_PRESENTATION_LINKBASE)\n`)
   return r.verdict.outcome === 'PASS' ? 0 : r.verdict.outcome === 'FAIL' ? 1 : 2
 }
 
 /** The linkbase files named by --pre / --filing-summary / --schema, read as text (each optional). */
 function readLinkbase(a: { pre?: string; filingSummary?: string; schema?: string }): TwinPresentationInput {
   return {
-    ...(a.pre !== undefined ? { pre: readFileSync(a.pre, 'utf8') } : {}),
-    ...(a.filingSummary !== undefined ? { filingSummary: readFileSync(a.filingSummary, 'utf8') } : {}),
-    ...(a.schema !== undefined ? { schema: readFileSync(a.schema, 'utf8') } : {}),
+    ...(a.pre !== undefined ? { pre: readText(a.pre) } : {}),
+    ...(a.filingSummary !== undefined ? { filingSummary: readText(a.filingSummary) } : {}),
+    ...(a.schema !== undefined ? { schema: readText(a.schema) } : {}),
   }
 }
 
@@ -1006,20 +2108,20 @@ function runTwinEinvoice(argv: string[], io: CliIO): number {
   const unknown: string[] = []
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i]
-    if (t === '--help' || t === '-h') { io.err(`${USAGE}\n`); return 0 }
+    if (t === '--help' || t === '-h') { return printHelp(io, 'twin-einvoice') }
     else if (t === '--claims') claimsPath = argv[++i]
     else if (t === '--profile') profile = argv[++i]
     else if (t === '--no-consistency') consistency = false
     else if (!t.startsWith('--') && xmlPath === undefined) xmlPath = t
     else unknown.push(t)
   }
-  if (unknown.length) { io.err(`verify twin-einvoice: unknown option(s) ${unknown.join(', ')}\n${USAGE}\n`); return 3 }
-  if (!xmlPath || !claimsPath) { io.err(`verify twin-einvoice needs <invoice.xml> and --claims <claims.json>\n${USAGE}\n`); return 3 }
+  if (unknown.length) { io.err(`verify twin-einvoice: unknown option(s) ${unknown.join(', ')}\n${seeHelp('twin-einvoice')}\n`); return 3 }
+  if (!xmlPath || !claimsPath) { io.err(`verify twin-einvoice needs <invoice.xml> and --claims <claims.json>\n${seeHelp('twin-einvoice')}\n`); return 3 }
   if (profile !== undefined && !['peppol-bis3', 'zatca-ksa', 'ksef-fa3'].includes(profile)) { io.err(`verify twin-einvoice: --profile must be peppol-bis3, zatca-ksa or ksef-fa3 (got "${profile}")\n`); return 3 }
   let xml: string, claims: EinvoiceClaim[]
   try {
-    xml = readFileSync(xmlPath, 'utf8')
-    const raw = JSON.parse(readFileSync(claimsPath, 'utf8')) as unknown
+    xml = readText(xmlPath)
+    const raw = readJson(claimsPath) as unknown
     const arr = Array.isArray(raw) ? raw : (raw as { claims?: unknown })?.claims
     if (!Array.isArray(arr)) throw new Error('claims file must be an array of {id, field, value} or { "claims": [...] }')
     claims = arr as EinvoiceClaim[]
@@ -1031,8 +2133,21 @@ function runTwinEinvoice(argv: string[], io: CliIO): number {
   try {
     r = verifyEinvoiceTwin(xml, claims, { consistency, ...(profile ? { profile: profile as EinvoiceProfile } : {}) })
   } catch (e) { io.err(`verify twin-einvoice: ${(e as Error).message}\n`); return 3 }
-  io.out(`${JSON.stringify(r, null, 2)}\n`)
-  return r.verdict.outcome === 'PASS' ? 0 : r.verdict.outcome === 'FAIL' ? 1 : 2
+  // 2026-10-05: the side reports say INSUFFICIENT_DATA where the twin's own word is ABSTAIN; the verdict always did
+  const word = <T extends { outcome: string }>(x: T): Omit<T, 'outcome'> & { outcome: string } => ({ ...x, outcome: x.outcome === 'ABSTAIN' ? 'INSUFFICIENT_DATA' : x.outcome })
+  const shown = { ...r, judgments: r.judgments.map(word), consistency: r.consistency.map(word) }
+  io.out(`${JSON.stringify(shown, null, 2)}\n`)
+  // 2026-10-05: one rule for every command, JSON on stdout and the words on stderr; and the exit reads the gate, failing
+  // closed like `check` (a PASS on which a claim could not be judged exits 2, never 0)
+  const reading = verdictExit(r.verdict)
+  const say = (o: string): string => o.padEnd(17)
+  const lines = shown.judgments.map(j => `  ${say(j.outcome)} ${j.claim_id} (${j.field} = ${JSON.stringify(j.value)}): ${j.detail}`)
+  const footing = shown.consistency
+  const held = footing.filter(c => c.outcome === 'PASS')
+  if (footing.length && held.length === footing.length) lines.push(`  ${say('PASS')} the XML's own figures: ${held.length} of ${footing.length} business rules hold (${[...new Set(held.map(c => c.rule_id))].join(', ')})`)
+  else for (const c of footing.filter(x => x.outcome !== 'PASS')) lines.push(`  ${say(c.outcome)} ${c.rule_id} on the XML's own figures: ${c.detail}`)
+  io.err(`verify twin-einvoice: ${gateHeadline(r.verdict)}\n${lines.join('\n')}${lines.length ? '\n' : ''}${reading.exit === 2 && r.verdict.outcome === 'PASS' ? `  exit 2: ${reading.words}\n` : ''}`)
+  return reading.exit
 }
 
 // ── a person's decisions on the book of record (wiring only: src/ledger/decisions.ts + src/verdict/voice.ts) ─────────
@@ -1058,40 +2173,49 @@ export interface Flags {
  * its value is a usage error (exit 3), never a silent default: a signature must mean exactly what the person typed.
  * A verb that takes positional arguments says how many (`positional`); one more is a usage error too.
  */
-export function parseFlags(argv: readonly string[], spec: FlagSpec, opts: { positional?: number } = {}): Flags {
+export function parseFlags(argv0: readonly string[], spec: FlagSpec, opts: { positional?: number } = {}): Flags {
+  // 2026-10-05: `--name=value` reads as `--name value`; an unknown option is named with the known one it is closest to,
+  // and the value typed after it is not reported a second time as an "unexpected argument".
+  const argv = splitEquals(argv0)
   const f: Flags = { v: {}, on: new Set(), multi: {}, args: [], help: false, problems: [] }
   const unknown: string[] = []
   const maxArgs = opts.positional ?? 0
+  let afterUnknown = false
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i] as string
-    if (t === '-h' || t === '--help') { f.help = true; continue }
+    if (t === '-h' || t === '--help') { f.help = true; afterUnknown = false; continue }
     const name = t.startsWith('--') ? t.slice(2) : ''
     const kind = name && Object.prototype.hasOwnProperty.call(spec, name) ? spec[name] : undefined
     if (!kind) {
+      if (afterUnknown && !t.startsWith('-')) { afterUnknown = false; continue } // the unknown option's value
       if (maxArgs > 0 && (!t.startsWith('-') || t === '-')) {
         if (f.args.length < maxArgs) f.args.push(t)
         else f.problems.push(`unexpected argument ${t}`)
         continue
       }
       unknown.push(t)
+      afterUnknown = t.startsWith('--')
       continue
     }
+    afterUnknown = false
     if (kind !== 'multi' && (Object.prototype.hasOwnProperty.call(f.v, name) || f.on.has(name))) f.problems.push(`${t} is given twice`)
     if (kind === 'bool') { f.on.add(name); continue }
     const val = argv[i + 1]
-    if (val === undefined || val.startsWith('--')) { f.problems.push(`${t} needs a value`); continue }
+    // 2026-10-05: an inline PEM ("$(cat k.pub.pem)") starts with five dashes; it is a value, never an option
+    if (val === undefined || (val.startsWith('--') && !val.startsWith('-----BEGIN '))) { f.problems.push(`${t} needs a value`); continue }
     if (kind === 'multi') (f.multi[name] ??= []).push(val)
     else f.v[name] = val
     i++
   }
-  if (unknown.length) f.problems.unshift(`unknown option(s) ${unknown.join(', ')}`)
+  if (unknown.length) f.problems.unshift(unknownOptions(unknown, [...Object.keys(spec).map(k => `--${k}`), '--help']))
   return f
 }
 
 const need = (f: Flags, names: readonly string[]): string[] => names.filter(n => f.v[n] === undefined).map(n => `--${n}`)
 
+/** A usage error: the one line that says what is wrong, then a one-line pointer to the command's help (never the reference). */
 function usageError(io: CliIO, verb: string, msg: string): number {
-  io.err(`verify ${verb}: ${msg}\n${USAGE}\n`)
+  io.err(`verify ${verb}: ${msg}\n${seeHelp(verb)}\n`)
   return 3
 }
 function inputError(io: CliIO, verb: string, e: unknown, what = 'error reading input'): number {
@@ -1140,12 +2264,12 @@ const PEM_PUBLIC = /-----BEGIN PUBLIC KEY-----[\s\S]+?-----END PUBLIC KEY-----/g
  * output ({ public_key }). A private key is refused: the root's private key never belongs on a reader's command line.
  */
 function readRootKeys(path: string): RootKeys {
-  const text = readFileSync(path, 'utf8')
+  const text = readText(path)
   if (/PRIVATE KEY-----/.test(text)) throw new Error(`${path} holds a PRIVATE key: --root-keys takes the root's PUBLIC key (the .pub.pem verify keygen wrote); keep the private key offline`)
   const t = text.trim()
   let pems: string[]
   if (t.startsWith('{') || t.startsWith('[')) {
-    const raw = JSON.parse(t) as unknown
+    const raw = parseJsonStrict(t, path) // 2026-10-05: a key written twice could change which root key a reader trusts
     const arr = Array.isArray(raw) ? raw : isObj(raw) && typeof raw.public_key === 'string' ? [raw.public_key] : undefined
     if (!arr || !arr.every(x => typeof x === 'string')) throw new Error('root keys must be PEM public key block(s), a JSON array of them, or verify keygen\'s output ({ public_key })')
     pems = arr as string[]
@@ -1168,7 +2292,7 @@ function existingBook(path: string): string {
 /** What every decision verb reads: the book (it must already exist), the person's private key, the signer, the anchors. */
 function readDecisionInputs(f: Flags): DecisionInputs {
   const ledgerPath = existingBook(f.v.ledger as string)
-  const keyPem = readFileSync(f.v.key as string, 'utf8')
+  const keyPem = readText(f.v.key as string)
   return { ledgerPath, keyPem, signer: f.v.signer as string, ...readAnchors(f) }
 }
 
@@ -1204,7 +2328,7 @@ function appendTwice<T>(verb: string, io: CliIO, path: string, a: Anchors, act: 
     if (!check.ok) return { code: refused(io, verb, `the book of record does not verify${check.brokenAt !== undefined ? ` at event ${check.brokenAt}` : ''} (${check.reason ?? 'unknown'}): nothing is appended to a book that does not verify`) }
     try { act(new MemoryLedger({ ...anchorOpts(a), seed: book.snapshot() })) } catch (e) { return { code: refusedOrLib(io, verb, e, 'error at the door') } }
     // A chain export (ledger.chainJSONL()) ends without a newline; the file ledger writes the missing one before its first
-    // append (N1, fixed in src/ledger/file.ts), so events never fuse onto one line.
+    // append (fixed in src/ledger/file.ts), so events never fuse onto one line.
     try { return { value: act(book) } } catch (e) { return { code: refusedOrLib(io, verb, e, 'error writing ledger') } }
   } finally {
     book.close()
@@ -1240,7 +2364,7 @@ function appendDecision<D extends BookDecision>(
 function runGrant(argv: string[], io: CliIO): number {
   const verb = 'grant'
   const f = parseFlags(argv, GRANT_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'grant') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (f.v.cosign !== undefined) return runGrantCosign(f, io)
   const missing = need(f, ['ledger', 'key', 'signer', 'workflow', 'level', 'tier', 'policy'])
@@ -1339,11 +2463,11 @@ const SUCCESSION_LISTED = 20
 
 /** --inputs: JSONL (or a JSON array) of { verdict_id, inputs }, the inputs each recorded verdict was issued on. */
 function readSuccessionInputs(path: string): Map<string, unknown> {
-  const raw = readFileSync(path, 'utf8')
+  const raw = readText(path)
   const text = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
-  const rows: unknown = text.trim().startsWith('[') ? JSON.parse(text) : text.split(/\r?\n/).filter(l => l.trim() !== '').map((l, i) => {
-    try { return JSON.parse(l) as unknown } catch (e) { throw new Error(`--inputs line ${i + 1}: ${(e as Error).message}`) }
-  })
+  // 2026-10-05: the inputs are hashed, so a number past the double range is refused here too (parseJsonStrict)
+  const rows: unknown = text.trim().startsWith('[') ? parseJsonStrict(text, `--inputs ${path}`)
+    : text.split(/\r?\n/).filter(l => l.trim() !== '').map((l, i) => parseJsonStrict(l, `--inputs line ${i + 1}`))
   if (!Array.isArray(rows)) throw new Error('--inputs must be JSONL (one { "verdict_id", "inputs" } per line) or a JSON array of them')
   const out = new Map<string, unknown>()
   rows.forEach((r, i) => {
@@ -1355,7 +2479,7 @@ function readSuccessionInputs(path: string): Map<string, unknown> {
 }
 
 function readDeclarativeRuleset(path: string): DeclarativeRuleset {
-  const raw = readJson(path) as unknown
+  const raw = readRulesetArg(path) as unknown
   if (!isDeclarativeRuleset(raw)) throw new Error(`--ruleset ${path} is not a declarative ruleset (id, version, fields, checks); a built-in ruleset is found by the --to version`)
   return raw
 }
@@ -1396,7 +2520,7 @@ const carriesOf = (g: DecisionEntry<GrantDecision>) => {
 function runSuccession(argv: string[], io: CliIO): number {
   const verb = 'succession'
   const f = parseFlags(argv, SUCCESSION_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'succession') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (f.v.check !== undefined) return runSuccessionCheck(f, io)
   const dry = f.on.has('dry-run')
@@ -1419,7 +2543,7 @@ function runSuccession(argv: string[], io: CliIO): number {
     inputs = readSuccessionInputs(f.v.inputs as string)
     ruleset = f.v.ruleset !== undefined ? readDeclarativeRuleset(f.v.ruleset) : undefined
     tolerance = f.v.tolerance !== undefined ? readTolerance(f.v.tolerance) : undefined
-    keyPem = f.v.key !== undefined ? readFileSync(f.v.key, 'utf8') : undefined
+    keyPem = f.v.key !== undefined ? readText(f.v.key) : undefined
     if (keyPem !== undefined) createPrivateKey(keyPem)
   } catch (e) { return inputError(io, verb, e) }
   if (!isObj(policy) || !Array.isArray((policy as { tiers?: unknown }).tiers)) return inputError(io, verb, new Error('--policy must be a promotion policy ({ policy_id, version, tiers, ... })'))
@@ -1540,14 +2664,14 @@ function readAssessment(path: string): VoiceAssessment {
 /**
  * `verify decline`: a person's "no" to the proposal the BOOK raises now (declineOnBook). Riposte re-derives the assessment
  * from the book itself and signs a DECLINE only for the live proposal the person names, so a doctored assessment file can
- * never become a signed decline (N4, closing C6: an assessment's hash is recomputable by anyone; the book is not). Name the
+ * never become a signed decline (an assessment's hash is recomputable by anyone; the book is not). Name the
  * proposal either with the assessment the person read (--assessment: the output of verify voice --from-book, which must
  * match its own hash and cite this book) or directly (--workflow + --proposal). --policy is the policy the book is read under.
  */
 function runDecline(argv: string[], io: CliIO): number {
   const verb = 'decline'
   const f = parseFlags(argv, DECLINE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'decline') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'key', 'signer', 'policy', 'reason'])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}${f.v.policy === undefined ? ' (--policy: the book is read again under it, and only the proposal it raises now is declined)' : ''}`)
@@ -1656,7 +2780,7 @@ function declineWords(a: VoiceAssessment): string | undefined {
 function runRevisePolicy(argv: string[], io: CliIO): number {
   const verb = 'revise-policy'
   const f = parseFlags(argv, REVISE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'revise-policy') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const drafting = DRAFT_ONLY.filter(n => f.v[n] !== undefined)
   if (f.v.revised === undefined && (f.v.from !== undefined || f.v.draft !== undefined)) return runReviseDraft(f, io)
@@ -1745,7 +2869,7 @@ const custodyWarning = (priv: string, signer: string | undefined): string => [
 function runKeygen(argv: string[], io: CliIO): number {
   const verb = 'keygen'
   const f = parseFlags(argv, KEYGEN_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'keygen') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (f.v.out === undefined) return usageError(io, verb, 'needs --out <person.pem>')
   const out = f.v.out
@@ -1784,7 +2908,7 @@ function readDeclarations(path: string): Record<string, unknown>[] {
 function runReport(argv: string[], io: CliIO): number {
   const verb = 'report'
   const f = parseFlags(argv, REPORT_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'report') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (f.v.ledger === undefined) return usageError(io, verb, 'needs --ledger <chain.jsonl>')
   let period: ReturnType<typeof monthPeriod> | undefined
@@ -1817,7 +2941,7 @@ function runReport(argv: string[], io: CliIO): number {
   return book.ok ? 0 : 1
 }
 
-// ── precedent → statute (SW4): a person's signed ruling on LAW, and the rulebook the rulings imply ────────────────────
+// ── precedent → statute: a person's signed ruling on LAW, and the rulebook the rulings imply ────────────────────
 
 const RULE_FLAGS: FlagSpec = {
   ledger: 'value', dispute: 'value', claim: 'value', ruling: 'value', reason: 'value', key: 'value', signer: 'value', tenant: 'value',
@@ -1833,7 +2957,7 @@ const RULE_FLAGS: FlagSpec = {
 function runRule(argv: string[], io: CliIO): number {
   const verb = 'rule'
   const f = parseFlags(argv, RULE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'rule') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'dispute', 'ruling', 'reason', 'key', 'signer'])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -1842,7 +2966,7 @@ function runRule(argv: string[], io: CliIO): number {
   let snap: LedgerSnapshot, keyPem: string, anchors: Anchors, inputs: unknown
   try {
     snap = readSnapshot(f.v.ledger as string, io, verb)
-    keyPem = readFileSync(f.v.key as string, 'utf8')
+    keyPem = readText(f.v.key as string)
     anchors = readAnchors(f)
     inputs = f.v.inputs !== undefined ? readJson(f.v.inputs) : undefined
   } catch (e) { return inputError(io, verb, e) }
@@ -1884,7 +3008,7 @@ const STATUTE_FLAGS: FlagSpec = {
 function runStatute(argv: string[], io: CliIO): number {
   const verb = 'statute'
   const f = parseFlags(argv, STATUTE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'statute') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'rulings', 'rule', 'domain'])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -1897,7 +3021,7 @@ function runStatute(argv: string[], io: CliIO): number {
   let snap: LedgerSnapshot, rulings: ReturnType<typeof parseRulingBook>, anchors: Anchors, inputs: unknown
   try {
     snap = readSnapshot(f.v.ledger as string, io, verb)
-    rulings = parseRulingBook(readFileSync(f.v.rulings as string, 'utf8'))
+    rulings = parseRulingBook(readText(f.v.rulings as string))
     anchors = readAnchors(f)
     inputs = f.v.inputs !== undefined ? readJson(f.v.inputs) : undefined
     if (inputs !== undefined && !isObj(inputs)) throw new Error('--inputs must be an object of the original inputs by verdict id ({ "<verdict_id>": <inputs> })')
@@ -1943,10 +3067,10 @@ const SAMPLE_FLAGS: FlagSpec = { ledger: 'value', policy: 'value', workflow: 'va
 function runSample(argv: string[], io: CliIO): number {
   const verb = 'sample commit'
   const [sub, ...rest] = argv
-  if (sub === '-h' || sub === '--help') { io.err(`${USAGE}\n`); return 0 }
+  if (sub === '-h' || sub === '--help') { return printHelp(io, 'sample') }
   if (sub !== 'commit') return usageError(io, 'sample', `the verb is \`verify sample commit\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
   const f = parseFlags(rest, SAMPLE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'sample') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'policy', 'workflow'])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -1973,7 +3097,7 @@ const QUEUE_FLAGS: FlagSpec = { ledger: 'value', policy: 'value', workflow: 'val
 function runQueue(argv: string[], io: CliIO): number {
   const verb = 'queue'
   const f = parseFlags(argv, QUEUE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'queue') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'policy', 'workflow'])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -2004,7 +3128,7 @@ const PROCEDURES = ['re-performed', 'inspected'] as const
 function runReview(argv: string[], io: CliIO): number {
   const verb = 'review'
   const f = parseFlags(argv, REVIEW_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'review') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (!f.on.has('sign')) return usageError(io, verb, 'a review is written as a person\'s SIGNED decision: pass --sign (with --key and --signer). The CLI writes no unsigned review')
   const missing = need(f, ['ledger', 'key', 'signer', 'verdict', 'decision'])
@@ -2041,10 +3165,10 @@ const KEY_FLAGS: FlagSpec = {
 
 /** A public key from a file: an SPKI PEM, or verify keygen's output ({ public_key }). */
 function readPublicKey(path: string): string {
-  const text = readFileSync(path, 'utf8')
+  const text = readText(path)
   if (/PRIVATE KEY-----/.test(text)) throw new Error(`${path} holds a PRIVATE key: register the PUBLIC key (the .pub.pem verify keygen wrote)`)
   const t = text.trim()
-  const pem = t.startsWith('{') ? (JSON.parse(t) as { public_key?: unknown }).public_key : (t.match(PEM_PUBLIC) ?? [])[0]
+  const pem = t.startsWith('{') ? (parseJsonStrict(t, path) as { public_key?: unknown }).public_key : (t.match(PEM_PUBLIC) ?? [])[0]
   if (typeof pem !== 'string' || keyFingerprint(pem) === undefined) throw new Error(`${path} holds no Ed25519 public key (SPKI PEM)`)
   return `${pem.trim()}\n`
 }
@@ -2059,11 +3183,11 @@ const list = (s: string): string[] => s.split(',').map(x => x.trim()).filter(Boo
  */
 function runKey(argv: string[], io: CliIO): number {
   const [sub, ...rest] = argv
-  if (sub === '-h' || sub === '--help') { io.err(`${USAGE}\n`); return 0 }
+  if (sub === '-h' || sub === '--help') { return printHelp(io, 'key') }
   if (sub !== 'register' && sub !== 'revoke') return usageError(io, 'key', `the verbs are \`verify key register\` and \`verify key revoke\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
   const verb = `key ${sub}`
   const f = parseFlags(rest, KEY_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'key') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'subject', 'public-key', ...(sub === 'revoke' ? ['reason'] : ['roles'])])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -2080,7 +3204,7 @@ function runKey(argv: string[], io: CliIO): number {
   let ledgerPath: string, keyPem: string, root: RootKeys, subjectKey: string
   try {
     ledgerPath = existingBook(f.v.ledger as string)
-    keyPem = readFileSync((f.v.root ?? f.v.key) as string, 'utf8')
+    keyPem = readText((f.v.root ?? f.v.key) as string)
     subjectKey = readPublicKey(f.v['public-key'] as string)
     const given = f.v['root-keys'] !== undefined ? readRootKeys(f.v['root-keys']) : undefined
     if (f.v.root !== undefined) {
@@ -2128,11 +3252,11 @@ function readIds(v: string): string[] {
  */
 function runCanary(argv: string[], io: CliIO): number {
   const [sub, ...rest] = argv
-  if (sub === '-h' || sub === '--help') { io.err(`${USAGE}\n`); return 0 }
+  if (sub === '-h' || sub === '--help') { return printHelp(io, 'canary') }
   if (sub !== 'seal' && sub !== 'reveal') return usageError(io, 'canary', `the verbs are \`verify canary seal\` and \`verify canary reveal\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
   const verb = `canary ${sub}`
   const f = parseFlags(rest, CANARY_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'canary') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'key', 'signer', ...(sub === 'seal' ? ['workflow', 'verdicts', 'secret-out'] : ['secret'])])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -2186,11 +3310,11 @@ function runCanary(argv: string[], io: CliIO): number {
 /** `verify policy lint --policy <policy.json>`: lintPolicy's errors AND warnings (an unreachable bar, sidedness). Exit 0 · 1 errors · 3. */
 function runPolicy(argv: string[], io: CliIO): number {
   const [sub, ...rest] = argv
-  if (sub === '-h' || sub === '--help') { io.err(`${USAGE}\n`); return 0 }
+  if (sub === '-h' || sub === '--help') { return printHelp(io, 'policy') }
   if (sub !== 'lint') return usageError(io, 'policy', `the verb is \`verify policy lint\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
   const verb = 'policy lint'
   const f = parseFlags(rest, { policy: 'value' })
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'policy') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (f.v.policy === undefined) return usageError(io, verb, 'needs --policy <policy.json>')
   let policy: unknown
@@ -2214,22 +3338,22 @@ const DELIMITER_NAMES: Readonly<Record<string, CsvDelimiter>> = { ',': ',', ';':
 
 /** The checked extractions: a JSON array ({ "extractions": [...] } too), or JSONL (one per line). */
 function readExtractions(path: string): unknown[] {
-  const text = readFileSync(path, 'utf8').replace(/^\uFEFF/, '')
+  const text = readText(path).replace(/^\uFEFF/, '')
   const t = text.trim()
   if (t.startsWith('[') || /^\{\s*"extractions"\s*:/.test(t)) {
-    const raw = JSON.parse(t) as unknown
+    const raw = parseJsonStrict(t, `--extractions ${path}`)
     const arr = Array.isArray(raw) ? raw : isObj(raw) ? raw.extractions : undefined
     if (!Array.isArray(arr)) throw new Error('--extractions must be a JSON array, { "extractions": [...] }, or JSONL (one extraction per line)')
     return arr
   }
   return text.split(/\r?\n/).filter(l => l.trim() !== '').map((l, i) => {
-    try { return JSON.parse(l) as unknown } catch (e) { throw new Error(`--extractions line ${i + 1}: ${(e as Error).message}`) }
+    return parseJsonStrict(l, `--extractions line ${i + 1}`) // 2026-10-05: the hash contract's reader (a repeated key is refused)
   })
 }
 
 /** --rungs: inline JSON ({"<workflow>": "gate"}) or a file holding it. */
 function readRungs(v: string): Record<string, VoiceLevel> {
-  const raw = JSON.parse(v.trim().startsWith('{') ? v : readFileSync(v, 'utf8')) as unknown
+  const raw = (v.trim().startsWith('{') ? parseJsonStrict(v, 'the inline JSON') : readJson(v)) as unknown
   if (!isObj(raw)) throw new Error('--rungs must be { "<workflow_id>": "record" | "advise" | "gate" | "autonomy" }')
   for (const [wf, level] of Object.entries(raw)) {
     if (!VOICE_LADDER.includes(level as VoiceLevel)) throw new Error(`--rungs: ${wf} must be one of ${VOICE_LADDER.join(', ')} (got ${JSON.stringify(level)})`)
@@ -2253,7 +3377,7 @@ function exceptionWords(r: CompletenessReport): string {
 function runReconcile(argv: string[], io: CliIO): number {
   const verb = 'reconcile'
   const f = parseFlags(argv, RECONCILE_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'reconcile') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   const missing = need(f, ['ledger', 'population', 'mapping'])
   if (missing.length) return usageError(io, verb, `needs ${missing.join(', ')}`)
@@ -2327,11 +3451,11 @@ const PREVIEW_CHARS = 2000
 /** `verify ledger repair|export`: the book FILE itself (the library's repairTornTail and writeChainFile). */
 function runLedger(argv: string[], io: CliIO): number {
   const [sub, ...rest] = argv
-  if (sub === '-h' || sub === '--help') { io.err(`${USAGE}\n`); return 0 }
+  if (sub === '-h' || sub === '--help') { return printHelp(io, 'ledger') }
   if (sub !== 'repair' && sub !== 'export') return usageError(io, 'ledger', `the verbs are \`verify ledger repair <book>\` and \`verify ledger export <book> --out <file>\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
   const verb = `ledger ${sub}`
   const f = parseFlags(rest, LEDGER_FLAGS, { positional: 1 })
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'ledger') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   if (f.args[0] !== undefined && f.v.ledger !== undefined) return usageError(io, verb, 'name the book once: <book> or --ledger <book>')
   const path = f.args[0] ?? f.v.ledger
@@ -2403,11 +3527,11 @@ const anchorWhy = (c: { reason?: string; within?: { from: number; to: number } }
 /** `verify anchor checkpoint|verify`: a witness signs the chain head outside the book; a reader holds the book to it. */
 function runAnchor(argv: string[], io: CliIO): number {
   const [sub, ...rest] = argv
-  if (sub === '-h' || sub === '--help') { io.err(`${USAGE}\n`); return 0 }
+  if (sub === '-h' || sub === '--help') { return printHelp(io, 'anchor') }
   if (sub !== 'checkpoint' && sub !== 'verify') return usageError(io, 'anchor', `the verbs are \`verify anchor checkpoint\` and \`verify anchor verify\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
   const verb = `anchor ${sub}`
   const f = parseFlags(rest, sub === 'checkpoint' ? ANCHOR_CHECKPOINT_FLAGS : ANCHOR_VERIFY_FLAGS)
-  if (f.help) { io.err(`${USAGE}\n`); return 0 }
+  if (f.help) { return printHelp(io, 'anchor') }
   if (f.problems.length) return usageError(io, verb, f.problems.join('; '))
   return sub === 'checkpoint' ? anchorCheckpoint(io, verb, f) : anchorVerify(io, verb, f)
 }
@@ -2432,7 +3556,7 @@ function anchorCheckpoint(io: CliIO, verb: string, f: Flags): number {
 
   let keyPem: string
   let root: RootKeys | undefined
-  try { keyPem = readFileSync(f.v.key as string, 'utf8') } catch (e) { return inputError(io, verb, e, 'error reading --key') }
+  try { keyPem = readText(f.v.key as string) } catch (e) { return inputError(io, verb, e, 'error reading --key') }
   try { root = f.v['root-keys'] !== undefined ? readRootKeys(f.v['root-keys']) : undefined } catch (e) { return inputError(io, verb, e, 'error reading --root-keys') }
   let witnessPub: string
   try {
@@ -2532,19 +3656,223 @@ function anchorVerify(io: CliIO, verb: string, f: Flags): number {
   return 0
 }
 
+/**
+ * `verify extract-schema <ruleset> [--validate <envelope.json>]` (T1, 2026-10-03): the extraction contract's JSON Schema for a
+ * ruleset (a carried name, a declarative ruleset file, or `legal` / `legal@<version>`), generated from its fields block. With
+ * --validate it checks an envelope against it instead and prints the violations, first one first.
+ * Exit 0 printed / valid · 1 the envelope breaks the contract · 3 usage or a ruleset it cannot read.
+ */
+function runExtractSchema(argv: string[], io: CliIO): number {
+  let target: string | undefined, validate: string | undefined, help = false
+  for (let i = 0; i < argv.length; i++) {
+    const t = argv[i] as string
+    if (t === '-h' || t === '--help') help = true
+    else if (t === '--validate') validate = argv[++i]
+    else if (t === '--ruleset') target = argv[++i]
+    else if (!t.startsWith('-') && target === undefined) target = t
+    else { io.err(`verify extract-schema: unknown argument ${t}\n`); return 3 }
+  }
+  if (help || target === undefined) { io.err('usage: verify extract-schema <ruleset | legal[@version]> [--validate <envelope.json>]\n'); return help ? 0 : 3 }
+  let ruleset: ContractRuleset
+  try {
+    ruleset = legalVersionOf(target) !== undefined ? target : readRulesetArg(target) as unknown as DeclarativeRuleset
+    if (typeof ruleset !== 'string' && !isDeclarativeRuleset(ruleset)) throw new Error(`${target} is not a declarative ruleset (id, version, fields, checks) or the legal ruleset`)
+  } catch (e) { io.err(`verify extract-schema: error reading ruleset: ${(e as Error).message}\n`); return 3 }
+  if (validate === undefined) { io.out(`${JSON.stringify(extractionSchema(ruleset), null, 2)}\n`); return 0 }
+  let env: unknown
+  try { env = readJson(validate) } catch (e) { io.err(`verify extract-schema: error reading ${validate}: ${(e as Error).message}\n`); return 3 }
+  const violations = validateContract(env, ruleset)
+  io.out(`${JSON.stringify({ ok: violations.length === 0, violations }, null, 2)}\n`)
+  if (violations.length) io.err(`verify extract-schema: ${violations.length} violation(s); the first: ${violations[0]!.code} at ${violations[0]!.pointer || '(the extraction)'}: ${violations[0]!.message}\n`)
+  return violations.length ? 1 : 0
+}
+
+/**
+ * `verify compile-ruleset` (T2, 2026-10-03): schematron → declarative ruleset skeleton (src/compile, docs/COMPILER.md), or with
+ * --diff, mark the hand edits made to a compiled ruleset. Exit 0 written and linted clean · 1 written but lint errors · 3 usage.
+ */
+function runCompileRuleset(argv: string[], io: CliIO): number {
+  const inputs: string[] = []
+  const against: string[] = []
+  let structure: string | undefined, out: string | undefined, profile: string | undefined, version: string | undefined, name: string | undefined
+  let aliases: string | undefined, scope: string | undefined, sources: string | undefined, report: string | undefined
+  let diff: [string, string] | undefined, help = false
+  for (let i = 0; i < argv.length; i++) {
+    const t = argv[i] as string
+    switch (t) {
+      case '-h': case '--help': help = true; break
+      case '--structure': structure = argv[++i]; break
+      case '--out': out = argv[++i]; break
+      case '--profile': profile = argv[++i]; break
+      case '--version': version = argv[++i]; break
+      case '--name': name = argv[++i]; break
+      case '--aliases': aliases = argv[++i]; break
+      case '--scope': scope = argv[++i]; break
+      case '--sources': sources = argv[++i]; break
+      case '--report': report = argv[++i]; break
+      case '--against': against.push(argv[++i] as string); break
+      case '--diff': diff = [argv[++i] as string, argv[++i] as string]; break
+      default:
+        if (t.startsWith('-')) { io.err(`verify compile-ruleset: unknown argument ${t}\n`); return 3 }
+        inputs.push(t)
+    }
+  }
+  const usage = 'usage: verify compile-ruleset <a.sch> [<b.sch> ...] --structure <tsv|xml> --out <ruleset.json> [--profile <id>] [--aliases <json>] [--scope aliases|<json>] [--against <hand.json>]\n       verify compile-ruleset --diff <compiled.json> <edited.json> --out <file.json>\n'
+  if (help) { io.err(usage); return 0 }
+  if (diff) {
+    if (!out || diff.some(x => !x)) { io.err(usage); return 3 }
+    let compiled: DeclarativeRuleset, edited: DeclarativeRuleset
+    try { compiled = readJson(diff[0]) as unknown as DeclarativeRuleset; edited = readJson(diff[1]) as unknown as DeclarativeRuleset } catch (e) { io.err(`verify compile-ruleset: error reading: ${(e as Error).message}\n`); return 3 }
+    const r = markHandEdits(compiled, edited)
+    writeFileSync(out, `${JSON.stringify(r.ruleset, null, 2)}\n`)
+    io.err(`verify compile-ruleset --diff: ${r.edits.length} hand edit(s) marked (${r.edits.map(e => `${e.kind} ${e.id} ${e.change}`).join('; ') || 'none'}); wrote ${out}\n`)
+    return 0
+  }
+  if (!inputs.length || !structure || !out) { io.err(usage); return 3 }
+  const read = (p: string): string => readText(p)
+  let result
+  try {
+    const structText = read(structure)
+    const structDir = dirname(resolvePath(structure))
+    result = compileSchematron(inputs.map(p => ({ path: p, text: read(p) })), {
+      structure: { file: structure, text: structText, readPart: (href: string) => { const p = join(structDir, href); return existsSync(p) ? read(p) : undefined } },
+      ...(profile ? { profile } : {}), ...(version ? { version } : {}), ...(name ? { name } : {}),
+      ...(aliases ? { aliases: { file: aliases, text: read(aliases) } } : {}),
+      ...(scope ? { scope: scope === 'aliases' ? 'aliases' as const : { file: scope, text: read(scope) } } : {}),
+      ...(sources ? { sources: parseJsonStrict(read(sources), sources) as Record<string, string> } : {}),
+      read: (href: string, from: string) => { const p = join(dirname(resolvePath(from)), href); return { path: p, text: read(p) } },
+    })
+  } catch (e) { io.err(`verify compile-ruleset: ${(e as Error).message}\n`); return 3 }
+  const reportPath = report ?? out.replace(/(\.json)?$/, '.compile-report.json')
+  writeFileSync(out, `${JSON.stringify(result.ruleset, null, 2)}\n`)
+  writeFileSync(reportPath, result.reportText)
+  const lint = lintRuleset(result.ruleset)
+  const t = result.report.total
+  io.err(`verify compile-ruleset: ${t.asserts} assert(s): ${t.arithmetic} arithmetic, ${t.presence} presence, ${t.membership} membership, ${t.uncompiled} uncompiled (${t.partial} partial) → ${result.ruleset.checks.length} check(s), ${Object.keys(result.ruleset.fields).length} field(s); wrote ${out} and ${reportPath}; lint ${lint.ok ? 'clean' : `${lint.errors.length} error(s): ${lint.errors[0]}`}\n`)
+  if (against.length) {
+    const comps = []
+    for (const h of against) {
+      let hand: DeclarativeRuleset
+      try { hand = readRulesetArg(h) as unknown as DeclarativeRuleset } catch (e) { io.err(`verify compile-ruleset: error reading ${h}: ${(e as Error).message}\n`); return 3 }
+      const c = compareWithHand(result.ruleset, hand, result.report)
+      comps.push(c)
+      io.err(`verify compile-ruleset: against ${c.hand}: ${c.summary.reproduced} reproduced, ${c.summary.differs} differ, ${c.summary.no_counterpart} with no counterpart, ${c.summary.unexplained} unexplained\n`)
+    }
+    const base = out.replace(/(\.json)?$/, '')
+    writeFileSync(`${base}.comparison.json`, `${JSON.stringify(comps, null, 1)}\n`)
+    writeFileSync(`${base}.comparison.md`, comps.map(renderComparison).join('\n'))
+  }
+  void basename
+  return lint.ok ? 0 : 1
+}
+
+/**
+ * `verify case open | move | status | replay` (engine 0.3.0; src/arbitration/case.ts). Asynchronous: a move may file a PDF,
+ * which the engine re-reads (pdfjs). The process entry runs it; `run()` (synchronous) points a caller here.
+ */
+export async function runCase(argv: string[], io: CliIO = PROCESS_IO): Promise<number> {
+  invoked = true
+  const [sub, ...rest] = argv
+  const verb = `case ${sub ?? ''}`.trim()
+  const flags: Record<string, string> = {}
+  const on = new Set<string>()
+  for (let i = 0; i < rest.length; i++) {
+    const t = rest[i] as string
+    if (t === '--json' || t === '--reread') { on.add(t.slice(2)); continue }
+    if (t === '-h' || t === '--help') { return printHelp(io, 'case') }
+    if (!t.startsWith('--') || rest[i + 1] === undefined) return usageError(io, verb, `unexpected argument ${JSON.stringify(t)}`)
+    flags[t.slice(2)] = rest[++i] as string
+  }
+  const dir = flags.dir
+  if (!dir) return usageError(io, verb, 'needs --dir <case-dir>')
+  const now = flags.now ?? new Date().toISOString().replace(/\.\d{3}Z$/, 'Z')
+  try {
+    if (sub === 'open') {
+      for (const k of ['verdict', 'inputs', 'parties']) if (!flags[k]) return usageError(io, verb, `needs --${k}`)
+      const raw = readJson(flags.verdict!) as Record<string, unknown>
+      const verdict = (isObj(raw.verdict) ? raw.verdict : raw) as unknown as Verdict
+      const st = openCase({ dir, verdict, inputs: readJson(flags.inputs!), parties: readJson(flags.parties!), now, ...(flags.document ? { document: new Uint8Array(readFileSync(flags.document)) } : {}), ...(flags.dispute ? { dispute: flags.dispute } : {}) })
+      io.out(`${JSON.stringify(st.record, null, 2)}\n`)
+      io.err(`verify case open: ${st.record.case_id} opened (${st.record.why}); clock ${st.record.clock.working_days} working days (${st.record.clock.kind}), deadline ${st.record.clock.deadline}\n${scopeLines(st.latest).map(l => `  ${l}`).join('\n')}\n`)
+      return 0
+    }
+    if (sub === 'move') {
+      if (!flags.move) return usageError(io, verb, 'needs --move <move.json>')
+      const r = await fileMove({ dir, move: new Uint8Array(readFileSync(flags.move)), ...(flags.evidence ? { evidence: new Uint8Array(readFileSync(flags.evidence)) } : {}), now })
+      io.out(`${JSON.stringify({ accepted: r.accepted, ...(r.move_id ? { move_id: r.move_id } : {}), ...(r.refusal ? { refusal: r.refusal } : {}), ...(r.before ? { before: r.before } : {}), ...(r.after ? { after: r.after } : {}), ...(r.resolution ? { resolution: r.resolution } : {}), status: r.status }, null, 2)}\n`)
+      if (!r.accepted) { io.err(`verify case move: REFUSED (${r.refusal?.code}): ${r.refusal?.detail}. The refusal is on the record, by the move's sha256.\n`); return 1 }
+      io.err(`verify case move: accepted ${r.move_id?.slice(0, 12)}…; re-verdict ${r.after?.verdict_id} reads ${r.after?.gate} (was ${r.before?.gate})${r.resolution ? `; the case resolves ${r.resolution}` : '; the case stays open'}\n${scopeLines(r.verdict).map(l => `  ${l}`).join('\n')}\n`)
+      return 0
+    }
+    if (sub === 'status') {
+      const s = caseStatus(dir, now)
+      io.out(`${JSON.stringify(s, null, 2)}\n`)
+      if (!on.has('json')) {
+        const st = loadCase(dir)
+        io.err(`verify case status: ${s.case_id} ${s.status.toUpperCase()}${s.resolution ? ` (${s.resolution})` : ` until ${s.deadline}`}; latest verdict ${s.latest.verdict_id} reads ${s.latest.gate}; ${s.moves.accepted} move(s) accepted, ${s.moves.refused} refused; ${s.struck.length} struck field(s)${s.struck.length ? `: ${s.struck.map(x => `${x.field} (${x.reason})`).join(', ')}` : ''}\n${scopeLines(st.latest).map(l => `  ${l}`).join('\n')}\n`)
+      }
+      return 0
+    }
+    if (sub === 'replay') {
+      const r = await replayCase(dir, { reread: on.has('reread') })
+      io.out(`${JSON.stringify(r, null, 2)}\n`)
+      io.err(`verify case replay: ${r.ok ? 'every verdict re-performed byte for byte, every move signature verified' : 'FAILED'}: ${r.verdicts.length} verdict(s), ${r.moves.length} move(s)${r.ledger.length ? `; ledger: ${r.ledger.join('; ')}` : ''}${on.has('reread') ? `; documents re-read: ${r.moves.filter(m => m.reread === 'same').length} same, ${r.moves.filter(m => m.reread === 'differs').length} differ` : ''}\n`)
+      return r.ok ? 0 : 1
+    }
+    return usageError(io, 'case', `the verbs are \`verify case open | move | status | replay\` (got ${sub === undefined ? 'nothing' : `"${sub}"`})`)
+  } catch (e) {
+    if (e instanceof CaseRefused) { io.err(`verify ${verb}: REFUSED (${e.code}): ${e.message}\n`); return 1 }
+    io.err(`verify ${verb}: error: ${(e as Error).message}\n`)
+    return 3
+  }
+}
+
 const VERBS: Readonly<Record<string, (argv: string[], io: CliIO) => number>> = {
+  'extract-schema': runExtractSchema, 'compile-ruleset': runCompileRuleset,
   lint: runLint, measure: runMeasure, replay: runReplay, ap: runAp, mine: runMine, voice: runVoice, notice: runNotice,
   twin: runTwin, 'twin-einvoice': runTwinEinvoice, opinion: runOpinion,
   grant: runGrant, succession: runSuccession, decline: runDecline, 'revise-policy': runRevisePolicy, keygen: runKeygen, report: runReport,
   rule: runRule, statute: runStatute, sample: runSample, queue: runQueue, review: runReview, key: runKey, canary: runCanary,
   policy: runPolicy, reconcile: runReconcile, ledger: runLedger, anchor: runAnchor,
+  bench: runBench, // `verify bench emit | index | check` (src/bench/cli-bench.ts): bench tables from preregs, the misses ledger
+  citations: runCitations, // `verify citations <citations.json> --sources <dir>` (src/legal/cli-citations.ts, 2026-10-05): a brief's quotations
 }
+import { runBench } from './bench/cli-bench.js'
+import { runCitations } from './legal/cli-citations.js'
+import { runServe } from './http/serve.js' // `verify serve` (2026-10-05): long-running, so the process entry starts it, not run()
+
+/** The one line `--version` prints (2026-10-05): the build, and every engine whose verdicts it re-performs. */
+export const VERSION_LINE = `${BIN} ${ENGINE_VERSION} (engine ${ENGINE_VERSION}; replays verdicts of engines ${ENGINE_VERSIONS.join(', ')})`
 
 export function run(argv: string[], io: CliIO = PROCESS_IO): number {
+  invoked = true
   try {
     const [first, ...rest] = argv
+    // 2026-10-05: no arguments prints the first screen (40 lines, not the reference); --version prints the version and
+    // exits 0; --help / help take an optional command (`--help replay`) or `all` (the whole reference).
+    if (first === undefined) { io.err(`${HELP}\n`); return 3 }
+    if (first === '--version' || first === '-V') { io.out(`${VERSION_LINE}\n`); return 0 }
+    if (first === '--help' || first === '-h' || first === 'help') {
+      const what = rest[0]
+      if (what === undefined) { io.err(`${HELP}\n`); return 0 }
+      if (what === 'all') { io.err(`${USAGE}\n`); return 0 }
+      const h = helpFor(what)
+      if (h !== undefined) { io.err(`${h}\n`); return 0 }
+      io.err(`verify: no command "${what}"${didYouMean(what, [...Object.keys(VERBS), 'check', 'case'])}\n${HELP}\n`)
+      return 3
+    }
+    if (first === 'check') return runVerify(rest, io)
+    if (first === 'case') { io.err('verify case is asynchronous (a move may file a PDF the engine re-reads): call runCase(argv) from the library, or run the CLI\n'); return 3 }
+    if (first === 'serve') { if (rest.includes('--help') || rest.includes('-h')) return printHelp(io, 'serve'); io.err('verify serve runs until stopped: call runServe(argv) from the library, or run the CLI\n'); return 3 }
     const verb = first !== undefined && Object.prototype.hasOwnProperty.call(VERBS, first) ? VERBS[first] : undefined
-    return verb ? verb(rest, io) : runVerify(argv, io)
+    if (verb) return verb(rest, io)
+    // 2026-10-05: a word that is neither a command nor a file (`verify replya verdict.json`) is a mistyped command, never a
+    // check of whatever file follows it.
+    if (/^[a-z][a-z0-9-]*$/i.test(first) && !existsSync(first)) {
+      io.err(`verify: unknown command "${first}"${didYouMean(first, [...Object.keys(VERBS), 'check', 'case', 'help'])} (and no file by that name)\nsee: ${invokedAs()} --help\n`)
+      return 3
+    }
+    return runVerify(argv, io)
   } catch (e) {
     // Nothing throws out of run(): an unexpected error is reported, never a stack trace from the process.
     io.err(`verify: internal error: ${e instanceof Error ? e.message : String(e)}\n`)
@@ -2552,7 +3880,33 @@ export function run(argv: string[], io: CliIO = PROCESS_IO): number {
   }
 }
 
+/**
+ * Is this file the program? (2026-10-05, a cold reader in cold review round 3: "my first wrapper exited 0 with no output and no error".) Yes when
+ * argv[1] names it: `node …/cli.js`, `tsx …/cli.ts`, an npm bin shim that passes the path, or a bin symlink such as `riposte-verify`
+ * (compared by real path, so a link whose own name does not end in cli.js still runs the CLI).
+ */
+export function isProgram(main: string | undefined = process.argv[1]): boolean {
+  if (!main) return false
+  if (/(^|[\\/])cli\.[cm]?[jt]s$/.test(main)) return true
+  try { return realpathSync(main) === realpathSync(fileURLToPath(import.meta.url)) } catch { return false }
+}
+/** Set once run() or runCase() is called: a host that imports this module and calls run() is using it, not wrapping it. */
+let invoked = false
+
 // Run when invoked directly.
-if (process.argv[1] && (process.argv[1].endsWith('cli.js') || process.argv[1].endsWith('cli.ts'))) {
-  process.exit(run(process.argv.slice(2)))
+if (isProgram()) {
+  const argv = process.argv.slice(2)
+  // `verify case …` is asynchronous; let stdout drain before the process ends (exitCode, never exit())
+  if (argv[0] === 'case') void runCase(argv.slice(1)).then(code => { process.exitCode = code })
+  else if (argv[0] === 'serve') { invoked = true; const r = runServe(argv.slice(1), { help: helpFor('serve') ?? '' }); if (!r.server) process.exitCode = r.code }
+  else process.exit(run(argv))
+} else if (!process.env.VITEST && process.env.JEST_WORKER_ID === undefined) {
+  // A script that imports this module and never calls run() ran no command. It used to end with exit 0 and nothing printed; now it
+  // says what happened and how to wrap the CLI, prints the usage, and exits 3. A test runner imports the module for run() and its
+  // helpers, so it is left alone.
+  process.once('beforeExit', () => {
+    if (invoked) return
+    process.stderr.write(`${BIN}: no command ran: this module was imported by ${process.argv[1] ?? 'another script'}, not run. To wrap the CLI, call run(process.argv.slice(2)) from this module and exit with the number it returns, or run node with this file's path.\n${HELP}\n`)
+    process.exitCode = 3
+  })
 }

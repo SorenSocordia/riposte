@@ -1,0 +1,76 @@
+# Test excerpt of the UBL invoice structure (Peppol BIS Billing 3.0 at OpenPEPPOL/peppol-bis-invoice-3 261c458): path, cardinality,
+# EN 16931 business terms, name, default. Rules column dropped.
+/Invoice/cbc:CustomizationID	1..1	BT-24	Specification identifier	DEFAULT=urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0
+/Invoice/cbc:ID	1..1	BT-1	Invoice number	
+/Invoice/cbc:IssueDate	1..1	BT-2	Invoice issue date	
+/Invoice/cbc:DueDate	0..1	BT-9	Payment due date	
+/Invoice/cbc:InvoiceTypeCode	1..1	BT-3	Invoice type code	
+/Invoice/cbc:DocumentCurrencyCode	1..1	BT-5	Invoice currency code	
+/Invoice/cbc:TaxCurrencyCode	0..1	BT-6	VAT accounting currency code	
+/Invoice/cbc:BuyerReference	0..1	BT-10	Buyer reference	
+/Invoice/cac:InvoicePeriod	0..1	BG-14	DELIVERY OR INVOICE PERIOD	
+/Invoice/cac:InvoicePeriod/cbc:StartDate	0..1	BT-73	Invoicing period start date	
+/Invoice/cac:InvoicePeriod/cbc:EndDate	0..1	BT-74	Invoicing period end date	
+/Invoice/cac:AccountingSupplierParty	1..1	BG-4	SELLER	
+/Invoice/cac:AccountingSupplierParty/cac:Party	1..1		PARTY	
+/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity	1..1		PARTY LEGAL ENTITY	
+/Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName	1..1	BT-27	Seller name	
+/Invoice/cac:AccountingCustomerParty	1..1	BG-7	BUYER	
+/Invoice/cac:AccountingCustomerParty/cac:Party	1..1		PARTY	
+/Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity	1..1		PARTY LEGAL ENTITY	
+/Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName	1..1	BT-44	Buyer name	
+/Invoice/cac:PaymentTerms	0..1		PAYMENT TERMS	
+/Invoice/cac:PaymentTerms/cbc:Note	1..1	BT-20	Payment terms	
+/Invoice/cac:AllowanceCharge	0..n	BG-20, BG-21	DOCUMENT LEVEL ALLOWANCES AND CHARGES	
+/Invoice/cac:AllowanceCharge/cbc:ChargeIndicator	1..1			
+/Invoice/cac:AllowanceCharge/cbc:Amount	1..1	BT-92,BT-99	Document level allowance or charge amount	
+/Invoice/cac:AllowanceCharge/cbc:Amount/@currencyID	1..1			
+/Invoice/cac:TaxTotal	1..2		TAX TOTAL	
+/Invoice/cac:TaxTotal/cbc:TaxAmount	1..1	BT-110, BT-111	Invoice total VAT amount, Invoice total VAT amount in accounting currency	
+/Invoice/cac:TaxTotal/cbc:TaxAmount/@currencyID	1..1			
+/Invoice/cac:TaxTotal/cac:TaxSubtotal	0..n	BG-23	VAT BREAKDOWN	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxableAmount	1..1	BT-116	VAT category taxable amount	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxableAmount/@currencyID	1..1			
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount	1..1	BT-117	VAT category tax amount	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount/@currencyID	1..1			
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory	1..1		VAT CATEGORY	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID	1..1	BT-118	VAT category code	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:Percent	0..1	BT-119	VAT category rate	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:TaxExemptionReasonCode	0..1	BT-121	VAT exemption reason code	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:TaxExemptionReason	0..1	BT-120	VAT exemption reason text	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme	1..1		TAX SCHEME	
+/Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID	1..1			DEFAULT=VAT
+/Invoice/cac:LegalMonetaryTotal	1..1	BG-22	DOCUMENT TOTALS	
+/Invoice/cac:LegalMonetaryTotal/cbc:LineExtensionAmount	1..1	BT-106	Sum of Invoice line net amount	
+/Invoice/cac:LegalMonetaryTotal/cbc:LineExtensionAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount	1..1	BT-109	Invoice total amount without VAT	
+/Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount	1..1	BT-112	Invoice total amount with VAT	
+/Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount	0..1	BT-107	Sum of allowances on document level	
+/Invoice/cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:ChargeTotalAmount	0..1	BT-108	Sum of charges on document level	
+/Invoice/cac:LegalMonetaryTotal/cbc:ChargeTotalAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:PrepaidAmount	0..1	BT-113	Paid amount	
+/Invoice/cac:LegalMonetaryTotal/cbc:PrepaidAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:PayableRoundingAmount	0..1	BT-114	Rounding amount	
+/Invoice/cac:LegalMonetaryTotal/cbc:PayableRoundingAmount/@currencyID	1..1			
+/Invoice/cac:LegalMonetaryTotal/cbc:PayableAmount	1..1	BT-115	Amount due for payment	
+/Invoice/cac:LegalMonetaryTotal/cbc:PayableAmount/@currencyID	1..1			
+/Invoice/cac:InvoiceLine	1..n	BG-25	INVOICE LINE	
+/Invoice/cac:InvoiceLine/cbc:ID	1..1	BT-126	Invoice line identifier	
+/Invoice/cac:InvoiceLine/cbc:InvoicedQuantity	1..1	BT-129	Invoiced quantity	
+/Invoice/cac:InvoiceLine/cbc:LineExtensionAmount	1..1	BT-131	Invoice line net amount	
+/Invoice/cac:InvoiceLine/cbc:LineExtensionAmount/@currencyID	1..1			
+/Invoice/cac:InvoiceLine/cac:DocumentReference	0..1		LINE OBJECT IDENTIFIER	
+/Invoice/cac:InvoiceLine/cac:DocumentReference/cbc:ID	1..1	BT-128	Invoice line object identifier	
+/Invoice/cac:InvoiceLine/cac:DocumentReference/cbc:DocumentTypeCode	1..1	BT-128	Document type code	DEFAULT=130
+/Invoice/cac:InvoiceLine/cac:AllowanceCharge	0..n	BG-27, BG-28	INVOICE LINE ALLOWANCES OR CHARGES	
+/Invoice/cac:InvoiceLine/cac:AllowanceCharge/cbc:ChargeIndicator	1..1			
+/Invoice/cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount	1..1	BT-136,BT-141	Line level allowance or charge amount	
+/Invoice/cac:InvoiceLine/cac:Item	1..1	BG-31	ITEM INFORMATION	
+/Invoice/cac:InvoiceLine/cac:Item/cbc:Name	1..1	BT-153	Item name	
+/Invoice/cac:InvoiceLine/cac:Price	1..1	BG-29	PRICE DETAILS	
+/Invoice/cac:InvoiceLine/cac:Price/cbc:PriceAmount	1..1	BT-146	Item net price	
+/Invoice/cac:InvoiceLine/cac:Price/cbc:PriceAmount/@currencyID	1..1			
+/Invoice/cac:InvoiceLine/cac:Price/cbc:BaseQuantity	0..1	BT-149	Item price base quantity	

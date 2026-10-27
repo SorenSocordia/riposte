@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url'
 import { verify, lintRuleset, type DeclarativeRuleset, type Verdict } from '../src/index'
 
 const KSEF = JSON.parse(
-  // pinned to the frozen 0.1.0 bytes (D1 pattern, E-INVOICE-2 2026-09-28); 0.2.0 (DoZaplaty) is tested in ksef-dozaplaty.test.ts
+  // pinned to the frozen 0.1.0 bytes (pinned 2026-09-28); 0.2.0 (DoZaplaty) is tested in ksef-dozaplaty.test.ts
   readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'golden-rulesets', 'ksef-fa3.ruleset.v0.1.0.json'), 'utf8'),
 ) as DeclarativeRuleset
 const NOW = () => new Date('2026-09-22T00:00:00Z')

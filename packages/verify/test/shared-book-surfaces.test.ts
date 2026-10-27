@@ -1,11 +1,11 @@
 /**
- * SW1 (BOOK-FIRST lane, 2026-09-28): the shared-book 409 on POST /v1/opinion is lifted. The opinion takes the caller's
+ * 2026-09-28: the shared-book 409 on POST /v1/opinion is lifted. The opinion takes the caller's
  * tenant scope (opinion/snapshot.ts): the chain is verified whole, but precedent, evidence and grants are the caller's own.
  *   - managed tier: a dispute on a book shared with another tenant is served (200), equal to the scoped disputeOpinion, and
  *     its JSON holds no other tenant's reviewer id, note or verdict id; another tenant's verdict is still 404;
  *   - stateless (router, MCP opinion_render): an optional `tenant_id` reads one tenant of a shared chain export;
  *   - the managed tier refuses a request `tenant_id` other than the caller's.
- * The book is the opinion lane's sharedBook() (test/opinion-scope.test.ts), rebuilt here (a test file is not importable).
+ * The book is sharedBook() from test/opinion-scope.test.ts, rebuilt here (a test file is not importable).
  */
 import { describe, it, expect } from 'vitest'
 import { verify, createLedger, disputeOpinion, snapshotOfLedger, promotionOpinion, type Ledger, type Opinion } from '../src/index'

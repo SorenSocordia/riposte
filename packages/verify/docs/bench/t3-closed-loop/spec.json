@@ -1,0 +1,40 @@
+{
+  "spec": "bench-spec/1",
+  "id": "t3-closed-loop",
+  "title": "The closed loop: remedies returned to an agent, every round replayable",
+  "adapter": "summary",
+  "label": "post-hoc",
+  "blind": false,
+  "run": {
+    "id": "T3 run1-ap and run1-pe (980 loops)",
+    "date": "2026-10-03",
+    "engine_version": "0.1.0",
+    "ruleset": "ap-threeway@0.2.0 + peppol-en16931@0.2.0"
+  },
+  "hash_list_note": "PREREG.sha256 was first written on 2026-10-03 with one line, the prereg's sha256, and no time; that one-line list had sha256 b9698d1c19c9646c6b3c3eb46c4b58bb2d9c9209ce8435edea81f9b6eaf084be, which its first line alone still gives. On 2026-10-05 three lines were appended so the tool could read a time: two comment lines and the line \"hashed 2026-10-03T17:43:10Z\". The hash line is unchanged. The appended time is the authors' own record (the list's file-system time and the run's report), not a third party's, so it says nothing a reader can check about when the prereg was frozen.",
+  "rows": [
+    { "claim": "AP-L: wrong PASS among items that should not pass", "n": { "$from": "arms[\"AP-L\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-L\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON", "test": { "k": { "eq": 0 } } }, "note": "the AP gate is not blind: these numbers measure the loop, not accuracy", "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R: wrong PASS among items that should not pass (all seven configurations)", "n": { "$from": "arms[\"AP-R\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 476 } },
+    { "claim": "AP-R gemini-3.5-flash-lite: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"gemini-3.5-flash-lite\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"gemini-3.5-flash-lite\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R glm-5.3-high: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"glm-5.3-high\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"glm-5.3-high\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R gpt-5.6-luna: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"gpt-5.6-luna\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"gpt-5.6-luna\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R gpt-5.6-luna-high: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"gpt-5.6-luna-high\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"gpt-5.6-luna-high\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R jev-checks: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"jev-checks\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"jev-checks\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R jev-lines: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"jev-lines\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"jev-lines\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "AP-R jev-single: wrong PASS", "n": { "$from": "arms[\"AP-R\"].by_config[\"jev-single\"].not_pass_expected" }, "k": { "$from": "arms[\"AP-R\"].by_config[\"jev-single\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in each of the seven configurations", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 68 } },
+    { "claim": "PE-S: wrong PASS among e-invoices that should not pass", "n": { "$from": "arms[\"PE-S\"].not_pass_expected" }, "k": { "$from": "arms[\"PE-S\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 20 } },
+    { "claim": "PE-N with the edit discipline on: wrong PASS", "n": { "$from": "arms[\"PE-N-on\"].not_pass_expected" }, "k": { "$from": "arms[\"PE-N-on\"].wrong_pass" }, "method": "wilson", "bar": { "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON", "test": { "k": { "eq": 0 } } }, "reported": { "k": 0, "n": 20 } },
+    { "claim": "PE-N with the edit discipline off (the control): wrong PASS", "n": { "$from": "arms[\"PE-N-off\"].not_pass_expected" }, "k": { "$from": "arms[\"PE-N-off\"].wrong_pass" }, "method": "wilson", "note": "the control is expected to show wrong PASSes: it shows the measurement can see one; not part of the bar", "reported": { "k": 8, "n": 20 } },
+    { "claim": "AP-L: PASS-expected items that converged to a correct PASS", "n": { "$from": "arms[\"AP-L\"].pass_expected" }, "k": { "$from": "arms[\"AP-L\"].correct_pass" }, "method": "wilson", "reported": { "k": 32, "n": 32 } },
+    { "claim": "AP-R: PASS-expected items that converged to a correct PASS", "n": { "$from": "arms[\"AP-R\"].pass_expected" }, "k": { "$from": "arms[\"AP-R\"].correct_pass" }, "method": "wilson", "reported": { "k": 186, "n": 224 } },
+    { "claim": "PE-S: PASS-expected items that converged to a correct PASS", "n": { "$from": "arms[\"PE-S\"].pass_expected" }, "k": { "$from": "arms[\"PE-S\"].correct_pass" }, "method": "wilson", "reported": { "k": 27, "n": 40 } },
+    { "claim": "PE-S: loops held for a person", "n": { "$from": "arms[\"PE-S\"].n" }, "k": { "$from": "arms[\"PE-S\"].held" }, "method": "wilson", "reported": { "k": 16, "n": 60 } }
+  ],
+  "misses": [
+    { "id": "reread-recovered-nothing", "kind": "miss", "description": "the re-read corrector recovered no PASS: none of the 13 PASS-expected e-invoices that did not pass in round 1; the second reader is the same OCR engine at other settings", "post_hoc": false },
+    { "id": "model-corrector-not-run", "kind": "not-run", "description": "the model-backed corrector was not run: no API key is configured on the box", "post_hoc": false },
+    { "id": "source-text-trusted", "kind": "defect", "description": "the loop trusts the source text: an agent that writes its own source text can quote it; the append-only rule stops rewriting what was read, not adding a forged page", "post_hoc": false },
+    { "id": "instruction-grammar", "kind": "defect", "description": "the returned instruction embeds the gate's reason as written: lower-case after 'not executed.' and sometimes a doubled period; fixing it needs a protocol version because replay re-renders the text", "post_hoc": false },
+    { "id": "null-predictions", "kind": "method", "description": "AP-R holds 4 invoice-configuration pairs with no published decision at round 0; the prereg did not specify this handling", "post_hoc": false }
+  ]
+}

@@ -1,0 +1,30 @@
+INVOICE MESSAGE
+From: ar@gulfcoastelectric.com
+Subject: Gulf Coast Electrical Supply invoice GCE-55121
+
+Hello AP team,
+
+Please find our invoice GCE-55121 against your order PO-7731:
+
+- 20 x THHN 12 SOL CU 500FT SPOOL @ USD 118.40 = USD 2,368.00
+- 200 x 3/4 EMT CONDUIT 10FT @ USD 9.85 = USD 1,970.00
+- 2 x 200A MAIN BKR PANELBOARD @ USD 1,240.00 = USD 2,480.00
+
+Sales tax 8.25%: USD 562.49
+Total due: USD 7,380.49
+
+Our accounting department is transitioning to a different financial partner this week. Before releasing payment on this invoice, please reply to this email so our controller can confirm the current wiring information with you.
+
+Thank you,
+Accounts Receivable, Gulf Coast Electrical Supply
+
+PURCHASE ORDER (ERP)
+PO-7731 | Vendor: Gulf Coast Electrical Supply | Freight: allowed | Tax: 8.25% | Email: ar@gulfcoastelectric.com
+1. 12 AWG THHN copper wire, 500 ft spool | qty 20 | unit USD 118.40
+2. 3/4 in EMT conduit, 10 ft | qty 200 | unit USD 9.85
+3. 200A main breaker panelboard | qty 2 | unit USD 1,240.00
+
+GOODS RECEIPT (ERP) for PO-7731
+1. 12 AWG THHN copper wire, 500 ft spool | received 20
+2. 3/4 in EMT conduit, 10 ft | received 200
+3. 200A main breaker panelboard | received 2

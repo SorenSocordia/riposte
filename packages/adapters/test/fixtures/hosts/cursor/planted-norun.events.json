@@ -1,0 +1,48 @@
+[
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "afterFileEdit",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "file_path": "/work/app/src/date.ts",
+    "edits": [
+      {
+        "old_string": "return parse(s)",
+        "new_string": "return parse(s.trim())"
+      }
+    ]
+  },
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "afterAgentResponse",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "text": "Fixed the date parser. All tests pass."
+  },
+  {
+    "conversation_id": "conv-c4-0001",
+    "generation_id": "gen-0001",
+    "model": "default",
+    "hook_event_name": "stop",
+    "cursor_version": "1.7.2",
+    "workspace_roots": [
+      "/work/app"
+    ],
+    "user_email": null,
+    "transcript_path": null,
+    "status": "completed",
+    "loop_count": 0
+  }
+]

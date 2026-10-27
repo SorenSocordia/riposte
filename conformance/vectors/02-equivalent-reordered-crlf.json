@@ -1,0 +1,724 @@
+{
+ "inputs": {
+  "source": null,
+  "references": {
+   "history": [],
+   "evidence": [],
+   "contract": null
+  },
+  "extraction": {
+   "totals": {
+    "total": 1894.92,
+    "tax": 144.42,
+    "tax_rate": 0.0825,
+    "subtotal": 1750.5
+   },
+   "line_items": [
+    {
+     "amount": 1500,
+     "unit_price": 150,
+     "quantity": 10,
+     "description": "Consulting"
+    },
+    {
+     "amount": 250.5,
+     "unit_price": 250.5,
+     "quantity": 1,
+     "description": "Travel"
+    }
+   ],
+   "invoice_number": "INV-1001"
+  }
+ },
+ "verdict": {
+  "scope": {
+   "statements": [
+    "advisories are counsel, not verdicts",
+    "this is a check, not a decision"
+   ],
+   "evidence_floor": "unstated",
+   "engine_version": "0.6.0",
+   "ruleset": "invoice@0.1.0"
+  },
+  "remedies": [
+   {
+    "claims": [
+     "document.TIME_ORD"
+    ],
+    "clears": [
+     "TIME_ORD"
+    ],
+    "operand": {
+     "role": "EVENT_DATE",
+     "source": "invoice"
+    },
+    "detail": "supply EVENT_DATE: the rule cannot run without it",
+    "kind": "missing-operand"
+   },
+   {
+    "claims": [
+     "document.TIME_ORD"
+    ],
+    "clears": [
+     "TIME_ORD"
+    ],
+    "operand": {
+     "role": "CONTRACT_START",
+     "source": "contract"
+    },
+    "detail": "supply CONTRACT_START: the rule cannot run without it",
+    "kind": "missing-operand"
+   },
+   {
+    "claims": [
+     "document.TIME_ORD"
+    ],
+    "clears": [
+     "TIME_ORD"
+    ],
+    "operand": {
+     "role": "CONTRACT_END",
+     "source": "contract"
+    },
+    "detail": "supply CONTRACT_END: the rule cannot run without it",
+    "kind": "missing-operand"
+   },
+   {
+    "claims": [
+     "line[0].RATE_SUP",
+     "line[1].RATE_SUP"
+    ],
+    "clears": [
+     "RATE_SUP"
+    ],
+    "operand": {
+     "role": "RATE_CONTRACTED",
+     "source": "contract"
+    },
+    "detail": "supply the contract reference: RATE_SUP needs RATE_CONTRACTED from it",
+    "kind": "missing-operand"
+   },
+   {
+    "claims": [
+     "line[0].AMT_CAP",
+     "line[1].AMT_CAP"
+    ],
+    "clears": [
+     "AMT_CAP"
+    ],
+    "operand": {
+     "role": "CONTRACTED_LIMIT",
+     "source": "contract"
+    },
+    "detail": "supply the contract reference: AMT_CAP needs CONTRACTED_LIMIT from it",
+    "kind": "missing-operand"
+   },
+   {
+    "claims": [
+     "line[0].QTY_MATCH",
+     "line[1].QTY_MATCH"
+    ],
+    "clears": [
+     "QTY_MATCH"
+    ],
+    "operand": {
+     "role": "ACTUAL_QUANTITY",
+     "source": "evidence"
+    },
+    "detail": "supply the evidence reference: QTY_MATCH needs ACTUAL_QUANTITY from it",
+    "kind": "missing-operand"
+   },
+   {
+    "claims": [
+     "document.DUP_PROHIB"
+    ],
+    "clears": [
+     "DUP_PROHIB"
+    ],
+    "operand": {
+     "path": "prior_invoice_ids",
+     "role": "PRIOR_CLAIM_IDS",
+     "source": "history"
+    },
+    "detail": "The invoice numbers already processed (prior_invoice_ids; an empty list means none), and the invoice number itself, so the duplicate check can run.",
+    "kind": "missing-operand"
+   }
+  ],
+  "coverage": {
+   "claims_insufficient": 8,
+   "claims_fail": 0,
+   "claims_pass": 5,
+   "claims_checked": 5,
+   "claims_total": 13
+  },
+  "claims": [
+   {
+    "variance": 0,
+    "explanation": "Law of Footing: All predicates satisfied.",
+    "locked": false,
+    "evidence": [
+     {
+      "role": "CONTEXT",
+      "confidence": 100,
+      "value": 1750.5,
+      "locator": {
+       "path": "Σ(line_items[0].amount + line_items[1].amount)",
+       "source": "computed",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1750.5,
+      "locator": {
+       "path": "totals.subtotal",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1500,
+      "locator": {
+       "path": "line_items[0].amount",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 250.5,
+      "locator": {
+       "path": "line_items[1].amount",
+       "source": "invoice",
+       "kind": "field"
+      }
+     }
+    ],
+    "computation": {
+     "tolerance": {
+      "rel": 0.0003,
+      "abs": 0.01
+     },
+     "result": 1750.5,
+     "operands": {
+      "SUBTOTAL": 1750.5,
+      "LINE_ITEMS_SUM": 1750.5
+     },
+     "formula": "Σ line_items[i].amount = subtotal"
+    },
+    "rule_name": "Law of Footing",
+    "rule_id": "SUM_INT",
+    "asserted": 1750.5,
+    "field": "subtotal",
+    "outcome": "PASS",
+    "tier": "DETERMINISTIC",
+    "kind": "RECOMPUTE",
+    "claim_id": "document.SUM_INT"
+   },
+   {
+    "variance": 0,
+    "explanation": "Law of the Bottom Line: All predicates satisfied.",
+    "locked": false,
+    "evidence": [
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1894.92,
+      "locator": {
+       "path": "totals.total",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "role": "CONTEXT",
+      "confidence": 100,
+      "value": 1894.92,
+      "locator": {
+       "path": "SUBTOTAL + TAX_AMOUNT + SERVICE_CHARGE − |DISCOUNT_AMOUNT| (SERVICE_CHARGE absent → 0; DISCOUNT_AMOUNT absent → 0)",
+       "source": "computed",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1750.5,
+      "locator": {
+       "path": "totals.subtotal",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 144.42,
+      "locator": {
+       "path": "totals.tax",
+       "source": "invoice",
+       "kind": "field"
+      }
+     }
+    ],
+    "computation": {
+     "tolerance": {
+      "rel": 0.0003,
+      "abs": 0.01
+     },
+     "result": 1894.92,
+     "operands": {
+      "EXPECTED_GRAND_TOTAL": 1894.92,
+      "GRAND_TOTAL": 1894.92
+     },
+     "formula": "grand_total = subtotal + tax − discount"
+    },
+    "rule_name": "Law of the Bottom Line",
+    "rule_id": "TOTAL_INT",
+    "asserted": 1894.92,
+    "field": "total",
+    "outcome": "PASS",
+    "tier": "DETERMINISTIC",
+    "kind": "RECOMPUTE",
+    "claim_id": "document.TOTAL_INT"
+   },
+   {
+    "variance": 0.0037,
+    "explanation": "Law of the Levy: All predicates satisfied.",
+    "locked": false,
+    "evidence": [
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 144.42,
+      "locator": {
+       "path": "totals.tax",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "role": "CONTEXT",
+      "confidence": 100,
+      "value": 144.4163,
+      "locator": {
+       "path": "SUBTOTAL × TAX_RATE",
+       "source": "computed",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1750.5,
+      "locator": {
+       "path": "totals.subtotal",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 0.0825,
+      "locator": {
+       "path": "totals.tax_rate",
+       "source": "invoice",
+       "kind": "field"
+      }
+     }
+    ],
+    "computation": {
+     "tolerance": {
+      "rel": 0.0003,
+      "abs": 0.01
+     },
+     "result": 144.4163,
+     "operands": {
+      "EXPECTED_TAX_AMOUNT": 144.4163,
+      "TAX_AMOUNT": 144.42
+     },
+     "formula": "tax = subtotal × tax_rate"
+    },
+    "rule_name": "Law of the Levy",
+    "rule_id": "TAX_INT",
+    "asserted": 144.42,
+    "field": "tax",
+    "outcome": "PASS",
+    "tier": "DETERMINISTIC",
+    "kind": "RECOMPUTE",
+    "claim_id": "document.TAX_INT"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for EVENT_DATE, CONTRACT_START, CONTRACT_END",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "EVENT_DATE",
+      "CONTRACT_START",
+      "CONTRACT_END"
+     ],
+     "detail": "Please supply: the service date from the invoice, the contract effective/start date, the contract expiration/end date",
+     "reason": "FIELD_MISSING"
+    },
+    "evidence": [],
+    "rule_name": "Law of Temporal Order",
+    "rule_id": "TIME_ORD",
+    "asserted": null,
+    "field": "service_date",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "document.TIME_ORD"
+   },
+   {
+    "variance": 0,
+    "explanation": "Law of Mathematical Integrity: All predicates satisfied.",
+    "locked": false,
+    "evidence": [
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1500,
+      "locator": {
+       "path": "line_items[*].amount",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "role": "CONTEXT",
+      "confidence": 100,
+      "value": 1500,
+      "locator": {
+       "path": "RATE_APPLIED * CLAIMED_QUANTITY (math check)",
+       "source": "computed",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 150,
+      "locator": {
+       "path": "line_items[*].unit_price",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 10,
+      "locator": {
+       "path": "line_items[*].quantity",
+       "source": "invoice",
+       "kind": "field"
+      }
+     }
+    ],
+    "computation": {
+     "tolerance": {
+      "rel": 0.0003,
+      "abs": 0.01
+     },
+     "result": 1500,
+     "operands": {
+      "VERIFIED_AMOUNT": 1500,
+      "CLAIMED_AMOUNT": 1500
+     },
+     "formula": "∀a: a_claimed = a_calculated"
+    },
+    "rule_name": "Law of Mathematical Integrity",
+    "rule_id": "MATH_INT",
+    "asserted": 1500,
+    "field": "amount",
+    "outcome": "PASS",
+    "tier": "DETERMINISTIC",
+    "kind": "RECOMPUTE",
+    "claim_id": "line[0].MATH_INT"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for RATE_CONTRACTED",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "RATE_CONTRACTED"
+     ],
+     "detail": "No contract/PO reference supplied; this check needs RATE_CONTRACTED",
+     "reason": "REFERENCE_NOT_PROVIDED"
+    },
+    "evidence": [],
+    "rule_name": "Law of Rate Supremacy",
+    "rule_id": "RATE_SUP",
+    "asserted": 150,
+    "field": "unit_price",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "line[0].RATE_SUP"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for CONTRACTED_LIMIT",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "CONTRACTED_LIMIT"
+     ],
+     "detail": "No contract/PO reference supplied; this check needs CONTRACTED_LIMIT",
+     "reason": "REFERENCE_NOT_PROVIDED"
+    },
+    "evidence": [],
+    "rule_name": "Law of Amount Cap",
+    "rule_id": "AMT_CAP",
+    "asserted": 1500,
+    "field": "amount",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "line[0].AMT_CAP"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for ACTUAL_QUANTITY",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "ACTUAL_QUANTITY"
+     ],
+     "detail": "No evidence reference supplied; this check needs ACTUAL_QUANTITY",
+     "reason": "REFERENCE_NOT_PROVIDED"
+    },
+    "evidence": [],
+    "rule_name": "Law of Quantity Match",
+    "rule_id": "QTY_MATCH",
+    "asserted": 10,
+    "field": "quantity",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "line[0].QTY_MATCH"
+   },
+   {
+    "variance": 0,
+    "explanation": "Law of Mathematical Integrity: All predicates satisfied.",
+    "locked": false,
+    "evidence": [
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 250.5,
+      "locator": {
+       "path": "line_items[*].amount",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "role": "CONTEXT",
+      "confidence": 100,
+      "value": 250.5,
+      "locator": {
+       "path": "RATE_APPLIED * CLAIMED_QUANTITY (math check)",
+       "source": "computed",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 250.5,
+      "locator": {
+       "path": "line_items[*].unit_price",
+       "source": "invoice",
+       "kind": "field"
+      }
+     },
+     {
+      "normalizations": [
+       "already_number"
+      ],
+      "role": "OPERAND",
+      "confidence": 100,
+      "value": 1,
+      "locator": {
+       "path": "line_items[*].quantity",
+       "source": "invoice",
+       "kind": "field"
+      }
+     }
+    ],
+    "computation": {
+     "tolerance": {
+      "rel": 0.0003,
+      "abs": 0.01
+     },
+     "result": 250.5,
+     "operands": {
+      "VERIFIED_AMOUNT": 250.5,
+      "CLAIMED_AMOUNT": 250.5
+     },
+     "formula": "∀a: a_claimed = a_calculated"
+    },
+    "rule_name": "Law of Mathematical Integrity",
+    "rule_id": "MATH_INT",
+    "asserted": 250.5,
+    "field": "amount",
+    "outcome": "PASS",
+    "tier": "DETERMINISTIC",
+    "kind": "RECOMPUTE",
+    "claim_id": "line[1].MATH_INT"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for RATE_CONTRACTED",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "RATE_CONTRACTED"
+     ],
+     "detail": "No contract/PO reference supplied; this check needs RATE_CONTRACTED",
+     "reason": "REFERENCE_NOT_PROVIDED"
+    },
+    "evidence": [],
+    "rule_name": "Law of Rate Supremacy",
+    "rule_id": "RATE_SUP",
+    "asserted": 250.5,
+    "field": "unit_price",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "line[1].RATE_SUP"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for CONTRACTED_LIMIT",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "CONTRACTED_LIMIT"
+     ],
+     "detail": "No contract/PO reference supplied; this check needs CONTRACTED_LIMIT",
+     "reason": "REFERENCE_NOT_PROVIDED"
+    },
+    "evidence": [],
+    "rule_name": "Law of Amount Cap",
+    "rule_id": "AMT_CAP",
+    "asserted": 250.5,
+    "field": "amount",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "line[1].AMT_CAP"
+   },
+   {
+    "explanation": "Cannot evaluate: missing bindings for ACTUAL_QUANTITY",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "ACTUAL_QUANTITY"
+     ],
+     "detail": "No evidence reference supplied; this check needs ACTUAL_QUANTITY",
+     "reason": "REFERENCE_NOT_PROVIDED"
+    },
+    "evidence": [],
+    "rule_name": "Law of Quantity Match",
+    "rule_id": "QTY_MATCH",
+    "asserted": 1,
+    "field": "quantity",
+    "outcome": "INSUFFICIENT_DATA",
+    "tier": "DETERMINISTIC",
+    "kind": "CROSS_REFERENCE",
+    "claim_id": "line[1].QTY_MATCH"
+   },
+   {
+    "explanation": "No prior invoice history supplied.",
+    "locked": false,
+    "insufficiency": {
+     "missing": [
+      "PRIOR_CLAIM_IDS"
+     ],
+     "detail": "no prior_invoice_ids supplied; supply the prior invoice-number history to check for duplicates",
+     "reason": "FIELD_MISSING"
+    },
+    "evidence": [],
+    "rule_name": "Law of Duplicate Prohibition",
+    "rule_id": "DUP_PROHIB",
+    "asserted": "INV1001",
+    "outcome": "INSUFFICIENT_DATA",
+    "claim_id": "document.DUP_PROHIB",
+    "field": "invoice_number",
+    "tier": "DETERMINISTIC",
+    "kind": "CONSISTENCY"
+   }
+  ],
+  "aggregation": "ANY_FAIL_FAILS",
+  "gate_status": "PASS_WITH_OPEN",
+  "outcome": "PASS",
+  "references": {
+   "source": false,
+   "history": 0,
+   "evidence": 0,
+   "contract": false
+  },
+  "document": {
+   "line_items": 2,
+   "extraction_hash": "5c378da04f06ea6156fb93f7d9573633d3891b07ee1fcf667a3e4a3e7697ecae"
+  },
+  "replayable": true,
+  "remedy_table_hash": "fef8580e40882b801fab640a89aeb7f27a2167cccd889c870fd1f4036c58190e",
+  "input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+  "ruleset": {
+   "domain": "invoice",
+   "version": "0.1.0",
+   "id": "invoice"
+  },
+  "engine_version": "0.6.0",
+  "issued_at": "2026-10-08T01:29:23.004Z",
+  "verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+  "schema_version": "v0"
+ }
+}

@@ -35,10 +35,12 @@
  * Deterministic: no network, no randomness, no clock except `issued_at`.
  */
 import { hashOf, sha256 } from '../verdict/canonical.js'
+import { attachRemedies } from '../verdict/remedy.js'
+import { attachScope } from '../verdict/scope.js'
 import type { ClaimVerdict, Coverage, Evidence, InsufficiencyReason, Outcome, Verdict } from '../verdict/schema.js'
-import { deriveVerdictId } from '../protocol/verdict-id.js'
+import { verdictIdentity } from '../protocol/verdict-id.js'
 import { aggregateOutcome } from '../verdict/aggregation.js'
-import { ENGINE_VERSION, SCHEMA_VERSION } from '../version.js'
+import { SCHEMA_VERSION, engineFor } from '../version.js'
 import { bindField, detectProfile, mapFor, parseDecimal, parseIsoDate, parseTime, type BindResult, type EinvoiceBinding, type ScopeRef } from './bind.js'
 import { checkEinvoiceConsistency, type EinvoiceConsistency } from './consistency.js'
 import { lineElements, type EinvoiceFieldMap, type EinvoiceMap, type EinvoiceProfile } from './map.js'
@@ -66,6 +68,11 @@ export interface EinvoiceTwinOptions {
   consistency?: boolean
   now?: () => Date
   producer?: string
+  /**
+   * The engine version to re-perform under (2026-10-03, version.ts engineFor): this build's when absent, or an earlier one it
+   * retains. For replay. The footing runs the declarative evaluator, which reads by this version (declarativeReading).
+   */
+  engine?: string
 }
 
 export type EinvoiceOutcome = 'PASS' | 'FAIL' | 'ABSTAIN'
@@ -347,7 +354,7 @@ export function verifyEinvoiceTwin(xml: string, claims: readonly EinvoiceClaim[]
       explanation: `${c.field} = ${JSON.stringify(c.value)}: ${r.detail}.${r.diagnosis ? ` [${r.diagnosis}]` : ''}` })
   }
 
-  const consistency = ctx && (opts.consistency ?? true) ? checkEinvoiceConsistency(ctx.map, ctx.root, xmlSha) : []
+  const consistency = ctx && (opts.consistency ?? true) ? checkEinvoiceConsistency(ctx.map, ctx.root, xmlSha, engineFor(opts.engine)) : []
   for (const k of consistency) out.push(k.claim)
 
   const coverage: Coverage = { claims_total: out.length, claims_checked: 0, claims_pass: 0, claims_fail: 0, claims_insufficient: 0 }
@@ -362,13 +369,18 @@ export function verifyEinvoiceTwin(xml: string, claims: readonly EinvoiceClaim[]
   const input = einvoiceVerdictInput(xmlSha, det.profile, claims, opts) as { claims: unknown }
   const input_hash = hashOf(input)
   const ruleset = map ? { id: map.id, version: map.version, domain: map.domain } : UNKNOWN_RULESET
+  // Engine 0.2.0: the id also binds the remedy table; the twin declares none (every remedy is derived), so it is the empty table.
+  const identity = verdictIdentity(input_hash, ruleset, engineFor(opts.engine), {})
   const verdict: Verdict = {
-    schema_version: SCHEMA_VERSION, verdict_id: deriveVerdictId(input_hash, ruleset, ENGINE_VERSION),
-    issued_at: (opts.now ?? (() => new Date()))().toISOString(), engine_version: ENGINE_VERSION, ruleset, input_hash, replayable: true,
+    schema_version: SCHEMA_VERSION, verdict_id: identity.verdict_id,
+    issued_at: (opts.now ?? (() => new Date()))().toISOString(), engine_version: engineFor(opts.engine), ruleset, input_hash,
+    ...(identity.remedy_table_hash !== undefined ? { remedy_table_hash: identity.remedy_table_hash } : {}), replayable: true,
     document: { extraction_hash: hashOf(input.claims), ...(opts.producer !== undefined ? { producer: opts.producer } : {}), line_items: root && map ? lineElements(map, root).length : 0 },
     references: { contract: false, evidence: 1, history: 0, source: true },
     outcome, aggregation: AGGREGATION, claims: out, coverage,
   }
+  // Typed remedies (verdict/remedy.ts): derived from each claim's insufficiency; a FAIL says `none`. Outside the hashed core.
+  attachScope(attachRemedies(verdict, { document: 'e-invoice' }))
   return { verdict, judgments, consistency, outcomes, twin: { sha256: xmlSha, profile: det.profile, detail: det.detail, lines: verdict.document.line_items } }
 }
 

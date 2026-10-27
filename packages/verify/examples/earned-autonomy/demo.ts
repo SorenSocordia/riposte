@@ -105,6 +105,11 @@ export interface DemoOptions {
   keep?: boolean
   /** Print the long documents (the opinion, the report, the reconciliation) in full. Default true for the CLI. */
   documents?: boolean
+  /**
+   * The engine version the verdicts are made under (2026-10-03): this build's when absent, or an earlier one it retains
+   * ('0.0.1'), to show that the book an earlier engine wrote is still re-performed byte for byte.
+   */
+  engine?: string
 }
 
 export interface DemoResult {
@@ -132,6 +137,8 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
   const h = (s: string): void => { say(); say(`━━ ${s} ${'━'.repeat(Math.max(0, 100 - s.length))}`) }
   const doc = (title: string, text: string): void => { if (opts.documents === false) return; say(`┌── ${title}`); for (const l of text.split('\n')) say(`│ ${l}`); say('└──') }
 
+  const engineOpt = opts.engine !== undefined ? { engine: opts.engine } : {}
+  const engineVersion = opts.engine ?? ENGINE_VERSION
   const { fixture, bytes } = loadFixture()
   const fixtureSha = createHash('sha256').update(bytes).digest('hex')
   const dir = mkdtempSync(join(tmpdir(), 'riposte-earned-autonomy-'))
@@ -174,7 +181,7 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
       for (const item of f.items) {
         const claim: TwinClaim = { id: `${f.adsh}.${f.model}.${item.field}`, field: item.field, value: item.value }
         const issued = new Date(clock)
-        const r = verifyAgainstTwin(twinOf(f), [claim], { periodEnd: f.period_end, map: MAP, presentation: f.presentation, producer: f.model, now: () => issued })
+        const r = verifyAgainstTwin(twinOf(f), [claim], { periodEnd: f.period_end, map: MAP, presentation: f.presentation, producer: f.model, now: () => issued, ...engineOpt })
         if (r.verdict.outcome !== OUTCOME[item.bench_v02]) throw new Error(`${claim.id}: the demo's verdict (${r.verdict.outcome}) is not the benchmark's (${item.bench_v02})`)
         led.record(r.verdict, { tenant_id: TENANT })
         const rec = { verdict: r.verdict, filing: f, item, claim, day }
@@ -190,7 +197,7 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
     const count = (rs: Rec[]): Record<string, number> => rs.reduce((a, r) => { a[r.verdict.outcome] = (a[r.verdict.outcome] ?? 0) + 1; return a }, { PASS: 0, FAIL: 0, INSUFFICIENT_DATA: 0 } as Record<string, number>)
     const preBy = count(pre)
     h('(b) real verdicts, rung `record`')
-    say(`Versions (pinned): engine ${ENGINE_VERSION} · verdict schema ${SCHEMA_VERSION} · ruleset ${first.ruleset.id}@${first.ruleset.version} · twin map ${MAP.id}@${MAP.version} · opinion ${OPINION_VERSION} · policy ${DEMO_POLICY.policy_id}@${DEMO_POLICY.version}`)
+    say(`Versions (pinned): engine ${engineVersion} · verdict schema ${SCHEMA_VERSION} · ruleset ${first.ruleset.id}@${first.ruleset.version} · twin map ${MAP.id}@${MAP.version} · opinion ${OPINION_VERSION} · policy ${DEMO_POLICY.policy_id}@${DEMO_POLICY.version}`)
     say(`Twin: the STATEMENT-ANCHORED map v0.2 (binds only facts the filing's presentation places on a face statement), the map`)
     say(`the benchmark pre-registered and passed. v0.1 is the library's default map; v0.2.1's held-out pre-registration failed.`)
     say(`Data: ${PRE.length} real 10-K filings (FY2024/25; the first 20 of the benchmark's audit sample, in its sha256 order), the values`)
@@ -386,7 +393,7 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
       } catch (e) { spliced = `refused even on an unanchored copy: ${(e as Error).message.slice(0, 160)}` }
     }
     say(`D-ANCHOR 2, the splice: on a copy opened with no anchors, the self-grant is appended; read with the root key: ${spliced}`)
-    // R1: a flipped outcome, replayed against the real filing.
+    // A flipped outcome, replayed against the real filing.
     const full = fixture.full!
     const fullFiling = fixture.filings.find(f => f.adsh === full.adsh)!
     const target = [...recs.values()].find(r => r.filing.adsh === full.adsh && r.verdict.outcome === 'FAIL')!
@@ -400,7 +407,7 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
     say(`R1, a forged outcome: ${fullFiling.name.trim()} ${target.item.field} FAIL rewritten to PASS.`)
     say(`  replayed against the real filing: ${rForged.status}${rForged.ok ? '' : ` (${(rForged.reason ?? "").slice(0, 200)})`}`)
     say(`  replayed without the filing:      ${rForgedBare.status}: outcome_verified ${rForgedBare.outcome_verified} (a signature or a hash is not a re-performance)`)
-    // R5: a torn tail.
+    // A torn tail.
     const tornPath = join(dir, 'torn-copy.jsonl')
     copyFileSync(bookPath, tornPath)
     appendFileSync(tornPath, '{"seq":99999,"ts":"2026-12-03T10:00:00.000Z","type":"REC')
@@ -425,7 +432,7 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
     const content = reopened.verifyContent()
     let fromFixture = 0, fromFiling = 0
     for (const r of recs.values()) {
-      const again = verifyAgainstTwin(twinOf(r.filing), [r.claim], { periodEnd: r.filing.period_end, map: MAP, presentation: r.filing.presentation, producer: r.filing.model, now: () => new Date(r.verdict.issued_at) })
+      const again = verifyAgainstTwin(twinOf(r.filing), [r.claim], { periodEnd: r.filing.period_end, map: MAP, presentation: r.filing.presentation, producer: r.filing.model, now: () => new Date(r.verdict.issued_at), ...engineOpt })
       if (canonicalize(replayView(again.verdict)) !== canonicalize(replayView(r.verdict))) throw new Error(`${r.claim.id}: re-performance differs`)
       fromFixture++
       if (r.filing.adsh === full.adsh) {
@@ -444,7 +451,7 @@ export function runDemo(opts: DemoOptions = {}): DemoResult {
     if (opts.keep) { writeFileSync(join(dir, 'narrative.txt'), lines.join('\n') + '\n'); writeFileSync(join(dir, 'opinion.md'), autonomyOpinion); writeFileSync(join(dir, 'report.md'), report); writeFileSync(join(dir, 'reconciliation.md'), recMd) }
 
     return {
-      versions: { engine: ENGINE_VERSION, schema: SCHEMA_VERSION, ruleset: `${first.ruleset.id}@${first.ruleset.version}`, map: `${MAP.id}@${MAP.version}`, opinion: OPINION_VERSION, policy: `${DEMO_POLICY.policy_id}@${DEMO_POLICY.version}`, fixture_sha256: fixtureSha },
+      versions: { engine: engineVersion, schema: SCHEMA_VERSION, ruleset: `${first.ruleset.id}@${first.ruleset.version}`, map: `${MAP.id}@${MAP.version}`, opinion: OPINION_VERSION, policy: `${DEMO_POLICY.policy_id}@${DEMO_POLICY.version}`, fixture_sha256: fixtureSha },
       workflow_id: WF,
       record: { verdicts: pre.length, by_outcome: preBy, reviewed: preReviewed.length, overturned: falseFlags.length + misses.length },
       assessment: { earned: a0.earned, rungs: a0.rungs.map(r => ({ rung: r.rung, n: r.n, errors: r.errors, upper: r.upper, cleared: r.cleared })), high_tier_earned: high.earned },

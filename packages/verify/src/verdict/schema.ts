@@ -98,6 +98,46 @@ export interface ClaimVerdict {
   /** True when the kernel LOCKED this verdict (all operands exact-path, high confidence). */
   locked: boolean
   explanation: string
+  /**
+   * Engine 0.2.0 (additive, 2026-10-03): present on an INSUFFICIENT_DATA claim held as SUSPECT. A value it could not read has a
+   * reading one character away under which the check FAILs, so the gate books the claim as a FAIL (verdict/aggregation.ts
+   * gateStatus) instead of an open check. Absent on every verdict of engines 0.0.1 and 0.1.0, and RETIRED from engine 0.3.0
+   * (the product ruling: a flag, never a FAIL): a 0.3.0 verdict states suspect on the struck field (Verdict.struck).
+   */
+  suspect?: Suspect
+}
+
+/** Why an unreadable claim is held as suspect (ClaimVerdict.suspect, engine 0.2.0). */
+export interface Suspect {
+  /** each unreadable operand as reported: its role, where it was reported, and the string */
+  reported: { role: string; path: string; raw: string }[]
+  /** the first failing reading, in candidate order: each operand read one character differently, and the value that gives */
+  reading: { role: string; path: string; read_as: string; value: number }[]
+  /** the check under that reading: its two sides */
+  computed: { left: Value; right: Value }
+  /** how many distinct one-character readings were evaluated, and how many of them FAIL the check */
+  readings_checked: number
+  readings_failing: number
+}
+
+/**
+ * Counsel attached to a verdict (additive, 2026-10-03; engine 0.2.0 rulesets that declare an `advisory` check): a check the
+ * ruleset reads as advice, never as a verdict. It never changes an outcome, a coverage count or a gate.
+ */
+export interface Advisory {
+  channel: 'COUNSEL'
+  rule_id: string
+  rule_name: string
+  claim_id: string
+  detail: string
+  computation?: Computation
+  /**
+   * Engine 0.5.0: the check evaluates a model at a point past the last measured support (`support` on the check), so
+   * the computed value is the model's, reported as counsel and never as PASS or FAIL. `support` gives the point and the last
+   * measured value.
+   */
+  beyond_data?: true
+  support?: { field: string; value: number; max_of: string; last: number }
 }
 
 export interface Coverage {
@@ -119,9 +159,46 @@ export interface DeclaredAccuracy {
   measured_on: string
 }
 
+// --- typed remedies (additive, 2026-10-02; verdict/remedy.ts, docs/REMEDIES.md) -------------------------------------------
+
+/**
+ * The lawful ways a non-PASS finding can be answered. A remedy never changes a verdict: applying one (supplying the operand,
+ * re-reading it, transforming it, or a person's call-scoped ruling) yields a NEW check or a ruling bound to THIS verdict.
+ *   missing-operand  an operand the rule needs is absent or unresolved: supply it (ABSTAIN's usual answer)
+ *   transform        a REGISTERED transformation (verdict/remedy.ts REMEDY_TRANSFORMS) of an operand, by name
+ *   authority        a named role may rule allow/deny on this verdict only (never a session, never a waiver of later checks)
+ *   recompute-with   re-read or correct a named operand and run the check again (a new verdict)
+ *   none             no lawful transition is declared: the finding stands
+ */
+export type RemedyKind = 'missing-operand' | 'transform' | 'authority' | 'recompute-with' | 'none'
+
+/** Where an operand comes from, in the evidence vocabulary: a document or reference name, the rule's role, the field path. */
+export interface OperandRef {
+  /** e.g. invoice · contract · evidence · history · purchase_order · goods_receipt · opinion · brief · source · document */
+  source: string
+  /** The role the rule binds (e.g. SUBTOTAL, RATE_CONTRACTED), when the rule names one. */
+  role?: string
+  /** The field path in the caller's document (e.g. "line_items[1].amount", "line[2].quantity"), when known. */
+  path?: string
+}
+
+export interface Remedy {
+  kind: RemedyKind
+  operand?: OperandRef
+  /** kind 'transform': the registered transformation's name. */
+  transform?: string
+  /** kind 'authority': the role that may rule on this verdict (its mandate: the rule ids in `clears`). */
+  authority?: string
+  detail: string
+  /** The rule ids this remedy could lawfully clear in this verdict. */
+  clears: string[]
+  /** The claim ids it answers in this verdict. */
+  claims: string[]
+}
+
 export interface Verdict {
   schema_version: 'v0'
-  /** Deterministic: derived from input_hash + ruleset + engine_version. NOT random, NOT time-based. */
+  /** Deterministic: derived from input_hash + ruleset + engine_version (+ remedy_table_hash from engine 0.2.0). NOT random, NOT time-based. */
   verdict_id: string
   /** ISO-8601 UTC. The ONLY field allowed to vary between replays of identical input. */
   issued_at: string
@@ -131,6 +208,12 @@ export interface Verdict {
   ruleset: { id: string; version: string; domain: string }
   /** sha256 over the canonicalized (extraction + references). */
   input_hash: string
+  /**
+   * Engine 0.2.0 (2026-10-03): sha256 of the remedy table the verdict's remedies come from (a declarative ruleset's declared
+   * remedies, or a built-in engine's table). verdict_id derives from it as well (protocol/verdict-id.ts), so a verdict's remedies
+   * are bound to its identity. Absent on every verdict of engines 0.0.1 and 0.1.0.
+   */
+  remedy_table_hash?: string
   replayable: true
 
   // --- what was checked -----------------------------------------------------------------------
@@ -153,6 +236,12 @@ export interface Verdict {
   // --- the result -----------------------------------------------------------------------------
   outcome: Outcome
   /**
+   * Engine 0.6.0 (2026-10-05): what a gate reads, recorded beside the outcome (verdict/aggregation.ts
+   * recordedGateStatus). PASS_WITH_OPEN when every check that ran held but some could not run; a gate that acts on money holds on
+   * it. Absent on every verdict of engines 0.0.1 to 0.5.0 (a reader recomputes it from the claims: gateStatus).
+   */
+  gate_status?: 'PASS' | 'PASS_WITH_OPEN' | 'FAIL' | 'INSUFFICIENT_DATA'
+  /**
    * The named rule the outcome follows from its claims by (verdict/aggregation.ts; every reader recomputes with the rule named):
    *   ANY_FAIL_FAILS: FAIL if any claim FAILs; else INSUFFICIENT_DATA if no claim could run; else PASS.
    *   ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVER_PASSES (additive, 2026-09-29): FAIL if any claim FAILs; else PASS only if a claim of
@@ -163,6 +252,22 @@ export interface Verdict {
 
   // --- honesty about ourselves ----------------------------------------------------------------
   coverage: Coverage
+  /**
+   * Typed remedies (additive, 2026-10-02): present iff some claim is not PASS (or the verdict itself is not PASS). The
+   * engine's output, so a replay re-derives it, but OUTSIDE the hashed core: verdict_id never commits to it, and a verdict
+   * issued before remedies existed (none carried) still replays on its core. See verdict/remedy.ts.
+   */
+  remedies?: Remedy[]
+  /**
+   * Checks a declarative ruleset ruled out for this document by `applies_if` (additive, 2026-10-03): no claim was made, and
+   * this says which and why. Present only when one was ruled out, so every verdict without one keeps its bytes.
+   */
+  not_applicable?: NotApplicable[]
+  /**
+   * Counsel from the ruleset's advisory checks (additive, 2026-10-03): present only when one fired. Never part of the outcome,
+   * the coverage or the gate reading; re-derived by a replay like every engine output.
+   */
+  advisories?: Advisory[]
   /** Populated once the public Verification Index exists. Measured on a preregistered set or absent. */
   declared_accuracy?: DeclaredAccuracy
 
@@ -175,6 +280,47 @@ export interface Verdict {
    */
   channel?: 'VERDICT'
 
+  // --- engine 0.3.0: strike and recompute, evidence tiers, the scope line (additive, 2026-10-03; docs/EVIDENCE.md) ---
+  /** The checks that ran, by outcome (engine 0.3.0, declarative). */
+  computed?: { pass: string[]; fail: string[] }
+  /** Every struck LOAD-BEARING field: one at least one claim waits on (engine 0.3.0, declarative). */
+  struck?: StruckField[]
+  /** Per struck field, the claims waiting on it: what a correction or corroboration would unlock (engine 0.3.0, declarative). */
+  would_unlock?: WouldUnlock[]
+  /** What was computed and what was struck, counted (engine 0.3.0, declarative). Suspect is counted here and never booked as FAIL. */
+  counts?: VerdictCounts
+  /** The worst effective evidence tier among the fields the computed checks rest on (engine 0.3.0, declarative). */
+  evidence_floor?: EvidenceFloor
+  /** Tier conflicts and refused tier claims (engine 0.3.0, declarative; present only when one was found). */
+  findings?: Finding[]
+  /** Per field an evidence overlay touched: the value used, its tier, what supports it (engine 0.3.0; present only with an overlay). */
+  support?: FieldSupport[]
+  /** The case a re-verdict belongs to (an annotation added after the engine, like `channel`; never compared by replay). */
+  case?: CaseLink
+  // --- engine 0.4.0: claims over tables (additive, 2026-10-04; docs/RULESETS.md, docs/EVIDENCE.md) ------------------
+  /**
+   * The files an envelope's values were read from, when their provenance is `archive` (engine 0.4.0, declarative): each with its
+   * url, retrieval time, content sha256, the archive's own checksum when it publishes one, the tier (E1, never E0), and what the
+   * engine verified from bytes it hashed itself (`content_verified`, `checksum_verified`). Present only when there is one.
+   */
+  archives?: ArchiveCheck[]
+  /**
+   * The pinned algorithms the ruleset names (engine 0.4.0, declarative; src/algorithms): ref, implementation sha256, source hashes.
+   * The ruleset's input identity carries the same pins, so the verdict_id binds them; replay refuses a pin this build does not carry.
+   */
+  algorithms?: AlgorithmPin[]
+  // --- engine 0.5.0: the choice ledger (additive, 2026-10-04; docs/CHOICES.md) -----------------------------------------
+  /**
+   * Every choice slot the ruleset declares (engine 0.5.0, declarative), in its order: stated by the document (with the quoted
+   * span), supplied (by the judge or the ruleset's default, with its source), unstated (no value: the checks that depend on it
+   * abstain), or not applicable. Empty for a ruleset that declares none. `counts.stated_rate` = stated / load-bearing.
+   */
+  choices?: ChoiceEntry[]
+  /** The values whose own quality flag the flags choice read (engine 0.5.0, declarative; present when a value carries `qc`). */
+  qc?: QcBlock
+  /** What this verdict is and is not, generated from the verdict itself (engine 0.3.0, every engine; verdict/scope.ts). Always last. */
+  scope?: VerdictScope
+
   // --- Stage 2 / Stage 3 reserved (additive; unused in v0) -------------------------------------
   ledger?: {
     tenant_id: string
@@ -182,4 +328,217 @@ export interface Verdict {
     reviewer?: { id: string; decided_at: string; decision: 'UPHELD' | 'OVERTURNED'; note?: string }
   }
   action_context?: { tool_name: string; call_id: string; argument_path: string }
+}
+
+// --- engine 0.3.0 (2026-10-03): the evidence ruling ----------------------------------------------------------------
+
+/**
+ * What a value rests on (docs/EVIDENCE.md):
+ *   E0  pulled from a system of record through an authenticated channel (a statement signed by an enrolled source key)
+ *   E1  a structured document whose fields are machine-native (UBL/CII XML), read by the engine
+ *   E2  a PDF's own text layer
+ *   E3  OCR of a scan or an image
+ *   E4  a human's assertion: never evidence on its own, never load-bearing
+ */
+export type EvidenceTier = 'E0' | 'E1' | 'E2' | 'E3' | 'E4'
+/** A verdict's floor: a tier; `unstated` (values with no provenance: a plain extraction); `none` (nothing was computed). */
+export type EvidenceFloor = EvidenceTier | 'unstated' | 'none'
+
+/** Why a field is struck. `suspect` is a flag on an unreadable field whose readable candidates would fail a check. */
+export type StruckReason = 'unreadable' | 'suspect' | 'withdrawn' | 'unsupported-assertion' | 'conflict' | 'qc_held' | 'qc_struck'
+
+/** What is known about where a struck field was reported. */
+export interface StruckProvenance {
+  /** the value as reported, as JSON ("4O0.00" → "\"4O0.00\"") */
+  raw?: string
+  /** where the source text prints it, when known ("line 31 of the source text: …") */
+  at?: string
+  page?: number
+  line?: number
+  reader?: string
+  /** an envelope field's readings: each reader's raw string (null when it read nothing) */
+  readings?: { reader: string; raw: string | null }[]
+  /** the tier the value would rest on; `unstated` for a plain extraction */
+  tier?: EvidenceTier | 'unstated'
+  /** a withdrawn field: the move that withdrew it */
+  move_id?: string
+}
+
+export interface StruckField {
+  /** the role, with its line or list element: "PAYABLE", "LINE_EXT@line[0]", "VBD_TAX[2]" */
+  field: string
+  role: string
+  /** where it was reported in the extraction (absent when only its label is printed) */
+  path?: string
+  reason: StruckReason
+  provenance: StruckProvenance
+  detail: string
+  /** reason `suspect`: the strict-parse candidates one reading away, and the first ones under which a check FAILs */
+  candidates?: { checked: number; failing: number; passing: number; shown: { read_as: string; value: number; fails: string[] }[] }
+}
+
+export interface WouldUnlock {
+  /** the struck field (as StruckField.field) */
+  field: string
+  /** the claims waiting on it; a claim waiting on two struck fields is listed under both */
+  claims: string[]
+}
+
+export interface VerdictCounts {
+  checks_computed: number
+  checks_pass: number
+  checks_fail: number
+  /** claims that wait on at least one struck field */
+  checks_struck: number
+  fields_struck: number
+  unreadable: number
+  suspect: number
+  withdrawn: number
+  unsupported_assertion: number
+  conflict: number
+  findings: number
+  // engine 0.5.0, present on every declarative verdict of that engine:
+  /** choice slots the ruleset declares load-bearing */
+  choices_load_bearing?: number
+  /** of those, the slots the document states (a quoted span) */
+  choices_stated?: number
+  /** choices_stated / choices_load_bearing, to 4 decimals; null (never 0) when no slot is load-bearing */
+  stated_rate?: number | null
+  /** struck fields held by their quality flag, and struck by it (a claim waits on each) */
+  qc_held?: number
+  qc_struck?: number
+  /** checks reported as counsel because they evaluate a model past the measured support */
+  beyond_data?: number
+}
+
+/** The kinds of free choice a number depends on (engine 0.5.0, docs/CHOICES.md). */
+export type ChoiceKind = 'weights' | 'flags' | 'ratio' | 'units' | 'model_form' | 'algorithm' | 'tolerance' | 'selection'
+/** stated: quoted from the document · supplied: by the judge or the ruleset default · unstated: no value · not_applicable. */
+export type ChoiceStatus = 'stated' | 'supplied' | 'unstated' | 'not_applicable'
+/** A choice value: a number (a role the checks read), a string (a name: an algorithm ref, a weighting), or a flags policy. */
+export type ChoiceValue = number | string | { [k: string]: unknown }
+
+/** Where a stated choice is quoted from: a page or a section, and the words. */
+export interface ChoiceSpan { page?: number; section?: string; quote: string }
+
+/** One slot of the choice ledger (Verdict.choices, engine 0.5.0). */
+export interface ChoiceEntry {
+  id: string
+  kind: ChoiceKind
+  status: ChoiceStatus
+  /** the value the checks use; null when unstated or not applicable */
+  value: ChoiceValue | null
+  /**
+   * stated: `{ span }` (an algorithm slot also `registry`: whether the quote is a verbatim part of the registry's pinned quote);
+   * supplied: `{ default, by }`; not applicable: `{ not_applicable }`; unstated: null
+   */
+  source:
+    | { span: ChoiceSpan; registry?: { ref: string; quote_sha256: string; verbatim: boolean } }
+    | { default: string; by: 'ruleset' | 'judge' }
+    | { not_applicable: string }
+    | null
+  load_bearing: boolean
+  /** why a fill was not read as a statement, or that the document is marked silent on it */
+  detail?: string
+}
+
+/** One value whose own quality flag held, struck or blanked it (QcBlock.values). */
+export interface QcValue {
+  field: string
+  path: string
+  scheme: string
+  flag: string
+  /** the scheme's meaning of the flag (the scheme file is authoritative; the provenance's own text is not used) */
+  meaning: string
+  action: 'held' | 'struck' | 'absent'
+}
+
+/** The verdict's account of per-value quality flags (engine 0.5.0; Verdict.qc). */
+export interface QcBlock {
+  /** the flags slot that governs, or null when no slot governs the scheme the values carry */
+  choice: string | null
+  read: number
+  computed: number
+  held: number
+  struck: number
+  absent: number
+  /** values whose qc no flags slot governs: computed as given, their flag not read */
+  not_read: number
+  values: QcValue[]
+}
+
+export interface Finding {
+  kind: 'tier-conflict' | 'tier-claim-capped'
+  field: string
+  path: string
+  detail: string
+  /** tier-conflict: the value used and the one it overrode (or the two at one tier) */
+  kept?: { value: Value; tier: EvidenceTier | 'unstated'; source: string }
+  against?: { value: Value; tier: EvidenceTier | 'unstated'; source: string }
+}
+
+export interface FieldSupport {
+  field: string
+  path: string
+  value: Value
+  tier: EvidenceTier | 'unstated'
+  /** the best tier among independent sources that agree with the value within tolerance */
+  supported_at: EvidenceTier | 'unstated'
+  sources: { source_id: string; tier: EvidenceTier | 'unstated'; value: Value; agrees: boolean; move_id?: string }[]
+}
+
+/** The case a re-verdict belongs to: its id, the verdict it follows, and the move that produced it. */
+export interface CaseLink {
+  case_id: string
+  prior_verdict_id: string
+  move_id: string
+}
+
+/** The scope-and-consent line, generated from the verdict, never typed (verdict/scope.ts). */
+export interface VerdictScope {
+  ruleset: string
+  engine_version: string
+  evidence_floor: EvidenceFloor
+  statements: readonly ['advisories are counsel, not verdicts', 'this is a check, not a decision']
+}
+
+/**
+ * A pinned algorithm as a verdict carries it (engine 0.4.0; Verdict.algorithms, src/algorithms): the ref, the sha256 of its
+ * implementation file, and the hashes of its quoted source; `carried: false` for a ref the issuing build did not carry.
+ */
+export type AlgorithmPin =
+  | { ref: string; id: string; version: string; implementation_sha256: string; source: { doi: string; url: string; pdf_sha256: string; text_sha256: string; quote_sha256: string; reference_sha256?: string } }
+  | { ref: string; carried: false }
+
+/** One archive an envelope's values were read from (engine 0.4.0; Verdict.archives, docs/EVIDENCE.md "Archive provenance"). */
+export interface ArchiveCheck {
+  url: string
+  /** the file inside a container the url serves */
+  member?: string
+  container_sha256?: string
+  retrieved_at: string
+  /** sha256 of the content the values were read from, as the provenance states it */
+  sha256: string
+  /** the checksum the archive itself publishes for the file, as the provenance states it */
+  archive_checksum?: { algorithm: string; value: string; published_at?: string }
+  /** always E1: a machine-native table read by its declared format; never E0, since no archive signs with an enrolled key */
+  tier: 'E1'
+  /** the engine hashed bytes it was given (the source text) and they are this file */
+  content_verified: boolean
+  /** those bytes also match the checksum the archive publishes (false when it publishes none, or the bytes were not given) */
+  checksum_verified: boolean
+  /** how many values were read from it */
+  fields: number
+  detail: string
+  /** engine 0.5.0: which supplied bytes the engine hashed and found to be this file (`source.text`, `archive_files[0]`, …) */
+  matched?: string
+}
+
+/** A declarative check (or required passage) that `applies_if` ruled out for this document (additive, 2026-10-03). */
+export interface NotApplicable {
+  /** the claim id it would have had, e.g. "document.LW_THROUGH" or "source.CA-8132.notice" */
+  claim_id: string
+  rule_id: string
+  /** the condition that does not hold, with the value it read */
+  detail: string
 }

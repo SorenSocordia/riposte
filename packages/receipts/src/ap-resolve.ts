@@ -6,6 +6,7 @@
  *
  *   hold_quantity  → credit memo for the unreceived units; short-pay the rest
  *   hold_price     → rebill at the PO price; short-pay the overcharge
+ *   hold_line_math → corrected invoice for the line that is not quantity × unit price; short-pay what it bills over that
  *   hold_total     → corrected invoice (no short-pay: we can't tell which line is wrong)
  *   hold_no_po     → confirm the PO (flags a transposed digit when that's what it looks like)
  *   hold_duplicate → do not pay; already booked
@@ -29,6 +30,8 @@ export interface ResolutionDraft {
 }
 
 const money = (n: number) => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+/** a unit price keeps its own precision (up to 4 decimals): 14.2537 is not 14.25 */
+const price = (n: number) => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
 const qty = (n: number) => String(n)
 const r2 = (n: number) => Math.round(n * 100) / 100
 
@@ -125,6 +128,36 @@ export function draftResolution(check: ApResult, documents?: ApDocuments | strin
         body: `Hello,\n\n${inv} bills ${g.item} at ${money(billed)} per unit; ${po} agreed ${money(agreed)} (${pct}% over, beyond our tolerance).${extra}` +
           ` Please rebill at the PO price, or send the approved price change.` +
           (short ? `\n\nWe will pay ${money(short.payable_now)} now and hold ${money(short.withheld)} until this is resolved.` : '') + '\n\nThank you.',
+        facts,
+      }
+    }
+
+    case 'hold_line_math': {
+      fact({ label: 'PO number', value: po, source: 'purchase_order' })
+      const stated = fact({ label: 'stated line amount', value: g.invoiced as number, source: 'invoice' }) as number
+      const line = invoiceLineFor(check, docs, 'AP_LINE_MATH')
+      if (line) {
+        fact({ label: 'quantity on the line', value: line.qty, source: 'invoice', line: line.line })
+        fact({ label: 'invoice unit price', value: line.unit, source: 'invoice', line: line.line })
+      }
+      const right = fact({ label: 'quantity × unit price', value: g.expected as number, source: 'computed', from: line ? ['quantity on the line', 'invoice unit price'] : ['invoice line'] }) as number
+      // an amount plus a direction in words, as for the total
+      const diff = fact({ label: 'difference', value: r2(Math.abs(stated - right)), source: 'computed', from: ['stated line amount', 'quantity × unit price'] }) as number
+      const over = stated > right
+      const total = statedTotal(docs)
+      let short: ResolutionDraft['short_pay']
+      if (over && total !== null) {
+        fact({ label: 'stated total', value: total, source: 'invoice' })
+        const now = fact({ label: 'payable now', value: r2(total - diff), source: 'computed', from: ['stated total', 'difference'] }) as number
+        short = { payable_now: now, withheld: diff, stated_total: total }
+      }
+      const math = line ? `${qty(line.qty)} × ${price(line.unit)} is ${money(right)}` : `quantity × unit price is ${money(right)}`
+      return {
+        ...base, kind: 'vendor_query', ...(short ? { short_pay: short } : {}),
+        subject: `${inv} (${po}): ${g.item} billed at ${money(stated)}, but ${math}`,
+        body: `Hello,\n\n${inv} bills ${g.item} at ${money(stated)}, but ${math}; the line is ${money(diff)} ${over ? 'above' : 'below'} that.` +
+          ` Please send a corrected invoice.` +
+          (short ? `\n\nWe will pay ${money(short.payable_now)} now and hold ${money(short.withheld)} until this is resolved.` : ' We will hold payment until it arrives.') + '\n\nThank you.',
         facts,
       }
     }

@@ -18,7 +18,7 @@
  * Signed with Ed25519 (node:crypto, as decisions and verdict envelopes are) over a DOMAIN-SEPARATED canonical body
  * (`riposte:ruling:v0\n`): a ruling signature is never valid as a decision or a verdict signature, or the reverse.
  * HONEST BOUNDARY: a signature proves the key holder ruled; `trusted_keys` binds keys to people. Rulings are not yet events
- * on the book of record (the ledger lane's to add as a decision kind); today they are kept as a signed ruling book (JSONL).
+ * on the book of record (a decision kind the ledger has yet to add); today they are kept as a signed ruling book (JSONL).
  */
 
 import { createPrivateKey, createPublicKey, sign as edSign, verify as edVerify } from 'node:crypto'

@@ -24,7 +24,7 @@ describe('Receipts MCP server', () => {
     const init = handleMcpRequest({ jsonrpc: '2.0', id: 0, method: 'initialize', params: {} }, deps) as { result: { serverInfo: { name: string } } }
     expect(init.result.serverInfo.name).toBe('receipts')
     const list = handleMcpRequest({ jsonrpc: '2.0', id: 1, method: 'tools/list' }, deps) as { result: { tools: { name: string }[] } }
-    expect(list.result.tools.map((t) => t.name)).toEqual(['check_done', 'ap_gate', 'model_attest', 'check_claims', 'ledger_verify'])
+    expect(list.result.tools.map((t) => t.name)).toEqual(['check_done', 'ap_gate', 'replay_receipt', 'model_attest', 'check_claims', 'ledger_verify', 'loop_round'] /* replay_receipt and loop_round added 2026-10-03 */)
   })
 
   it('check_done: a true claim PASSes and is receipted (signed)', () => {
@@ -39,12 +39,12 @@ describe('Receipts MCP server', () => {
     expect(String(r.structuredContent.message)).toMatch(/Not done/)
   })
 
-  it('check_done: cannot read outside the workspace root (path escape and absolute paths refused -> ABSTAIN)', () => {
+  it('check_done: cannot read outside the workspace root (path escape and absolute paths refused -> INSUFFICIENT_DATA)', () => {
     const esc = call('check_done', { claim: 'x', expectations: [{ source: '../../etc/passwd', path: '', exists: true }] }, deps)
-    expect(esc.structuredContent.outcome).toBe('ABSTAIN')
+    expect(esc.structuredContent.outcome).toBe('INSUFFICIENT_DATA')
     expect(JSON.stringify(esc.structuredContent)).toMatch(/escapes the workspace root/)
     const abs = call('check_done', { claim: 'x', expectations: [{ source: 'C:/Windows/win.ini', path: '', exists: true }] }, deps)
-    expect(abs.structuredContent.outcome).toBe('ABSTAIN')
+    expect(abs.structuredContent.outcome).toBe('INSUFFICIENT_DATA')
   })
 
   it('ap_gate: disagreement goes to REVIEW with the reason, and is receipted', () => {

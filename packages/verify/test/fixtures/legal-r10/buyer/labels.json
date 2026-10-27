@@ -1,0 +1,337 @@
+[
+  {
+    "id": "h01",
+    "label": "G",
+    "note": "genuine whole sentence after a West headnote number"
+  },
+  {
+    "id": "h02",
+    "label": "B",
+    "note": "quotes the West headnote, not the opinion"
+  },
+  {
+    "id": "h03",
+    "label": "B",
+    "note": "dropped \"ordinarily\""
+  },
+  {
+    "id": "h04",
+    "label": "B",
+    "note": "cut before \", but a court may excuse\""
+  },
+  {
+    "id": "h05",
+    "label": "B",
+    "note": "party view after \"In its view,\""
+  },
+  {
+    "id": "h06",
+    "label": "B",
+    "note": "party request after \"asks us to hold that\""
+  },
+  {
+    "id": "h07",
+    "label": "G",
+    "note": "genuine, right after star paging *235"
+  },
+  {
+    "id": "h08",
+    "label": "G",
+    "note": "genuine, across a Thomson Reuters footer and running header mid-sentence"
+  },
+  {
+    "id": "h09",
+    "label": "B",
+    "note": "silently dropped \", unsupported by specific facts,\" (matches headnote 2 word for word)"
+  },
+  {
+    "id": "h10",
+    "label": "B",
+    "note": "ellipsis drops \"the opposing party suffers no prejudice and\" from an and-joined condition"
+  },
+  {
+    "id": "h11",
+    "label": "B",
+    "note": "\"may\" changed to \"must\""
+  },
+  {
+    "id": "h12",
+    "label": "B",
+    "note": "\"plainly\" changed to \"clearly\""
+  },
+  {
+    "id": "h13",
+    "label": "G",
+    "note": "genuine, court speaks again after \"We disagree.\""
+  },
+  {
+    "id": "h14",
+    "label": "B",
+    "note": "party position after an unlisted frame (\"Harrowgate's fallback is that\")"
+  },
+  {
+    "id": "h15",
+    "label": "B",
+    "note": "counterfactual after \"we might agree that\""
+  },
+  {
+    "id": "h16",
+    "label": "B",
+    "note": "transposed \"does not ordinarily\" to \"ordinarily does not\""
+  },
+  {
+    "id": "h17",
+    "label": "B",
+    "note": "\"reason\" made plural"
+  },
+  {
+    "id": "h18",
+    "label": "G",
+    "note": "genuine mid-sentence start with bracketed capital"
+  },
+  {
+    "id": "h19",
+    "label": "G",
+    "note": "genuine, short-form cite resolvable to the full cite in this brief"
+  },
+  {
+    "id": "h20",
+    "label": "G",
+    "note": "genuine, \"Id.\" short form left unresolved in the JSON"
+  },
+  {
+    "id": "h21",
+    "label": "B",
+    "note": "joins two sentences two paragraphs apart with an ellipsis"
+  },
+  {
+    "id": "h22",
+    "label": "B",
+    "note": "paraphrase put in quotation marks"
+  },
+  {
+    "id": "h23",
+    "label": "G",
+    "note": "genuine words, WRONG pin page (299 is outside the opinion)"
+  },
+  {
+    "id": "h24",
+    "label": "B",
+    "note": "rule citation sentence silently left out between two quoted sentences"
+  },
+  {
+    "id": "h25",
+    "label": "G",
+    "note": "same as h24 but disclosed with (citation omitted)"
+  },
+  {
+    "id": "h26",
+    "label": "B",
+    "note": "first letter lowercased without a bracket"
+  },
+  {
+    "id": "q01",
+    "label": "G",
+    "note": "genuine whole sentence after an HN1 marker"
+  },
+  {
+    "id": "q02",
+    "label": "B",
+    "note": "silently dropped \"or should have discovered\""
+  },
+  {
+    "id": "q03",
+    "label": "B",
+    "note": "ellipsis drops \"or should have discovered\" (or-joined condition)"
+  },
+  {
+    "id": "q04",
+    "label": "B",
+    "note": "concurrence words attributed to the court (Lexis \"Concur\" layout)"
+  },
+  {
+    "id": "q05",
+    "label": "B",
+    "note": "party contention after \"Marbeck contends that\""
+  },
+  {
+    "id": "q06",
+    "label": "G",
+    "note": "genuine, court answers the contention"
+  },
+  {
+    "id": "q07",
+    "label": "G",
+    "note": "genuine, after [**4] star paging and before a glued Lexis footnote call n1"
+  },
+  {
+    "id": "q08",
+    "label": "B",
+    "note": "\"or\" changed to \"and\""
+  },
+  {
+    "id": "q09",
+    "label": "G",
+    "note": "genuine whole sentence"
+  },
+  {
+    "id": "q10",
+    "label": "B",
+    "note": "opening \"Where ...\" condition cut off"
+  },
+  {
+    "id": "q11",
+    "label": "B",
+    "note": "\"troublesome\" changed to \"problematic\""
+  },
+  {
+    "id": "q12",
+    "label": "B",
+    "note": "inserted \"closely\""
+  },
+  {
+    "id": "q13",
+    "label": "B",
+    "note": "quotes the Lexis headnote"
+  },
+  {
+    "id": "q14",
+    "label": "B",
+    "note": "party position after an unlisted frame (\"On Marbeck's telling,\")"
+  },
+  {
+    "id": "q15",
+    "label": "G",
+    "note": "genuine, cited by its Lexis database number only"
+  },
+  {
+    "id": "q16",
+    "label": "G",
+    "note": "genuine majority footnote (printed after the concurrence, as Lexis does)"
+  },
+  {
+    "id": "q17",
+    "label": "B",
+    "note": "quotes the Lexis Case Summary overview"
+  },
+  {
+    "id": "q18",
+    "label": "B",
+    "note": "Quillon words cited to Harrowgate (wrong case)"
+  },
+  {
+    "id": "o01",
+    "label": "G",
+    "note": "genuine whole sentence"
+  },
+  {
+    "id": "o02",
+    "label": "B",
+    "note": "standard the court quotes and then rejects in other words (\"We part ways with that formulation today.\"), no (quoting)"
+  },
+  {
+    "id": "o03",
+    "label": "B",
+    "note": "dissent words attributed to the court"
+  },
+  {
+    "id": "o04",
+    "label": "B",
+    "note": "\"other qualified\" changed to \"any\""
+  },
+  {
+    "id": "o05",
+    "label": "B",
+    "note": "burden shift: silently dropped \"the opponent shows that\""
+  },
+  {
+    "id": "o06",
+    "label": "B",
+    "note": "burden shift by ellipsis over \"the opponent shows that\""
+  },
+  {
+    "id": "o07",
+    "label": "G",
+    "note": "genuine, before star paging *1109"
+  },
+  {
+    "id": "o08",
+    "label": "B",
+    "note": "rule citation silently left out across two sentences"
+  },
+  {
+    "id": "o09",
+    "label": "G",
+    "note": "same as o08, disclosed with (citation omitted)"
+  },
+  {
+    "id": "o10",
+    "label": "G",
+    "note": "benign cut before \", not when they were gathered\" (meaning kept)"
+  },
+  {
+    "id": "o11",
+    "label": "B",
+    "note": "quotes the West headnote"
+  },
+  {
+    "id": "o12",
+    "label": "B",
+    "note": "rejected standard, with a (quoting) parenthetical"
+  },
+  {
+    "id": "f01",
+    "label": "G",
+    "note": "genuine whole sentence"
+  },
+  {
+    "id": "f02",
+    "label": "B",
+    "note": "dropped \"only\""
+  },
+  {
+    "id": "f03",
+    "label": "G",
+    "note": "genuine whole sentence"
+  },
+  {
+    "id": "f04",
+    "label": "G",
+    "note": "genuine, ellipsis over an appositive (no condition)"
+  },
+  {
+    "id": "f05",
+    "label": "B",
+    "note": "\"fourteen\" changed to \"thirty\""
+  },
+  {
+    "id": "f06",
+    "label": "B",
+    "note": "\"fourteen\" written as \"14\" without a bracket"
+  },
+  {
+    "id": "f07",
+    "label": "B",
+    "note": "party request after \"asks the Court to\""
+  },
+  {
+    "id": "f08",
+    "label": "G",
+    "note": "genuine whole sentence"
+  },
+  {
+    "id": "f09",
+    "label": "G",
+    "note": "genuine, full Bluebook-style WL cite with star pin"
+  },
+  {
+    "id": "f10",
+    "label": "B",
+    "note": "\"shall\" changed to \"may\""
+  },
+  {
+    "id": "f11",
+    "label": "B",
+    "note": "fabricated sentence"
+  }
+]

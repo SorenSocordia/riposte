@@ -71,7 +71,7 @@ const getFlightRecorder = (): EpistemicFlightRecorder | null => null
 
 // --- logging: injectable, silent by default (a verifier must not spray stdout) -----------
 let bridgeLog: (message: string) => void = () => {}
-// Every call site tests this first, so no message string is built while nobody is listening (F3, 2026-09-28).
+// Every call site tests this first, so no message string is built while nobody is listening (2026-09-28).
 let bridgeLogOn = false
 /** Install a logger for the binding layer (debugging/telemetry); pass undefined to silence. */
 export function setBridgeLogger(logger?: (message: string) => void): void {
@@ -79,7 +79,7 @@ export function setBridgeLogger(logger?: (message: string) => void): void {
   bridgeLogOn = logger !== undefined && logger !== null
 }
 
-// --- per-call memo (F3, 2026-09-28) -------------------------------------------------------
+// --- per-call memo (2026-09-28) -------------------------------------------------------
 /**
  * Work that does not read the line index, done once per createLineItemBindings call instead of once per line. That call
  * used to redo it for every line: each document-level path walk (with every alternative), the contract-rule and evidence
@@ -118,6 +118,24 @@ function newDocumentScope(): DocumentScope {
 }
 
 /** The inner memo for one document (keyed by the document object itself). */
+/**
+ * Evidence roles that belong to ONE LINE (2026-10-03): at a line of a multi-line invoice they are read only from the
+ * evidence's line-level paths (`[*]`), at the evidence line matching the invoice line; a document-level value (a ticket's
+ * total, a single quantity) is not any one line's.
+ */
+const LINE_SCOPED_EVIDENCE_ROLES: ReadonlySet<string> = new Set(['ACTUAL_QUANTITY', 'VERIFIED_AMOUNT', 'EVIDENCE_DESCRIPTION'])
+const lineScoped = new WeakMap<DomainFieldMapping, DomainFieldMapping | null>()
+/** The mapping restricted to its `[*]` paths, no field aliases or fuzzy search (null when it has no `[*]` path). Cached per mapping. */
+function lineScopedEvidenceMapping(m: DomainFieldMapping): DomainFieldMapping | undefined {
+  let x = lineScoped.get(m)
+  if (x === undefined) {
+    const paths = [m.fieldPath, ...(m.alternativePaths ?? [])].filter(p => p.includes('[*]'))
+    x = paths.length ? { ...m, fieldPath: paths[0]!, alternativePaths: paths.slice(1), fieldAliases: [], fuzzyMatch: false } : null
+    lineScoped.set(m, x)
+  }
+  return x ?? undefined
+}
+
 function perDocument<K, V>(outer: Map<unknown, Map<K, V>>, document: unknown): Map<K, V> {
   let inner = outer.get(document)
   if (!inner) {
@@ -228,7 +246,7 @@ export class OntologicalBridge {
   private currentDocumentId: string | undefined
   private currentDomain: string | undefined
   private currentDocumentType: 'invoice' | 'contract' | 'evidence' | undefined
-  // F3: live only inside createLineItemBindings (see DocumentScope); null everywhere else, so a lone createBindings
+  // The document scope: live only inside createLineItemBindings (see DocumentScope); null everywhere else, so a lone createBindings
   // call behaves exactly as before.
   private scope: DocumentScope | null = null
 
@@ -274,7 +292,7 @@ export class OntologicalBridge {
   }
 
   // --------------------------------------------------------------------------
-  // F3 memo helpers. Each returns exactly what its uncached body returns; inside a createLineItemBindings call the
+  // Memo helpers. Each returns exactly what its uncached body returns; inside a createLineItemBindings call the
   // answer is computed on first use (so anything that throws still throws at the same point) and reused by later lines.
   // --------------------------------------------------------------------------
 
@@ -947,8 +965,25 @@ export class OntologicalBridge {
       }
     }
 
-    for (const mapping of plan.evidence) {
-      if (bindings[mapping.role]) continue
+    // 2026-10-03: evidence at ONE LINE of a multi-line invoice. A line-level evidence path (`line_items[*].quantity`)
+    // used to resolve to the evidence document's FIRST line for every invoice line, so line 2 read line 1's quantity (and the
+    // description check then refused it: QTY_MATCH abstained); and a document-level evidence total (`totals.total`) was bound
+    // as every line's VERIFIED_AMOUNT (MATH_INT then failed every line against the document total). Now, at a line of a
+    // multi-line invoice: the line-level paths resolve at the evidence line whose description matches this line, and nothing
+    // binds when none does; a document-level evidence value is not bound to a line. A single-line invoice is unchanged.
+    const invoiceLines = invoice ? (invoice as Record<string, unknown>).line_items : undefined
+    const multiLine = lineItemIndex !== undefined && Array.isArray(invoiceLines) && invoiceLines.length > 1
+    const lineDescription = bindings.INVOICE_DESCRIPTION?.value
+
+    for (const mapping0 of plan.evidence) {
+      if (bindings[mapping0.role]) continue
+      const scoped = multiLine && LINE_SCOPED_EVIDENCE_ROLES.has(mapping0.role) ? lineScopedEvidenceMapping(mapping0) : undefined
+      if (multiLine && LINE_SCOPED_EVIDENCE_ROLES.has(mapping0.role) && !scoped) continue // only document-level paths: not a line's
+      const mapping = scoped ?? mapping0
+      /** At a line of a multi-line invoice: the evidence line this invoice line corresponds to (-1: none; undefined: not line-scoped). */
+      const evLine = (ev: Record<string, unknown>): number | undefined => (scoped ? this.evidenceLineIndex(ev, lineDescription) : undefined)
+      /** The mapping to read an evidence item with: the line-scoped one for a document; the original for anything else (junk takes the old path). */
+      const mappingFor = (ev: unknown): DomainFieldMapping => (ev !== null && typeof ev === 'object' ? mapping : mapping0)
 
       // v5.5 HETEROGENEOUS LINE ITEM DETECTION (must run BEFORE correlation branch)
       // If invoice has multiple distinct line item types (e.g., "transport" + "fuel surcharge" + "crane"),
@@ -975,7 +1010,8 @@ export class OntologicalBridge {
       // Only use correlated evidence if correlation is reliable
       if (evidenceCorrelation.isReliable && evidenceCorrelation.matchedIndex >= 0) {
         const correlatedEvidence = evidence[evidenceCorrelation.matchedIndex]
-        const match = this.extractWithFallbacks(correlatedEvidence, mapping)
+        const li = evLine(correlatedEvidence)
+        const match = li === -1 ? null : this.extractWithFallbacks(correlatedEvidence, mappingFor(correlatedEvidence), li)
 
         if (match !== null) {
           // v5.0 DETERMINISTIC MODE: Exact/alternative matches don't need correlation scaling
@@ -1017,10 +1053,13 @@ export class OntologicalBridge {
         // Fallback: try all evidence
         for (let evIdx = 0; evIdx < evidence.length; evIdx++) {
           const ev = evidence[evIdx]
-          const match = this.extractWithFallbacks(ev, mapping)
+          const li = evLine(ev)
+          const match = li === -1 ? null : this.extractWithFallbacks(ev, mappingFor(ev), li)
           if (match !== null) {
-            // v5.4: For ACTUAL_QUANTITY, check description similarity first (backup check)
-            if (needsSemanticCheck && typeof invoiceDesc === 'string') {
+            // v5.4: For ACTUAL_QUANTITY, check description similarity first (backup check). A line-scoped read already
+            // chose the evidence line by its description, so the quantity-equality lookup below is not needed (and could
+            // pick another line with the same quantity).
+            if (needsSemanticCheck && typeof invoiceDesc === 'string' && li === undefined) {
               // Extract evidence description from the same line item
               const evLineItems = (ev as Record<string, unknown>).line_items as Array<Record<string, unknown>> | undefined
               let evidenceDescForQty: string | undefined
@@ -1550,7 +1589,7 @@ export class OntologicalBridge {
     mapping: DomainFieldMapping,
     arrayIndex?: number
   ): FuzzyMatchResult | null {
-    // F3: phases 1–2 are fixed per (document, mapping) when no path can see the line index (isLineBlind), so inside
+    // Phases 1–2 are fixed per (document, mapping) when no path can see the line index (isLineBlind), so inside
     // createLineItemBindings they run once and later lines reuse the answer. A flight recorder must see every attempt,
     // so it bypasses the memo.
     const scope = this.flightRecorder ? null : this.scope
@@ -1865,6 +1904,36 @@ export class OntologicalBridge {
    * Simple word overlap similarity for description matching
    * Returns 0-1 score
    */
+  /**
+   * The index of the evidence line that corresponds to an invoice line, by description (2026-10-03): the one line whose
+   * description equals it (case and spacing ignored), else the one line with the highest word overlap at or above 25% (the
+   * v5.4 threshold). -1 when no line matches or the best is shared: nothing is bound from this evidence for this line.
+   * undefined when the evidence has no line array (its `[*]` paths then miss on their own).
+   */
+  private evidenceLineIndex(ev: Record<string, unknown>, invoiceDesc: unknown): number | undefined {
+    // not a document (a correlation map naming evidence that does not exist): the old path handles it, exactly as before
+    if (ev === null || typeof ev !== 'object') return undefined
+    const lines = ev.line_items
+    if (!Array.isArray(lines)) return undefined
+    if (typeof invoiceDesc !== 'string' || !invoiceDesc.trim()) return -1
+    const descOf = (l: unknown): string | undefined => {
+      if (l === null || typeof l !== 'object') return undefined
+      const o = l as Record<string, unknown>
+      const d = o.description ?? o.item ?? o.service ?? o.name
+      return d === undefined || d === null ? undefined : String(d)
+    }
+    const norm = (s: string): string => s.toLowerCase().replace(/\s+/g, ' ').trim()
+    const want = norm(invoiceDesc)
+    const exact = lines.flatMap((l, i) => { const d = descOf(l); return d !== undefined && norm(d) === want ? [i] : [] })
+    if (exact.length === 1) return exact[0]!
+    if (exact.length > 1) return -1
+    const scores = lines.map(l => this.computeDescriptionSimilarity(invoiceDesc, descOf(l)))
+    const best = Math.max(0, ...scores)
+    if (best < 0.25) return -1
+    const at = scores.flatMap((s, i) => (s === best ? [i] : []))
+    return at.length === 1 ? at[0]! : -1
+  }
+
   private computeDescriptionSimilarity(a: unknown, b: unknown): number {
     // Ensure we have strings
     const strA = typeof a === 'string' ? a : null
@@ -2008,7 +2077,7 @@ export class OntologicalBridge {
     }
 
     const contexts: BindingContext[] = []
-    // F3: the document-level work is done once for all lines (see DocumentScope), then dropped even if a line throws
+    // The document-level work is done once for all lines (see DocumentScope), then dropped even if a line throws
     const outer = this.scope
     this.scope = outer ?? newDocumentScope()
     try {

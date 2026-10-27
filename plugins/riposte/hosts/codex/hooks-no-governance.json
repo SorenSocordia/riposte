@@ -1,0 +1,16 @@
+{
+  "description": "Riposte: check the claims a Codex turn ends with against its own tool results. Record-only unless RIPOSTE_HOOK_MODE says otherwise.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"RIPOSTE_HOSTS_DIR/codex/riposte-codex.mjs\" --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

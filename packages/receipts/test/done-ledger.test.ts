@@ -29,10 +29,10 @@ describe('checkDone — completion claims checked against the real state', () =>
     expect(r.outcome).toBe('FAIL')
     expect(r.results[0]).toMatchObject({ expected: 2000, actual: 1935.5 })
   })
-  it('ABSTAIN — never accepts a claim it could not check', () => {
-    expect(checkDone({ claim: 'done!', expectations: [] }, read).outcome).toBe('ABSTAIN')
-    expect(checkDone({ claim: 'wrote the file', expectations: [{ source: 'missing.json', path: '', exists: true }] }, read).outcome).toBe('ABSTAIN')
-    expect(checkDone({ claim: 'vague', expectations: [{ source: 'payments.json', path: 'INV-1042' }] }, read).outcome).toBe('ABSTAIN')
+  it('INSUFFICIENT_DATA — never accepts a claim it could not check', () => {
+    expect(checkDone({ claim: 'done!', expectations: [] }, read).outcome).toBe('INSUFFICIENT_DATA')
+    expect(checkDone({ claim: 'wrote the file', expectations: [{ source: 'missing.json', path: '', exists: true }] }, read).outcome).toBe('INSUFFICIENT_DATA')
+    expect(checkDone({ claim: 'vague', expectations: [{ source: 'payments.json', path: 'INV-1042' }] }, read).outcome).toBe('INSUFFICIENT_DATA')
   })
   it('exists / absent expectations', () => {
     expect(checkDone({ claim: 'removed draft', expectations: [{ source: 'payments.json', path: 'DRAFT-1', exists: false }] }, read).outcome).toBe('PASS')

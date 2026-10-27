@@ -1,0 +1,44 @@
+{
+  "citations": [
+    { "id": "W01-genuine-after-headnote-mark-PASS", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "A contract term is ambiguous only when it is reasonably susceptible to more than one meaning after the court has considered the agreement as a whole." },
+    { "id": "W02-genuine-across-page-break-PASS", "cite": "88 F.4th 412, 415-16", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "the parties are sophisticated commercial actors who negotiated it at arm's length" },
+    { "id": "W03-dropped-only-FAIL", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "A contract term is ambiguous when it is reasonably susceptible to more than one meaning" },
+    { "id": "W04-ellipsis-drops-not-NOTPASS", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "such evidence may . . . be used to vary the plain terms of an integrated writing" },
+    { "id": "W05-headnote-as-opinion-CANT", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "Extrinsic evidence may not be used to create an ambiguity where none exists." },
+    { "id": "W06-dissent-as-holding-CANT", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "the phrase \"storage charges\" is reasonably susceptible to a meaning that includes handling fees" },
+    { "id": "W07-party-argues-CANT", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "the term is ambiguous because the industry uses it loosely" },
+    { "id": "W08-may-to-shall-FAIL", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "A court shall consider extrinsic evidence to determine whether a term is ambiguous" },
+    { "id": "W09-genuine-footnote-glued-PASS", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "such evidence may not be used to vary the plain terms of an integrated writing." },
+    { "id": "W10-bracket-swaps-meaning-FAIL", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "the agreement treats [storage charges] as a separate line item" },
+    { "id": "W11-legit-bracket-case-PASS", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "[T]he district court did not err in granting summary judgment to Brightwater on that claim." },
+    { "id": "W12-cut-drops-limitation-NOTPASS", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "A court may consider extrinsic evidence to determine whether a term is ambiguous" },
+    { "id": "W13-inserted-clearly-FAIL", "cite": "88 F.4th 412", "case_name": "Harlan Tool Co. v. Brightwater Logistics, Inc.", "quote": "A contract term is clearly ambiguous only when it is reasonably susceptible to more than one meaning" },
+
+    { "id": "L01-genuine-star-page-inside-PASS", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "courts presumptively decide whether litigation conduct has waived arbitration, absent clear and unmistakable evidence that the parties intended otherwise." },
+    { "id": "L02-party-contends-CANT", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "a party cannot waive arbitration unless the opposing party shows prejudice" },
+    { "id": "L03-according-to-party-CANT", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "the delegation clause sends the waiver question to the arbitrator" },
+    { "id": "L04-ellipsis-drops-not-NOTPASS", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "A party waives its right to arbitrate when it acts inconsistently with that right, and prejudice is . . . required." },
+    { "id": "L05-genuine-after-HN-marker-PASS", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "A party waives its right to arbitrate when it acts inconsistently with that right, and prejudice is not required." },
+    { "id": "L06-lexis-headnote-only-CANT", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "Prejudice is not a condition of waiver." },
+    { "id": "L07-presumptively-to-always-FAIL", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "courts always decide whether litigation conduct has waived arbitration" },
+    { "id": "L08-ellipsis-drops-presumptively-NOTPASS", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "courts . . . decide whether litigation conduct has waived arbitration" },
+    { "id": "L09-district-court-reasoned-CANT", "cite": "61 F.4th 233", "case_name": "Kessler Mfg. Corp. v. Arden Supply Co.", "quote": "Arden's conduct was a deliberate attempt to test the waters in court before seeking a second forum" },
+
+    { "id": "P01-plurality-holding-PASS-named", "cite": "604 U.S. 318", "case_name": "Dorsett Holdings, LLC v. Meridian Trust Co.", "quote": "a court may not graft a discovery rule onto a statute whose text forecloses one" },
+    { "id": "P02-petitioner-asks-CANT", "cite": "604 U.S. 318", "case_name": "Dorsett Holdings, LLC v. Meridian Trust Co.", "quote": "the period begins only when the beneficiary discovers the breach" },
+    { "id": "P03-dissent-with-join-CANT", "cite": "604 U.S. 318", "case_name": "Dorsett Holdings, LLC v. Meridian Trust Co.", "quote": "A discovery rule is the default for claims sounding in fraud or concealment" },
+    { "id": "P04-concur-in-judgment-CANT", "cite": "604 U.S. 318", "case_name": "Dorsett Holdings, LLC v. Meridian Trust Co.", "quote": "petitioner had actual knowledge of the transaction more than six years before suit" },
+    { "id": "P05-syllabus-CANT", "cite": "604 U.S. 318", "case_name": "Dorsett Holdings, LLC v. Meridian Trust Co.", "quote": "The limitations period for a breach of trust claim runs from the date of breach, not from discovery." },
+    { "id": "P06-ellipsis-drops-not-NOTPASS", "cite": "604 U.S. 318", "case_name": "Dorsett Holdings, LLC v. Meridian Trust Co.", "quote": "a court may . . . graft a discovery rule onto a statute" },
+
+    { "id": "D01-position-is-that-CANT", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "any lost-profits testimony is speculative as a matter of law for a business with less than three years of operating history" },
+    { "id": "D02-would-have-court-treat-CANT", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "the expert's margin assumption as a question of weight for the jury rather than admissibility" },
+    { "id": "D03-cut-drops-but-clause-NOTPASS", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "Questions of weight are for the jury" },
+    { "id": "D04-certainty-to-probability-FAIL", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "a new business may recover lost profits if it proves them with reasonable probability" },
+    { "id": "D05-ellipsis-drops-only-FAIL", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "An expert's lost-profits opinion is admissible . . . if it rests on a reliable method applied to sufficient facts" },
+    { "id": "D06-genuine-verbatim-PASS", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "Summary judgment is appropriate where there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law." },
+    { "id": "D07-quoted-then-rejected-NOTPASS", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "too remote and speculative to be recovered" },
+    { "id": "D08-far-apart-splice-FAIL", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "a new business may recover lost profits . . . on a properly limited model" },
+    { "id": "D09-fabricated-CANT", "cite": "2025 WL 1188234", "case_name": "Calloway Precision, Inc. v. Northgate Components Corp.", "quote": "a damages expert may rely on industry averages without regard to the plaintiff's own history" }
+  ]
+}

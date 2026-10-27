@@ -1,0 +1,813 @@
+{
+  "step": "halfB",
+  "run_utc": "2026-10-05T14:26:50.294Z",
+  "engine": "0.6.0",
+  "tree": {
+    "src/legal/index.ts": "35137247097483ca6da2c67de178e8a79cf74ac1ef7bd42e790546c02a843f36",
+    "src/legal/quotation.ts": "9f5ffee86ab252c380d4111b23e142fd077d3c2919f97249c15532e90e4225e7",
+    "src/legal/binding.ts": "02816bb723291150d5fdff4ed105d6cd26717a987a6faf3e293602e25b72cc3d",
+    "src/version.ts": "9ad7ccf53c401d3c01129a3891fe34e6d506d7d5747dee0987d3133a3309ae5b"
+  },
+  "freeze": {
+    "frozen_utc": "2026-10-05T14:26:32.173Z",
+    "distinct": false,
+    "limits": {
+      "ellipsisChars": 600,
+      "bracketChars": 40,
+      "bracketExtraWords": 2,
+      "minPieceWords": 3,
+      "minLiteralWords": 4,
+      "anchorWords": 4,
+      "correspondingSimilarity": 0.8,
+      "nearestSimilarity": 0.5
+    },
+    "moved": [],
+    "sha256": "f423e0458128bbb1b86b174a584f27031d3a41a3ca9a5d2ca2b0dcfa2ed38634"
+  },
+  "rules": {
+    "legal@0.0.1": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 0,
+          "n": 10,
+          "rate": 0,
+          "ci95": [
+            0,
+            0.278
+          ]
+        },
+        "known_bad_fail": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 6,
+          "n": 10,
+          "rate": 0.6,
+          "ci95": [
+            0.313,
+            0.832
+          ]
+        },
+        "control_false_fail": {
+          "k": 3,
+          "n": 10,
+          "rate": 0.3,
+          "ci95": [
+            0.108,
+            0.603
+          ]
+        },
+        "control_pass": {
+          "k": 3,
+          "n": 10,
+          "rate": 0.3,
+          "ci95": [
+            0.108,
+            0.603
+          ]
+        },
+        "control_abstain": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "J": 6.5
+      },
+      "rows": [
+        {
+          "id": "L2-05",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Environmental Protection Agency v. Mink: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "40c449405b79418017feac3a3f680f84"
+        },
+        {
+          "id": "L2-06",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Flast v. Cohen: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "5afb4bef2766ed5f70e8f12e5709ae35"
+        },
+        {
+          "id": "L2-07",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "United States v. Vuitch: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "e51f8faabeaf10ca5ca9df4d16ab867a"
+        },
+        {
+          "id": "L2-08",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Morey v. Doud. The corresponding passage there reads: \"must be based on differences that are reasonably related to the purposes of the Act in which it is found. Smith v\".",
+          "verdict_id": "91dfc335e9c37c88871d5cb680ded8f5"
+        },
+        {
+          "id": "L2-09",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Dent v. West Virginia. The corresponding passage there reads: \"he possesses. Reliance must be placed upon the assur-anee given by his license, issued by an authority competent to judge in that respect, that he possesses the requisite qualifications. Due consideration\".",
+          "verdict_id": "de9abe3301352821b30000028220fed2"
+        },
+        {
+          "id": "L2-10",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Metropolis Theatre Co. v. City of Chicago. The corresponding passage there reads: \"judicial interference. The problems of government are practical ones and may justify, if they do not require, rough accommodations — illogical, it may be, and unscientific. But even\".",
+          "verdict_id": "1f9641be599b60fabd2396338b2ac869"
+        },
+        {
+          "id": "L2-11",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Pointer v. Texas.",
+          "verdict_id": "3618db6f1561922955745c74f03923f7"
+        },
+        {
+          "id": "L2-12",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Roman v. Sincock: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "2e1046762c40816fd2ba8331dbebd71a"
+        },
+        {
+          "id": "L2-21",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Ahrens v. Clark: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "5620a240a7f63612ec13da36fe44463a"
+        },
+        {
+          "id": "L2-22",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Blair v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "9f34adbb04d44559b0a36e1b4d0c9b4f"
+        },
+        {
+          "id": "L2-23",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Dandridge v. Williams.",
+          "verdict_id": "c498e30e8ebcbda5483775289c389689"
+        },
+        {
+          "id": "L2-24",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Barry v. United States ex rel. Cunningham: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "38c38c6ea30bb10033fe6da56698d97d"
+        },
+        {
+          "id": "L2-25",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment.",
+          "verdict_id": "bd11e39ec0c335cb3c952fd8127fa40a"
+        },
+        {
+          "id": "L2-26",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Zizzo v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "7564e38a32e0f8eef3956ef021290cd1"
+        },
+        {
+          "id": "L2-27",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Cook v. Calhoun: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "6547d9b0ac030c6191f14571a7de002c"
+        },
+        {
+          "id": "L2-28",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Indiana v. Kentucky. The corresponding passage there reads: \"the country. When a great river is the boundary betAveen two nations or States, if the original property is in neither, and there be no convention respecting it, each holds to the middle of the stream. But when, as in this case, one State -is the original proprietor and grants the territory on one side only, it retains the river Avithin its own domain, and the neAvly created State extends to the river only. The river, however, is its boundary. ... If, instead\".",
+          "verdict_id": "23acc064cd69d4e84b602601f0c9c3b1"
+        },
+        {
+          "id": "L2-37",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for American Power & Light Co. v. Securities & Exchange Commission. The corresponding passage there reads: \"is a fundamental principle, however, that where Congress has entrusted an administrative agency with the responsibility of selecting the means of achieving the statutory policy “the relation of remedy to policy is peculiarly a matter for administrative competence.” Phelps Dodge\".",
+          "verdict_id": "1b1ae501d83e39362e7286747a8eb9ce"
+        },
+        {
+          "id": "L2-38",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Chevron Oil Co. v. Huson: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "dc03022dffbf632cc04c20c58c8e982d"
+        },
+        {
+          "id": "L2-39",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Norton v. Shelby County. The corresponding passage there reads: \"law; it confers no rights ; it imposes no duties; it affords no protection; it creates no office; it is, in legal contemplation, as inoperative as though it had never been passed.\nThe action\".",
+          "verdict_id": "00933242cfa43b592d316b4c70e986e0"
+        },
+        {
+          "id": "L2-40",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Chicot County Drainage District v. Baxter State Bank. The corresponding passage there reads: \"questions are among the most difficult of those which have engaged the attention of courts, state and federal, and it\".",
+          "verdict_id": "faa1730d26dee6dcabebdbcee9924021"
+        }
+      ]
+    },
+    "legal@0.1.0": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "known_bad_fail": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 6,
+          "n": 10,
+          "rate": 0.6,
+          "ci95": [
+            0.313,
+            0.832
+          ]
+        },
+        "control_false_fail": {
+          "k": 1,
+          "n": 10,
+          "rate": 0.1,
+          "ci95": [
+            0.018,
+            0.404
+          ]
+        },
+        "control_pass": {
+          "k": 5,
+          "n": 10,
+          "rate": 0.5,
+          "ci95": [
+            0.237,
+            0.763
+          ]
+        },
+        "control_abstain": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "J": 24.5
+      },
+      "rows": [
+        {
+          "id": "L2-05",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Environmental Protection Agency v. Mink: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "3cbcf31b619f717368a5a71562622847"
+        },
+        {
+          "id": "L2-06",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Flast v. Cohen: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "df1bf353fe76299de18cd4aca5ef860f"
+        },
+        {
+          "id": "L2-07",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "United States v. Vuitch: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "1650db5d4a772276a07b27aaf0bb1b85"
+        },
+        {
+          "id": "L2-08",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for Morey v. Doud, read with the quotation conventions it uses: bracket [reasonable] stands for \"purposes\".",
+          "verdict_id": "f1daefcb7ac78d9b6b73cb7377bce7ba"
+        },
+        {
+          "id": "L2-09",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Dent v. West Virginia. The corresponding passage there reads: \"he possesses. Reliance must be placed upon the assur-anee given by his license, issued by an authority competent to judge in that respect, that he possesses the requisite qualifications. Due consideration\".",
+          "verdict_id": "fd23a448f067646ab30f405bb7ac5519"
+        },
+        {
+          "id": "L2-10",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Metropolis Theatre Co. v. City of Chicago. The corresponding passage there reads: \"judicial interference. The problems of government are practical ones and may justify, if they do not require, rough accommodations — illogical, it may be, and unscientific. But even\".",
+          "verdict_id": "f963184e95f534a9d027f8c0ae0c184b"
+        },
+        {
+          "id": "L2-11",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Pointer v. Texas.",
+          "verdict_id": "c216fc393841e7c35052078af1cac85b"
+        },
+        {
+          "id": "L2-12",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Roman v. Sincock: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "6afe0b70982a199e349cccdd5abb05b1"
+        },
+        {
+          "id": "L2-21",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Ahrens v. Clark: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "ea9f3528d679994fbeb4620c1e90924a"
+        },
+        {
+          "id": "L2-22",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Blair v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "35d5f809fe1f594343848796a9441c73"
+        },
+        {
+          "id": "L2-23",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Dandridge v. Williams.",
+          "verdict_id": "c50fafa98dec14195534bc164f387be0"
+        },
+        {
+          "id": "L2-24",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Barry v. United States ex rel. Cunningham: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "76c9ba02e04ebf8c2cbaee85aaa15140"
+        },
+        {
+          "id": "L2-25",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment.",
+          "verdict_id": "2842a3cc28de43a19c5e69525bb88a62"
+        },
+        {
+          "id": "L2-26",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Zizzo v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "20468f060a4704833a5efcd2b8eb1bf2"
+        },
+        {
+          "id": "L2-27",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Cook v. Calhoun: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "e7a9a5497370d7e7d2ba67514e1af4da"
+        },
+        {
+          "id": "L2-28",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Indiana v. Kentucky. The corresponding passage there reads: \"the country. When a great river is the boundary betAveen two nations or States, if the original property is in neither, and there be no convention respecting it, each holds to the middle of the stream. But when, as in this case, one State -is the original proprietor and grants the territory on one side only, it retains the river Avithin its own domain, and the neAvly created State extends to the river only. The river, however, is its boundary. ... If, instead\".",
+          "verdict_id": "46166063ca10268a4327987e20e22e35"
+        },
+        {
+          "id": "L2-37",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for American Power & Light Co. v. Securities & Exchange Commission, read with the quotation conventions it uses: an ellipsis stands for \", however,\"; quotation marks not compared.",
+          "verdict_id": "e2402a9b63502b2facf30fa6ffb858e2"
+        },
+        {
+          "id": "L2-38",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Chevron Oil Co. v. Huson: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "cd7407952ce887ebc59061fd35cb0ca5"
+        },
+        {
+          "id": "L2-39",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Norton v. Shelby County.",
+          "verdict_id": "1a075f082161113a87427056f7a7b380"
+        },
+        {
+          "id": "L2-40",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for Chicot County Drainage District v. Baxter State Bank, read with the quotation conventions it uses: bracket [reasonable] stands for \"attention\"; an ellipsis at the edge of the quotation (not located).",
+          "verdict_id": "b305b0acf3d0d3e48a3c9be70eab8219"
+        }
+      ]
+    },
+    "legal@0.2.0": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 0,
+          "n": 10,
+          "rate": 0,
+          "ci95": [
+            0,
+            0.278
+          ]
+        },
+        "known_bad_fail": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 6,
+          "n": 10,
+          "rate": 0.6,
+          "ci95": [
+            0.313,
+            0.832
+          ]
+        },
+        "control_false_fail": {
+          "k": 1,
+          "n": 10,
+          "rate": 0.1,
+          "ci95": [
+            0.018,
+            0.404
+          ]
+        },
+        "control_pass": {
+          "k": 5,
+          "n": 10,
+          "rate": 0.5,
+          "ci95": [
+            0.237,
+            0.763
+          ]
+        },
+        "control_abstain": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "J": 4.5
+      },
+      "rows": [
+        {
+          "id": "L2-05",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Environmental Protection Agency v. Mink: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "ae24cf000539127ee69273aa8408f94e"
+        },
+        {
+          "id": "L2-06",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Flast v. Cohen: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "b3ca7adf8ef55551a809bce6bf59af07"
+        },
+        {
+          "id": "L2-07",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "United States v. Vuitch: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "b6c10707bb22a974930c74baf4ede1e2"
+        },
+        {
+          "id": "L2-08",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation alters the meaning of the opinion text supplied for Morey v. Doud: the bracket [reasonable] stands for \"purposes\", and \"reasonable\" is not \"purposes\", an inflection of it, or a pronoun or referent. The passage there reads: \"based on differences that are reasonably related to the purposes of the Act in which it is found.\".",
+          "verdict_id": "4e2b257717b20c5c35861e982ad80d16"
+        },
+        {
+          "id": "L2-09",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Dent v. West Virginia. The corresponding passage there reads: \"he possesses. Reliance must be placed upon the assur-anee given by his license, issued by an authority competent to judge in that respect, that he possesses the requisite qualifications. Due consideration\".",
+          "verdict_id": "ebacc52557f75e4a5cdf78b49014a462"
+        },
+        {
+          "id": "L2-10",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Metropolis Theatre Co. v. City of Chicago. The corresponding passage there reads: \"judicial interference. The problems of government are practical ones and may justify, if they do not require, rough accommodations — illogical, it may be, and unscientific. But even\".",
+          "verdict_id": "5afd0ca8a66113dd58ff87b8c10560db"
+        },
+        {
+          "id": "L2-11",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Pointer v. Texas.",
+          "verdict_id": "45fc2ef32f0de5d36ec05a9d529df0d5"
+        },
+        {
+          "id": "L2-12",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Roman v. Sincock: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "baa4fc53aab6dec3c54d1e525b98f9f8"
+        },
+        {
+          "id": "L2-21",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Ahrens v. Clark: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "ce8605647a3eef2b10d9b24ae89a9dd8"
+        },
+        {
+          "id": "L2-22",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Blair v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "ac9274e04aad7d0071ee06dca2427b0a"
+        },
+        {
+          "id": "L2-23",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Dandridge v. Williams.",
+          "verdict_id": "5cd0afb0bd75d4d0f2fe960218038c43"
+        },
+        {
+          "id": "L2-24",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Barry v. United States ex rel. Cunningham: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "8f7e44f50281010f5c5637562dec7441"
+        },
+        {
+          "id": "L2-25",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment.",
+          "verdict_id": "5857a2f2c8023eb509274f60f98ce1d0"
+        },
+        {
+          "id": "L2-26",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Zizzo v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "fc6225868a5bc67c9e75172b5701d891"
+        },
+        {
+          "id": "L2-27",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Cook v. Calhoun: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "e2edf8b71acc023684e41b2ed4c7af3f"
+        },
+        {
+          "id": "L2-28",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Indiana v. Kentucky. The corresponding passage there reads: \"the country. When a great river is the boundary betAveen two nations or States, if the original property is in neither, and there be no convention respecting it, each holds to the middle of the stream. But when, as in this case, one State -is the original proprietor and grants the territory on one side only, it retains the river Avithin its own domain, and the neAvly created State extends to the river only. The river, however, is its boundary. ... If, instead\".",
+          "verdict_id": "831f4c023d1bdbda37e79ba9a3bd4c00"
+        },
+        {
+          "id": "L2-37",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for American Power & Light Co. v. Securities & Exchange Commission, read with the quotation conventions it uses: an ellipsis stands for \", however,\"; quotation marks not compared.",
+          "verdict_id": "257bdb4e09a4643f31584670fe295b64"
+        },
+        {
+          "id": "L2-38",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Chevron Oil Co. v. Huson: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "fdba3d25af8a81fdea06f191b55836ba"
+        },
+        {
+          "id": "L2-39",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Norton v. Shelby County.",
+          "verdict_id": "59f14c4c730b828758e863c83c659be9"
+        },
+        {
+          "id": "L2-40",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation alters the meaning of the opinion text supplied for Chicot County Drainage District v. Baxter State Bank: the bracket [reasonable] stands for \"attention\", and \"reasonable\" is not \"attention\", an inflection of it, or a pronoun or referent. The passage there reads: \"among the most difficult of those which have engaged the attention of courts, state and federal\".",
+          "verdict_id": "bd3d711261f61285fe5c2b384b9c5044"
+        }
+      ]
+    }
+  },
+  "candidate": "none: no limit moved on half A, so there is no distinct legal@0.3.0 candidate (PREREG section 6)"
+}

@@ -13,6 +13,8 @@
 
 import type { BindingContext, BoundValue, ComputationalAxiom, DomainOntology, UniversalRole } from '../kernel/types.js'
 import type { ClaimKind, ClaimVerdict, Evidence, InsufficiencyReason } from '../verdict/schema.js'
+import type { RemedyTable } from '../verdict/remedy.js'
+import type { EngineVersion } from '../version.js'
 
 export type Json = Record<string, unknown>
 
@@ -40,6 +42,17 @@ export interface ComputeInput {
   docCtx: BindingContext
   /** One context per line, in document order (mutate to add per-line computed roles). */
   lineCtxs: BindingContext[]
+  /**
+   * The engine the verdict is made under (2026-10-05): a ruleset reads strictly from engine 0.6.0 (./strict.ts).
+   * Absent means a caller that does not say, read as an engine before 0.6.0, so nothing changes for it.
+   */
+  engine?: EngineVersion
+}
+
+/** What a ruleset's finish() hook is told (2026-10-05). */
+export interface FinishContext {
+  /** the engine the verdict is made under */
+  engine: EngineVersion
 }
 
 export interface ComputeOutput {
@@ -67,6 +80,16 @@ export interface Ruleset extends RulesetRef {
   kindByCode: Readonly<Record<string, ClaimKind>>
   /** The extracted field each rule is "about", in the caller's vocabulary. */
   fieldByCode: Readonly<Record<string, string>>
+  /**
+   * What lawfully answers each rule's FAIL (and, optionally, its can't-tell), declared next to the laws (2026-10-02;
+   * verdict/remedy.ts). Outside the verdict's hashed core: adding or editing a remedy never moves a verdict_id.
+   */
+  remedyByCode?: RemedyTable
+  /**
+   * The remedy table a verdict of engine `engine` is answered from, when it differs by engine (2026-10-05). Absent:
+   * `remedyByCode` for every engine. The verdict_id binds the table returned here, so an earlier engine keeps its table.
+   */
+  remedyByCodeFor?: (engine: EngineVersion) => RemedyTable
   /** Roles that come from each optional reference. Drives honesty rule 2 (REFERENCE_NOT_PROVIDED). */
   referenceRoles: {
     contract: readonly UniversalRole[]
@@ -84,6 +107,12 @@ export interface Ruleset extends RulesetRef {
   ambiguityGuards: readonly (readonly [code: string, role: UniversalRole])[]
   /** Bind computed roles (with provenance) onto the contexts; report what could not be computed and why. */
   compute(input: ComputeInput): ComputeOutput
+  /**
+   * Optional (2026-10-05): called once on the claims after the gavel and the ruleset's own claims, before tolerance and the
+   * honesty passes. It may reword a claim's explanation in the ruleset's own words; it never changes an outcome, a value or an
+   * id. A ruleset that rewords does so only from engine 0.6.0, so earlier verdicts re-perform byte for byte.
+   */
+  finish?(claims: ClaimVerdict[], ctx: FinishContext): void
 }
 
 /** A computed role inherits the LOWEST confidence of its operands — a guessed operand can never launder into a locked verdict. */

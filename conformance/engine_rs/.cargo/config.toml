@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# Shortcuts, run from this folder.
+#   cargo vectors          the record vectors against this crate, as a program (exit 0: every case outside the named list passes)
+#   cargo vectors-words    the same, comparing each command's whole stdout and stderr as well
+#   cargo wasm             the library for wasm32-unknown-unknown (needs: rustup target add wasm32-unknown-unknown)
+[alias]
+vectors = "run --release --bin riposte-record-cli -- vectors"
+vectors-words = "run --release --bin riposte-record-cli -- vectors --words"
+wasm = "build --release --lib --target wasm32-unknown-unknown"

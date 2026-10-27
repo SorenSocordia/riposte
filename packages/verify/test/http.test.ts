@@ -61,7 +61,9 @@ describe('POST /v1/verify/action and /citations', () => {
     expect((r.json as { outcome: string }).outcome).toBe('FAIL')
   })
   it('cite-checks a quote against a supplied opinion', () => {
-    const r = post('/v1/verify/citations', { citations: [{ id: 'a', case_name: 'X', quote: 'the sky is blue' }], sources: { X: 'the court found the sky is blue that day' } })
+    // the text names its case (engine 0.6.0 checks a quotation only against a text that names its cite); the court speaks in its own
+    // voice ("the court finds"): under legal@0.5.2 "the court found" would report another court's finding, and answer can't tell
+    const r = post('/v1/verify/citations', { citations: [{ id: 'a', case_name: 'X', quote: 'the sky is blue' }], sources: { X: 'X v. Y. the court finds the sky is blue that day' } })
     expect((r.json as { outcome: string }).outcome).toBe('PASS')
   })
 })

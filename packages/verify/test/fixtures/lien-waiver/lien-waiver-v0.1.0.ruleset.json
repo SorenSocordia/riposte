@@ -1,0 +1,219 @@
+{
+  "id": "lien-waiver",
+  "version": "0.1.0",
+  "name": "Statutory lien waiver reconciled against its AIA G702 pay application and the payment record (CA Civ. Code 8132-8138, TX Prop. Code 53.284). DEMO, synthetic fixtures only: not a benchmark.",
+  "domain": "lien-waiver",
+  "lineArrayKeys": ["waiver_exception_items"],
+  "tolerance": { "rel": 0, "absCap": 0 },
+  "sources": {
+    "CA-8132": "Cal. Civ. Code 8132 (Conditional Waiver and Release on Progress Payment), https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8132 (raw: sources/ca-civ-8132.raw.html)",
+    "CA-8134": "Cal. Civ. Code 8134 (Unconditional Waiver and Release on Progress Payment), https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8134 (raw: sources/ca-civ-8134.raw.html)",
+    "CA-8136": "Cal. Civ. Code 8136 (Conditional Waiver and Release on Final Payment), https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8136 (raw: sources/ca-civ-8136.raw.html)",
+    "CA-8138": "Cal. Civ. Code 8138 (Unconditional Waiver and Release on Final Payment), https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8138 (raw: sources/ca-civ-8138.raw.html)",
+    "TX-53.284": "Tex. Prop. Code 53.284(b)-(e) (the four waiver and release forms), https://statutes.capitol.texas.gov/Docs/PR/htm/PR.53.htm#53.284 (raw: sources/tx-prop-ch53.raw.htm, fetched from https://tcss.legis.texas.gov/resources/PR/htm/PR.53.htm)",
+    "G702": "AIA G702 line 8 'current payment due' and the application number, as the built-in verify ruleset pay-app@0.0.1 binds them (products/verify/src/rulesets/pay-app). 'Period To' is the G702 header field; it is not sourced from AIA text in this demo (the AIA form is licensed)."
+  },
+  "fields": {
+    "FORM_STATE": { "paths": ["waiver.form.state"], "kind": "identifier" },
+    "FORM_FINAL": { "paths": ["waiver.form.final"], "kind": "bool" },
+    "FORM_UNCONDITIONAL": { "paths": ["waiver.form.unconditional"], "kind": "bool" },
+    "CLAIMANT": { "paths": ["waiver.claimant"], "kind": "identifier" },
+    "CUSTOMER": { "paths": ["waiver.customer", "waiver.contracted_with"], "kind": "identifier" },
+    "WAIVER_OWNER": { "paths": ["waiver.owner"], "kind": "identifier" },
+    "WAIVER_LOCATION": { "paths": ["waiver.job_location"], "kind": "identifier" },
+    "WAIVER_THROUGH": { "paths": ["waiver.through_date"], "kind": "identifier" },
+    "WAIVER_ATTACHED_REQUEST": { "paths": ["waiver.attached_request_no"], "kind": "identifier" },
+    "WAIVER_AMOUNT": { "paths": ["waiver.amount"] },
+    "EXC_STATED": { "paths": ["waiver.exceptions.unpaid_progress_amount_stated"], "default": 0 },
+    "EXC_ITEM_AMOUNT": { "paths": ["amount"], "line": true },
+    "EXC_ITEM_DATE": { "paths": ["waiver_date"], "line": true, "kind": "identifier" },
+
+    "PAYAPP_APP_NO": { "paths": ["pay_app.application_number"], "kind": "identifier" },
+    "PAYAPP_PERIOD_TO": { "paths": ["pay_app.period_to"], "kind": "identifier" },
+    "PAYAPP_CONTRACTOR": { "paths": ["pay_app.contractor"], "kind": "identifier" },
+    "PAYAPP_OWNER": { "paths": ["pay_app.owner"], "kind": "identifier" },
+    "PAYAPP_PROJECT_ADDRESS": { "paths": ["pay_app.project.address"], "kind": "identifier" },
+    "PAYAPP_PROJECT_STATE": { "paths": ["pay_app.project.state"], "kind": "identifier" },
+    "PAYAPP_CURRENT_DUE": { "paths": ["pay_app.current_payment_due"] },
+    "PAYAPP_FINAL": { "paths": ["pay_app.final"], "kind": "bool" },
+
+    "PAYMENT_PAYEE": { "paths": ["payment.payee"], "kind": "identifier" },
+    "PAYMENT_AMOUNT": { "paths": ["payment.amount"] },
+    "PAYMENT_CLEARED": { "paths": ["payment.cleared"], "kind": "bool" }
+  },
+  "checks": [
+    {
+      "code": "LW_STATE",
+      "name": "The waiver is on the statutory form of the state where the property sits [CA-8132..CA-8138, TX-53.284]",
+      "compare": "identifier", "left": "FORM_STATE", "op": "=", "right": "PAYAPP_PROJECT_STATE",
+      "field": "waiver.form.state",
+      "remedy": {
+        "fail": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.form.state" }, "detail": "The waiver is on the {op:FORM_STATE} statutory form but the property is in {op:PAYAPP_PROJECT_STATE}: obtain a waiver on the {op:PAYAPP_PROJECT_STATE} statutory form." },
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.form.state" }, "detail": "If the form's state was misread, re-read waiver.form.state from the form's title and statute and run the check again." }
+        ]
+      }
+    },
+    {
+      "code": "LW_FINAL_MATCH",
+      "name": "Progress vs final: the waiver's form type matches whether the pay application is final [CA-8132..CA-8138, TX-53.284]",
+      "left": "FORM_FINAL", "op": "=", "right": "PAYAPP_FINAL", "tol": 0,
+      "field": "waiver.form.final",
+      "remedy": {
+        "fail": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.form.final" }, "detail": "The waiver's form is final={asserted} (1 = a final-payment form) but the pay application is final={expected}: obtain the waiver form that matches the payment (progress for a progress application, final for the final application)." }
+        ]
+      }
+    },
+    {
+      "code": "LW_UNCOND_PAID",
+      "name": "An unconditional waiver is given only after the payment has cleared (FORM_UNCONDITIONAL <= PAYMENT_CLEARED) [CA-8134, CA-8138, TX-53.284]",
+      "left": "FORM_UNCONDITIONAL", "op": "<=", "right": "PAYMENT_CLEARED", "tol": 0,
+      "field": "payment.cleared",
+      "remedy": {
+        "fail": [
+          { "kind": "missing-operand", "operand": { "source": "payment", "path": "payment.cleared" }, "detail": "The waiver is unconditional but the payment record does not show the payment cleared: supply evidence that the payment cleared the bank." },
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.form.unconditional" }, "detail": "Or replace it with the conditional form until the payment clears (the statutory unconditional notice: 'IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM')." }
+        ]
+      }
+    },
+    {
+      "code": "LW_THROUGH",
+      "name": "The waiver's Through Date equals the pay application's period-to (Through Date is a blank on CA 8132/8134 progress forms only) [CA-8132, CA-8134, G702]",
+      "compare": "identifier", "left": "WAIVER_THROUGH", "op": "=", "right": "PAYAPP_PERIOD_TO",
+      "field": "waiver.through_date",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.through_date" }, "detail": "The waiver's Through Date ({asserted}) is not the pay application's period-to ({expected}): obtain a waiver through {expected}, or re-read the Through Date." }
+        ],
+        "abstain": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.through_date" }, "when": ["FIELD_MISSING"], "detail": "No Through Date was read. CA 8132/8134 progress forms carry one: supply it. CA 8136/8138 final forms and the TX 53.284 forms have no Through Date blank, so on those forms this check does not apply." }
+        ]
+      }
+    },
+    {
+      "code": "LW_ATTACHED",
+      "name": "A TX progress waiver covers 'the attached statement(s) or progress payment request(s)': the attached request is this pay application [TX-53.284]",
+      "compare": "identifier", "left": "WAIVER_ATTACHED_REQUEST", "op": "=", "right": "PAYAPP_APP_NO",
+      "field": "waiver.attached_request_no",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.attached_request_no" }, "detail": "The waiver's attached payment request is No. {asserted} but this pay application is No. {expected}: obtain a waiver with this application attached, or re-read the attachment." }
+        ],
+        "abstain": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.attached_request_no" }, "when": ["FIELD_MISSING"], "detail": "No attached payment request was read. TX 53.284(b)/(c) progress forms cover the attached request: supply its number. CA forms and TX final forms do not, so on those forms this check does not apply." }
+        ]
+      }
+    },
+    {
+      "code": "LW_AMOUNT",
+      "name": "The waiver amount equals the pay application's current payment due, G702 line 8 (CA/TX unconditional FINAL forms state no amount: 'paid in full') [CA-8132, CA-8134, CA-8136, TX-53.284, G702]",
+      "left": "WAIVER_AMOUNT", "op": "=", "right": "PAYAPP_CURRENT_DUE",
+      "field": "waiver.amount",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.amount" }, "detail": "The waiver states {asserted}; the pay application's current payment due (G702 line 8) is {expected}; difference {variance}. If the difference equals retainage, the waiver counted retainage the payer holds back. Obtain a waiver for {expected}, or re-read the amount." }
+        ],
+        "abstain": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.amount" }, "when": ["FIELD_MISSING"], "detail": "No waiver amount was read. Every form except the unconditional final forms (CA 8138, TX 53.284(e): 'paid in full') has an amount blank: supply it." }
+        ]
+      }
+    },
+    {
+      "code": "LW_PAYMENT_AMOUNT",
+      "name": "The payment record's amount equals the pay application's current payment due (G702 line 8) [G702]",
+      "left": "PAYMENT_AMOUNT", "op": "=", "right": "PAYAPP_CURRENT_DUE",
+      "field": "payment.amount",
+      "remedy": {
+        "fail": [
+          { "kind": "missing-operand", "operand": { "source": "payment", "path": "payment.amount" }, "detail": "The payment is {asserted} but the pay application's current payment due is {expected} (difference {variance}): supply the payment record for the full amount, or the change order / certificate that reduced it." },
+          { "kind": "authority", "authority": "payables-approver", "detail": "A short payment of {variance} is a payer decision: the approver rules, for this verdict only." }
+        ]
+      }
+    },
+    {
+      "code": "LW_PAYEE",
+      "name": "The payment is payable to the claimant (check payable to) [CA-8132, CA-8136, TX-53.284]",
+      "compare": "identifier", "left": "PAYMENT_PAYEE", "op": "=", "right": "CLAIMANT",
+      "field": "payment.payee",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "payment", "path": "payment.payee" }, "detail": "The payment is payable to {asserted} but the waiver's claimant is {expected}: the waiver and the payment must name the same party." }
+        ]
+      }
+    },
+    {
+      "code": "LW_CLAIMANT",
+      "name": "The waiver's claimant (CA 'Name of Claimant'; TX signer's 'Company name') is the pay application's contractor [CA-8132..CA-8138, TX-53.284, G702]",
+      "compare": "identifier", "left": "CLAIMANT", "op": "=", "right": "PAYAPP_CONTRACTOR",
+      "field": "waiver.claimant",
+      "remedy": {
+        "fail": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.claimant" }, "detail": "The waiver is signed for {asserted} but the pay application is from {expected}: obtain the waiver from {expected}, or re-read the claimant." }
+        ]
+      }
+    },
+    {
+      "code": "LW_CUSTOMER",
+      "name": "The waiver's customer (CA 'Name of Customer'; TX 'person with whom signer contracted') is the pay application's owner, for a prime contractor's waiver [CA-8132..CA-8138, TX-53.284]",
+      "compare": "identifier", "left": "CUSTOMER", "op": "=", "right": "PAYAPP_OWNER",
+      "field": "waiver.customer",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.customer" }, "detail": "The waiver names {asserted} as the customer but the pay application's owner is {expected}: re-read it; a subcontractor's waiver (customer = the prime) is outside this demo." }
+        ]
+      }
+    },
+    {
+      "code": "LW_OWNER",
+      "name": "The waiver's Owner is the pay application's owner [CA-8132..CA-8138, TX-53.284, G702]",
+      "compare": "identifier", "left": "WAIVER_OWNER", "op": "=", "right": "PAYAPP_OWNER",
+      "field": "waiver.owner",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.owner" }, "detail": "The waiver names owner {asserted} but the pay application's owner is {expected}: obtain a corrected waiver, or re-read the owner." }
+        ]
+      }
+    },
+    {
+      "code": "LW_LOCATION",
+      "name": "The waiver's property (CA 'Job Location'; TX 'located at') is the pay application's project address [CA-8132..CA-8138, TX-53.284, G702]",
+      "compare": "identifier", "left": "WAIVER_LOCATION", "op": "=", "right": "PAYAPP_PROJECT_ADDRESS",
+      "field": "waiver.job_location",
+      "remedy": {
+        "fail": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver.job_location" }, "detail": "The waiver releases rights at {asserted} but the pay application is for {expected}: obtain a waiver for this property." }
+        ]
+      }
+    },
+    {
+      "code": "LW_EXC_ITEMIZED",
+      "name": "Exceptions are empty or itemized: the unpaid-progress-payment amount stated in the CA 8132 exception (3) equals the sum of its itemized amounts, else zero when nothing is itemized [CA-8132]",
+      "left": "EXC_STATED", "op": "=", "right": "sum(EXC_ITEM_AMOUNT)",
+      "alternatives": [{ "left": "EXC_STATED", "right": "0" }],
+      "field": "waiver.exceptions.unpaid_progress_amount_stated",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver.exceptions.unpaid_progress_amount_stated" }, "detail": "The exceptions state {asserted} of unpaid progress payments but the itemized amounts total {expected}: itemize each earlier conditional waiver (its date and its unpaid amount)." }
+        ]
+      }
+    },
+    {
+      "code": "LW_EXC_DATED",
+      "name": "Each itemized exception names the date of the earlier conditional waiver it excepts and a positive amount [CA-8132]",
+      "scope": "line",
+      "left": "EXC_ITEM_AMOUNT", "op": ">=", "right": "0.01", "tol": 0,
+      "abstain_unless_all_present": ["EXC_ITEM_DATE"],
+      "guard_reason": "CA 8132 exception (3) pairs 'Date(s) of waiver and release' with 'Amount(s) of unpaid progress payment(s)'",
+      "field": "waiver_exception_items.amount",
+      "remedy": {
+        "fail": [
+          { "kind": "recompute-with", "operand": { "source": "waiver", "path": "waiver_exception_items[{line}].amount" }, "detail": "Itemized exception {line} states {asserted}, not a positive amount: re-read it." }
+        ],
+        "abstain": [
+          { "kind": "missing-operand", "operand": { "source": "waiver", "path": "waiver_exception_items[{line}].waiver_date" }, "when": ["FIELD_MISSING"], "detail": "Itemized exception {line} has an amount but no date of the earlier waiver: supply the date, or the exception is not itemized." }
+        ]
+      }
+    }
+  ]
+}

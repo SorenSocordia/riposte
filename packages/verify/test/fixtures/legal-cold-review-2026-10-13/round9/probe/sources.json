@@ -1,0 +1,98 @@
+{
+  "900 F.4th 101": {
+    "file": "900.txt",
+    "source": "probe: designation \"MOLINA, Circuit Judge, dissenting:\""
+  },
+  "901 F.4th 101": {
+    "file": "901.txt",
+    "source": "probe: designation \"DISSENTING OPINION\""
+  },
+  "902 F.4th 101": {
+    "file": "902.txt",
+    "source": "probe: designation \"Dissenting Opinion by Judge Molina\""
+  },
+  "903 F.4th 101": {
+    "file": "903.txt",
+    "source": "probe: designation \"Judge MOLINA, dissenting.\""
+  },
+  "904 F.4th 101": {
+    "file": "904.txt",
+    "source": "probe: designation \"MOLINA, J., dissenting in part:\""
+  },
+  "905 F.4th 101": {
+    "file": "905.txt",
+    "source": "probe: designation \"MOLINA, J. (dissenting):\""
+  },
+  "906 F.4th 101": {
+    "file": "906.txt",
+    "source": "probe: designation \"MOLINA, J., dissents and votes to reverse in the following opinion:\""
+  },
+  "907 F.4th 101": {
+    "file": "907.txt",
+    "source": "probe: designation \"CONCURRING OPINION\""
+  },
+  "908 F.4th 101": {
+    "file": "908.txt",
+    "source": "probe: designation \"MOLINA, Circuit Judge, concurring in the judgment:\""
+  },
+  "909 F.4th 101": {
+    "file": "909.txt",
+    "source": "probe: designation \"Molina, J., dissenting\""
+  },
+  "910 F.4th 101": {
+    "file": "910.txt",
+    "source": "probe: designation \"MOLINA, Circuit Judge, dissenting from the denial of rehearing en banc:\""
+  },
+  "911 F.4th 101": {
+    "file": "911.txt",
+    "source": "probe: designation \"I respectfully dissent.\""
+  },
+  "912 F.4th 101": {
+    "file": "912.txt",
+    "source": "probe: lead-in \"Appellee counters that\""
+  },
+  "913 F.4th 101": {
+    "file": "913.txt",
+    "source": "probe: lead-in \"On Tamberly’s reading,\""
+  },
+  "914 F.4th 101": {
+    "file": "914.txt",
+    "source": "probe: lead-in \"Tamberly maintains that\""
+  },
+  "915 F.4th 101": {
+    "file": "915.txt",
+    "source": "probe: lead-in \"Tamberly posits that\""
+  },
+  "916 F.4th 101": {
+    "file": "916.txt",
+    "source": "probe: lead-in \"Tamberly would have us adopt a rule that\""
+  },
+  "917 F.4th 101": {
+    "file": "917.txt",
+    "source": "probe: lead-in \"The magistrate judge concluded that\""
+  },
+  "918 F.4th 101": {
+    "file": "918.txt",
+    "source": "probe: lead-in \"The trial court found that\""
+  },
+  "919 F.4th 101": {
+    "file": "919.txt",
+    "source": "probe: lead-in \"Under Tamberly’s interpretation,\""
+  },
+  "920 F.4th 101": {
+    "file": "920.txt",
+    "source": "probe: lead-in \"Tamberly’s theory is that\""
+  },
+  "921 F.4th 101": {
+    "file": "921.txt",
+    "source": "probe: lead-in \"In Bexley, the Fifth Circuit held that\""
+  },
+  "922 F.4th 101": {
+    "file": "922.txt",
+    "source": "probe: lead-in \"Tamberly’s brief states that\""
+  },
+  "923 F.4th 101": {
+    "file": "923.txt",
+    "source": "probe: lead-in \"Tamberly takes the position that\""
+  }
+}

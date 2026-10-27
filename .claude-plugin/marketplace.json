@@ -1,8 +1,9 @@
 {
   "name": "riposte",
   "owner": {
-    "name": "Tucker Anderson"
+    "name": "E. Tucker Anderson"
   },
+  "description": "Receipts for your agent: a Stop hook that checks closing claims, an MCP server with the AP gate and check_done, and a tamper-evident ledger. Record-only by default.",
   "plugins": [
     {
       "name": "riposte",

@@ -39,6 +39,7 @@
  */
 
 import { route, type HttpRequest, type HttpResponse } from './router.js'
+import { openapiFor } from './openapi.js'
 import type { Ledger, LedgerRecord } from '../ledger/types.js'
 import type { Verdict } from '../verdict/schema.js'
 import { renderTenantReport, monthPeriod, readRung, bookRefusal, type TenantReportOptions, type RungRead } from '../ledger/report.js'
@@ -186,6 +187,8 @@ export function createService(opts: ServiceOptions = {}): Service {
         if (!rl.ok) return json(429, { error: 'rate limit exceeded', ...(rl.retry_after_seconds !== undefined ? { retry_after_seconds: rl.retry_after_seconds } : {}) })
       }
 
+      // 2026-10-05: the spec describes this server: every route with a book of record, the pure core's without one
+      if (req.method === 'GET' && (path === '/v1/openapi.json' || path === '/openapi.json')) return json(200, openapiFor({ ledger: Boolean(ledger) }))
       // Stateful reads — only meaningful with a ledger; these are the hosted product's dashboards, in JSON.
       if (ledger && req.method === 'GET') {
         if (path === '/v1/ledger/stats') return json(200, ledger.stats(tenant))
@@ -306,7 +309,7 @@ export function createService(opts: ServiceOptions = {}): Service {
       const d = body.dispute
       if (isObj(d) && typeof d.verdict_id === 'string') {
         if (led.get(d.verdict_id)?.tenant_id !== tenant_id) return json(404, { error: `verdict ${d.verdict_id} is not on this tenant's book of record` })
-        // A shared book is served (W4/SW1): the opinion is scoped to the caller's tenant (its precedent, prior ruling and
+        // A shared book is served: the opinion is scoped to the caller's tenant (its precedent, prior ruling and
         // verdict are the tenant's own; the chain is still verified whole), so it never cites another tenant's reviews.
       }
     } else {
@@ -333,7 +336,7 @@ export function createService(opts: ServiceOptions = {}): Service {
       }))
     } catch (e) {
       // The scoped opinion's own refusal of another tenant's verdict or workflow is a 404, like the pre-checks: under a
-      // shared verdict id (F-A) the ledger names the latest owner, so the scoped opinion is the final word.
+      // shared verdict id the ledger names the latest owner, so the scoped opinion is the final word.
       if (e instanceof SurfaceInputError) return json(NOT_THE_TENANTS.test(e.message) ? 404 : 400, { error: e.message })
       return json(500, { error: `opinion error: ${(e as Error).message}` })
     }

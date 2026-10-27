@@ -32,7 +32,7 @@ describe('verifyReplay — independent binding check (no engine)', () => {
 
   it('deriveVerdictId reproduces the producer derivation exactly', () => {
     const v = mkVerdict()
-    expect(deriveVerdictId(v.input_hash, v.ruleset, v.engine_version)).toBe(v.verdict_id)
+    expect(deriveVerdictId(v.input_hash, v.ruleset, v.engine_version, v.remedy_table_hash)).toBe(v.verdict_id)
   })
 
   it('catches a tampered verdict_id', () => {

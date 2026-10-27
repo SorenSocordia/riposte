@@ -1,0 +1,110 @@
+{
+  "ruleset": "pay-app",
+  "extraction": {
+    "application_number": 2,
+    "currency": "USD",
+    "original_contract_sum": 95000,
+    "net_change_orders": 5000,
+    "contract_sum_to_date": 100000,
+    "schedule_of_values": [
+      {
+        "item_no": "1",
+        "description": "Mobilization",
+        "scheduled_value": 10000,
+        "previous": 10000,
+        "this_period": 0,
+        "materials_stored": 0,
+        "completed_to_date": 10000,
+        "percent_complete": 100,
+        "balance_to_finish": 0,
+        "retainage": 1000
+      },
+      {
+        "item_no": "2",
+        "description": "Concrete",
+        "scheduled_value": 50000,
+        "previous": 20000,
+        "this_period": 15000,
+        "materials_stored": 5000,
+        "completed_to_date": 40000,
+        "percent_complete": 80,
+        "balance_to_finish": 10000,
+        "retainage": 4000
+      },
+      {
+        "item_no": "3",
+        "description": "Framing",
+        "scheduled_value": 40000,
+        "previous": 0,
+        "this_period": 12000,
+        "materials_stored": 0,
+        "completed_to_date": 12000,
+        "percent_complete": 30,
+        "balance_to_finish": 28000,
+        "retainage": 1200
+      }
+    ],
+    "total_completed_and_stored": 62000,
+    "retainage_rate": "10%",
+    "total_retainage": 5200,
+    "total_earned_less_retainage": 56800,
+    "less_previous_certificates": 27000,
+    "current_payment_due": 29800,
+    "balance_to_finish_including_retainage": 43200
+  },
+  "references": {
+    "history": [
+      {
+        "application_number": 1,
+        "currency": "USD",
+        "original_contract_sum": 95000,
+        "net_change_orders": 5000,
+        "contract_sum_to_date": 100000,
+        "schedule_of_values": [
+          {
+            "item_no": "1",
+            "description": "Mobilization",
+            "scheduled_value": 10000,
+            "previous": 0,
+            "this_period": 10000,
+            "materials_stored": 0,
+            "completed_to_date": 10000,
+            "percent_complete": 100,
+            "balance_to_finish": 0,
+            "retainage": 1000
+          },
+          {
+            "item_no": "2",
+            "description": "Concrete",
+            "scheduled_value": 50000,
+            "previous": 0,
+            "this_period": 20000,
+            "materials_stored": 0,
+            "completed_to_date": 20000,
+            "percent_complete": 40,
+            "balance_to_finish": 30000,
+            "retainage": 2000
+          },
+          {
+            "item_no": "3",
+            "description": "Framing",
+            "scheduled_value": 40000,
+            "previous": 0,
+            "this_period": 0,
+            "materials_stored": 0,
+            "completed_to_date": 0,
+            "percent_complete": 0,
+            "balance_to_finish": 40000,
+            "retainage": 0
+          }
+        ],
+        "total_completed_and_stored": 30000,
+        "retainage_rate": "10%",
+        "total_retainage": 3000,
+        "total_earned_less_retainage": 27000,
+        "current_payment_due": 27000,
+        "balance_to_finish_including_retainage": 73000
+      }
+    ]
+  }
+}

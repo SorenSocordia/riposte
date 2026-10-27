@@ -1,0 +1,176 @@
+{
+  "spec": "bench-spec/1",
+  "id": "process-misses-2026-10-20",
+  "title": "Process misses, week of 2026-10-20 to 2026-10-26: what the lead and the runs recorded as their own",
+  "adapter": "transcribed",
+  "label": "transcribed",
+  "blind": false,
+  "run": {
+    "id": "process misses of 2026-10-20 to 2026-10-26, transcribed on 2026-10-26 from the maintainers' working log, two notes of the lead, a script and its status file, and five runs' reports",
+    "date": "2026-10-26"
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "p-01",
+      "kind": "method",
+      "description": "the lead, 03:0x: a brief told a run to write the whetstone's amendments in a form the whetstone's own runner refuses (an amendment may not name a development row); the run measured every split and showed the step wrong, and the lead replaced the step with a grant to revise the development rows in place",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-02",
+      "kind": "harness defect",
+      "description": "the lead, 05:2x: a Python replacement string turned an escaped newline into a real newline inside the source of the maintainers' release check (not part of this tree), breaking three string literals; fixed with a replacement that does not interpret escapes, after which the check's source parsed",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-03",
+      "kind": "harness defect",
+      "description": "the lead, 07:37: the maintainers' release check refused on two rows added at 05:2x whose pass condition carried a backspace byte (0x08) where a word boundary was meant, although the checks those rows ran had passed; the rows had been written through a shell tool that unescapes a backslash once, so a Python word-boundary escape reached the file as 0x08; found by printing the line with cat -A, fixed by replacing the byte, and the next release check passed at 07:51",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-04",
+      "kind": "method",
+      "description": "the lead, 10:3x: three lines of the maintainers' log carried the runs' UTC clock as if it were local time (13:4x, 13:5x and 14:1x for 09:4x, 09:5x and 10:1x), so the day's entries ran backwards until a later line read 10:36; fixed in place, with a line saying so",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-05",
+      "kind": "method",
+      "description": "the lead, 13:2x: a planning note said, from recall, that in-toto's reference implementation is written in Python; a run that downloaded the project's README found no such sentence there, and the note was corrected",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-06",
+      "kind": "harness defect",
+      "description": "the lead, 15:3x: a Python script merging six edits at once was written through a shell heredoc and carried an unescaped apostrophe, so Python refused it before running a line; the next command in the same call rebuilt a package whose dependent needed two of those edits in place before the rebuild, as the run that changed the package had warned, and the dependent's tests failed for ten minutes until the two lines were applied",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-07",
+      "kind": "harness defect",
+      "description": "the lead, 15:3x to 15:4x: a regular-expression edit of the agents' page (docs/doors/agents.md) replaced the wrong passage twice, a sentence about the hosted gate and then the whole bullet list around the match; each was restored from the local backup, and the third attempt replaced the intended lines by line number, as the run that wrote them had given them",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-08",
+      "kind": "harness defect",
+      "description": "the lead, 18:44: a folder named `C:` appeared in the maintainers' working tree holding four state files of the agent tool's hooks, because a shell was sitting in a scratch folder when a path went wrong; found at 22:5x, and removed from the tree and from the backup drive it had reached",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-09",
+      "kind": "harness defect",
+      "description": "the lead, 18:4x: a backup script excluded a protected folder by its full path and in no other way, so a second folder of the same name inside another folder would have been copied; a reader found that stray at 18:54, and the backup script and the installer now exclude the name at any depth",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-10",
+      "kind": "harness defect",
+      "description": "the lead, 23:06: a script launched without a console to wait for a long backup run polled 1,200 times in 132 seconds and gave up, because the sleep command it called returned at once with no console attached; the two steps it was to run afterwards, swapping in the corrected backup script and sweeping the backup drive, were done by hand at 10:45 on 2026-10-21",
+      "post_hoc": false,
+      "date": "2026-10-20"
+    },
+    {
+      "id": "p-11",
+      "kind": "method",
+      "description": "the lead, 13:0x: the briefs written for the runs of 2026-10-26 named two paths that did not exist, a misses folder beside the ledger page and a docs folder for the work graph's schema; the runs found the schema at the work graph package's root, and one run created the misses folder, following the shape of the bench folder's misses tables",
+      "post_hoc": false,
+      "date": "2026-10-25"
+    },
+    {
+      "id": "p-12",
+      "kind": "method",
+      "description": "the lead, 03:03: the Linux check was launched before BENCH.md was regenerated after a preregistration amendment was stamped on 2026-10-20, though the plan for the morning put that step before the check; the check went red at 03:44 on the bench-docs test (and on a known timeout under load), and BENCH.md was regenerated at 03:51",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-13",
+      "kind": "method",
+      "description": "a run, about 03:18: a search for exclusion lists named, in its command, folders the maintainers' read guard protects; the guard refused the command and nothing was read; the search was run again with neutral patterns",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-14",
+      "kind": "method",
+      "description": "a run, 03:3x: the run edited the maintainers' release check before taking the local backup the maintainers' rules ask for; at 03:54 it rebuilt the original by undoing each edit exactly once and saved that as the backup, with no copy from after 2026-10-19 left to compare its bytes with",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-15",
+      "kind": "harness defect",
+      "description": "a run, 03:4x: the run's end-to-end script for the hill harness wrote a judge configuration with a Windows path whose backslashes were not escaped, so every judge run loaded no test and reported 0 of 0 checks, and the harness recorded those results as scores of 0; the run added a refusal to the harness for a result whose count of checks differs from the hill's (checks_miscounted), and its next end-to-end run was clean",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-16",
+      "kind": "defect",
+      "description": "a run, 03:4x: a guard the run delivered, which refuses to start another of the maintainers' agents away from its home machine, covered one of the two scripts that start that agent; the run named the gap in its report, and the guard was added to the other script at 03:5x",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-17",
+      "kind": "method",
+      "description": "a run, 03:42: the run's working log carried clock times up to 04:20 that were estimates, ahead of the system clock, which read 03:42; the times were replaced by ordered steps",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-18",
+      "kind": "method",
+      "description": "the lead, 03:5x: the bench index was run without its --bench-md and --misses-md flags, so it wrote no page, since the index writes a page when told where and not otherwise; it was run again with both flags",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-19",
+      "kind": "method",
+      "description": "a run, 03:5x: a word-search command ended with a stray version-control command that changed nothing (a diff of two empty files), which the maintainers' rules for runs forbid; no other such command was run",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-20",
+      "kind": "method",
+      "description": "the lead, 04:0x: a run's model attestation was read from the run's metadata file, which records the alias requested, instead of from the per-message model field of the run's transcript; corrected from the transcript at 04:1x, and attestations are read from transcripts since",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-21",
+      "kind": "method",
+      "description": "the lead, by 04:18: three lines of the maintainers' log carried hours ahead of the system clock (04:3x, 04:4x and 04:5x, written before 04:18:40, when the log was copied for this table); found by the run that wrote these rows, by comparing the copy with the clock",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-22",
+      "kind": "method",
+      "description": "a run, hour not given: a version-control command that changed nothing (the status of one folder) was run to check that a frozen file had not changed, which the maintainers' rules for runs forbid; the file was then checked by its modification time, size and sha256, and no other such command was run",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-23",
+      "kind": "method",
+      "description": "a run, hour not given: a file search that named two folders the maintainers' read guard protects, so as to leave them out, was refused by the guard and nothing was read; the two trees were then left out of the search altogether",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    }
+  ]
+}

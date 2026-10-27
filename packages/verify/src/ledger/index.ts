@@ -30,7 +30,7 @@ export type {
   CanaryRevealDecision, ReviewDecisionBody, Signable, SignedReviewEntry, AnchorOptions, BookDecision, BookDecisionKind, KeyDecision,
   CanaryDecision, KeyDecisionKind, CanaryDecisionKind,
 } from './decisions.js'
-export { KeyRegistry, ROLES, ROLE_FOR, isRole, keyFingerprint, tenantOfWorkflow } from './registry.js'
+export { KeyRegistry, ROLES, ROLE_FOR, isRole, keyFingerprint, legacyKeyFingerprint, tenantOfWorkflow } from './registry.js'
 export type { Role, RootKeys, KeyEntry, Authorization, SignedKind } from './registry.js'
 export {
   PERIOD_UNITS, PERIOD_LENGTH_RANK, STRATA, SAMPLE_SEED_PREFIX, SampleRefused, isPeriodUnit, periodAt, nextPeriodEnd, chainClock,

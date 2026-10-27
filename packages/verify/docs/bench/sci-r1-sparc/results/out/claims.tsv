@@ -1,0 +1,176 @@
+galaxy	n_rows	Q	Inc	science_sample	Vflat_t1	Vf_rec	R_flat	n_S	C1	C1_reason	C1_maxdev	C1_slope	C1_slope_se	C2	C2_reason	C2_min_excess	C3	C3_reason	C3_diff	C1b_prime_not_decisive	C2i_abs30_not_decisive	C2ii_frac_not_decisive	C2iii_Yd0.7_not_decisive	C3_strict_not_decisive
+CamB	9	2	65.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+D512-2	4	2	56.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+D564-8	6	2	63.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+D631-7	16	1	59.0	True	57.7	57.7	5.39	5	PASS		0.0191	0.0221	0.0684	PASS		35.625	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+DDO064	14	1	60.0	True	46.1	46.0833	1.68	6	PASS		0.0409	0.0812	0.0333	PASS		21.61	PASS		-0.0167	FAIL	FAIL	PASS	PASS	PASS
+DDO154	12	2	64.0	True	47.0	46.96	3.95	5	PASS		0.0311	-0.0261	0.0803	PASS		27.566	PASS		-0.04	PASS	FAIL	PASS	PASS	PASS
+DDO161	31	1	70.0	True	66.3	66.3333	9.58	9	PASS		0.0276	0.0463	0.04	PASS		29.154	PASS		0.0333	PASS	FAIL	PASS	PASS	PASS
+DDO168	10	2	63.0	True	53.4	53.36	2.47	5	PASS		0.0307	0.0359	0.0747	PASS		26.466	PASS		-0.04	PASS	FAIL	PASS	PASS	PASS
+DDO170	8	2	66.0	True	60.0	59.95	7.85	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		-0.05					PASS
+ESO079-G014	15	1	79.0	True	175.0	175.0	11.65	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+ESO116-G012	15	1	74.0	True	109.1	109.1429	5.23	7	PASS		0.038	0.0859	0.0154	PASS		52.671	PASS		0.0429	FAIL	PASS	PASS	PASS	PASS
+ESO444-G084	7	2	32.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+ESO563-G021	30	1	83.0	True	314.6	314.6316	12.06	19	PASS		0.0202	0.011	0.0072	PASS		110.395	PASS		0.0316	PASS	PASS	PASS	PASS	PASS
+F561-1	6	3	24.0	False	50.0	50.0	6.45	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0					PASS
+F563-1	17	1	25.0	False	109.9	109.9167	11.84	6	PASS		0.0356	0.0211	0.0663	PASS		67.368	PASS		0.0167	PASS	PASS	PASS	PASS	PASS
+F563-V1	6	3	60.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+F563-V2	10	1	29.0	False	116.6	116.6	4.76	5	PASS		0.0223	0.0447	0.004	FAIL	at R=10.18 kpc excess 70.1 km/s < 2*errV = 103.8	68.324	PASS		0.0	FAIL	PASS	PASS	FAIL	PASS
+F565-V2	7	2	60.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+F567-2	5	3	20.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+F568-1	12	1	26.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+F568-3	18	1	40.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+F568-V1	15	1	40.0	True	112.3	112.3333	5.09	9	PASS		0.0504	0.047	0.015	PASS		68.247	PASS		0.0333	FAIL	PASS	PASS	PASS	PASS
+F571-8	13	1	85.0	True	139.7	139.6667	9.33	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+F571-V1	7	2	30.0	True	83.6	83.5667	9.72	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+F574-1	14	1	65.0	True	97.8	97.8	7.99	6	FAIL	log-slope +0.116 beyond +/-0.10	0.0317	0.1157	0.0109	PASS		53.216	PASS		0.0	FAIL	PASS	PASS	PASS	PASS
+F574-2	5	3	30.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+F579-V1	14	1	26.0	False	112.1	112.1429	6.32	7	PASS		0.0369	0.0618	0.0141	PASS		55.773	PASS		0.0429	FAIL	PASS	PASS	PASS	PASS
+F583-1	25	1	63.0	True	85.8	85.8	10.29	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0					PASS
+F583-4	12	1	55.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+IC2574	34	2	75.0	True	66.4	66.45	9.38	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.05					PASS
+IC4202	32	1	90.0	True	242.6	242.5833	7.08	24	PASS		0.0477	0.0169	0.0117	PASS		58.262	PASS		-0.0167	PASS	PASS	PASS	PASS	PASS
+KK98-251	15	2	59.0	True	33.7	33.675	2.06	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		-0.025					PASS
+NGC0024	29	1	64.0	True	106.3	106.3	2.23	10	PASS		0.0348	0.016	0.0092	PASS		51.773	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+NGC0055	21	2	77.0	True	85.6	85.5636	7.37	11	PASS		0.037	0.065	0.0153	PASS		33.835	PASS		-0.0364	FAIL	PASS	PASS	PASS	PASS
+NGC0100	21	1	89.0	True	88.1	88.1333	7.52	6	FAIL	log-slope +0.306 beyond +/-0.10	0.0401	0.3058	0.003	PASS		48.032	PASS		0.0333	FAIL	PASS	PASS	PASS	PASS
+NGC0247	26	2	74.0	True	104.9	104.8889	10.23	9	FAIL	log-slope +0.157 beyond +/-0.10	0.0371	0.1569	0.0203	PASS		49.515	PASS		-0.0111	FAIL	PASS	PASS	PASS	PASS
+NGC0289	28	2	46.0	True	163.0	163.0	59.03	5	PASS		0.0307	0.0212	0.226	PASS		79.844	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+NGC0300	25	2	42.0	True	93.3	93.3	8.17	9	PASS		0.0407	0.0902	0.0756	PASS		48.488	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+NGC0801	13	1	80.0	True	220.1	220.125	10.59	8	PASS		0.0403	-0.0365	0.0052	PASS		37.259	PASS		0.025	FAIL	PASS	FAIL	FAIL	PASS
+NGC0891	18	1	90.0	True	216.1	216.1429	11.58	7	FAIL	log-slope -0.176 beyond +/-0.10	0.0377	-0.176	0.0216	PASS		46.955	PASS		0.0429	FAIL	PASS	PASS	PASS	PASS
+NGC1003	36	1	67.0	True	109.8	109.8125	17.78	16	FAIL	log-slope +0.135 beyond +/-0.10	0.0472	0.1354	0.0242	PASS		61.336	PASS		0.0125	FAIL	PASS	PASS	PASS	PASS
+NGC1090	24	1	64.0	True	164.4	164.3846	15.04	13	PASS		0.0267	-0.0616	0.0068	PASS		49.862	PASS		-0.0154	FAIL	PASS	PASS	PASS	PASS
+NGC1705	14	3	80.0	False	71.9	71.8917	1.11	12	PASS		0.0182	-0.0136	0.0038	PASS		36.978	PASS		-0.0083	FAIL	PASS	PASS	PASS	PASS
+NGC2366	26	3	68.0	False	50.2	50.2	4.4	8	FAIL	log-slope -0.167 beyond +/-0.10	0.0339	-0.1669	0.052	PASS		19.941	PASS		0.0	FAIL	FAIL	PASS	PASS	PASS
+NGC2403	73	1	63.0	True	131.2	131.1613	5.96	31	PASS		0.047	0.072	0.0045	PASS		53.622	PASS		-0.0387	FAIL	PASS	PASS	PASS	PASS
+NGC2683	11	2	80.0	True	154.0	154.0	23.08	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+NGC2841	50	1	76.0	True	284.8	284.7619	22.51	21	PASS		0.0483	-0.0292	0.0186	PASS		137.117	PASS		-0.0381	PASS	PASS	PASS	PASS	PASS
+NGC2903	34	1	66.0	True	184.6	184.6154	13.44	13	FAIL	log-slope -0.119 beyond +/-0.10	0.0454	-0.1191	0.0153	PASS		69.201	PASS		0.0154	FAIL	PASS	PASS	PASS	PASS
+NGC2915	30	2	56.0	True	83.5	83.525	7.7	8	FAIL	log-slope +0.301 beyond +/-0.10	0.0434	0.301	0.037	PASS		57.444	PASS		0.025	FAIL	PASS	PASS	PASS	PASS
+NGC2955	24	1	56.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+NGC2976	27	2	61.0	True	85.4	85.375	1.74	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		-0.025					PASS
+NGC2998	13	1	58.0	True	209.9	209.8889	3.63	9	PASS		0.0424	0.0152	0.0099	PASS		48.417	PASS		-0.0111	PASS	PASS	PASS	FAIL	PASS
+NGC3109	25	1	70.0	True	66.2	66.16	5.42	5	FAIL	log-slope +0.189 beyond +/-0.10	0.0266	0.189	0.0827	PASS		43.228	PASS		-0.04	FAIL	PASS	PASS	PASS	PASS
+NGC3198	43	1	73.0	True	150.1	150.087	6.74	23	PASS		0.0461	-0.0022	0.0081	PASS		42.679	PASS		-0.013	PASS	PASS	PASS	PASS	PASS
+NGC3521	41	1	75.0	True	213.7	213.697	1.89	33	PASS		0.036	-0.015	0.0062	FAIL	at R=5.84 kpc excess 29.2 km/s < 2*errV = 63.4	15.226	PASS		-0.003	FAIL	FAIL	FAIL	FAIL	PASS
+NGC3726	12	2	53.0	True	168.0	168.0	27.52	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0					PASS
+NGC3741	21	1	70.0	True	50.1	50.08	5.14	5	FAIL	log-slope +0.164 beyond +/-0.10	0.0315	0.1635	0.0434	PASS		34.224	PASS		-0.02	FAIL	PASS	PASS	PASS	PASS
+NGC3769	12	2	70.0	True	118.6	118.5714	10.47	7	PASS		0.047	-0.0233	0.0243	PASS		49.616	PASS		-0.0286	PASS	PASS	PASS	PASS	PASS
+NGC3877	13	2	76.0	True	168.4	168.4286	6.11	7	PASS		0.0382	0.0655	0.0244	PASS		25.331	PASS		0.0286	FAIL	FAIL	FAIL	FAIL	PASS
+NGC3893	10	1	49.0	True	174.0	174.0	15.33	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0					PASS
+NGC3917	17	1	79.0	True	135.9	135.9	6.98	10	PASS		0.0434	0.0562	0.0142	PASS		51.81	PASS		0.0	FAIL	PASS	PASS	PASS	PASS
+NGC3949	7	2	55.0	True	163.0	163.0	4.37	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+NGC3953	8	1	62.0	True	220.8	220.8333	6.98	6	PASS		0.0264	0.0043	0.0314	PASS		47.971	PASS		0.0333	PASS	PASS	PASS	PASS	PASS
+NGC3972	10	1	77.0	True	132.7	132.6667	6.98	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+NGC3992	9	1	56.0	True	241.0	241.0	32.11	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+NGC4010	12	2	89.0	True	125.8	125.8	6.98	5	FAIL	log-slope -0.114 beyond +/-0.10	0.0302	-0.1144	0.0446	PASS		48.998	PASS		0.0	FAIL	PASS	PASS	PASS	PASS
+NGC4013	36	2	89.0	True	172.9	172.95	17.19	20	FAIL	log-slope +0.128 beyond +/-0.10	0.0408	0.128	0.0234	PASS		54.769	PASS		0.05	FAIL	PASS	PASS	PASS	PASS
+NGC4051	7	2	49.0	True	157.0	157.0	6.98	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+NGC4068	6	2	44.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+NGC4085	7	2	82.0	True	131.5	131.5	3.58	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+NGC4088	12	1	69.0	True	171.7	171.7143	10.47	7	PASS		0.0424	-0.0527	0.0398	FAIL	at R=10.47 kpc excess 9.0 km/s < 2*errV = 14.0	9.038	PASS		0.0143	PASS	FAIL	FAIL	FAIL	PASS
+NGC4100	24	1	73.0	True	158.2	158.25	20.09	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.05					PASS
+NGC4138	7	2	53.0	True	147.3	147.3333	13.47	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0333					PASS
+NGC4157	17	1	82.0	True	184.7	184.7273	12.19	11	PASS		0.0285	-0.0121	0.0143	PASS		32.158	PASS		0.0273	PASS	PASS	FAIL	FAIL	PASS
+NGC4183	23	1	82.0	True	110.6	110.625	6.98	16	PASS		0.0395	-0.0006	0.0149	PASS		44.736	PASS		0.025	PASS	PASS	PASS	PASS	PASS
+NGC4214	14	2	15.0	False	80.1	80.1333	2.3	9	PASS		0.0166	0.0185	0.0048	PASS		40.77	PASS		0.0333	FAIL	PASS	PASS	PASS	PASS
+NGC4217	19	1	86.0	True	181.3	181.2857	11.35	7	FAIL	log-slope -0.175 beyond +/-0.10	0.0426	-0.1754	0.0305	PASS		36.89	PASS		-0.0143	FAIL	PASS	FAIL	PASS	FAIL
+NGC4389	6	3	50.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+NGC4559	32	1	67.0	True	121.2	121.15	8.51	20	PASS		0.0425	0.0329	0.0138	PASS		33.663	PASS		-0.05	FAIL	PASS	PASS	PASS	PASS
+NGC5005	18	1	68.0	True	262.2	262.25	3.44	12	PASS		0.0162	0.0218	0.0044	FAIL	at R=3.44 kpc excess 13.4 km/s < 2*errV = 46.6	13.37	PASS		0.05	FAIL	FAIL	FAIL	FAIL	PASS
+NGC5033	22	1	66.0	True	194.2	194.1667	33.12	6	PASS		0.0249	-0.0211	0.0667	PASS		90.673	PASS		-0.0333	PASS	PASS	PASS	PASS	PASS
+NGC5055	28	1	55.0	True	179.0	179.0	28.74	10	PASS		0.0391	-0.0826	0.0154	PASS		68.26	PASS		0.0	FAIL	PASS	PASS	PASS	PASS
+NGC5371	19	1	53.0	True	209.5	209.5	31.76	6	PASS		0.0167	-0.0024	0.0477	PASS		38.449	PASS		0.0	PASS	PASS	FAIL	PASS	PASS
+NGC5585	24	1	51.0	True	90.3	90.2875	6.16	8	PASS		0.0253	0.0215	0.0292	PASS		43.668	PASS		-0.0125	PASS	PASS	PASS	PASS	PASS
+NGC5907	19	1	88.0	True	215.0	215.0	30.2	9	PASS		0.0186	0.0011	0.0226	PASS		82.059	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+NGC5985	33	1	60.0	True	293.6	293.5556	8.02	27	PASS		0.039	-0.0184	0.0093	PASS		122.983	PASS		-0.0444	PASS	PASS	PASS	PASS	PASS
+NGC6015	44	2	60.0	True	154.1	154.1111	22.63	9	PASS		0.0332	-0.0679	0.088	PASS		79.297	PASS		0.0111	PASS	PASS	PASS	PASS	PASS
+NGC6195	23	1	62.0	True	251.7	251.6667	15.47	9	PASS		0.0305	-0.0201	0.0213	PASS		23.412	PASS		-0.0333	PASS	FAIL	FAIL	FAIL	PASS
+NGC6503	31	1	74.0	True	116.3	116.2857	3.04	28	PASS		0.0405	-0.0161	0.0039	PASS		22.143	PASS		-0.0143	FAIL	FAIL	FAIL	PASS	PASS
+NGC6674	15	1	54.0	True	241.3	241.3333	32.5	9	PASS		0.0359	-0.0104	0.0274	PASS		113.789	PASS		0.0333	PASS	PASS	PASS	PASS	PASS
+NGC6789	4	2	43.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+NGC6946	58	1	38.0	True	158.9	158.875	15.06	16	FAIL	log-slope -0.152 beyond +/-0.10	0.0386	-0.1515	0.0305	PASS		50.419	PASS		-0.025	FAIL	PASS	PASS	PASS	PASS
+NGC7331	36	1	75.0	True	239.0	239.0	9.62	26	PASS		0.0377	-0.0216	0.0069	PASS		18.667	PASS		0.0	FAIL	FAIL	FAIL	FAIL	PASS
+NGC7793	46	1	47.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+NGC7814	18	1	90.0	True	218.9	218.9286	5.03	14	PASS		0.0414	-0.0609	0.0062	PASS		36.923	PASS		0.0286	FAIL	PASS	FAIL	PASS	PASS
+PGC51017	6	3	66.0	False	18.6	18.65	1.65	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.05					PASS
+UGC00128	22	1	57.0	True	129.3	129.3333	18.71	15	PASS		0.0361	0.0151	0.0162	PASS		75.111	PASS		0.0333	PASS	PASS	PASS	PASS	PASS
+UGC00191	9	1	45.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC00634	4	2	37.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC00731	12	1	57.0	True	73.3	73.32	7.28	5	PASS		0.0248	0.0737	0.0296	PASS		36.615	PASS		0.02	FAIL	PASS	PASS	PASS	PASS
+UGC00891	5	2	60.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC01230	11	1	22.0	False	103.7	103.6667	25.8	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+UGC01281	25	1	90.0	True	55.2	55.1833	3.07	6	FAIL	log-slope +0.146 beyond +/-0.10	0.0396	0.1457	0.0051	PASS		31.186	PASS		-0.0167	FAIL	PASS	PASS	PASS	PASS
+UGC02023	5	2	19.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC02259	8	2	41.0	True	86.2	86.16	4.07	5	FAIL	log-slope +0.126 beyond +/-0.10	0.0446	0.1255	0.0148	PASS		47.381	PASS		-0.04	FAIL	PASS	PASS	PASS	PASS
+UGC02455	8	3	51.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC02487	17	1	36.0	True	332.0	332.0	50.24	7	PASS		0.0181	-0.0236	0.0213	PASS		174.741	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+UGC02885	19	1	64.0	True	289.5	289.4667	19.49	15	PASS		0.0327	0.0527	0.0107	PASS		91.048	PASS		-0.0333	FAIL	PASS	PASS	PASS	PASS
+UGC02916	43	2	50.0	True	182.7	182.6667	31.72	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+UGC02953	115	2	50.0	True	264.9	264.8889	27.65	27	PASS		0.0419	-0.0403	0.0124	PASS		121.285	PASS		-0.0111	FAIL	PASS	PASS	PASS	PASS
+UGC03205	48	1	67.0	True	219.6	219.5833	8.29	24	PASS		0.0528	-0.037	0.0076	PASS		52.96	PASS		-0.0167	FAIL	PASS	PASS	FAIL	FAIL
+UGC03546	30	1	55.0	True	196.9	196.875	4.17	16	PASS		0.0413	-0.0174	0.0128	FAIL	at R=5.56 kpc excess 6.3 km/s < 2*errV = 26.6	-0.365	PASS		-0.025	PASS	FAIL	FAIL	FAIL	PASS
+UGC03580	47	2	63.0	True	126.2	126.1667	16.6	6	PASS		0.0383	0.0294	0.0681	PASS		62.167	PASS		-0.0333	PASS	PASS	PASS	PASS	PASS
+UGC04278	25	1	90.0	True	91.4	91.4333	6.36	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0333					PASS
+UGC04305	22	3	40.0	False	34.5	34.4667	4.26	6	PASS		0.0426	-0.0631	0.1409	FAIL	at R=5.52 kpc excess -0.2 km/s < 2*errV = 6.2	-0.233	PASS		-0.0333	PASS	FAIL	FAIL	FAIL	PASS
+UGC04325	8	1	41.0	True	90.9	90.92	2.79	5	PASS		0.0244	0.0548	0.0169	PASS		47.265	PASS		0.02	FAIL	PASS	PASS	PASS	PASS
+UGC04483	8	2	58.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC04499	9	1	50.0	True	72.8	72.75	5.45	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		-0.05					PASS
+UGC05005	11	1	41.0	True	98.9	98.9	17.97	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+UGC05253	73	2	37.0	True	213.7	213.6667	36.68	6	PASS		0.025	0.0048	0.0655	PASS		95.432	PASS		-0.0333	PASS	PASS	PASS	PASS	PASS
+UGC05414	6	1	55.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC05716	12	2	54.0	True	73.1	73.0917	7.23	6	PASS		0.022	0.0457	0.0252	PASS		40.929	PASS		-0.0083	PASS	PASS	PASS	PASS	PASS
+UGC05721	23	1	61.0	True	79.7	79.7375	1.35	16	PASS		0.0419	-0.0211	0.0106	PASS		42.438	PASS		0.0375	PASS	PASS	PASS	PASS	PASS
+UGC05750	11	1	64.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC05764	10	2	60.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC05829	11	2	34.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC05918	8	2	46.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC05986	15	2	90.0	True	113.0	113.0	4.39	9	PASS		0.0531	-0.0664	0.0346	PASS		57.14	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+UGC05999	5	2	22.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC06399	9	1	75.0	True	85.0	85.05	5.24	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.05					PASS
+UGC06446	17	1	51.0	True	82.2	82.2222	5.23	9	PASS		0.0326	0.038	0.031	PASS		43.658	PASS		0.0222	PASS	PASS	PASS	PASS	PASS
+UGC06614	13	1	36.0	True	199.8	199.8333	24.94	6	PASS		0.0342	0.0638	0.0162	PASS		71.939	PASS		0.0333	FAIL	PASS	PASS	PASS	PASS
+UGC06628	7	2	20.0	False	41.8	41.76	3.3	5	PASS		0.0302	0.0541	0.0122	FAIL	at R=7.69 kpc excess -3.3 km/s < 2*errV = 16.5	-3.281	PASS		-0.04	FAIL	FAIL	FAIL	FAIL	PASS
+UGC06667	9	1	89.0	True	83.8	83.85	5.24	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.05					PASS
+UGC06786	45	1	64.0	True	219.4	219.3889	4.05	36	PASS		0.0474	0.0204	0.0058	PASS		57.004	PASS		-0.0111	FAIL	PASS	PASS	PASS	PASS
+UGC06787	71	2	66.0	True	248.1	248.0769	20.62	13	PASS		0.0366	0.0732	0.0174	PASS		122.856	PASS		-0.0231	FAIL	PASS	PASS	PASS	PASS
+UGC06818	8	2	75.0	True	71.2	71.2333	5.24	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0333					PASS
+UGC06917	11	1	56.0	True	108.7	108.6667	8.72	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+UGC06923	6	2	65.0	True	79.6	79.6	3.72	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0					PASS
+UGC06930	10	1	32.0	True	107.2	107.1667	8.72	6	PASS		0.0389	0.0621	0.0266	PASS		47.01	PASS		-0.0333	FAIL	PASS	PASS	PASS	PASS
+UGC06973	9	3	71.0	False	174.2	173.7778	1.74	9	PASS		0.0358	0.0298	0.0116	FAIL	at R=1.74 kpc excess -89.7 km/s < 2*errV = 9.4	-89.717	PASS		-0.4222	FAIL	FAIL	FAIL	FAIL	PASS
+UGC06983	17	1	49.0	True	109.0	109.0	7.85	10	PASS		0.0367	-0.0004	0.0236	PASS		56.16	PASS		0.0	PASS	PASS	PASS	PASS	PASS
+UGC07089	12	2	80.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC07125	13	1	90.0	True	65.2	65.1833	11.47	6	PASS		0.0089	0.003	0.0163	PASS		20.841	PASS		-0.0167	PASS	FAIL	PASS	PASS	PASS
+UGC07151	11	1	90.0	True	73.5	73.5	4.0	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.0					PASS
+UGC07232	4	2	59.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC07261	7	2	30.0	True	74.7	74.7333	4.76	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0333					PASS
+UGC07323	10	1	47.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC07399	10	1	55.0	True	103.0	103.0	4.91	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		0.0					PASS
+UGC07524	31	1	46.0	True	79.5	79.55	7.58	10	FAIL	log-slope +0.204 beyond +/-0.10	0.0534	0.204	0.0546	PASS		35.084	PASS		0.05	FAIL	PASS	PASS	PASS	PASS
+UGC07559	7	2	61.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC07577	9	2	63.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC07603	12	1	78.0	True	61.6	61.5714	2.05	7	PASS		0.0394	0.081	0.0215	PASS		32.952	PASS		-0.0286	FAIL	PASS	PASS	PASS	PASS
+UGC07608	8	1	25.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC07690	7	2	41.0	True	57.4	57.375	2.36	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		-0.025					PASS
+UGC07866	7	2	44.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC08286	17	1	90.0	True	82.4	82.4444	4.25	9	PASS		0.0381	0.0846	0.0079	PASS		45.521	PASS		0.0444	FAIL	PASS	PASS	PASS	PASS
+UGC08490	30	1	50.0	True	78.6	78.584	2.03	25	PASS		0.0418	0.0104	0.0069	PASS		39.965	PASS		-0.016	PASS	PASS	PASS	PASS	PASS
+UGC08550	11	1	90.0	True	56.9	56.925	3.89	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.025					PASS
+UGC08699	41	2	73.0	True	182.4	182.44	6.3	25	PASS		0.0463	-0.0076	0.0118	PASS		50.134	PASS		0.04	PASS	PASS	PASS	PASS	PASS
+UGC08837	8	2	80.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC09037	22	2	65.0	True	152.3	152.2857	20.69	7	FAIL	log-slope -0.247 beyond +/-0.10	0.0741	-0.2474	0.1104	PASS		42.581	PASS		-0.0143	FAIL	PASS	PASS	FAIL	PASS
+UGC09133	68	1	53.0	True	226.8	226.75	69.19	12	PASS		0.032	-0.0561	0.031	PASS		117.849	PASS		-0.05	PASS	PASS	PASS	PASS	PASS
+UGC09992	5	2	30.0	True	33.6	33.5667	2.34	3	INSUFFICIENT	too few outer rows, n_S = 3				INSUFFICIENT	too few outer rows, n_S = 3		PASS		-0.0333					PASS
+UGC10310	7	1	34.0	True	71.4	71.425	4.42	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		0.025					PASS
+UGC11455	36	1	90.0	True	269.4	269.4444	24.89	9	PASS		0.0388	0.0051	0.0385	PASS		59.551	PASS		0.0444	PASS	PASS	PASS	PASS	PASS
+UGC11557	12	2	30.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC11820	10	1	45.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGC11914	65	1	31.0	True	288.1	288.0893	1.12	56	PASS		0.0587	-0.0	0.0039	PASS		44.942	PASS		-0.0107	PASS	PASS	FAIL	FAIL	PASS
+UGC12506	31	2	86.0	True	234.0	234.0	33.6	11	FAIL	log-slope -0.187 beyond +/-0.10	0.0427	-0.1869	0.0282	PASS		108.39	PASS		0.0	FAIL	PASS	PASS	PASS	PASS
+UGC12632	15	1	46.0	True	71.7	71.7	7.11	6	FAIL	log-slope +0.148 beyond +/-0.10	0.0349	0.1479	0.0247	PASS		36.442	PASS		0.0	FAIL	PASS	PASS	PASS	PASS
+UGC12732	16	1	39.0	True	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGCA281	7	3	67.0	False	0.0			0	INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve				INSUFFICIENT	no flat part by the algorithm: rising or irregular outer curve		PASS-absent	both say no flat part						PASS-absent
+UGCA442	8	1	64.0	True	56.4	56.375	3.79	4	INSUFFICIENT	too few outer rows, n_S = 4				INSUFFICIENT	too few outer rows, n_S = 4		PASS		-0.025					PASS
+UGCA444	36	2	78.0	True	37.0	36.96	2.33	5	FAIL	log-slope +0.248 beyond +/-0.10	0.0368	0.248	0.34	PASS		20.002	PASS		-0.04	PASS	FAIL	PASS	PASS	PASS

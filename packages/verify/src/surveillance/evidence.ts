@@ -1,5 +1,5 @@
 /**
- * The evidence audit — which reviews a rung may rest on, read from the book (2026-09-28, evidence-integrity lane).
+ * The evidence audit — which reviews a rung may rest on, read from the book (2026-09-28).
  *
  * The design rulings bind this module: only a person moves a rung (nothing here changes one; it narrows what counts as
  * evidence and can make a demotion PROPOSAL fire); settings are fixed at grant (every requirement below is declared in the
@@ -164,7 +164,7 @@ export function chainOf(jsonl: string): { events: LedgerEvent[]; payloads: unkno
 const tk = (tenant: string, id: string): string => `${tenant}\u0000${id}`
 
 /**
- * The latest review and RECORD position of every (tenant, verdict id), as the ledger attributes them (F-A: a REVIEW names
+ * The latest review and RECORD position of every (tenant, verdict id), as the ledger attributes them (a REVIEW names
  * its tenant; a legacy one reviewed the id's latest owner). `forWorkflow` resolves an id for one workflow's tenant, so one
  * tenant's review is never read into another's evidence.
  */

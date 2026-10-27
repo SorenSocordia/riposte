@@ -1,0 +1,155 @@
+{
+  "format": "bench-table/1",
+  "id": "sci-r0-rotation-curve",
+  "title": "Galaxy rotation curve recompute from pinned public tables (NGC 3198)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "f20a9a23800728f341f87a6f170c22d9f3d00b2afe47ba65a1603968b6507633",
+    "frozen_sha256": "47209b9d0a446201ca8564d4487287578bcc52022eb925ecc8f1cdd551ce722d",
+    "amendments": [
+      {
+        "sha256": "f20a9a23800728f341f87a6f170c22d9f3d00b2afe47ba65a1603968b6507633",
+        "recorded_in": "results/scratch/recompute-result.json#prereg_sha256",
+        "text": "## AMENDMENTS\n\n(none at freeze)\n\n- 2026-10-04T03:1xZ, parser only, no claim or threshold changed. Table1 (`SPARC_Lelli2016c.mrt`)\n  declares a 113-byte fixed-width layout with Vflat at bytes 87-91, but all 175 data rows are\n  131 bytes and the fields sit at other offsets. A byte-offset read failed on NGC 3198\n  (`ValueError: could not convert string to float: '5  13.'`). Every row splits into exactly\n  19 whitespace fields in the declared label order, so Table1 is parsed by whitespace. The\n  frozen-at-writing sha256 of this file (before this amendment) was\n  47209b9d0a446201ca8564d4487287578bcc52022eb925ecc8f1cdd551ce722d.",
+        "text_from": "PREREG.md:74-84"
+      }
+    ],
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:23Z",
+          "serial": "70c9606d5120686b489542a2e6883c71",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "SCI-R0 recompute (one galaxy, one telescope file)",
+    "date": "2026-10-04",
+    "engine_version": null,
+    "ruleset": null,
+    "results": {
+      "path": "results",
+      "sha256": "e885edb05b8487c4f378ea5c854cf418c181d47672fad644242305ca10c6e593"
+    },
+    "spec_sha256": "d7349425442821c44fa366658ce6ec004d5e855ef2eb6d025b9e58d8e3d1e26f",
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The script that computed the result is not in this tree. Its inputs are public SPARC files from astroweb.case.edu, named by sha256 in results/scratch/recompute-result.json and not redistributed here."
+    }
+  },
+  "rows": [
+    {
+      "claim": "C1: the observed curve is flat within 10 km/s beyond 10 kpc",
+      "n": 1,
+      "k": 1,
+      "rate": 1,
+      "ci95": [
+        0.206549,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "C1: PASS if max over rows beyond R of |V_obs - median| <= 10 km/s; INSUFFICIENT if fewer than 5 rows",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": "a demonstration, not a blind test: the thresholds were set by someone expecting a PASS"
+    },
+    {
+      "claim": "C2: the observed velocity exceeds the baryonic prediction by at least 30 km/s at every row beyond 10 kpc",
+      "n": 1,
+      "k": 1,
+      "rate": 1,
+      "ci95": [
+        0.206549,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "C2: PASS if min over rows beyond R of (V_obs - V_bar) >= 30 km/s",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "C3: the published V_flat replays from the rows within 1 km/s",
+      "n": 1,
+      "k": 1,
+      "rate": 1,
+      "ci95": [
+        0.206549,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "C3: PASS if |V_f(recomputed) - V_flat(Table1)| <= 1.0 km/s",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "telescope file header checks passing (FITS and pipeline conventions)",
+      "n": 25,
+      "k": 23,
+      "rate": 0.92,
+      "ci95": [
+        0.750338,
+        0.97778
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; checks and tolerances written before running, outside the prereg; differs from the report (22 of 24)"
+    }
+  ],
+  "misses": [
+    {
+      "id": "table1-layout",
+      "kind": "data-defect",
+      "description": "the published SPARC Table1 does not match its own byte layout: the header declares 113-byte rows with Vflat at bytes 87-91, every data row is 131 bytes, and standard readers fail; read by whitespace as a stated parser-only amendment",
+      "post_hoc": false
+    },
+    {
+      "id": "J9-pixel-area",
+      "kind": "data-finding",
+      "description": "two header keywords state the same pixel area to different precision (relative difference 1.1e-4 against a tolerance of 1e-5 set before running); finding or tolerance choice is a ruleset-design question",
+      "post_hoc": false
+    },
+    {
+      "id": "F5-no-checksum",
+      "kind": "data-finding",
+      "description": "no CHECKSUM or DATASUM on any header unit of the telescope file (an optional convention); integrity rests on the archive's md5, which matches",
+      "post_hoc": false
+    },
+    {
+      "id": "err-docs-looser",
+      "kind": "docs-defect",
+      "description": "the pipeline documentation says ERR combines two variance terms; in the file ERR squared equals the sum of three (VAR_FLAT included) to 2.9e-7, and the two-term form misses by up to 3.9%",
+      "post_hoc": false
+    }
+  ],
+  "blind": false,
+  "label": "demo",
+  "findings": [
+    "\"telescope file header checks passing (FITS and pipeline conventions)\": computed 23 of 25 from the results; the run's report states 22 of 24"
+  ]
+}

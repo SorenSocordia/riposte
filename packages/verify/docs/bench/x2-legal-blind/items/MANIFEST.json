@@ -1,0 +1,1892 @@
+{
+ "name": "X2 blind verbatim-quote legal test",
+ "built_utc": "2026-10-03",
+ "counts": {
+  "known-bad": 20,
+  "control": 20,
+  "supplementary": 18
+ },
+ "items": [
+  {
+   "id": "KB01",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "282 Conn. 505",
+   "case_name": "Cogswell v. American Transit Insurance Co.",
+   "source_key": "282 Conn. 505",
+   "decision": {
+    "file": "sources/charlotin/decisions/3180-Ambrose_v._Swithin_USA_30_September_2026.pdf",
+    "sha256": "c53876248291b3e5fc50173aa2627b390186cd0df62842c1bf3d444a402811fc"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "totality of the defendant’s Connecticut-related conduct",
+   "charlotin": {
+    "row_index": 8,
+    "item_index": 0,
+    "case": "Ambrose v. Swithin",
+    "court": "D. Connecticut",
+    "date": "2026-09-30",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the phrase “totality of the defendant’s Connecticut-related conduct” to Cogswell as authority concerning Conn. Gen. Stat. § 52-59b(a)(1), but the court found that Cogswell addressed different long-arm statutes and could not locate the quoted language in the opinion."
+   },
+   "source_file": "sources/opinions/k00.txt",
+   "source_sha256": "c8ca6326f35c3b25b7d29e02b4de1a9164e9d8724ff56a4a50894aa09105ec1d",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/conn/282/cases/0505-01.json",
+    "caseName": "Cogswell v. American Transit Insurance",
+    "dateFiled": "2007-05-22",
+    "raw_sha256": "49002ea02f80f51749df609daf28b06aaf0ffef77a2f4de395bb5142812e53a9",
+    "text_sha256": "c8ca6326f35c3b25b7d29e02b4de1a9164e9d8724ff56a4a50894aa09105ec1d",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 3951694
+   }
+  },
+  {
+   "id": "KB02",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "598 U.S. 175",
+   "case_name": "Axon Enterprise, Inc. v. FTC",
+   "source_key": "598 U.S. 175",
+   "decision": {
+    "file": "sources/charlotin/decisions/3172-Williams_v._FAA_USA_28_September_2026.pdf",
+    "sha256": "0fb15e039a00f7a7e017b45ab35e8548dd492d49a6a2f62d4855b0b82e844176"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "the injury is being subjected to the defective framework itself",
+   "charlotin": {
+    "row_index": 19,
+    "item_index": 1,
+    "case": "Williams v. Federal Aviation Administration et al.",
+    "court": "D. Connecticut",
+    "date": "2026-09-28",
+    "finding": "False Quotes: Case Law | Plaintiff attributed language concerning challenges to “the very framework of an agency’s operations,” claims being “inescapably intertwined” with merits orders, and injury from being subjected to a defective framework to Axon Enterprise. The Court found none of the quoted language in the opinion."
+   },
+   "source_file": "sources/opinions/k01.txt",
+   "source_sha256": "a766c34af218ac08012f08939caf092250a6faa07959c11f41d6ceff82cb81e3",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2023/04/14/axon_enterprise_inc._v._ftc.pdf",
+    "caseName": "Axon Enterprise, Inc. v. FTC",
+    "dateFiled": "2023-04-14",
+    "raw_sha256": "35481af1df02078996ff41be78365488af7af51288b6cad25b375775496f8b93",
+    "text_sha256": "a766c34af218ac08012f08939caf092250a6faa07959c11f41d6ceff82cb81e3",
+    "cap_cite_used": null,
+    "cluster_id": 9391545,
+    "cap_id": null
+   },
+   "notes": "longest of three inner quotations the brief attributed to Axon; court: none appears in the opinion"
+  },
+  {
+   "id": "KB03",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "503 U.S. 140",
+   "case_name": "McCarthy v. Madigan",
+   "source_key": "503 U.S. 140",
+   "decision": {
+    "file": "sources/charlotin/decisions/3172-Williams_v._FAA_USA_28_September_2026.pdf",
+    "sha256": "0fb15e039a00f7a7e017b45ab35e8548dd492d49a6a2f62d4855b0b82e844176"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "the constitutionality of the system itself",
+   "charlotin": {
+    "row_index": 19,
+    "item_index": 3,
+    "case": "Williams v. Federal Aviation Administration et al.",
+    "court": "D. Connecticut",
+    "date": "2026-09-28",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the quoted structural-system language to McCarthy v. Madigan. The Court found that the phrase “the constitutionality of the system itself” does not appear in McCarthy."
+   },
+   "source_file": "sources/opinions/k02.txt",
+   "source_sha256": "d57c8ac9a4dc2d74ab7765b8a169a785a89572a88eb569823cbc1fb08888a7c7",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/503/cases/0140-01.json",
+    "caseName": "McCarthy v. Madigan",
+    "dateFiled": "1992-03-04",
+    "raw_sha256": "f9f1d5dcf64a3a393d5473b0b6f2985be1ac93a5bb6d2039449049efef158932",
+    "text_sha256": "d57c8ac9a4dc2d74ab7765b8a169a785a89572a88eb569823cbc1fb08888a7c7",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 6222886
+   }
+  },
+  {
+   "id": "KB04",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "531 Pa. 391, 613 A.2d 551",
+   "case_name": "Babac v. Pennsylvania Milk Marketing Board",
+   "source_key": "531 Pa. 391, 613 A.2d 551",
+   "decision": {
+    "file": "sources/charlotin/decisions/3183-Coyne_v._Smurl_USA_25-09-2026.pdf",
+    "sha256": "81ac4da210e1f81d459e4c8d3d67f89f67573850137b563ea1042321d60ad798"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "The Sunshine Act imposes obligations directly upon the agency and its members.",
+   "charlotin": {
+    "row_index": 21,
+    "item_index": 0,
+    "case": "Coyne v. Smurl",
+    "court": "Lackawanna CCCP",
+    "date": "2026-09-25",
+    "finding": "False Quotes: Case Law | The plaintiffs cited “Babac v. Pennsylvania Milk Marketing Board, Supreme Court of Pennsylvania 1990” and attributed to it the statement that the Sunshine Act imposes obligations directly upon the agency and its members. The court found no such quotation in Babac or any reported Pennsylvania federal or state case."
+   },
+   "source_file": "sources/opinions/k32.txt",
+   "source_sha256": "7d31dce204d9669a269b22e5af38da1b2265fc3606a1c9dfb08ea50f96d9b601",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/pa/531/cases/0391-01.json",
+    "caseName": "Babac v. Pennsylvania Milk Marketing Board",
+    "dateFiled": "1992-09-18",
+    "raw_sha256": "e1504559f7c4835178f11030ae36af4aeb0046c4587eec90a3c6a8520a0abad6",
+    "text_sha256": "7d31dce204d9669a269b22e5af38da1b2265fc3606a1c9dfb08ea50f96d9b601",
+    "cap_cite_used": "531 Pa. 391",
+    "cluster_id": null,
+    "cap_id": 1834384
+   },
+   "notes": "filing cited \"Supreme Court of Pennsylvania 1990\"; the court identified the real Babac (1992) and found no such statement"
+  },
+  {
+   "id": "KB05",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "627 A.2d 305",
+   "case_name": "Reading Eagle Co. v. Council of City of Reading",
+   "source_key": "627 A.2d 305",
+   "decision": {
+    "file": "sources/charlotin/decisions/3183-Coyne_v._Smurl_USA_25-09-2026.pdf",
+    "sha256": "81ac4da210e1f81d459e4c8d3d67f89f67573850137b563ea1042321d60ad798"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "[m]embers of an agency who participate in a meeting held in violation of the Sunshine Act may be subject to penalties under Section 714.",
+   "charlotin": {
+    "row_index": 21,
+    "item_index": 2,
+    "case": "Coyne v. Smurl",
+    "court": "Lackawanna CCCP",
+    "date": "2026-09-25",
+    "finding": "False Quotes: Case Law | The plaintiffs cited “Reading Eagle Company v. Council of the City of Reading, Commonwealth Court, 1999” and claimed it held that members participating in an illegal meeting may be subject to penalties under Section 714. The court corrected the citation to Reading Eagle Co. v. Council of City of Reading, 627 A.2d 305 (Pa. Cmwlth. 1993), which addressed specificity of executive-session reasons and did not contain the quoted holding."
+   },
+   "source_file": "sources/opinions/k03.txt",
+   "source_sha256": "9f6cc905b21b717755e2e0bced43894efe558afa9684e967f2fd95dff90609df",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/pa-commw/156/cases/0412-01.json",
+    "caseName": "Reading Eagle Co. v. Council of City of Reading",
+    "dateFiled": "1993-06-24",
+    "raw_sha256": "abf224f75020a2cfb5ca736a6fc81c62cabc58354560f0b3712b134a9a265e5d",
+    "text_sha256": "9f6cc905b21b717755e2e0bced43894efe558afa9684e967f2fd95dff90609df",
+    "cap_cite_used": "156 Pa. Commw. 412",
+    "cluster_id": null,
+    "cap_id": 1447109
+   },
+   "notes": "filing cited \"Commonwealth Court, 1999\"; the court corrected it to 627 A.2d 305 (1993)"
+  },
+  {
+   "id": "KB06",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "458 N.E.2d 985",
+   "case_name": "Thakkar v. Wilson Enterprises, Inc.",
+   "source_key": "458 N.E.2d 985",
+   "decision": {
+    "file": "sources/charlotin/decisions/3194-Adams_v._Board_of_Trustees_of_University_of_Illinois_at_Chicago_USA_01-01-2025.pdf",
+    "sha256": "06d8d02012c3e74d330179d9aedea173c10fc78f27fac1eb3ecde2e2ed9ce8f9"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "The IHRA is a remedial statute and must be liberally construed to protect claimants’ rights.",
+   "charlotin": {
+    "row_index": 28,
+    "item_index": 0,
+    "case": "Adams v. Board of Trustees of the University of Illinois at Chicago et al.",
+    "court": "N.D. Illinois",
+    "date": "2026-09-24",
+    "finding": "False Quotes: Case Law | The brief attributed the quotation “The IHRA is a remedial statute and must be liberally construed to protect claimants’ rights” to Thakkar. The court could not find the quotation in the case and noted that the citation was incorrect and lacked a page citation."
+   },
+   "source_file": "sources/opinions/k05.txt",
+   "source_sha256": "9979d311299a0be259fafc223a68d351ad1d8caff453d91f50079ab9a0cc0850",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/ill-app-3d/120/cases/0878-01.json",
+    "caseName": "Thakkar v. Wilson Enterprises, Inc.",
+    "dateFiled": "1983-12-23",
+    "raw_sha256": "4dfbdc34c30411e4c771eb7ab74162534815fb154e49c34b118f69d8e1553916",
+    "text_sha256": "9979d311299a0be259fafc223a68d351ad1d8caff453d91f50079ab9a0cc0850",
+    "cap_cite_used": "120 Ill. App. 3d 878",
+    "cluster_id": null,
+    "cap_id": 3595086
+   },
+   "notes": "pleading line number \"10\" removed from the decision text"
+  },
+  {
+   "id": "KB07",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "92 F.3d 814",
+   "case_name": "Committee for Idaho's High Desert, Inc. v. Yost",
+   "source_key": "92 F.3d 814",
+   "decision": {
+    "file": "sources/charlotin/decisions/3039-Falkenstein_v._Niles_USA_3_September_2026.pdf",
+    "sha256": "3dedf2b9f144c55e1f294b1f050f864f3f8177e8a47608f3f5deef959c8b0934"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "the moving, active conscious force behind the [defendant’s] infringement.",
+   "charlotin": {
+    "row_index": 86,
+    "item_index": 0,
+    "case": "Falkenstein v. Niles",
+    "court": "C.D. California",
+    "date": "2026-09-03",
+    "finding": "False Quotes: Case Law | The motion placed in quotation marks language attributing personal trademark-infringement liability to an individual who was the “moving, active conscious force behind the [defendant’s] infringement.” The Court stated that Yost does not contain that language and instead says an officer may be liable for torts he “authorizes or directs or in which he participates.”"
+   },
+   "source_file": "sources/opinions/k06.txt",
+   "source_sha256": "e28f570bfd7f2e47e7e8a072e7708de6a90a6e839b65a6db2b588c892b9b35b0",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/92/cases/0814-01.json",
+    "caseName": "Committee for Idaho's High Desert, Inc. v. Yost",
+    "dateFiled": "1996-08-06",
+    "raw_sha256": "c0dc0f4540bcabd8a4ad99b20485098e409be908e0740f7ca94210d677de6e4f",
+    "text_sha256": "e28f570bfd7f2e47e7e8a072e7708de6a90a6e839b65a6db2b588c892b9b35b0",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 7632769
+   },
+   "notes": "court: Yost \"instead states\" a corporate officer may be liable for torts he \"authorizes or directs or in which he participates\" (that passage is control CT01)"
+  },
+  {
+   "id": "KB08",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "762 F.2d 1374",
+   "case_name": "Oakland Tribune, Inc. v. Chronicle Publishing Co.",
+   "source_key": "762 F.2d 1374",
+   "decision": {
+    "file": "sources/charlotin/decisions/3039-Falkenstein_v._Niles_USA_3_September_2026.pdf",
+    "sha256": "3dedf2b9f144c55e1f294b1f050f864f3f8177e8a47608f3f5deef959c8b0934"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "undercuts any claim that the harm is immediate and irreparable",
+   "charlotin": {
+    "row_index": 86,
+    "item_index": 5,
+    "case": "Falkenstein v. Niles",
+    "court": "C.D. California",
+    "date": "2026-09-03",
+    "finding": "False Quotes: Case Law | The opposition quoted Oakland Tribune as stating that delay “undercuts any claim that the harm is immediate and irreparable,” but the Court found that language does not appear in the decision."
+   },
+   "source_file": "sources/opinions/k07.txt",
+   "source_sha256": "c5898dfca7b7668ffbf423b50aade2b01eeca7fae28f521c8356d52a9da2eff9",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f2d/762/cases/1374-01.json",
+    "caseName": "Oakland Tribune, Inc. v. Chronicle Publishing Co.",
+    "dateFiled": "1985-06-14",
+    "raw_sha256": "c6f92660b37aaa46cc2c1c263c5b21a32e061387ec8800b660ada99087172d50",
+    "text_sha256": "c5898dfca7b7668ffbf423b50aade2b01eeca7fae28f521c8356d52a9da2eff9",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 366134
+   }
+  },
+  {
+   "id": "KB09",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "255 Cal. App. 2d 366",
+   "case_name": "Adohr Milk Farms, Inc. v. Love",
+   "source_key": "255 Cal. App. 2d 366",
+   "decision": {
+    "file": "sources/charlotin/decisions/3004-Perez_v._Schaal_USA_21_August_2026.pdf",
+    "sha256": "2da85cb60cab4db3fe5ff8328cf32bc9d84485775b01d1651f3eb11640e10d1c"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "The filing of an answer … effected a waiver of the right to demur.",
+   "charlotin": {
+    "row_index": 127,
+    "item_index": 0,
+    "case": "Perez v. Schaal, et al.",
+    "court": "SC California",
+    "date": "2026-08-20",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the sentence \"The filing of an answer … effected a waiver of the right to demur.\" to Adorh (Adohr) Milk Farms, Inc. v. Love (255 Cal.App.2d 366), but the court could not find that language in that opinion or any reported case and noted the quotation may be AI-generated."
+   },
+   "source_file": "sources/opinions/k08.txt",
+   "source_sha256": "977dd303f969a3d2401e15b93d4e41d9e8e50875f7389b1ce72d2b105a874fa8",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/cal-app-2d/255/cases/0362-01.json",
+    "caseName": "Adohr Milk Farms, Inc. v. Love",
+    "dateFiled": "1967-10-25",
+    "raw_sha256": "011e7a66af33fc2e3f28f68220f8156a7673e693723bb0bbb630ed9a9ec7833f",
+    "text_sha256": "977dd303f969a3d2401e15b93d4e41d9e8e50875f7389b1ce72d2b105a874fa8",
+    "cap_cite_used": "255 Cal. App. 2d 366",
+    "cluster_id": null,
+    "cap_id": 2218936
+   },
+   "notes": "the filing's own ellipsis kept"
+  },
+  {
+   "id": "KB10",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "52 So. 3d 351",
+   "case_name": "Gorton v. Rance",
+   "source_key": "52 So. 3d 351",
+   "decision": {
+    "file": "sources/charlotin/decisions/2707-Swinney_v._Jhoc_USA_6_jUly_2026.pdf",
+    "sha256": "02873548d50baf067544c8ef45d1e14a9e2d180ccd759ee167a4b679f38dd9ff"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "whether a worker is a “borrowed servant” is generally a question of fact to be decided by the jury.",
+   "charlotin": {
+    "row_index": 310,
+    "item_index": 0,
+    "case": "Swinney v. JHOC, Inc.",
+    "court": "CC Copiah County Mississippi",
+    "date": "2026-07-06",
+    "finding": "False Quotes: Case Law | Counsel attributed the quoted language \"whether a worker is a 'borrowed servant' is generally a question of fact to be decided by the jury\" to Gorton v. Rance; the court found no such quotation or discussion in the opinion."
+   },
+   "source_file": "sources/opinions/k09.txt",
+   "source_sha256": "5116db49168b54af9ed15be9cbadeda488e4bdd5d1be3ee12a8623313daf4a2f",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/so3d/52/cases/0351-01.json",
+    "caseName": "Gorton v. Rance",
+    "dateFiled": "2011-01-27",
+    "raw_sha256": "f4c6d905b3327ccb5a295a1802694f5b47334cfda3572fa14e7d0de1fb3a5faa",
+    "text_sha256": "5116db49168b54af9ed15be9cbadeda488e4bdd5d1be3ee12a8623313daf4a2f",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 7034143
+   }
+  },
+  {
+   "id": "KB11",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "439 F.3d 1018",
+   "case_name": "Cornwell v. Electra Central Credit Union",
+   "source_key": "439 F.3d 1018",
+   "decision": {
+    "file": "sources/charlotin/decisions/2452-Preston_House_v._TH_Foods_USA_18_June_2026.pdf",
+    "sha256": "2f48da3326eba11562b04cdd2857785d62bf0e2b768fa50000bef3510b3e3b75"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "[a]t some point, litigation must come to an end.",
+   "charlotin": {
+    "row_index": 374,
+    "item_index": 5,
+    "case": "Preston House v. TH Foods, Inc.",
+    "court": "D. Nevada",
+    "date": "2026-06-18",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the line \"At some point, litigation must come to an end\" to Cornwell; the court found the quotation does not appear in that case."
+   },
+   "source_file": "sources/opinions/k10.txt",
+   "source_sha256": "6053dff76479384e036e1435f0f1f0193d3e0f53903b67a0d9c50038e1496494",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/439/cases/1018-01.json",
+    "caseName": "Cornwell v. Electra Central Credit Union",
+    "dateFiled": "2006-03-01",
+    "raw_sha256": "215c60a37a0de4f87a731cbc3153b68e4577e360d24f2ed65ea23c81322a99f9",
+    "text_sha256": "6053dff76479384e036e1435f0f1f0193d3e0f53903b67a0d9c50038e1496494",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 31223
+   },
+   "notes": "pleading line number \"16\" removed"
+  },
+  {
+   "id": "KB12",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "451 F.3d 1139",
+   "case_name": "Walker v. City of Orem",
+   "source_key": "451 F.3d 1139",
+   "decision": {
+    "file": "sources/charlotin/decisions/2570-Jackson_v._Santander_USA_15_June_2026.pdf",
+    "sha256": "81eb9eca38b1d0ef9bf3e45ff12cb3e7143a7eda78862746cfba3d18d0e9839a"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "consider all pending motions and develop an adequate record",
+   "charlotin": {
+    "row_index": 389,
+    "item_index": 0,
+    "case": "Chapter Kris Jackson v. Santander Consumer USA Inc., et al.",
+    "court": "10th Cir. CA",
+    "date": "2026-06-15",
+    "finding": "False Quotes: Case Law | Plaintiff attributed language to Walker v. City of Orem that does not appear in that decision; the brief quoted: \"a district court must 'consider all pending motions and develop an adequate record' before dismissal.\" The court noted Walker contains no such language."
+   },
+   "source_file": "sources/opinions/k11.txt",
+   "source_sha256": "2e7a9eb598e02725737f132545147eaa5a3e77fb50eaf2821cb09a81cc32d300",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/451/cases/1139-01.json",
+    "caseName": "Walker v. City of Orem",
+    "dateFiled": "2006-06-27",
+    "raw_sha256": "0bcc2c0a54de492f60d5d847f31bde7d9ee0561bd569e87d6aa677c72e7bec91",
+    "text_sha256": "2e7a9eb598e02725737f132545147eaa5a3e77fb50eaf2821cb09a81cc32d300",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 3268929
+   },
+   "notes": "inner quotation; the court reproduced the brief as: a \"district court must 'consider all pending motions and develop an adequate record' before dismissal.\""
+  },
+  {
+   "id": "KB13",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "cite": "792 F.3d 663",
+   "case_name": "United States v. Houston",
+   "source_key": "792 F.3d 663",
+   "decision": {
+    "file": "sources/charlotin/decisions/2570-Jackson_v._Santander_USA_15_June_2026.pdf",
+    "sha256": "81eb9eca38b1d0ef9bf3e45ff12cb3e7143a7eda78862746cfba3d18d0e9839a"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "failure to address pending motions constitutes procedural error.",
+   "charlotin": {
+    "row_index": 389,
+    "item_index": 1,
+    "case": "Chapter Kris Jackson v. Santander Consumer USA Inc., et al.",
+    "court": "10th Cir. CA",
+    "date": "2026-06-15",
+    "finding": "False Quotes: Case Law | Plaintiff attributed a proposition to United States v. Houston that the decision does not contain; the brief claimed: \"failure to address pending motions constitutes procedural error.\" The court stated Houston contains no such proposition."
+   },
+   "source_file": "sources/opinions/k12.txt",
+   "source_sha256": "c4956b69e22f0672801daa8ad5e160f4f2de7598a268f694123b51b5337f52bd",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2015/07/09/united_states_v._clifford_houston.pdf",
+    "caseName": "United States v. Clifford Houston",
+    "dateFiled": "2015-07-09",
+    "raw_sha256": "831c73bd931eed61d7f67f81bcd330ef16f41a3e419469555b1689e10127a372",
+    "text_sha256": "c4956b69e22f0672801daa8ad5e160f4f2de7598a268f694123b51b5337f52bd",
+    "cap_cite_used": null,
+    "cluster_id": 2815871,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "KB14",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "cite": "87 Ohio App.3d 43, 621 N.E.2d 717",
+   "case_name": "Kaplan v. Tuennerman",
+   "source_key": "87 Ohio App.3d 43, 621 N.E.2d 717",
+   "decision": {
+    "file": "sources/charlotin/decisions/2237-Guo_v._Meade_Motorcars_USA_26_May_2026.pdf",
+    "sha256": "b34cdea93cdc5312497599798acd42d390b04aceb773ea71cd970c44c7e86da5"
+   },
+   "expected": "ABSTAIN",
+   "proposition": "Ohio courts cannot inquire into the validity of a foreign judgment and any challenges to jurisdiction must be made in the rendering court.",
+   "charlotin": {
+    "row_index": 489,
+    "item_index": 1,
+    "case": "Guo v. Meade Motorcars, L.L.C.",
+    "court": "CA Ohio (6d)",
+    "date": "2026-05-26",
+    "finding": "Fabricated: Case Law | Appellant cited \"Kaplan v. Tuennerman, 87 Ohio App.3d 43, 621 N.E.2d 717 (8th Dist.1993)\" but the citation did not correspond to an authority supporting his quoted proposition and could not be located as cited."
+   },
+   "source_file": "sources/opinions/b14.txt",
+   "source_sha256": "83129a25c0ebbb4b81c4129e03c5495d7d8fdae620de77557b46d0d7d684bf29",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/ohio-app-3d/87/cases/0043-01.json",
+    "caseName": "State ex rel. Connole v. Cleveland Board of Education",
+    "dateFiled": "1993-04-06",
+    "raw_sha256": "2ff647cee2304eec831400406aeabce44b52f588dddb984f7eb0fed88b3139c6",
+    "text_sha256": "83129a25c0ebbb4b81c4129e03c5495d7d8fdae620de77557b46d0d7d684bf29",
+    "cap_cite_used": "87 Ohio App. 3d 43",
+    "cluster_id": null,
+    "cap_id": 1694197
+   },
+   "notes": "decision 2237 = Guo v. Meade Motorcars; the court reproduced the proposition, not the quotation; source supplied = the real, unrelated case printed at 87 Ohio App. 3d 43 (State ex rel. Connole v. Cleveland Bd. of Educ.), i.e. what a resolver would fetch for the cite"
+  },
+  {
+   "id": "KB15",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "cite": "60 F.4th 1283",
+   "case_name": "Rodriguez-Romero v. Garland",
+   "source_key": "60 F.4th 1283",
+   "decision": {
+    "file": "sources/charlotin/decisions/1517-Picon_Diaz_v._Bondi_USA_13_February_2026.pdf",
+    "sha256": "3fdc50c18cea4a222bca02503961b0d4aa698b8fea24774f0b93be5fbcdf7993"
+   },
+   "expected": "ABSTAIN",
+   "quote": "reasoned consideration",
+   "charlotin": {
+    "row_index": 985,
+    "item_index": 0,
+    "case": "Martha Liliana Picon-Diaz et al. v. Pamela J. Bondi",
+    "court": "10th Cir. CA",
+    "date": "2026-02-13",
+    "finding": "Fabricated: Case Law | Counsel repeatedly cited and quoted a non-existent Tenth Circuit decision captioned 'Rodriguez-Romero v. Garland, 60 F.4th 1283 (10th Cir. 2023)'; the court found no such opinion and that the pincites pointed to unrelated cases (Wesley and Diaz-Menera), concluding the citation appears fabricated, likely generated by AI."
+   },
+   "source_file": "sources/opinions/b15.txt",
+   "source_sha256": "96f98336decd705b12d5d1ebc368802d7f1ab408d63c1717951a5f73dbd07d8d",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2023/02/28/united_states_v._wesley.pdf",
+    "caseName": "United States v. Wesley",
+    "dateFiled": "2023-02-28",
+    "raw_sha256": "369cc745839e596824c10a1e91169a27c2e7880d363aeeb989ce88b7d3270575",
+    "text_sha256": "96f98336decd705b12d5d1ebc368802d7f1ab408d63c1717951a5f73dbd07d8d",
+    "cap_cite_used": null,
+    "cluster_id": 9380376,
+    "cap_id": null
+   },
+   "notes": "a two-word quotation (the only words the filing quoted); source supplied = United States v. Wesley, 60 F.4th 1277, where the court says the citation leads"
+  },
+  {
+   "id": "KB16",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "cite": "476 F.3d 179",
+   "case_name": "United States v. Mateo",
+   "source_key": "476 F.3d 179",
+   "decision": {
+    "file": "sources/charlotin/decisions/1499-THOMAS_CARL_DODDS_JR_Petitioner_-_Appellant_v_CARRIE_BRIDGES_Respondent_-_.pdf",
+    "sha256": "403c7b0d2e60fda36e288bc286f701fe1e28f5c777e30cf84e92170bb10627fd"
+   },
+   "expected": "ABSTAIN",
+   "quote": "Reliance can be shown by the sentencing court's express remarks referencing the prior conviction.",
+   "charlotin": {
+    "row_index": 1000,
+    "item_index": 0,
+    "case": "Thomas Carl Dodds, Jr. v. Carrie Bridges",
+    "court": "10th Cir. CA",
+    "date": "2026-02-11",
+    "finding": "Fabricated: Case Law | Dodds cited 'United States v. Mateo, 476 F.3d 179, 184 (3d Cir. 2007)' for a proposition and quotation; the reporter pages actually correspond to unrelated cases (In re O'Lexa and Wishkin v. Potter) and do not support the cited proposition."
+   },
+   "source_file": "sources/opinions/b16.txt",
+   "source_sha256": "2993ee2e28342b95e9ea245281dea3973380729264c71d60e8dd98beb3fafa49",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/476/cases/0177-01.json",
+    "caseName": "In re O'Lexa",
+    "dateFiled": "2007-02-07",
+    "raw_sha256": "6f6a55768af837e2819d47ac654a20e70448b6df402223842cfb2ffb01881aed",
+    "text_sha256": "2993ee2e28342b95e9ea245281dea3973380729264c71d60e8dd98beb3fafa49",
+    "cap_cite_used": "476 F.3d 177",
+    "cluster_id": null,
+    "cap_id": 3763587
+   },
+   "notes": "source supplied = In re O'Lexa, 476 F.3d 177, the real case containing page 179 (the court names it)"
+  },
+  {
+   "id": "KB17",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "cite": "887 F.2d 1128",
+   "case_name": "Citizens Nat'l Bank of Paris v. Midwest Agri-Dev. Corp.",
+   "source_key": "887 F.2d 1128",
+   "decision": {
+    "file": "sources/charlotin/decisions/1060-Smith_v._Santander_USA_4_November_2025.pdf",
+    "sha256": "9e1b09c06a048786cf47447f6fae24333306cacec894a92f963a72eb5d9c3f5a"
+   },
+   "expected": "ABSTAIN",
+   "proposition": "if a loan servicer fails to provide certain documentation, the unpaid loan is discharged.",
+   "charlotin": {
+    "row_index": 1466,
+    "item_index": 0,
+    "case": "Xavier Jamal Smith v. Santander Consumer USA Inc.",
+    "court": "N.D. Indiana",
+    "date": "2025-11-04",
+    "finding": "Fabricated: Case Law | Plaintiff cited 'Citizens Nat’l Bank of Paris v. Midwest Agri-Dev. Corp., 887 F.2d 1128, 1134 (7th Cir. 1989)'; the Court found the reporter citation corresponds to an unrelated First Circuit opinion, no Seventh Circuit case by that name from 1989 appears to exist, and it could not locate any case containing the quoted language."
+   },
+   "source_file": "sources/opinions/b17.txt",
+   "source_sha256": "de3554a2e938bc280af1c3ee83d69eabe6057df68b380015202787fd14326b3a",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f2d/887/cases/1128-01.json",
+    "caseName": "Midwest Precision Services, Inc. v. PTM Industries Corp.",
+    "dateFiled": "1989-10-18",
+    "raw_sha256": "ca3ff1d34d707b240ac0dc16df011c1ce0ef007f285300df13b1a692c8b7ccbd",
+    "text_sha256": "de3554a2e938bc280af1c3ee83d69eabe6057df68b380015202787fd14326b3a",
+    "cap_cite_used": "887 F.2d 1128",
+    "cluster_id": null,
+    "cap_id": 10536328
+   },
+   "notes": "the court did not reproduce the quotation; source supplied = the unrelated First Circuit case at 887 F.2d 1128 (Midwest Precision Servs. v. PTM Indus.)"
+  },
+  {
+   "id": "KB18",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "cite": "2008 WL 5395720",
+   "case_name": "Concepcion v. City of New York",
+   "source_key": "2008 WL 5395720",
+   "decision": {
+    "file": "sources/charlotin/decisions/823-ERIC_ANDREW_PEREZ_Plaintiff_v_DR_NEIL_C_EVANS_et_al_Defendants.pdf",
+    "sha256": "63a6d1bcab528de3e19d99d6da36fc97754d5ab640332e06adf40c7e2aa1d196"
+   },
+   "expected": "ABSTAIN",
+   "quote": "[w]hen there is actual notice, every technical violation of the rule or failure of strict compliance may not invalidate the service of process.",
+   "charlotin": {
+    "row_index": 1619,
+    "item_index": 0,
+    "case": "Eric Andrew Perez v. Dr. Neil C. Evans, et al.",
+    "court": "S.D. New York",
+    "date": "2025-09-25",
+    "finding": "Fabricated: Case Law | Plaintiff attributed a quotation to 'Concepcion v. City of New York, No. 05 Civ. 8501 (RJS), 2008 WL 5395720, at *4 (S.D.N.Y. Dec. 17, 2008),' but no such December 17, 2008 S.D.N.Y. opinion exists; the quoted language actually appears in Armco, Inc. v. Penrod-Stauffer Building Systems, Inc., 733 F.2d 1087, 1089 (4th Cir. 1984). Court treated this citation as a hallucinated/fabricated citation and noted the misattribution and omission of context."
+   },
+   "source_file": null,
+   "notes": "no such Westlaw decision exists, so no opinion text can be supplied; the court found the words in Armco v. Penrod-Stauffer, 733 F.2d 1087 (4th Cir. 1984)"
+  },
+  {
+   "id": "KB19",
+   "set": "known-bad",
+   "subset": "proposition",
+   "cite": "132 Ill. 2d 304, 547 N.E.2d 437",
+   "case_name": "Castaneda v. Illinois Human Rights Commission",
+   "source_key": "132 Ill. 2d 304, 547 N.E.2d 437",
+   "decision": {
+    "file": "sources/charlotin/decisions/3194-Adams_v._Board_of_Trustees_of_University_of_Illinois_at_Chicago_USA_01-01-2025.pdf",
+    "sha256": "06d8d02012c3e74d330179d9aedea173c10fc78f27fac1eb3ecde2e2ed9ce8f9"
+   },
+   "expected": "ABSTAIN (OUT_OF_RULESET_SCOPE)",
+   "proposition": "exhaustion of the administrative remedies or procedure is satisfied when the complainant has done what the statute requires, all remaining steps are the agency’s responsibility.",
+   "charlotin": {
+    "row_index": 28,
+    "item_index": 3,
+    "case": "Adams v. Board of Trustees of the University of Illinois at Chicago et al.",
+    "court": "N.D. Illinois",
+    "date": "2026-09-24",
+    "finding": "Misrepresented: Case Law | The brief cited Castaneda for the proposition that exhaustion is satisfied when a complainant has done what the statute requires and all remaining steps are the agency’s responsibility. The court found that Castaneda instead addressed whether a party must seek review before the en banc Human Rights Commission after losing before a three-member panel."
+   },
+   "source_file": "sources/opinions/k34.txt",
+   "source_sha256": "b9cbccd26606ce073ba7eadb0003f968f1cf3a212dba418d80b9963a9dd18cd9",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/ill-2d/132/cases/0304-01.json",
+    "caseName": "Castaneda v. Illinois Human Rights Commission",
+    "dateFiled": "1989-11-22",
+    "raw_sha256": "994e524c8debd1bc9f77dc4a854427bb00b6e3e82d4c5309458ea76c3cfda839",
+    "text_sha256": "b9cbccd26606ce073ba7eadb0003f968f1cf3a212dba418d80b9963a9dd18cd9",
+    "cap_cite_used": "132 Ill. 2d 304",
+    "cluster_id": null,
+    "cap_id": 5588617
+   },
+   "notes": "the filing put these words in quotation marks; run here as the proposition it asserted. Replaces Adams/Roxana (998 N.E.2d 1256), excluded: no text from CourtListener (citation search empty, name search blocked by the daily limit) or CAP"
+  },
+  {
+   "id": "KB20",
+   "set": "known-bad",
+   "subset": "proposition",
+   "cite": "217 So. 3d 785",
+   "case_name": "James v. Dedeaux",
+   "source_key": "217 So. 3d 785",
+   "decision": {
+    "file": "sources/charlotin/decisions/2707-Swinney_v._Jhoc_USA_6_jUly_2026.pdf",
+    "sha256": "02873548d50baf067544c8ef45d1e14a9e2d180ccd759ee167a4b679f38dd9ff"
+   },
+   "expected": "ABSTAIN (OUT_OF_RULESET_SCOPE)",
+   "proposition": "the \"borrowed servant\" doctrine is \"fact driven\" and summary judgment is appropriate only where the material facts are undisputed.",
+   "charlotin": {
+    "row_index": 310,
+    "item_index": 2,
+    "case": "Swinney v. JHOC, Inc.",
+    "court": "CC Copiah County Mississippi",
+    "date": "2026-07-06",
+    "finding": "Misrepresented: Case Law | Counsel miscited James v. Dedeaux as 242 So. 3d 905 and represented a rule (that facts must be undisputed) that the court says is not the majority holding; the correct citation is 217 So. 3d 785 and the brief appears to rely on a dissent."
+   },
+   "source_file": "sources/opinions/k35.txt",
+   "source_sha256": "952e1001c00171d7f2baa7321d06eeec6eac666125cbf3a8431993c00b206ef1",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2017/02/21/michael_james_v._brian_dedeaux.pdf",
+    "caseName": "Michael James v. Brian Dedeaux",
+    "dateFiled": "2017-02-21",
+    "raw_sha256": "4beb5d49db0518b67ef9706d3dc5572066acd7cbedfadb64fe4ea69f88be071b",
+    "text_sha256": "952e1001c00171d7f2baa7321d06eeec6eac666125cbf3a8431993c00b206ef1",
+    "cap_cite_used": null,
+    "cluster_id": 4369561,
+    "cap_id": null
+   },
+   "notes": "filing miscited it as 242 So. 3d 905; source = the correct 217 So. 3d 785 the court names"
+  },
+  {
+   "id": "CT01",
+   "set": "control",
+   "subset": "matched-pair",
+   "cite": "92 F.3d 814",
+   "case_name": "Committee for Idaho's High Desert, Inc. v. Yost",
+   "source_key": "92 F.3d 814",
+   "decision": {
+    "file": "sources/charlotin/decisions/3039-Falkenstein_v._Niles_USA_3_September_2026.pdf",
+    "sha256": "3dedf2b9f144c55e1f294b1f050f864f3f8177e8a47608f3f5deef959c8b0934"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "authorizes or directs or in which he participates.",
+   "source_file": "sources/opinions/k06.txt",
+   "source_sha256": "e28f570bfd7f2e47e7e8a072e7708de6a90a6e839b65a6db2b588c892b9b35b0",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/92/cases/0814-01.json",
+    "caseName": "Committee for Idaho's High Desert, Inc. v. Yost",
+    "dateFiled": "1996-08-06",
+    "raw_sha256": "c0dc0f4540bcabd8a4ad99b20485098e409be908e0740f7ca94210d677de6e4f",
+    "text_sha256": "e28f570bfd7f2e47e7e8a072e7708de6a90a6e839b65a6db2b588c892b9b35b0",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 7632769
+   },
+   "notes": "the passage the court says Yost actually contains (pair of KB07)"
+  },
+  {
+   "id": "CT02",
+   "set": "control",
+   "subset": "matched-pair",
+   "cite": "486 U.S. 800",
+   "case_name": "Christianson v. Colt Industries Operating Corp.",
+   "source_key": "486 U.S. 800",
+   "decision": {
+    "file": "sources/charlotin/decisions/2183-Curtin_v._Watts_USA_19_May_2026.pdf",
+    "sha256": "bec0505b999fc4d987fe2bc2ce2c9ef52c22f75f4615d9046429e719deef78e8"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "has the power to revisit prior decisions of its own or of a coordinate court in any circumstance, although as a rule courts should be loathe to do so in the absence of extraordinary circumstances such as where the initial decision was ‘clearly erroneous and would work a manifest injustice.’",
+   "source_file": "sources/opinions/k13.txt",
+   "source_sha256": "1194d61724417eb100c37bf7ec68372efc7637747a36d81c1c26ec0d7013300f",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/486/cases/0800-01.json",
+    "caseName": "Christianson v. Colt Industries Operating Corp.",
+    "dateFiled": "1988-06-17",
+    "raw_sha256": "75b86155ac53d1763689208f2c8b6118df14a40c4d6c9fa253fb798fd33ee455",
+    "text_sha256": "1194d61724417eb100c37bf7ec68372efc7637747a36d81c1c26ec0d7013300f",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 6224266
+   },
+   "notes": "the passage the court says Christianson actually contains; Christianson is itself quoting Arizona v. California"
+  },
+  {
+   "id": "CT03",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "809 F. Supp. 2d 26",
+   "case_name": "W. World Media, LLC v. Ikamobile Ltd.",
+   "source_key": "809 F. Supp. 2d 26",
+   "decision": {
+    "file": "sources/charlotin/decisions/3180-Ambrose_v._Swithin_USA_30_September_2026.pdf",
+    "sha256": "c53876248291b3e5fc50173aa2627b390186cd0df62842c1bf3d444a402811fc"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "The first inquiry must be whether [Connecticut’s] long-arm statute authorizes the exercise of jurisdiction under the particular facts of this case. Only if [the court] find[s] the statute to be applicable do[es it] reach the question whether it would offend due process to assert jurisdiction.",
+   "source_file": "sources/opinions/a03.txt",
+   "source_sha256": "3701de98ddefc578b2d4f306ecc675b9253b40ce6cc944bc51a1b4ab8b968a76",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f-supp-2d/809/cases/0026-01.json",
+    "caseName": "West World Media, LLC v. Ikamobile Ltd.",
+    "dateFiled": "2011-08-12",
+    "raw_sha256": "be3aa12c707f7f4ed08bfc3e6733c697fe2cf2862691b317bcac1f92902d6248",
+    "text_sha256": "3701de98ddefc578b2d4f306ecc675b9253b40ce6cc944bc51a1b4ab8b968a76",
+    "cap_cite_used": "809 F. Supp. 2d 26",
+    "cluster_id": null,
+    "cap_id": 4176153
+   },
+   "notes": "page footer \"5\" and running header removed"
+  },
+  {
+   "id": "CT04",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "201 F.3d 110",
+   "case_name": "Makarova v. United States",
+   "source_key": "201 F.3d 110",
+   "decision": {
+    "file": "sources/charlotin/decisions/3172-Williams_v._FAA_USA_28_September_2026.pdf",
+    "sha256": "0fb15e039a00f7a7e017b45ab35e8548dd492d49a6a2f62d4855b0b82e844176"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "when the district court lacks the statutory or constitutional power to adjudicate it.",
+   "source_file": "sources/opinions/a04.txt",
+   "source_sha256": "3fbb04df4fd129f50153c2a5b8a447a29b565927586738881153f7f0763562fc",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/201/cases/0110-01.json",
+    "caseName": "Makarova v. United States",
+    "dateFiled": "2000-01-12",
+    "raw_sha256": "1937c912793db1a975bc8b2634ae1e5ead5fd5f90023035eb516a598234c8cc9",
+    "text_sha256": "3fbb04df4fd129f50153c2a5b8a447a29b565927586738881153f7f0763562fc",
+    "cap_cite_used": "201 F.3d 110",
+    "cluster_id": null,
+    "cap_id": 1757397
+   }
+  },
+  {
+   "id": "CT05",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "354 A.3d 537",
+   "case_name": "CVS Pharmacy, Inc. v. City of Philadelphia",
+   "source_key": "354 A.3d 537",
+   "decision": {
+    "file": "sources/charlotin/decisions/3183-Coyne_v._Smurl_USA_25-09-2026.pdf",
+    "sha256": "81ac4da210e1f81d459e4c8d3d67f89f67573850137b563ea1042321d60ad798"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "Preliminary objections in the nature of a demurrer test the legal sufficiency of the complaint.",
+   "source_file": "sources/opinions/a05.txt",
+   "source_sha256": "4771d3622c9181a50c9c852791206de42221d29acca9e2670933e8ca176f18d5",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2026/02/27/cvs_pharmacy_v._the_city_of_philadelphia.pdf",
+    "caseName": "CVS Pharmacy v. The City of Philadelphia",
+    "dateFiled": "2026-02-27",
+    "raw_sha256": "020a81f2b2248f9e88c4ee24bd1a93d7658b34089a29069028920887f71c654b",
+    "text_sha256": "4771d3622c9181a50c9c852791206de42221d29acca9e2670933e8ca176f18d5",
+    "cap_cite_used": null,
+    "cluster_id": 10801710,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT06",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "550 U.S. 544",
+   "case_name": "Bell Atlantic Corp. v. Twombly",
+   "source_key": "550 U.S. 544",
+   "decision": {
+    "file": "sources/charlotin/decisions/3194-Adams_v._Board_of_Trustees_of_University_of_Illinois_at_Chicago_USA_01-01-2025.pdf",
+    "sha256": "06d8d02012c3e74d330179d9aedea173c10fc78f27fac1eb3ecde2e2ed9ce8f9"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "give the defendant fair notice of what the claim is and the grounds upon which it rests.",
+   "source_file": "sources/opinions/a06.txt",
+   "source_sha256": "46d2771178dec64312e56fb13a11e4b87e14197f0523a54efeabadeab49a6191",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2007/05/21/Bell_Atlantic_Corp._v._Twombly.pdf",
+    "caseName": "Bell Atlantic Corp. v. Twombly",
+    "dateFiled": "2007-05-21",
+    "raw_sha256": "60be2f5e8d9e57e30f138b2d5c1051f5b99739ec22b51edf48ef989a5835fd5b",
+    "text_sha256": "46d2771178dec64312e56fb13a11e4b87e14197f0523a54efeabadeab49a6191",
+    "cap_cite_used": null,
+    "cluster_id": 145730,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT07",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "935 So. 2d 393",
+   "case_name": "Moss v. Batesville Casket Co.",
+   "source_key": "935 So. 2d 393",
+   "decision": {
+    "file": "sources/charlotin/decisions/2707-Swinney_v._Jhoc_USA_6_jUly_2026.pdf",
+    "sha256": "02873548d50baf067544c8ef45d1e14a9e2d180ccd759ee167a4b679f38dd9ff"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "tends to resolve any of the issues properly raised by the parties.",
+   "source_file": "sources/opinions/a07.txt",
+   "source_sha256": "a72d5a7fa44650cd7b897c4728cead5bfde6a07629a80d2d57f007fd7647626d",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/so2d/935/cases/0393-01.json",
+    "caseName": "Moss v. Batesville Casket Co.",
+    "dateFiled": "2006-07-27",
+    "raw_sha256": "e1db4e65301948594b4476310235911461fcf082bcf13e1faec2027b219b347f",
+    "text_sha256": "a72d5a7fa44650cd7b897c4728cead5bfde6a07629a80d2d57f007fd7647626d",
+    "cap_cite_used": "935 So. 2d 393",
+    "cluster_id": null,
+    "cap_id": 8477644
+   }
+  },
+  {
+   "id": "CT08",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "782 F.2d 829",
+   "case_name": "Thompson v. Housing Authority of City of Los Angeles",
+   "source_key": "782 F.2d 829",
+   "decision": {
+    "file": "sources/charlotin/decisions/2452-Preston_House_v._TH_Foods_USA_18_June_2026.pdf",
+    "sha256": "2f48da3326eba11562b04cdd2857785d62bf0e2b768fa50000bef3510b3e3b75"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "[i]n the exercise of that power, they may impose sanctions including, where appropriate ... dismissal",
+   "source_file": "sources/opinions/a08.txt",
+   "source_sha256": "932126b7bcca65e06082895b1dbbca8f15a289426f05edcbda7618679d8881b0",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f2d/782/cases/0829-01.json",
+    "caseName": "Thompson v. Housing Authority",
+    "dateFiled": "1986-02-11",
+    "raw_sha256": "26e9f685fc6678495ab2b5cdbce54fa8a56727b432bfa6c4fcac3168f4c69a5b",
+    "text_sha256": "932126b7bcca65e06082895b1dbbca8f15a289426f05edcbda7618679d8881b0",
+    "cap_cite_used": "782 F.2d 829",
+    "cluster_id": null,
+    "cap_id": 1552417
+   },
+   "notes": "pleading line number \"6\" removed; the court closes the quotation after \"dismissal\""
+  },
+  {
+   "id": "CT09",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "425 F.3d 836",
+   "case_name": "Garrett v. Selby Connor Maddux & Janer",
+   "source_key": "425 F.3d 836",
+   "decision": {
+    "file": "sources/charlotin/decisions/2570-Jackson_v._Santander_USA_15_June_2026.pdf",
+    "sha256": "81eb9eca38b1d0ef9bf3e45ff12cb3e7143a7eda78862746cfba3d18d0e9839a"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "serv[e] as the litigant’s attorney in constructing arguments and searching the record.",
+   "source_file": "sources/opinions/a09.txt",
+   "source_sha256": "60de97279d90c84b0bdd6a2192522ebf451ad08375463e23995fc545558d64c4",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2005/09/21/Garrett_vs._Selby_Conner.pdf",
+    "caseName": "Garrett v. Selby Connor Maddux & Janer",
+    "dateFiled": "2005-09-21",
+    "raw_sha256": "fc16e161293501acd13d0c1299b17bdfc5230fae8d202f97fa5c399e1771695a",
+    "text_sha256": "60de97279d90c84b0bdd6a2192522ebf451ad08375463e23995fc545558d64c4",
+    "cap_cite_used": null,
+    "cluster_id": 166438,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT10",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "496 U.S. 384",
+   "case_name": "Cooter & Gell v. Hartmarx Corp.",
+   "source_key": "496 U.S. 384",
+   "decision": {
+    "file": "sources/charlotin/decisions/2255-El_bitar_v._Wamsley_USA_2_June_2026.pdf",
+    "sha256": "17c31e5f4e439a2567b47eaf6b1729ce7aee26a6e0859de464ecad39ea3700de"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "imposes a duty on attorneys to certify that they have conducted a reasonable inquiry and have determined that any papers filed with the court are well grounded in fact, legally tenable, and ‘not interposed for any improper purpose.’",
+   "source_file": "sources/opinions/k18.txt",
+   "source_sha256": "424349bdab7b251bc646ae273dbfe8509d6de39ca560f4f65a5ec0b783114684",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/496/cases/0384-01.json",
+    "caseName": "Cooter & Gell v. Hartmarx Corp.",
+    "dateFiled": "1990-06-11",
+    "raw_sha256": "70068a3e424b6d2d3f693b95e95fd62afb233441abe01d0dc0f057c37b05ef46",
+    "text_sha256": "424349bdab7b251bc646ae273dbfe8509d6de39ca560f4f65a5ec0b783114684",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 12123482
+   },
+   "notes": "pleading line numbers \"22\" and \"23\" removed"
+  },
+  {
+   "id": "CT11",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "556 U.S. 662",
+   "case_name": "Ashcroft v. Iqbal",
+   "source_key": "556 U.S. 662",
+   "decision": {
+    "file": "sources/charlotin/decisions/2183-Curtin_v._Watts_USA_19_May_2026.pdf",
+    "sha256": "bec0505b999fc4d987fe2bc2ce2c9ef52c22f75f4615d9046429e719deef78e8"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "a complaint must contain sufficient factual matter . . . to ‘state a claim to relief that is plausible on its face.’",
+   "source_file": "sources/opinions/a11.txt",
+   "source_sha256": "b38cb97161a5956e4505c8b7119c659bb890cbad042734b746a8c38695228c4a",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2009/05/18/Ashcroft_v._Iqbal.pdf",
+    "caseName": "Ashcroft v. Iqbal",
+    "dateFiled": "2009-05-18",
+    "raw_sha256": "61c3413bb5834dc4ce777e53b38302be52adef0a146293265db59b2aef46ddcd",
+    "text_sha256": "b38cb97161a5956e4505c8b7119c659bb890cbad042734b746a8c38695228c4a",
+    "cap_cite_used": null,
+    "cluster_id": 145875,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT12",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "477 U.S. 317",
+   "case_name": "Celotex Corp. v. Catrett",
+   "source_key": "477 U.S. 317",
+   "decision": {
+    "file": "sources/charlotin/decisions/2067-Tuntstall_v._Alabama_DOC_USA_28_April_2026.pdf",
+    "sha256": "f50b17210bfffa59b5fd020297e99d013066a6bfdd33ac7c79717a200ca0eb81"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to judgment as a matter of law.",
+   "source_file": "sources/opinions/a12.txt",
+   "source_sha256": "880c416e61502f0aee2455082c48b6d2579ebd389b38574bb2c5f33476eb1796",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/477/cases/0317-01.json",
+    "caseName": "Celotex Corp. v. Catrett",
+    "dateFiled": "1986-06-25",
+    "raw_sha256": "070684a85533121af10e47abcf238dfbd00967b7dbd484f561ae4039f37cb1a0",
+    "text_sha256": "880c416e61502f0aee2455082c48b6d2579ebd389b38574bb2c5f33476eb1796",
+    "cap_cite_used": "477 U.S. 317",
+    "cluster_id": null,
+    "cap_id": 6207800
+   },
+   "notes": "pleading line number \"12\" removed"
+  },
+  {
+   "id": "CT13",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "985 F.3d 1075",
+   "case_name": "American Unites for Kids v. Rousseau",
+   "source_key": "985 F.3d 1075",
+   "decision": {
+    "file": "sources/charlotin/decisions/1886-Allen_v._Western_Governors_University_USA_31_March_2026.pdf",
+    "sha256": "9dae470f96e0a62c251782915a076f74a79e88f8bd4fdeed7ae4ce4e589f3c3f"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "Federal courts possess certain ‘inherent powers,’ not conferred by rule or statute, ‘to manage their own affairs so as to achieve the orderly and expeditious disposition of cases.’",
+   "source_file": "sources/opinions/a13.txt",
+   "source_sha256": "6b2307370c8e1f5b0b21de6b8c2106e8ff1632e0ad86ac8c79e0c92adce1fdf4",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2021/01/22/america_unites_for_kids_v._sylvia_rousseau.pdf",
+    "caseName": "America Unites for Kids v. Sylvia Rousseau",
+    "dateFiled": "2021-01-22",
+    "raw_sha256": "f4daeee8519e38dce2ab58de767a6879f7c8d42648d27fde7dd03ea6947fdbdb",
+    "text_sha256": "6b2307370c8e1f5b0b21de6b8c2106e8ff1632e0ad86ac8c79e0c92adce1fdf4",
+    "cap_cite_used": null,
+    "cluster_id": 4849955,
+    "cap_id": null
+   },
+   "notes": "pleading line number \"27\" removed"
+  },
+  {
+   "id": "CT14",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "993 F.3d 851",
+   "case_name": "Orellana-Recinos v. Garland",
+   "source_key": "993 F.3d 851",
+   "decision": {
+    "file": "sources/charlotin/decisions/1517-Picon_Diaz_v._Bondi_USA_13_February_2026.pdf",
+    "sha256": "3fdc50c18cea4a222bca02503961b0d4aa698b8fea24774f0b93be5fbcdf7993"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "[I]t cannot be incidental, tangential, superficial, or subordinate to another reason for harm.",
+   "source_file": "sources/opinions/a14.txt",
+   "source_sha256": "8219a491a5b43cc6e8c666359977d0f6a8f20b7add1240a6e2fd919d5077fba5",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2021/04/05/orellana-recinos_v._barr.pdf",
+    "caseName": "Orellana-Recinos v. Barr",
+    "dateFiled": "2021-04-05",
+    "raw_sha256": "3bab472e8be6e6afbe4679d18a7630812778c42b3ca74f3a29907ab4793456df",
+    "text_sha256": "8219a491a5b43cc6e8c666359977d0f6a8f20b7add1240a6e2fd919d5077fba5",
+    "cap_cite_used": null,
+    "cluster_id": 4870839,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT15",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "562 U.S. 86",
+   "case_name": "Harrington v. Richter",
+   "source_key": "562 U.S. 86",
+   "decision": {
+    "file": "sources/charlotin/decisions/1499-THOMAS_CARL_DODDS_JR_Petitioner_-_Appellant_v_CARRIE_BRIDGES_Respondent_-_.pdf",
+    "sha256": "403c7b0d2e60fda36e288bc286f701fe1e28f5c777e30cf84e92170bb10627fd"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "presumption may be overcome when there is reason to think some other explanation for the state court's decision is more likely.",
+   "source_file": "sources/opinions/a15.txt",
+   "source_sha256": "bcd27000c6404458e8c7848b1f67866b5a7879e09cf3f87fc9dbbc0720d47667",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2011/01/19/Harrington_v._Richter.pdf",
+    "caseName": "Harrington v. Richter",
+    "dateFiled": "2011-01-19",
+    "raw_sha256": "547f2044c703442c971882b14386ad4e24b0b644a098c7eee8ceae28127cd104",
+    "text_sha256": "bcd27000c6404458e8c7848b1f67866b5a7879e09cf3f87fc9dbbc0720d47667",
+    "cap_cite_used": null,
+    "cluster_id": 182992,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT16",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "581 U.S. 101",
+   "case_name": "Goodyear Tire & Rubber Co. v. Haeger",
+   "source_key": "581 U.S. 101",
+   "decision": {
+    "file": "sources/charlotin/decisions/1456-Button_v._Mccawley_USA_4_February_2026.pdf",
+    "sha256": "3bd92c4855f8e6d03585bc54034d2b941135882d3e18487328815f21d6c616b5"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "[f]ederal courts possess certain ‘inherent powers,’ not conferred by rule or statute, to manage their own affairs so as to achieve the orderly and expeditious disposition of cases.",
+   "source_file": "sources/opinions/a16.txt",
+   "source_sha256": "29dec698e91742c183e4eaec0c5651fe1d570cc6ce26c20469d6d9dc39ab4314",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2017/04/18/goodyear_tire__rubber_co._v._haeger.pdf",
+    "caseName": "Goodyear Tire & Rubber Co. v. Haeger",
+    "dateFiled": "2017-04-18",
+    "raw_sha256": "a3643cda114c6e1d47449d533b047b0828cdd69b85bfb70ead5f2b6f81a0c374",
+    "text_sha256": "29dec698e91742c183e4eaec0c5651fe1d570cc6ce26c20469d6d9dc39ab4314",
+    "cap_cite_used": null,
+    "cluster_id": 4383732,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "CT17",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "368 Ill. App. 3d 1052",
+   "case_name": "In re Daphnie E.",
+   "source_key": "368 Ill. App. 3d 1052",
+   "decision": {
+    "file": "sources/charlotin/decisions/1230-In_re_SA_USA_29_December_2025_-_ECF_96.pdf",
+    "sha256": "84f66e203311bd4d33c2ba600de747290c8f582195fee4cec9b1cc73f495fff6"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "is judged by an objective standard based upon the amount of progress measured from the conditions existing at the time custody was taken from the parent.",
+   "source_file": "sources/opinions/a17.txt",
+   "source_sha256": "f6b47bed3326869c3f1893bbadb97da428bb6f173ae85d2d610fd54d7e76da9f",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/ill-app-3d/368/cases/1052-01.json",
+    "caseName": "People v. Adeline E.",
+    "dateFiled": "2006-11-17",
+    "raw_sha256": "a843566ad6c1c29f9f0a401a0f376ba14f5b37e8f1483715afacbadddc6dac39",
+    "text_sha256": "f6b47bed3326869c3f1893bbadb97da428bb6f173ae85d2d610fd54d7e76da9f",
+    "cap_cite_used": "368 Ill. App. 3d 1052",
+    "cluster_id": null,
+    "cap_id": 4267159
+   }
+  },
+  {
+   "id": "CT18",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "18 F. Supp. 3d 309",
+   "case_name": "Fedele v. Harris",
+   "source_key": "18 F. Supp. 3d 309",
+   "decision": {
+    "file": "sources/charlotin/decisions/1148-Farrow_v._Does_USA_3_December_2025.pdf",
+    "sha256": "3602441456edbc680f8dc671443c244db55c0c880fef4d6faa5ae025bfbe5a04"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "[T]he Second Circuit has cautioned district courts ‘to take seriously the adjective substantial’ and thus ‘for venue to be proper, significant events or omissions material to the plaintiff’s claim must have occurred in the district in question.’",
+   "source_file": "sources/opinions/a18.txt",
+   "source_sha256": "c63aa2f0e98c9d08bd9de3ab458dbd789738284f1a004904ce59d8c20bef1789",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f-supp-3d/18/cases/0309-01.json",
+    "caseName": "Fedele v. Harris",
+    "dateFiled": "2014-05-09",
+    "raw_sha256": "f5a0cc6d7e898ff7f423e2cc902cd0cebb30fbbfcc514f7123af8b8c36e5b440",
+    "text_sha256": "c63aa2f0e98c9d08bd9de3ab458dbd789738284f1a004904ce59d8c20bef1789",
+    "cap_cite_used": "18 F. Supp. 3d 309",
+    "cluster_id": null,
+    "cap_id": 4260337
+   }
+  },
+  {
+   "id": "CT19",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "684 F.3d 605",
+   "case_name": "Keys v. Humana, Inc.",
+   "source_key": "684 F.3d 605",
+   "decision": {
+    "file": "sources/charlotin/decisions/1116-Johnson_v._Capital_One_Bank_USA_10_November_2025.pdf",
+    "sha256": "725493e0cd3e19f448a91568e61804ad1cf03738bea145ba8065f18858e6d447"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "construe the complaint in the light most favorable to plaintiff and accept all allegations as true.",
+   "source_file": "sources/opinions/a21.txt",
+   "source_sha256": "3579c5d340cf705300dbffee3ae1106a2133b97293b7294596c3a2792228a98a",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2012/07/02/kathryn_keys_v._humana_inc..pdf",
+    "caseName": "Kathryn Keys v. Humana, Inc.",
+    "dateFiled": "2012-07-02",
+    "raw_sha256": "f9cf98d9c71e8d0c394ad06f66c5148e05094d6f37889a31b73cea434470759d",
+    "text_sha256": "3579c5d340cf705300dbffee3ae1106a2133b97293b7294596c3a2792228a98a",
+    "cap_cite_used": null,
+    "cluster_id": 803465,
+    "cap_id": null
+   },
+   "notes": "first reserve; replaces Peak/Benjamin v. Costco (779 F. Supp. 3d 341, 2025), excluded: no text from CourtListener (citation search empty, name search blocked) or CAP (ends 2019)"
+  },
+  {
+   "id": "CT20",
+   "set": "control",
+   "subset": "court-quote",
+   "cite": "739 F.3d 689",
+   "case_name": "Estes Express Lines v. United States",
+   "source_key": "739 F.3d 689",
+   "decision": {
+    "file": "sources/charlotin/decisions/1016-Strong_v._USA_USA_13_November_2025.pdf",
+    "sha256": "6345f96e1f431b9e17dd34c2bc8e634a2687370e4af950e71d221934aaaaf9a8"
+   },
+   "expected": "PASS (court-quoted, label unaudited)",
+   "quote": "plaintiff bears the burden of establishing subject matter jurisdiction by a preponderance of the evidence.",
+   "source_file": "sources/opinions/a20.txt",
+   "source_sha256": "9f592db00bad2d6887f65eeb9cbfd3030f08c1d7793e79f3f6dab032b9f82bfe",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2014/01/03/estes_express_lines_v._united_states.pdf",
+    "caseName": "Estes Express Lines v. United States",
+    "dateFiled": "2014-01-03",
+    "raw_sha256": "aca2b29d177bde625d7095486aeb70aa6a18e8104997aa6cbd6146f2f4387023",
+    "text_sha256": "9f592db00bad2d6887f65eeb9cbfd3030f08c1d7793e79f3f6dab032b9f82bfe",
+    "cap_cite_used": null,
+    "cluster_id": 2648103,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "SP01",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "54 A.3d 404",
+   "case_name": "Smith v. Township of Richmond",
+   "source_key": "54 A.3d 404",
+   "decision": {
+    "file": "sources/charlotin/decisions/3183-Coyne_v._Smurl_USA_25-09-2026.pdf",
+    "sha256": "81ac4da210e1f81d459e4c8d3d67f89f67573850137b563ea1042321d60ad798"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "The Sunshine Act authorizes penalties against public officials who knowingly participate in illegal meetings.",
+   "charlotin": {
+    "row_index": 21,
+    "item_index": 3,
+    "case": "Coyne v. Smurl",
+    "court": "Lackawanna CCCP",
+    "date": "2026-09-25",
+    "finding": "False Quotes: Case Law | The plaintiffs cited “Smith v. Township of Richmond, Commonwealth Court, 2003” and attributed to it the statement that the Sunshine Act authorizes penalties against public officials who knowingly participate in illegal meetings. The court identified the actual Commonwealth Court decision as Smith v. Township of Richmond, 54 A.3d 404 (Pa. Cmwlth. 2012), affirmed at 82 A.3d 407 (Pa. 2013), and stated that neither court issued the quoted holding."
+   },
+   "source_file": "sources/opinions/k04.txt",
+   "source_sha256": "08a52a38d9464daab919224689bf1f4d18b0992aabeabed32d3dc25a9cead4b8",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/a3d/54/cases/0404-01.json",
+    "caseName": "Smith v. Township of Richmond",
+    "dateFiled": "2012-10-05",
+    "raw_sha256": "51014a709e2b5654f2d9f26136b521fd9fc1c34ad34880a2b06c466c9ba9ac9d",
+    "text_sha256": "08a52a38d9464daab919224689bf1f4d18b0992aabeabed32d3dc25a9cead4b8",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 7311291
+   }
+  },
+  {
+   "id": "SP02",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "486 U.S. 800",
+   "case_name": "Christianson v. Colt Industries Operating Corp.",
+   "source_key": "486 U.S. 800",
+   "decision": {
+    "file": "sources/charlotin/decisions/2183-Curtin_v._Watts_USA_19_May_2026.pdf",
+    "sha256": "bec0505b999fc4d987fe2bc2ce2c9ef52c22f75f4615d9046429e719deef78e8"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "should not revisit a jurisdictional ruling made by a coordinate court unless it is clearly erroneous",
+   "charlotin": {
+    "row_index": 519,
+    "item_index": 1,
+    "case": "Curtin v. Watts, et al.",
+    "court": "M.D. North Carolina",
+    "date": "2026-05-20",
+    "finding": "False Quotes: Case Law | Plaintiff misquoted Christianson as stating a transferee court \"should not revisit a jurisdictional ruling made by a coordinate court unless it is clearly erroneous,\" which the court found to be a fabrication of Christianson, 486 U.S. 800 (1988)."
+   },
+   "source_file": "sources/opinions/k13.txt",
+   "source_sha256": "1194d61724417eb100c37bf7ec68372efc7637747a36d81c1c26ec0d7013300f",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/486/cases/0800-01.json",
+    "caseName": "Christianson v. Colt Industries Operating Corp.",
+    "dateFiled": "1988-06-17",
+    "raw_sha256": "75b86155ac53d1763689208f2c8b6118df14a40c4d6c9fa253fb798fd33ee455",
+    "text_sha256": "1194d61724417eb100c37bf7ec68372efc7637747a36d81c1c26ec0d7013300f",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 6224266
+   }
+  },
+  {
+   "id": "SP03",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "421 U.S. 35",
+   "case_name": "Withrow v. Larkin",
+   "source_key": "421 U.S. 35",
+   "decision": {
+    "file": "sources/charlotin/decisions/2109-Seeto_v._Kendall_USA_5_May_2026.pdf",
+    "sha256": "b49aaaf54419c49903cb08d4310e67a381a922068b7e341f1c031ba599baee8e"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "would offer a possible temptation to the average man as a judge to forget the burden of proof",
+   "charlotin": {
+    "row_index": 590,
+    "item_index": 0,
+    "case": "Seeto v. Kendall",
+    "court": "D. Nevada",
+    "date": "2026-05-05",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the phrase “would offer a possible temptation to the average man as a judge to forget the burden of proof” to Withrow v. Larkin, but the court found that language does not appear in Withrow."
+   },
+   "source_file": "sources/opinions/k14.txt",
+   "source_sha256": "e03ac93fa3e880c63c9118b8710b0cb7e024d64f8625a740be028fe6d0b134dd",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/421/cases/0035-01.json",
+    "caseName": "Withrow v. Larkin",
+    "dateFiled": "1975-04-16",
+    "raw_sha256": "e05a0d8c0c9b331b2786eed181bc31548e6290acd4ee987082b855f263b10b26",
+    "text_sha256": "e03ac93fa3e880c63c9118b8710b0cb7e024d64f8625a740be028fe6d0b134dd",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 541084
+   }
+  },
+  {
+   "id": "SP04",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "116 F.3d 1432",
+   "case_name": "Thomas v. Dillard Department Stores, Inc.",
+   "source_key": "116 F.3d 1432",
+   "decision": {
+    "file": "sources/charlotin/decisions/2067-Tuntstall_v._Alabama_DOC_USA_28_April_2026.pdf",
+    "sha256": "f50b17210bfffa59b5fd020297e99d013066a6bfdd33ac7c79717a200ca0eb81"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "‘Resign or be fired’ scenarios are classic jury questions.",
+   "charlotin": {
+    "row_index": 636,
+    "item_index": 0,
+    "case": "Tunstall v. Alabama Department of Corrections",
+    "court": "N.D. Alabama",
+    "date": "2026-04-28",
+    "finding": "False Quotes: Case Law | Counsel attributed the phrase \"'Resign or be fired' scenarios are classic jury questions\" to Thomas v. Dillard; the court reviewed Thomas and found no such language, calling the quotation a misattribution/fabrication and warning about Rule 11 implications."
+   },
+   "source_file": "sources/opinions/k15.txt",
+   "source_sha256": "01e0327e5334811d34bfbab3d17669366c2c6ee41c1d8734a4e73e957bfc2dfa",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/1997/07/14/Thomas_v._Dillard_Department_Stores.pdf",
+    "caseName": "Thomas v. Dillard Department Stores, Inc.",
+    "dateFiled": "1997-07-14",
+    "raw_sha256": "c5f99110884560d9472b5c81692696f4f89a0e5530447a9b0395fb39e7071f22",
+    "text_sha256": "01e0327e5334811d34bfbab3d17669366c2c6ee41c1d8734a4e73e957bfc2dfa",
+    "cap_cite_used": null,
+    "cluster_id": 71923,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "SP05",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "97 N.Y.2d 436",
+   "case_name": "Matter of Sakow",
+   "source_key": "97 N.Y.2d 436",
+   "decision": {
+    "file": "sources/charlotin/decisions/1957-Ellen_Michaelis_Plaintiff_v_Wilmington_Savings_Fund_Society_USA_3_April_2026.pdf",
+    "sha256": "e3cdfa8dc77aacde32db2beb9655570edbb4794cee7fb31e3a5809cff5a7e299"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "A void decree is open to collateral attack at any time.",
+   "charlotin": {
+    "row_index": 730,
+    "item_index": 0,
+    "case": "Ellen Michaelis v. Wilmington Savings Fund Society",
+    "court": "SC New York",
+    "date": "2026-04-03",
+    "finding": "False Quotes: Case Law | Plaintiff attributes the statement \"A void decree is open to collateral attack at any time.\" to Matter of Sakow (97 NY2d 436), but the quoted language does not appear in that case; court identified this as a false quotation."
+   },
+   "source_file": "sources/opinions/k16.txt",
+   "source_sha256": "845d336dccfafd0b680351876ac1377f4bbd8251d4f1ab5787bf2c5bb8f6e670",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/ny-2d/97/cases/0436-01.json",
+    "caseName": "In re the Estate of Sakow",
+    "dateFiled": "2002-03-21",
+    "raw_sha256": "fd240d87a3c6761f804c0a15de20f25014429e83a2245d5e6660f6862b75e56f",
+    "text_sha256": "845d336dccfafd0b680351876ac1377f4bbd8251d4f1ab5787bf2c5bb8f6e670",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 1061670
+   }
+  },
+  {
+   "id": "SP06",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "286 F.3d 1118",
+   "case_name": "Christian v. Mattel, Inc.",
+   "source_key": "286 F.3d 1118",
+   "decision": {
+    "file": "sources/charlotin/decisions/1886-Allen_v._Western_Governors_University_USA_31_March_2026.pdf",
+    "sha256": "9dae470f96e0a62c251782915a076f74a79e88f8bd4fdeed7ae4ce4e589f3c3f"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "both baseless and made without a reasonable and competent inquiry",
+   "charlotin": {
+    "row_index": 755,
+    "item_index": 0,
+    "case": "Edward C. Allen v. Western Governors University, et al.",
+    "court": "D. Nevada",
+    "date": "2026-03-31",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the quote \"both baseless and made without a reasonable and competent inquiry\" to Christian v. Mattel; court found no such quote in that opinion."
+   },
+   "source_file": "sources/opinions/k17.txt",
+   "source_sha256": "de247b2aef2e9be35c71f27e089c90939cb9bac450f99dd701cf030a0d34da68",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/286/cases/1118-01.json",
+    "caseName": "Christian v. Mattel, Inc.",
+    "dateFiled": "2002-04-15",
+    "raw_sha256": "3eb7c4e1972352267522a57079db8a6c0bb447750065a751b13a090bf2faa671",
+    "text_sha256": "de247b2aef2e9be35c71f27e089c90939cb9bac450f99dd701cf030a0d34da68",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 940862
+   }
+  },
+  {
+   "id": "SP07",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "496 U.S. 384",
+   "case_name": "Cooter & Gell v. Hartmarx Corp.",
+   "source_key": "496 U.S. 384",
+   "decision": {
+    "file": "sources/charlotin/decisions/1886-Allen_v._Western_Governors_University_USA_31_March_2026.pdf",
+    "sha256": "9dae470f96e0a62c251782915a076f74a79e88f8bd4fdeed7ae4ce4e589f3c3f"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "a reasonable attorney in like circumstances could believe his actions to be factually and legally justified",
+   "charlotin": {
+    "row_index": 755,
+    "item_index": 1,
+    "case": "Edward C. Allen v. Western Governors University, et al.",
+    "court": "D. Nevada",
+    "date": "2026-03-31",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the quote \"a reasonable attorney in like circumstances could believe his actions to be factually and legally justified\" to Cooter & Gell; court found no such quote in that Supreme Court opinion."
+   },
+   "source_file": "sources/opinions/k18.txt",
+   "source_sha256": "424349bdab7b251bc646ae273dbfe8509d6de39ca560f4f65a5ec0b783114684",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/496/cases/0384-01.json",
+    "caseName": "Cooter & Gell v. Hartmarx Corp.",
+    "dateFiled": "1990-06-11",
+    "raw_sha256": "70068a3e424b6d2d3f693b95e95fd62afb233441abe01d0dc0f057c37b05ef46",
+    "text_sha256": "424349bdab7b251bc646ae273dbfe8509d6de39ca560f4f65a5ec0b783114684",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 12123482
+   }
+  },
+  {
+   "id": "SP08",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "898 F.2d 684",
+   "case_name": "Hudson v. Moore Business Forms, Inc.",
+   "source_key": "898 F.2d 684",
+   "decision": {
+    "file": "sources/charlotin/decisions/1886-Allen_v._Western_Governors_University_USA_31_March_2026.pdf",
+    "sha256": "9dae470f96e0a62c251782915a076f74a79e88f8bd4fdeed7ae4ce4e589f3c3f"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "Rule 11 is not intended as a vehicle for intimidation or punishment for minor pleading errors",
+   "charlotin": {
+    "row_index": 755,
+    "item_index": 3,
+    "case": "Edward C. Allen v. Western Governors University, et al.",
+    "court": "D. Nevada",
+    "date": "2026-03-31",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the quote \"Rule 11 is not intended as a vehicle for intimidation or punishment for minor pleading errors\" to Hudson; court found no such quote or holding in that opinion."
+   },
+   "source_file": "sources/opinions/k19.txt",
+   "source_sha256": "46256451650c589df1dcc9d4c9cc61f203f35ac504bb0faa6f8cfefa04482991",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f2d/898/cases/0684-01.json",
+    "caseName": "Hudson v. Moore Business Forms, Inc.",
+    "dateFiled": "1990-02-27",
+    "raw_sha256": "306f3b2e325b56a5321131b61365b6141c8c40f3ff7bb30304da4f9f8b753178",
+    "text_sha256": "46256451650c589df1dcc9d4c9cc61f203f35ac504bb0faa6f8cfefa04482991",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 10535419
+   }
+  },
+  {
+   "id": "SP09",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "496 U.S. 384",
+   "case_name": "Cooter & Gell v. Hartmarx Corp.",
+   "source_key": "496 U.S. 384",
+   "decision": {
+    "file": "sources/charlotin/decisions/1886-Allen_v._Western_Governors_University_USA_31_March_2026.pdf",
+    "sha256": "9dae470f96e0a62c251782915a076f74a79e88f8bd4fdeed7ae4ce4e589f3c3f"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "as a bar to the courthouse door",
+   "charlotin": {
+    "row_index": 755,
+    "item_index": 4,
+    "case": "Edward C. Allen v. Western Governors University, et al.",
+    "court": "D. Nevada",
+    "date": "2026-03-31",
+    "finding": "False Quotes: Case Law | Plaintiff quoted the Supreme Court as cautioning against using Rule 11 \"as a bar to the courthouse door\" and cited Cooter & Gell at 393; court found no such quote in that opinion as used."
+   },
+   "source_file": "sources/opinions/k18.txt",
+   "source_sha256": "424349bdab7b251bc646ae273dbfe8509d6de39ca560f4f65a5ec0b783114684",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/us/496/cases/0384-01.json",
+    "caseName": "Cooter & Gell v. Hartmarx Corp.",
+    "dateFiled": "1990-06-11",
+    "raw_sha256": "70068a3e424b6d2d3f693b95e95fd62afb233441abe01d0dc0f057c37b05ef46",
+    "text_sha256": "424349bdab7b251bc646ae273dbfe8509d6de39ca560f4f65a5ec0b783114684",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 12123482
+   }
+  },
+  {
+   "id": "SP10",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "762 N.W.2d 902",
+   "case_name": "People v. Swafford",
+   "source_key": "762 N.W.2d 902",
+   "decision": {
+    "file": "sources/charlotin/decisions/1924-Shaltry_v._Benzing_USA_27_March_2026.pdf",
+    "sha256": "4a996bfec8d44e51a8256b59a3243c662218cb2058c0f8d4523155a35a56bc1f"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "A conviction is not final until the completion of the direct appeal.",
+   "charlotin": {
+    "row_index": 778,
+    "item_index": 0,
+    "case": "Patrick C. Shaltry, I v. Brent Benzing, et al.",
+    "court": "E.D. Michigan",
+    "date": "2026-03-27",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the sentence \"A conviction is not final until the completion of the direct appeal.\" to People v. Swafford; the Court found the quote does not appear in the opinion and noted cited passages contradict the proposition."
+   },
+   "source_file": "sources/opinions/k20.txt",
+   "source_sha256": "85c5f00564131c4503414eedcaaaad177f9ebd9b51033e99ca548d872ad92c63",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2009/03/18/people_of_mi_v._kobeay_quran_swafford.pdf",
+    "caseName": "People v. Swafford",
+    "dateFiled": "2009-03-18",
+    "raw_sha256": "11b91b3fba97200e87b3f44f87ff11f7abfe92280b50fdd915377d83fb12ecc5",
+    "text_sha256": "85c5f00564131c4503414eedcaaaad177f9ebd9b51033e99ca548d872ad92c63",
+    "cap_cite_used": null,
+    "cluster_id": 837464,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "SP11",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "917 N.W.2d 355",
+   "case_name": "People v. Kennedy",
+   "source_key": "917 N.W.2d 355",
+   "decision": {
+    "file": "sources/charlotin/decisions/1924-Shaltry_v._Benzing_USA_27_March_2026.pdf",
+    "sha256": "4a996bfec8d44e51a8256b59a3243c662218cb2058c0f8d4523155a35a56bc1f"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "A judgment is not final while an appeal of right remains pending.",
+   "charlotin": {
+    "row_index": 778,
+    "item_index": 1,
+    "case": "Patrick C. Shaltry, I v. Brent Benzing, et al.",
+    "court": "E.D. Michigan",
+    "date": "2026-03-27",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the sentence \"A judgment is not final while an appeal of right remains pending.\" to People v. Kennedy; the Court found the quote does not appear in the opinion."
+   },
+   "source_file": "sources/opinions/k21.txt",
+   "source_sha256": "5b8c93edb97f1a232d829e4b28a601459c9a0bbd054cfafc2803e18ae258b6e7",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2018/06/29/people_of_michigan_v._johnny_ray_kennedy.pdf",
+    "caseName": "People of Michigan v. Johnny Ray Kennedy",
+    "dateFiled": "2018-06-29",
+    "raw_sha256": "424948ea3ce42e732bfb9d26a0660a01a5a85215e11114b4b39960711e09f23e",
+    "text_sha256": "5b8c93edb97f1a232d829e4b28a601459c9a0bbd054cfafc2803e18ae258b6e7",
+    "cap_cite_used": null,
+    "cluster_id": 4513147,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "SP12",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "325 Ill. App. 3d 387",
+   "case_name": "In re M.A.",
+   "source_key": "325 Ill. App. 3d 387",
+   "decision": {
+    "file": "sources/charlotin/decisions/1230-In_re_SA_USA_29_December_2025_-_ECF_96.pdf",
+    "sha256": "84f66e203311bd4d33c2ba600de747290c8f582195fee4cec9b1cc73f495fff6"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "rest on a parent's personality traits or imperfect cooperation unless those conditions prevent the parent from safely parenting and remain unaddressed despite reasonable opportunity.",
+   "charlotin": {
+    "row_index": 1207,
+    "item_index": 2,
+    "case": "In re S.A., D.H., and B.M., Minors",
+    "court": "CA Illinois",
+    "date": "2025-12-29",
+    "finding": "False Quotes: Case Law | Respondent drew a fictitious conclusion from In re M.A., quoting that termination \"cannot rest on a parent's personality traits or imperfect cooperation unless those conditions prevent the parent from safely parenting,\" which the court found was not in M.A."
+   },
+   "source_file": "sources/opinions/k23.txt",
+   "source_sha256": "145870eda80ed83777df0914076ebd49be9cc77f698122799d654ab4fa894343",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/ill-app-3d/325/cases/0387-01.json",
+    "caseName": "People v. S.R.",
+    "dateFiled": "2001-09-19",
+    "raw_sha256": "7db04712b4aff3eaac379ec10a2d155afe71d1756b5b25ea021ff3c5e425d345",
+    "text_sha256": "145870eda80ed83777df0914076ebd49be9cc77f698122799d654ab4fa894343",
+    "cap_cite_used": "325 Ill. App. 3d 387",
+    "cluster_id": null,
+    "cap_id": 570737
+   }
+  },
+  {
+   "id": "SP13",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "740 F.3d 211",
+   "case_name": "Martinez v. Bloomberg LP",
+   "source_key": "740 F.3d 211",
+   "decision": {
+    "file": "sources/charlotin/decisions/1148-Farrow_v._Does_USA_3_December_2025.pdf",
+    "sha256": "3602441456edbc680f8dc671443c244db55c0c880fef4d6faa5ae025bfbe5a04"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "assumes the truth of the plaintiff’s factual allegations.",
+   "charlotin": {
+    "row_index": 1318,
+    "item_index": 2,
+    "case": "Farrow v. John Does",
+    "court": "E.D. New York",
+    "date": "2025-12-03",
+    "finding": "False Quotes: Case Law | Plaintiff claimed Martinez v. Bloomberg held that a court on a venue challenge \"assumes the truth of the plaintiff's factual allegations,\" which the court said Martinez did not state."
+   },
+   "source_file": "sources/opinions/k24.txt",
+   "source_sha256": "821d8d345aea2afddb0e148b89745f0ba119dbd4cd53685d57c5871122e857d6",
+   "source_provenance": {
+    "via": "courtlistener-storage-pdf",
+    "url": "https://storage.courtlistener.com/pdf/2014/01/14/martinez_v._bloomberg_lp.pdf",
+    "caseName": "Martinez v. Bloomberg LP",
+    "dateFiled": "2014-01-14",
+    "raw_sha256": "fc39590c7918c2e6c4faa2491310246fe6b54d088c97cc2945958d8c347dae61",
+    "text_sha256": "821d8d345aea2afddb0e148b89745f0ba119dbd4cd53685d57c5871122e857d6",
+    "cap_cite_used": null,
+    "cluster_id": 2649080,
+    "cap_id": null
+   }
+  },
+  {
+   "id": "SP14",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "951 F.2d 504",
+   "case_name": "Action S.A. v. Marc Rich & Co.",
+   "source_key": "951 F.2d 504",
+   "decision": {
+    "file": "sources/charlotin/decisions/1111-Peak_v._Maraj-Pety_USA_26_November_2025.pdf",
+    "sha256": "1f6f716a9ecdc4cb92e2ee6bebe096e1f479bad71a74090fc7cfdaacfb5113b6"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "[a] default is willful where the conduct of counsel or the litigant was egregious and was not satisfactorily explained",
+   "charlotin": {
+    "row_index": 1356,
+    "item_index": 0,
+    "case": "Tameer Peak v. Onika Tanya Maraj-Petty, et al.",
+    "court": "S.D. New York",
+    "date": "2025-11-26",
+    "finding": "False Quotes: Case Law | Plaintiff attributed the quotation \"[a] default is willful where the conduct of counsel or the litigant was egregious and was not satisfactorily explained\" to Action S.A. v. Marc Rich & Co.; the court found that quotation does not appear in that opinion."
+   },
+   "source_file": "sources/opinions/k25.txt",
+   "source_sha256": "8a8992d5e75854cfb85dfc8da94037e2c6206d896e5ba74d3ab9609980c8ff4c",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f2d/951/cases/0504-01.json",
+    "caseName": "Action S.A. v. Marc Rich & Co.",
+    "dateFiled": "1991-12-11",
+    "raw_sha256": "4eb2d8cb2ae9eb0a4505bbf0545b4f1ba1bb4cc4a93496550ba434a0195c2a96",
+    "text_sha256": "8a8992d5e75854cfb85dfc8da94037e2c6206d896e5ba74d3ab9609980c8ff4c",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 10521592
+   }
+  },
+  {
+   "id": "SP15",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "137 F.3d 732",
+   "case_name": "SEC v. McNulty",
+   "source_key": "137 F.3d 732",
+   "decision": {
+    "file": "sources/charlotin/decisions/1111-Peak_v._Maraj-Pety_USA_26_November_2025.pdf",
+    "sha256": "1f6f716a9ecdc4cb92e2ee6bebe096e1f479bad71a74090fc7cfdaacfb5113b6"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "waiting to retain counsel does not constitute good cause.",
+   "charlotin": {
+    "row_index": 1356,
+    "item_index": 1,
+    "case": "Tameer Peak v. Onika Tanya Maraj-Petty, et al.",
+    "court": "S.D. New York",
+    "date": "2025-11-26",
+    "finding": "False Quotes: Case Law | Plaintiff cited S.E.C. v. McNulty for the proposition that \"waiting to retain counsel does not constitute good cause,\" but the court found no such quote in McNulty and noted the case addresses a different procedural posture."
+   },
+   "source_file": "sources/opinions/k26.txt",
+   "source_sha256": "7e8633b575b1f9494bdd16eea5c05ed01a01cc704d8c3f9330f1b94a0d89cd1a",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/f3d/137/cases/0732-01.json",
+    "caseName": "Securities & Exchange Commission v. McNulty",
+    "dateFiled": "1998-03-03",
+    "raw_sha256": "70a5827303570bc72657a91ab04fe4a8a56f7dedfeeca1398811c2515dd9f746",
+    "text_sha256": "7e8633b575b1f9494bdd16eea5c05ed01a01cc704d8c3f9330f1b94a0d89cd1a",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 105967
+   }
+  },
+  {
+   "id": "SP16",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "230 F.R.D. 688",
+   "case_name": "Universal City Development Partners, Ltd. v. Ride & Show Engineering",
+   "source_key": "230 F.R.D. 688",
+   "decision": {
+    "file": "sources/charlotin/decisions/557-Crespo_v._Tesla_USA_30_June_2025.pdf",
+    "sha256": "8e0faba70489873fc110c93b7bc290f69fca0397a529c8587c573a8fd5d95942"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "is tantamount to no objection at all.",
+   "charlotin": {
+    "row_index": 1870,
+    "item_index": 2,
+    "case": "Crespo v. Tesla, Inc.",
+    "court": "S.D. Florida",
+    "date": "2025-06-30",
+    "finding": "False Quotes: Case Law | Plaintiff quoted Universal City Dev. Partners, Ltd. v. Ride & Show, 230 F.R.D. 688, 695 (M.D. Fla. 2005) as saying “is tantamount to no objection at all.” (DE 78 at 2); the Court found no such quote exists in that case."
+   },
+   "source_file": "sources/opinions/k29.txt",
+   "source_sha256": "47ebfdb6d83f15ff96205e47e332b49b12293fc2a91d075bee80b4dd574bf28f",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/frd/230/cases/0688-01.json",
+    "caseName": "Universal City Development Partners, Ltd. v. Ride & Show Engineering, Inc.",
+    "dateFiled": "2005-09-23",
+    "raw_sha256": "87ecc271246e6e6fb7130b4cd6896ab221b62e33724a9ad2711e4cc62d845e27",
+    "text_sha256": "47ebfdb6d83f15ff96205e47e332b49b12293fc2a91d075bee80b4dd574bf28f",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 673051
+   }
+  },
+  {
+   "id": "SP17",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "863 A.2d 772",
+   "case_name": "Production Resources Group, L.L.C. v. NCT Group, Inc.",
+   "source_key": "863 A.2d 772",
+   "decision": {
+    "file": "sources/charlotin/decisions/2361-34_-_An_v_Archblock_Inc.pdf",
+    "sha256": "991de56333c3dbfa5515d7abb231d6f769bfaa5f9828196992f6af90d115163d"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "Delaware courts have traditionally construed the scope of permissible discovery liberally.",
+   "charlotin": {
+    "row_index": 1984,
+    "item_index": 2,
+    "case": "An v. Archblock, Inc.",
+    "court": "Delaware Ch.",
+    "date": "2025-04-04",
+    "finding": "False Quotes: Case Law | Quoted Production Resources Group v. NCT Group as stating \"Delaware courts have traditionally construed the scope of permissible discovery liberally,\" but the quoted language is not found in NCT or other cases searched."
+   },
+   "source_file": "sources/opinions/k30.txt",
+   "source_sha256": "c59db313fe695acd439dcf6d880503c4319a4f07619990e19f042c6a59576862",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/a2d/863/cases/0772-01.json",
+    "caseName": "Production Resources Group, L.L.C. v. NCT Group, Inc.",
+    "dateFiled": "2004-11-17",
+    "raw_sha256": "643f5d6588268a5f394f8db0b0a1812a5b21dc544185c614ba1cde6bc753b844",
+    "text_sha256": "c59db313fe695acd439dcf6d880503c4319a4f07619990e19f042c6a59576862",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 9170262
+   }
+  },
+  {
+   "id": "SP18",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "cite": "34 Cal. 4th 319",
+   "case_name": "Sav-On Drug Stores, Inc. v. Superior Court",
+   "source_key": "34 Cal. 4th 319",
+   "decision": {
+    "file": "sources/charlotin/decisions/2362-35_-_Evans_v_Execushield_Inc.pdf",
+    "sha256": "f3e8247a6f99356a0cba61f29912b9c13df2f6479d48119afbf9537bd10e6223"
+   },
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "quote": "courts are not obligated to deny certification where the complaint omits facts that would support class treatment.",
+   "charlotin": {
+    "row_index": 2014,
+    "item_index": 0,
+    "case": "Evans v. Execushield, Inc.",
+    "court": "California SC",
+    "date": "2025-03-10",
+    "finding": "False Quotes: Case Law | Reply brief attributed the quotation \"courts are not obligated to deny certification where the complaint omits facts that would support class treatment\" to Sav-On Drug Stores; Court's Westlaw search found no such language in Sav-On."
+   },
+   "source_file": "sources/opinions/k31.txt",
+   "source_sha256": "c1d02a190f5ca6f320c221df06377d08f7c214681932278c1662325ace3e547a",
+   "source_provenance": {
+    "via": "cap-static-json",
+    "url": "https://static.case.law/cal-4th/34/cases/0319-01.json",
+    "caseName": "Sav-On Drug Stores, Inc. v. Superior Court",
+    "dateFiled": "2004-08-26",
+    "raw_sha256": "d70305eabc3d26b87fa0585b3de5baaa2acf4e973bf9088fdc8edb8919bd0e8b",
+    "text_sha256": "c1d02a190f5ca6f320c221df06377d08f7c214681932278c1662325ace3e547a",
+    "cap_cite_used": null,
+    "cluster_id": null,
+    "cap_id": 633022
+   }
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+{
+  "spec": "bench-spec/1",
+  "id": "r4-peppol-posthoc",
+  "title": "E-invoice PDFs re-run under the Peppol 0.2.0 ruleset, post-hoc",
+  "adapter": "items",
+  "label": "post-hoc",
+  "blind": false,
+  "items": "docs",
+  "run": {
+    "id": "R4 post-hoc re-run of X1's 60 PDFs (peppol-en16931@0.2.0 alone, blind extractor unchanged)",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "peppol-en16931@0.2.0"
+  },
+  "rows": [
+    {
+      "claim": "planted defects certified PASS under 0.2.0 alone (wrong PASS)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "X1's B1, re-run post-hoc: 0 wrong PASS on the 20 planted defects",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        },
+        "reused_from": "the e-invoice PDF run's prereg"
+      },
+      "note": "the 0.2.0 ruleset sits in the shipped slot of X1's scorer",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "planted defects caught",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "caught"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 17,
+        "n": 20
+      }
+    },
+    {
+      "claim": "planted defects abstained",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 3,
+        "n": 20
+      }
+    },
+    {
+      "claim": "clean invoices correctly PASS",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "class_shipped": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 17,
+        "n": 20
+      }
+    },
+    {
+      "claim": "noisy scans certified PASS wrongly",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "noisy scans false FAIL",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 2,
+        "n": 20
+      }
+    },
+    {
+      "claim": "FAILs on planted documents (FAIL precision, all 60)",
+      "where": {
+        "decision.shipped": "FAIL"
+      },
+      "hit": {
+        "arm": "defect"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 17,
+        "n": 19
+      }
+    }
+  ],
+  "misses": [
+    {
+      "id": "X1-D15-still-luck",
+      "kind": "near-miss",
+      "description": "X1-D15 is still caught only because the blind extractor invented SEK, which R051 FAILs: a ruleset cannot fix an invented value",
+      "post_hoc": true,
+      "fixed_by": "T1 / extraction contract (a label heads its row segment and is maximal)"
+    },
+    {
+      "id": "X1-N06-false-fail",
+      "kind": "false-fail",
+      "description": "X1-N06 (stamped scan): false FAIL on R051, a stamped GBP read as CEN by OCR",
+      "post_hoc": true
+    },
+    {
+      "id": "X1-N20-false-fail",
+      "kind": "false-fail",
+      "description": "X1-N20 (rotated scan): false FAIL from the OCR misread of 1 as 4",
+      "post_hoc": true
+    },
+    {
+      "id": "presence-on-misread",
+      "kind": "scope",
+      "description": "presence checks (BR-02, BR-03, BR-05, BR-15) pass on any readable value, so a misread identifier passes",
+      "post_hoc": true
+    },
+    {
+      "id": "labels-from-renderer",
+      "kind": "method",
+      "description": "the 0.2.0 label lists include the phrasings X1's renderer prints beside the EN 16931 term names, so this run is not independent evidence for label coverage",
+      "post_hoc": true
+    }
+  ],
+  "audit": "no new audit: the planted defects of the X1 corpus are known by construction"
+}

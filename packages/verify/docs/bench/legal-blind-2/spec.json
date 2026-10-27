@@ -1,0 +1,534 @@
+{
+  "spec": "bench-spec/1",
+  "id": "legal-blind-2",
+  "title": "Verbatim legal quotation check, second blind set (40 quotations from 1973 opinions)",
+  "adapter": "items",
+  "label": "blind",
+  "blind": true,
+  "files": {
+    "halfA": "run-halfA.json",
+    "halfB": "run-halfB.json",
+    "tuning": "tuning.json",
+    "freeze": "FREEZE.json",
+    "binding": "binding-unheaded.json"
+  },
+  "run": {
+    "id": "legal-blind-2: half A under three rules, the tuning search on half A, then half B once (40 items, one citation per verdict)",
+    "date": "2026-10-05T14:26:10Z",
+    "engine_version": {
+      "$from": "halfB:engine"
+    },
+    "ruleset": "legal@0.0.1 + legal@0.1.0 + legal@0.2.0"
+  },
+  "rows": [
+    {
+      "claim": "H11a (primary): legal@0.2.0, half B: known-bad quotations certified PASS",
+      "items": "halfB:rules[\"legal@0.2.0\"].rows",
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H11a (primary): legal@0.2.0 certifies no known-bad item: 0 PASS among the 10 half-B known-bads",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.2.0, half B: genuine quotations FAILed (false FAIL)",
+      "items": "halfB:rules[\"legal@0.2.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "note": "H11b (descriptive): compare legal@0.0.1's row below; n = 10 cannot separate them",
+      "reported": {
+        "k": 1,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.2.0, half B: genuine quotations PASS",
+      "items": "halfB:rules[\"legal@0.2.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 5,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.2.0, half B: genuine quotations abstained",
+      "items": "halfB:rules[\"legal@0.2.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "ABSTAIN"
+      },
+      "method": "wilson",
+      "note": "all four are label errors in the set's own extraction (see the misses); every rule abstained on them",
+      "reported": {
+        "k": 4,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.0.1, half B: known-bad quotations certified PASS",
+      "items": "halfB:rules[\"legal@0.0.1\"].rows",
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.0.1, half B: genuine quotations FAILed (false FAIL)",
+      "items": "halfB:rules[\"legal@0.0.1\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "note": "H11b's comparison row",
+      "reported": {
+        "k": 3,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.0.1, half B: genuine quotations PASS",
+      "items": "halfB:rules[\"legal@0.0.1\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 3,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.1.0, half B: known-bad quotations certified PASS",
+      "items": "halfB:rules[\"legal@0.1.0\"].rows",
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "note": "prediction P2, written from the code before any run: 0.1.0 passes at least one bracket-changed known-bad (L2-08, L2-40)",
+      "reported": {
+        "k": 2,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.1.0, half B: genuine quotations FAILed (false FAIL)",
+      "items": "halfB:rules[\"legal@0.1.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 1,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.1.0, half B: genuine quotations PASS",
+      "items": "halfB:rules[\"legal@0.1.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 5,
+        "n": 10
+      }
+    },
+    {
+      "claim": "H11c: tuning on half A produced a distinct candidate rule",
+      "items": "freeze:",
+      "hit": {
+        "distinct": true
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H11c: the legal@0.3.0 candidate beats legal@0.2.0 on half B; if no limit moves, there is no distinct 0.3.0 candidate and H11c is \"does not beat\"",
+        "test": {
+          "k": {
+            "eq": 1
+          }
+        }
+      },
+      "note": "no limit moved on half A (results/FREEZE.json, distinct false), so the preregistered tuned candidate did not exist: by the prereg, does not beat. The legal@0.3.0 shipped later is a different change, not tuned on this set (table legal-blind-2-030)",
+      "reported": {
+        "k": 0,
+        "n": 1
+      }
+    },
+    {
+      "claim": "legal@0.2.0, both halves: known-bad quotations certified PASS",
+      "items": [
+        "halfA:rules[\"legal@0.2.0\"].rows",
+        "halfB:rules[\"legal@0.2.0\"].rows"
+      ],
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "note": "H11a, also reported on all 20; half A was the tuning half and no limit moved, so legal@0.2.0 is the same rule on both",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "legal@0.2.0, both halves: genuine quotations FAILed (false FAIL)",
+      "items": [
+        "halfA:rules[\"legal@0.2.0\"].rows",
+        "halfB:rules[\"legal@0.2.0\"].rows"
+      ],
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "note": "six of the seven are OCR artifacts in the public texts; one is a bracket the quoting opinion used to change a state's name",
+      "reported": {
+        "k": 7,
+        "n": 20
+      }
+    },
+    {
+      "claim": "legal@0.2.0, both halves: genuine quotations PASS",
+      "items": [
+        "halfA:rules[\"legal@0.2.0\"].rows",
+        "halfB:rules[\"legal@0.2.0\"].rows"
+      ],
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 7,
+        "n": 20
+      }
+    },
+    {
+      "claim": "legal@0.1.0, both halves: known-bad quotations certified PASS",
+      "items": [
+        "halfA:rules[\"legal@0.1.0\"].rows",
+        "halfB:rules[\"legal@0.1.0\"].rows"
+      ],
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 2,
+        "n": 20
+      }
+    },
+    {
+      "claim": "legal@0.0.1, both halves: known-bad quotations certified PASS",
+      "items": [
+        "halfA:rules[\"legal@0.0.1\"].rows",
+        "halfB:rules[\"legal@0.0.1\"].rows"
+      ],
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "legal@0.0.1, both halves: genuine quotations FAILed (false FAIL)",
+      "items": [
+        "halfA:rules[\"legal@0.0.1\"].rows",
+        "halfB:rules[\"legal@0.0.1\"].rows"
+      ],
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 10,
+        "n": 20
+      }
+    },
+    {
+      "claim": "legal@0.2.0, half B, audited view: genuine quotations PASS, label errors set apart",
+      "items": "halfB:rules[\"legal@0.2.0\"].rows",
+      "where": {
+        "label": "control",
+        "id": {
+          "$nin": [
+            "L2-05",
+            "L2-07",
+            "L2-21",
+            "L2-27"
+          ]
+        }
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "note": "post-hoc: the label-error classes come from the run author's audit (an AI agent); shown beside the blind number, never in its place",
+      "reported": {
+        "k": 5,
+        "n": 6
+      }
+    },
+    {
+      "claim": "legal@0.2.0, half B, audited view: genuine quotations FAILed, label errors set apart",
+      "items": "halfB:rules[\"legal@0.2.0\"].rows",
+      "where": {
+        "label": "control",
+        "id": {
+          "$nin": [
+            "L2-05",
+            "L2-07",
+            "L2-21",
+            "L2-27"
+          ]
+        }
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "note": "post-hoc, as above; the one FAIL is an OCR artifact in the source (L2-09)",
+      "reported": {
+        "k": 1,
+        "n": 6
+      }
+    },
+    {
+      "claim": "sources that bind to their cite without the header line (legal@0.2.0)",
+      "items": "binding:rows",
+      "hit": {
+        "bound": true
+      },
+      "method": "wilson",
+      "note": "PREREG section 7, descriptive: all 40 name their parties; none prints its own reporter citation, so a public opinion text abstains unless the caller supplies the caption and cite line",
+      "reported": {
+        "k": 0,
+        "n": 40
+      }
+    }
+  ],
+  "misses": [
+    {
+      "id": "L2-03",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-03: a genuine-quotation item whose label is wrong: the quotation is from a federal appeals opinion in 454 F. 2d (a short form \"454 F. 2d, at 584\" the citation filter missed), and the next U.S. cite was the quoting case's own certiorari grant, so the source is the wrong opinion. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-05",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-05: a genuine-quotation item whose label is wrong: the cite taken is the quoting case's own certiorari grant (405 U.S. 974): the source is an order, not the quoted opinion. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-07",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-07: a genuine-quotation item whose label is wrong: the cite taken names the case the quotation is about (\"upheld in Vuitch\", 402 U.S. 62), not the quotation's source. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-21",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-21: a genuine-quotation item whose label is wrong: the quotation is a statute (28 U.S.C. § 2241(a)); the statute citation was not filtered, so the source is the wrong text. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-27",
+      "kind": "label error (the set's own extraction)",
+      "description": "L2-27: a genuine-quotation item whose label is wrong: the cite taken is an order setting argument (409 U.S. 974), not the quoted opinion. Every rule abstained, which is the right answer, but it counts against the genuine rate",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "citation-filter",
+      "kind": "harness defect",
+      "description": "the build harness's \"next citation\" filter let order cites, a statute and a cite inside the quoted subject through; it caused all five label errors. A next set should take only a citation that directly follows the closing mark and exclude orders and memorandum decisions",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-01",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-01 (half A): FAIL on a genuine quotation under every rule: the quoting opinion's OCR reads \"[c'jitizens\" for \"[c]itizens\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-17",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-17 (half A): FAIL on a genuine quotation under every rule: the quoting opinion's OCR reads \"the-first\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-31",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-31 (half A): FAIL on a genuine quotation under every rule: the source's OCR reads \"largé\" (and \"hot intended\")",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-33",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-33 (half A): FAIL on a genuine quotation under every rule: the source's OCR reads \"éffecting\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-35",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-35 (half A): FAIL on a genuine quotation under every rule: the quoting opinion's OCR reads \"[djoubtful\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-09",
+      "kind": "false-fail (OCR artifact)",
+      "description": "L2-09 (half B): FAIL on a genuine quotation under every rule: the source's OCR reads \"assur-anee\" for \"assurance\"",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-15",
+      "kind": "abstain (meaning-guard false positive)",
+      "description": "L2-15 (half A): legal@0.2.0 abstains on a genuine quotation because its meaning guard reads \"provided\" in the omitted text (\"concepts ... that have provided the basis\") as a condition; there it is a verb (legal@0.0.1 FAILs it; legal@0.1.0 passes it)",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-19",
+      "kind": "false-fail (disclosed substantive bracket)",
+      "description": "L2-19 (half A): the quoting opinion substitutes \"[Kentucky]\" for \"North Carolina\" and \"[Alabama]\" for \"California\", disclosed by brackets; legal@0.2.0 FAILs a bracket that replaces a word with a different word, by design (legal@0.0.1 FAILs it too; legal@0.1.0 passes it)",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "L2-37",
+      "kind": "false-fail (quotation convention, legal@0.0.1 only)",
+      "description": "L2-37 (half B): legal@0.0.1 FAILs a genuine quotation with an ellipsis and inner single quotation marks",
+      "post_hoc": false,
+      "date": "2026-10-05",
+      "fixed_by": "legal@0.1.0 and legal@0.2.0 read it (rules that predate this set)"
+    },
+    {
+      "id": "L2-39",
+      "kind": "false-fail (text artifact, legal@0.0.1 only)",
+      "description": "L2-39 (half B): legal@0.0.1 FAILs a genuine quotation whose source prints \"duties ;\" with a space before the semicolon",
+      "post_hoc": false,
+      "date": "2026-10-05",
+      "fixed_by": "legal@0.1.0 and legal@0.2.0 read it (rules that predate this set)"
+    },
+    {
+      "id": "L2-08",
+      "kind": "false-pass (legal@0.1.0 bracket hole)",
+      "description": "L2-08 (half B): legal@0.1.0 PASSes a bracket-changed known-bad: \"[reasonable]\" accepted for \"purposes\" (legal@0.2.0 FAILs it)",
+      "post_hoc": false,
+      "date": "2026-10-05",
+      "fixed_by": "legal@0.2.0 (its meaning guard predates this set)"
+    },
+    {
+      "id": "L2-40",
+      "kind": "false-pass (legal@0.1.0 bracket hole)",
+      "description": "L2-40 (half B): legal@0.1.0 PASSes a bracket-changed known-bad: \"[reasonable]\" accepted for \"attention\" (legal@0.2.0 FAILs it)",
+      "post_hoc": false,
+      "date": "2026-10-05",
+      "fixed_by": "legal@0.2.0 (its meaning guard predates this set)"
+    },
+    {
+      "id": "H11c-no-candidate",
+      "kind": "hypothesis not met",
+      "description": "H11c: tuning three limits on half A moved none (half-A loss J was 9 at every point the searches evaluated), so the preregistered tuned candidate did not exist; by the prereg, H11c does not beat. (The legal@0.3.0 shipped later is a different change, not tuned on this set.)",
+      "post_hoc": false,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "generator-scope",
+      "kind": "scope",
+      "description": "the known-bad operators (altered, elided, fabricated, bracket-changed) produce neither a later opinion's text that cites the case nor a condition cut off at the start or end of a quotation; an outside reviewer's 26-citation brief found eight such quotations legal@0.2.0 passed (three wrong-opinion, five edge or untriggered conditions), so this set's 0 of 20 known-bad passes measures its generator, not those kinds",
+      "post_hoc": true,
+      "fixed_by": "legal@0.3.0 (caption binding and edge-cut condition guards)",
+      "date": "2026-10-05"
+    },
+    {
+      "id": "unheaded-binding",
+      "kind": "data-limit",
+      "description": "0 of the 40 public opinion texts print their own reporter citation; without the header line the harness added, every item abstains under strict binding (results/binding-unheaded.json)",
+      "post_hoc": true,
+      "date": "2026-10-05"
+    }
+  ],
+  "audit": "the run's author, an AI agent (Claude Opus 5.5 (claude-opus-5-5)), classed every genuine quotation that did not PASS and every known-bad that PASSed, under every rule, against the texts (prereg section 6); no person labelled"
+}

@@ -1,0 +1,61 @@
+{
+  "id": "rotation-curve-sparc",
+  "version": "0.1.0",
+  "domain": "astronomy/galaxy-kinematics",
+  "name": "DEMO, never a benchmark: a SPARC rotation-curve table (one galaxy's rotmod file and its Table1 row) checked against three claims fixed in writing before the numbers were computed: (C1) the observed curve is flat within 10 km/s beyond 10 kpc; (C2) the observed velocity exceeds the baryonic one by at least 30 km/s at every row beyond 10 kpc, at Y_disk = 0.5 and Y_bul = 0.7 M_sun/L_sun [3.6]; (C3) the published V_flat replays from the rows, by the pinned algorithm sparc.vflat@1, within 1 km/s. The parameters are literals, so changing one changes the ruleset's bytes and its id. Engine 0.4.0.",
+  "sources": {
+    "SPARC-PAPER": "Lelli, McGaugh & Schombert 2016, AJ 152, 157, https://doi.org/10.3847/0004-6256/152/6/157 (arXiv:1606.09251v1, PDF sha256 d089215877213661e40965543ee7e05736619082ad16d95e65ec059029588c63): eq. (2) for V_bar; Sect. 5.3.1 and the Fig. 5 caption for Y_disk = 0.5 and Y_bul = 0.7",
+    "SPARC-BTFR": "Lelli, McGaugh & Schombert 2016, ApJL 816, L14, https://doi.org/10.3847/2041-8205/816/1/L14 (arXiv:1512.04543v1, PDF sha256 750465eb6e09a3c4af2de6eaccd7ca8e664c38ee1cc16c0dbc8200328148963c): Sect. 2.2, the V_f algorithm, pinned in this build as sparc.vflat@1",
+    "SPARC-ROTMOD": "https://astroweb.case.edu/SPARC/Rotmod_LTG.zip (sha256 0a80cc90714828cc28b7dd57923576714d209f2490328c087c4a4ad607faf588); one <galaxy>_rotmod.dat member per galaxy (NGC3198_rotmod.dat sha256 17b774ad11e7dd745a067073b76f1909d4de32fa87616df12b64da3f225cf953)",
+    "SPARC-TABLE1": "https://astroweb.case.edu/SPARC/SPARC_Lelli2016c.mrt (sha256 5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243). Its byte-by-byte description declares 113-byte rows and its rows are 131 bytes, so it is read by splitting on whitespace, a stated narrowing",
+    "SPARC-TABLE2": "https://astroweb.case.edu/SPARC/MassModels_Lelli2016c.mrt (sha256 9108994b12cc401b94a1768beca61c53ec354779385c9c9cc571049f3043244c), Note (3): Vdisk and Vbul are given for M/L = 1 solMass/solLum at [3.6]"
+  },
+  "lineArrayKeys": ["rows"],
+  "tolerance": { "rel": 0, "absCap": 0 },
+  "provenance_kinds": ["page", "archive"],
+  "fields": {
+    "GALAXY": { "paths": ["galaxy"], "kind": "identifier", "term": "the galaxy the rotmod file is for (its file name) [SPARC-ROTMOD]" },
+    "GALAXY_T1": { "paths": ["table1.galaxy"], "kind": "identifier", "term": "the galaxy of the Table1 row read (Galaxy) [SPARC-TABLE1]" },
+    "UNIT_RAD": { "paths": ["units.rad"], "kind": "identifier", "term": "the unit of Rad, as the rotmod header's unit line prints it [SPARC-ROTMOD]" },
+    "UNIT_VOBS": { "paths": ["units.vobs"], "kind": "identifier", "term": "the unit of Vobs, as the rotmod header's unit line prints it [SPARC-ROTMOD]" },
+    "UNIT_VBAR_COLS": { "paths": ["units.vgas_vdisk_vbul"], "kind": "identifier", "term": "the one unit Vgas, Vdisk and Vbul share; reported only when the three agree [SPARC-ROTMOD]" },
+    "DIST_ROTMOD": { "paths": ["distance_mpc"], "kind": "quantity", "term": "the distance on the rotmod header line \"# Distance = ... Mpc\" [SPARC-ROTMOD]" },
+    "DIST_T1": { "paths": ["table1.d_mpc"], "kind": "quantity", "term": "Table1 D, the distance (Mpc) [SPARC-TABLE1]" },
+    "VFLAT_T1": { "paths": ["table1.vflat"], "kind": "quantity", "term": "Table1 Vflat, the published flat velocity (km/s) [SPARC-TABLE1]" },
+    "RAD": { "paths": ["rad"], "kind": "quantity", "line": true, "term": "Rad, the galactocentric radius (kpc) [SPARC-ROTMOD]" },
+    "VOBS": { "paths": ["vobs"], "kind": "quantity", "line": true, "term": "Vobs, the observed circular velocity (km/s) [SPARC-ROTMOD]" },
+    "VGAS": { "paths": ["vgas"], "kind": "quantity", "line": true, "term": "Vgas, the gas contribution including helium (km/s); may be negative [SPARC-ROTMOD, SPARC-TABLE2]" },
+    "VDISK": { "paths": ["vdisk"], "kind": "quantity", "line": true, "term": "Vdisk, the stellar disk contribution at M/L = 1 (km/s) [SPARC-TABLE2 Note 3]" },
+    "VBUL": { "paths": ["vbul"], "kind": "quantity", "line": true, "term": "Vbul, the bulge contribution at M/L = 1 (km/s) [SPARC-TABLE2 Note 3]" }
+  },
+  "row_sets": {
+    "OUTER": [{ "left": "RAD", "op": ">=", "right": "10" }]
+  },
+  "line_computed": {
+    "VBAR": "sqrt(abs(VGAS) * VGAS + 0.5 * abs(VDISK) * VDISK + 0.7 * abs(VBUL) * VBUL)",
+    "EXCESS": "VOBS - VBAR",
+    "DEV": "abs(VOBS - doc.VMED_OUTER)"
+  },
+  "computed": {
+    "VMED_OUTER": "median(VOBS, OUTER)"
+  },
+  "algorithms": {
+    "VFLAT_REPLAY": { "algorithm": "sparc.vflat@1", "inputs": { "rad": "RAD", "v": "VOBS" }, "output": "vflat" },
+    "VFLAT_RIN": { "algorithm": "sparc.vflat@1", "inputs": { "rad": "RAD", "v": "VOBS" }, "output": "r_inner" }
+  },
+  "checks": [
+    { "code": "GALAXY_XREF", "compare": "identifier", "field": "galaxy", "left": "GALAXY", "op": "=", "right": "GALAXY_T1", "name": "The rotmod file and the Table1 row are for the same galaxy [SPARC-ROTMOD, SPARC-TABLE1]" },
+    { "code": "UNITS_RAD", "compare": "member", "field": "units.rad", "left": "UNIT_RAD", "op": "=", "right": "kpc", "in": ["kpc"], "name": "Rad is in kpc [SPARC-ROTMOD]" },
+    { "code": "UNITS_VOBS", "compare": "member", "field": "units.vobs", "left": "UNIT_VOBS", "op": "=", "right": "km/s", "in": ["km/s"], "name": "Vobs is in km/s [SPARC-ROTMOD]" },
+    { "code": "UNITS_VBAR_COLS", "compare": "member", "field": "units.vgas_vdisk_vbul", "left": "UNIT_VBAR_COLS", "op": "=", "right": "km/s", "in": ["km/s"], "name": "Vgas, Vdisk and Vbul are in km/s [SPARC-ROTMOD]" },
+    { "code": "DIST_XREF", "field": "distance_mpc", "left": "DIST_ROTMOD", "op": "=", "right": "DIST_T1", "tol": 0, "exact_tolerance": true, "name": "The rotmod distance equals Table1 D: the mass-model columns scale with distance, so a difference means the two tables describe different models [SPARC-ROTMOD, SPARC-TABLE1]" },
+    { "code": "RAD_INCREASING", "scope": "line", "field": "rad", "applies_if": [{ "neighbour": "prev" }], "left": "RAD - prev(RAD)", "op": ">=", "right": "0", "tol": 0, "exact_tolerance": true, "name": "Rad does not decrease from the row before" },
+    { "code": "RAD_DISTINCT", "scope": "line", "field": "rad", "applies_if": [{ "neighbour": "prev" }], "left": "RAD", "op": "!=", "right": "prev(RAD)", "tol": 0, "exact_tolerance": true, "name": "Rad differs from the row before (with RAD_INCREASING: strictly increasing, so the outermost rows are the last)" },
+    { "code": "NMIN_BEYOND_R", "field": "rows", "left": "count(RAD, OUTER)", "op": ">=", "right": "5", "tol": 0, "exact_tolerance": true, "name": "At least 5 rows lie at Rad >= 10 kpc, so no single row decides C1 or C2" },
+    { "code": "C1_FLAT", "field": "vobs", "left": "max(DEV, OUTER)", "op": "<=", "right": "10", "tol": 0, "exact_tolerance": true, "name": "C1: every row at Rad >= 10 kpc lies within 10 km/s of the median Vobs of those rows (left: the largest deviation)" },
+    { "code": "C1_ROWS_VS_PUBLISHED", "scope": "line", "field": "vobs", "applies_if": [{ "left": "RAD", "op": ">=", "right": "10" }], "left": "abs(VOBS - doc.VFLAT_T1)", "op": "<=", "right": "10", "tol": 0, "exact_tolerance": true, "name": "C1, per row, against the published value: each row at Rad >= 10 kpc lies within 10 km/s of Table1 Vflat [SPARC-TABLE1]" },
+    { "code": "C2_EXCESS", "field": "vobs", "left": "min(EXCESS, OUTER)", "op": ">=", "right": "30", "tol": 0, "exact_tolerance": true, "name": "C2: at every row with Rad >= 10 kpc, Vobs - V_bar >= 30 km/s, V_bar = sqrt(|Vgas|Vgas + 0.5|Vdisk|Vdisk + 0.7|Vbul|Vbul) (left: the smallest excess) [SPARC-PAPER eq. (2), Sect. 5.3.1; SPARC-TABLE2 Note 3]" },
+    { "code": "C3_VFLAT_REPLAY", "field": "table1.vflat", "left": "VFLAT_REPLAY", "op": "=", "right": "VFLAT_T1", "tol": 1, "exact_tolerance": true, "name": "C3: V_f recomputed from the rows by sparc.vflat@1 equals the published Table1 Vflat within 1 km/s [SPARC-BTFR Sect. 2.2, SPARC-TABLE1]" },
+    { "code": "FLAT_PART_ROWS", "scope": "line", "field": "vobs", "applies_if": [{ "left": "RAD", "op": ">=", "right": "doc.VFLAT_RIN" }], "left": "abs(VOBS - doc.VFLAT_REPLAY)", "op": "<=", "right": "10", "tol": 0, "exact_tolerance": true, "name": "Every row from the innermost row the algorithm included outward lies within 10 km/s of the recomputed V_f" }
+  ]
+}

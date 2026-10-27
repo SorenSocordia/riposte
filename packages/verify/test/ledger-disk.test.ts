@@ -5,7 +5,7 @@
  *          a voice read) is byte-identical to the heap mode's, before and after live appends; the bytes on disk are identical.
  *   TRUST  a line changed on disk after the open is never served (LedgerFileChanged, named), and the check says the book no
  *          longer verifies; a book tampered before the open fails its first (full) check, as in the heap mode.
- *   R5     torn tail and corruption behave exactly as in the heap mode.
+ *   TORN   torn tail and corruption behave exactly as in the heap mode.
  *   P-G    at every step the kept reader reads what a fresh full read reads; it resumes (the verified prefix is not re-read,
  *          the stated boundary); a failure is never resumed from; snapshots resume or read in full, never wrongly; and the
  *          first failure is the monolithic walk's (a structural break, else an altered payload, else a refused event).
@@ -66,7 +66,7 @@ function actor(start = '2026-09-01T09:00:00Z') {
 /**
  * A rich book: two tenants; reviews (a non-ASCII note); a re-record keeping its review; one verdict recorded by both tenants;
  * a key registry under a root key; a signed review; a grant; a committed sample of a closed day; and a LEGACY review (no
- * tenant), appended by hand as a book written before F-A would carry it.
+ * tenant), appended by hand as a book written before 2026-09-28 would carry it.
  */
 function richBook(path: string): void {
   const a = actor()
@@ -184,7 +184,7 @@ describe('DISK: the same book, the same answers', () => {
     expect(readFileSync(dp).equals(readFileSync(hp))).toBe(true)
   })
 
-  it('a chain export (no final newline) opens in the disk mode and appends onto its own line (N1), as the heap mode does', () => {
+  it('a chain export (no final newline) opens in the disk mode and appends onto its own line, as the heap mode does', () => {
     const src = tmpPath()
     richBook(src)
     const exp = tmpPath()
@@ -244,7 +244,7 @@ describe('TRUST: a line changed on disk after the open is never served', () => {
   })
 })
 
-describe('R5 in the disk mode: exactly the heap mode\'s rules', () => {
+describe('the torn tail in the disk mode: exactly the heap mode\'s rules', () => {
   it('a torn last line opens read-only, every whole event reads and verifies, an append names the fix; repair, then append', () => {
     const p = tmpPath()
     richBook(p)

@@ -1,0 +1,76 @@
+{
+ "schema": "riposte.ap-input/0.1.0",
+ "bill": {
+  "invoice_number": "GCE-5512",
+  "vendor": {
+   "name": "Gulf Coast Electric Supply"
+  },
+  "purchase_order_number": "PO-7781",
+  "currency": "USD",
+  "amount": {
+   "amount": 252500,
+   "currency_code": "USD"
+  },
+  "line_items": [
+   {
+    "purchase_order_line_item_id": "pol-1",
+    "quantity": 20,
+    "unit_price": "125.00",
+    "amount": "2500.00"
+   },
+   {
+    "purchase_order_line_item_id": "pol-2",
+    "quantity": 5,
+    "unit_price": "5.00",
+    "amount": "25.00"
+   }
+  ]
+ },
+ "purchase_order": {
+  "id": "po-1",
+  "purchase_order_number": "PO-7781",
+  "vendor": {
+   "name": "Gulf Coast Electric Supply"
+  },
+  "currency": "USD",
+  "freight_allowed": false,
+  "line_items": [
+   {
+    "id": "pol-1",
+    "description": "200A panelboard, 42 circuit",
+    "quantity": 40,
+    "unit_price": "125.00"
+   },
+   {
+    "id": "pol-2",
+    "description": "Ground rod clamp",
+    "quantity": 5,
+    "unit_price": "5.00"
+   }
+  ]
+ },
+ "item_receipts": [
+  {
+   "purchase_order_id": "po-1",
+   "line_items": [
+    {
+     "purchase_order_line_item_id": "pol-1",
+     "quantity": 40
+    },
+    {
+     "purchase_order_line_item_id": "pol-2",
+     "quantity": 5
+    }
+   ]
+  }
+ ],
+ "payment_history": [
+  {
+   "invoice_number": "GCE-5512",
+   "vendor": "Gulf Coast Electric Supply",
+   "purchase_order_number": "PO-7781",
+   "amount": "2525.00",
+   "paid_at": "2026-09-02"
+  }
+ ]
+}

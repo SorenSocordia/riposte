@@ -47,6 +47,23 @@ describe('AP resolution drafts — generation where every number is a verified f
     expect(d.short_pay).toBeUndefined()
   })
 
+  it('hold_line_math: the line that is not quantity × unit price, corrected invoice, short-pay what it bills over', () => {
+    const PO = 'PURCHASE ORDER (ERP)\nPO-48825 | Vendor: Northfield Material Handling | Freight: not allowed\n1. Extension cord 50 ft, 12 AWG | qty 5 | unit USD 47.30\n2. Floor marking tape, yellow | qty 10 | unit USD 14.25\n'
+    const GR = 'GOODS RECEIPT (ERP) for PO-48825\n1. Extension cord 50 ft, 12 AWG | received 5\n2. Floor marking tape, yellow | received 10\n'
+    const INV = (tape: string, total: string) => `INVOICE MESSAGE\nINVOICE NM-84665   DATE 2026-09-28\nCUST PO: PO-48825\n1   CORD EXT 50FT 12AWG | 5 | 47.30 | 236.50\n2   Floor marking tape, yellow | 10 | 14.25 | ${tape}\nTOTAL DUE USD | ${total}\n`
+    const over = { invoice: INV('172.50', '409.00'), purchase_order: PO, goods_receipt: GR }
+    const d = draftResolution(verifyInvoiceMatch(over, { now: NOW }), over)
+    expect(d.decision).toBe('hold_line_math')
+    expect(d.body).toMatch(/bills Floor marking tape, yellow at 172\.50, but 10 × 14\.25 is 142\.50; the line is 30\.00 above that/)
+    expect(d.short_pay).toEqual({ stated_total: 409, withheld: 30, payable_now: 379 })
+    expect(unsourcedNumbers(d)).toEqual([])
+    const under = { invoice: INV('132.50', '369.00'), purchase_order: PO, goods_receipt: GR }
+    const u = draftResolution(verifyInvoiceMatch(under, { now: NOW }), under)
+    expect(u.body).toMatch(/the line is 10\.00 below that\. Please send a corrected invoice\. We will hold payment until it arrives\./)
+    expect(u.short_pay).toBeUndefined()
+    expect(unsourcedNumbers(u)).toEqual([])
+  })
+
   it('a total BELOW its lines is described in words, never as a negative number (found by the all-cases property test)', () => {
     const d = run('T018')
     expect(d.body).toMatch(/the stated total is 90\.00 below them/)
@@ -62,7 +79,10 @@ describe('AP resolution drafts — generation where every number is a verified f
   })
 
   it('approve: nothing to send; abstain: no guessed letter, only the reasons', () => {
-    expect(run('T003')).toMatchObject({ kind: 'none' })
+    // an approve needs the duplicate check to have run: an empty book counts (with no book at all the checker abstains, since
+    // 2026-10-05), so T003 is checked against one
+    const t3 = { ...splitApLayout(cases.find((x) => x.id === 'T003')!.input)!, history: [] }
+    expect(draftResolution(verifyInvoiceMatch(t3, { now: NOW }), t3)).toMatchObject({ kind: 'none' })
     const docs = splitApLayout(cases[0]!.input)!
     const blurred = { ...docs, invoice: docs.invoice.replace(/Total due:.*$/m, 'Total due: USD 1 935.50') } // ambiguous total → abstain
     const d = draftResolution(verifyInvoiceMatch(blurred, { now: NOW }), blurred)

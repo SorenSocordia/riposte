@@ -299,7 +299,7 @@ describe('POST /v1/reconcile (managed tier): the caller\'s own book, the scope f
 
   it('a shared book: another tenant is never named, counted or listed (the summary is the caller\'s slice)', () => {
     const j = post(body).json as { report: CompletenessReport }
-    expect(LIB.book.tenants).toEqual(['acme']) // P-S3-R1 (SURFACES-4): the engine's own summary is the tenant's slice
+    expect(LIB.book.tenants).toEqual(['acme']) // P-S3-R1: the engine's own summary is the tenant's slice
     expect(j.report.book.tenants).toEqual(['acme'])
     expect(j.report.book.records).toBe(LIB.book.records)
     expect(j.report.book.out_of_scope).toBe(0)

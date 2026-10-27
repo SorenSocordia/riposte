@@ -1,0 +1,823 @@
+{
+  "verdict": {
+    "schema_version": "v0",
+    "verdict_id": "e3ddcaffd50c67418e2e2f581dabd9fb",
+    "issued_at": "2026-10-19T22:33:31.374Z",
+    "engine_version": "0.7.2",
+    "ruleset": {
+      "id": "ap-threeway",
+      "version": "0.3.0",
+      "domain": "accounts-payable"
+    },
+    "input_hash": "73d18c19297c9c1b26a0b41c3ef99af3d79537bb3ebbf21e336971e93e7df06d",
+    "remedy_table_hash": "dfeada8c6ecb422a8a6448de85725e2161d05edb078ccb05b7537fe33b893d99",
+    "replayable": true,
+    "document": {
+      "extraction_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+      "line_items": 3
+    },
+    "references": {
+      "contract": true,
+      "evidence": 1,
+      "history": 0,
+      "source": true
+    },
+    "outcome": "FAIL",
+    "gate_status": "FAIL",
+    "aggregation": "ANY_FAIL_FAILS",
+    "claims": [
+      {
+        "claim_id": "ap.duplicate",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "invoice_number",
+        "rule_id": "AP_DUPLICATE",
+        "rule_name": "Invoice not already booked",
+        "outcome": "INSUFFICIENT_DATA",
+        "asserted": null,
+        "evidence": [],
+        "insufficiency": {
+          "reason": "REFERENCE_NOT_PROVIDED",
+          "detail": "duplicate check not run: no payment history supplied, so this bill was not compared with what is already booked (pass history to enable it)",
+          "missing": []
+        },
+        "locked": false,
+        "explanation": "duplicate check not run: no payment history supplied, so this bill was not compared with what is already booked (pass history to enable it)"
+      },
+      {
+        "claim_id": "ap.po_number",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "po_number",
+        "asserted": "PO-49051",
+        "rule_id": "AP_PO_MATCH",
+        "rule_name": "Invoice references the purchase order",
+        "computation": {
+          "formula": "invoice.po_number = po.number",
+          "operands": {
+            "invoice_po": "PO-49051",
+            "po": "PO-49051"
+          },
+          "result": "PO-49051"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 319,
+              "end": 327,
+              "line": 13
+            },
+            "value": "PO-49051",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 21,
+              "end": 29,
+              "line": 2
+            },
+            "value": "PO-49051",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Invoice cites PO-49051, which is the purchase order."
+      },
+      {
+        "claim_id": "ap.vendor",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "vendor",
+        "rule_id": "AP_VENDOR_MATCH",
+        "rule_name": "Bill is from the purchase order's vendor",
+        "outcome": "PASS",
+        "asserted": "ar@aldinejan.com",
+        "computation": {
+          "formula": "the invoice names purchase_order.vendor (by name, or by a sender's address built from it)",
+          "operands": {
+            "po_vendor": "Aldine Janitorial",
+            "read_by": "sender address",
+            "invoice_reads": "ar@aldinejan.com"
+          },
+          "result": "Aldine Janitorial"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 176,
+              "end": 198,
+              "line": 8
+            },
+            "value": "ar@aldinejan.com",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 21,
+              "end": 80,
+              "line": 2
+            },
+            "value": "Aldine Janitorial",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "The invoice's sender, ar@aldinejan.com, writes from a domain built from the purchase order's vendor name, Aldine Janitorial (invoice line 8)."
+      },
+      {
+        "claim_id": "ap.line[1].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "FAIL",
+        "field": "line[1].quantity",
+        "asserted": 10,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 10,
+            "received": 7
+          },
+          "result": 7
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 330,
+              "end": 376,
+              "line": 15
+            },
+            "value": 10,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1df2700a6754ca26fe5793c68dbde78bd2079507d6f5b1953ac2752b5ef5d6bb",
+              "start": 33,
+              "end": 79,
+              "line": 2
+            },
+            "value": 7,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "variance": 3,
+        "explanation": "Machine grease cartridge 14 oz: billed 10, received 7 — more billed than received. (Invoice line \"GREASE CART 14OZ\".)"
+      },
+      {
+        "claim_id": "ap.line[1].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].unit_price",
+        "asserted": 7.45,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 7.45,
+            "po_unit": 7.45
+          },
+          "result": 7.599,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 330,
+              "end": 376,
+              "line": 15
+            },
+            "value": 7.45,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 81,
+              "end": 139,
+              "line": 3
+            },
+            "value": 7.45,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Machine grease cartridge 14 oz: invoiced 7.45, PO 7.45 (max 7.5990 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[1].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].amount",
+        "asserted": 74.5,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 10,
+            "unit_price": 7.45,
+            "exact_product": "74.5",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 74.5,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 330,
+              "end": 376,
+              "line": 15
+            },
+            "value": 74.5,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 330,
+              "end": 376,
+              "line": 15
+            },
+            "value": 10,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 330,
+              "end": 376,
+              "line": 15
+            },
+            "value": 7.45,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 81,
+              "end": 139,
+              "line": 3
+            },
+            "value": "USD",
+            "confidence": 100,
+            "role": "CONTEXT"
+          }
+        ],
+        "locked": true,
+        "explanation": "Machine grease cartridge 14 oz: 10 × 7.45 = 74.5; the line says 74.5. (Invoice line \"GREASE CART 14OZ\".)"
+      },
+      {
+        "claim_id": "ap.line[2].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].quantity",
+        "asserted": 20,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 20,
+            "received": 20
+          },
+          "result": 20
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 377,
+              "end": 428,
+              "line": 16
+            },
+            "value": 20,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1df2700a6754ca26fe5793c68dbde78bd2079507d6f5b1953ac2752b5ef5d6bb",
+              "start": 80,
+              "end": 121,
+              "line": 3
+            },
+            "value": 20,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "First aid kit, 50 person: billed 20, received 20. (Invoice line \"FIRST AID KIT 50P\".)"
+      },
+      {
+        "claim_id": "ap.line[2].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].unit_price",
+        "asserted": 79.9,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 79.9,
+            "po_unit": 79.9
+          },
+          "result": 81.498,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 377,
+              "end": 428,
+              "line": 16
+            },
+            "value": 79.9,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 140,
+              "end": 193,
+              "line": 4
+            },
+            "value": 79.9,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "First aid kit, 50 person: invoiced 79.9, PO 79.9 (max 81.4980 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[2].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].amount",
+        "asserted": 1598,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 20,
+            "unit_price": 79.9,
+            "exact_product": "1598",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 1598,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 377,
+              "end": 428,
+              "line": 16
+            },
+            "value": 1598,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 377,
+              "end": 428,
+              "line": 16
+            },
+            "value": 20,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 377,
+              "end": 428,
+              "line": 16
+            },
+            "value": 79.9,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 140,
+              "end": 193,
+              "line": 4
+            },
+            "value": "USD",
+            "confidence": 100,
+            "role": "CONTEXT"
+          }
+        ],
+        "locked": true,
+        "explanation": "First aid kit, 50 person: 20 × 79.9 = 1598; the line says 1598. (Invoice line \"FIRST AID KIT 50P\".)"
+      },
+      {
+        "claim_id": "ap.line[3].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[3].quantity",
+        "asserted": 10,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 10,
+            "received": 10
+          },
+          "result": 10
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 429,
+              "end": 481,
+              "line": 17
+            },
+            "value": 10,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1df2700a6754ca26fe5793c68dbde78bd2079507d6f5b1953ac2752b5ef5d6bb",
+              "start": 122,
+              "end": 162,
+              "line": 4
+            },
+            "value": 10,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Bubble wrap roll 300 mm: billed 10, received 10. (Invoice line \"BUBBLE WRAP 300MM RL\".)"
+      },
+      {
+        "claim_id": "ap.line[3].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[3].unit_price",
+        "asserted": 26.3,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 26.3,
+            "po_unit": 26.3
+          },
+          "result": 26.826,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 429,
+              "end": 481,
+              "line": 17
+            },
+            "value": 26.3,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 194,
+              "end": 246,
+              "line": 5
+            },
+            "value": 26.3,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Bubble wrap roll 300 mm: invoiced 26.3, PO 26.3 (max 26.8260 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[3].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[3].amount",
+        "asserted": 263,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 10,
+            "unit_price": 26.3,
+            "exact_product": "263",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 263,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 429,
+              "end": 481,
+              "line": 17
+            },
+            "value": 263,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 429,
+              "end": 481,
+              "line": 17
+            },
+            "value": 10,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 429,
+              "end": 481,
+              "line": 17
+            },
+            "value": 26.3,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "ee77f703179816f7b652a30c1a71cdfb20ad8aa0bdbe64b616e6ab32cd7d9204",
+              "start": 194,
+              "end": 246,
+              "line": 5
+            },
+            "value": "USD",
+            "confidence": 100,
+            "role": "CONTEXT"
+          }
+        ],
+        "locked": true,
+        "explanation": "Bubble wrap roll 300 mm: 10 × 26.3 = 263; the line says 263. (Invoice line \"BUBBLE WRAP 300MM RL\".)"
+      },
+      {
+        "claim_id": "ap.total",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "total",
+        "asserted": 1935.5,
+        "rule_id": "AP_TOTAL_SUM",
+        "rule_name": "Stated total equals the lines (+ allowed freight)",
+        "computation": {
+          "formula": "total = Σ line.amount + (freight if PO allows)",
+          "operands": {
+            "lines": 1935.5,
+            "freight": 0,
+            "freight_allowed": false
+          },
+          "result": 1935.5,
+          "tolerance": {
+            "abs": 0.005
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 483,
+              "end": 506,
+              "line": 19
+            },
+            "value": 1935.5,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 330,
+              "end": 376,
+              "line": 15
+            },
+            "value": 74.5,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 377,
+              "end": 428,
+              "line": 16
+            },
+            "value": 1598,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "a05a25e903e78100efd2073eadaa260afc7290c7effa6546872f406a0a438ede",
+              "start": 429,
+              "end": 481,
+              "line": 17
+            },
+            "value": 263,
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "The lines add to 1,935.50; the bill says 1,935.50."
+      }
+    ],
+    "coverage": {
+      "claims_total": 13,
+      "claims_checked": 12,
+      "claims_pass": 11,
+      "claims_fail": 1,
+      "claims_insufficient": 1
+    },
+    "remedies": [
+      {
+        "kind": "missing-operand",
+        "detail": "Billed 10, received 7. A goods receipt for the other 3 unit(s), posted when they arrive, lets the check pass as a new verdict.",
+        "operand": {
+          "source": "goods_receipt",
+          "path": "line[1].quantity"
+        },
+        "clears": [
+          "AP_QTY_RECEIVED"
+        ],
+        "claims": [
+          "ap.line[1].quantity"
+        ]
+      },
+      {
+        "kind": "transform",
+        "detail": "Pay for the 7 unit(s) received now, and the rest on receipt.",
+        "operand": {
+          "source": "invoice",
+          "path": "line[1].quantity"
+        },
+        "transform": "cap-at-received",
+        "clears": [
+          "AP_QTY_RECEIVED"
+        ],
+        "claims": [
+          "ap.line[1].quantity"
+        ]
+      },
+      {
+        "kind": "authority",
+        "detail": "The buyer may approve paying for units not yet received, for this verdict only.",
+        "authority": "buyer",
+        "clears": [
+          "AP_QTY_RECEIVED"
+        ],
+        "claims": [
+          "ap.line[1].quantity"
+        ]
+      },
+      {
+        "kind": "missing-operand",
+        "detail": "The payment history (invoices already booked or paid for this vendor), so the duplicate check runs: until then this bill has not been checked for a duplicate.",
+        "operand": {
+          "source": "history"
+        },
+        "clears": [
+          "AP_DUPLICATE"
+        ],
+        "claims": [
+          "ap.duplicate"
+        ]
+      }
+    ],
+    "scope": {
+      "ruleset": "ap-threeway@0.3.0",
+      "engine_version": "0.7.2",
+      "evidence_floor": "unstated",
+      "statements": [
+        "advisories are counsel, not verdicts",
+        "this is a check, not a decision"
+      ]
+    }
+  },
+  "decision": "approve",
+  "payable": true,
+  "grounding": {
+    "invoice_number": "AJ-97466",
+    "po_number": "PO-49051",
+    "item": "Machine grease cartridge 14 oz",
+    "invoiced": 10,
+    "expected": 7
+  },
+  "reasons": [
+    "all checks passed"
+  ],
+  "not_checked": [],
+  "read": {
+    "form": "one file",
+    "text_sha256": "763b59f2e90e6aa5a8bfe8aacac4e32b0dc2cad46c0b37cc7dfe6488f46eb597",
+    "history_sha256": null,
+    "policy": {
+      "price_tolerance": 0.02,
+      "total_tolerance": 0.005
+    }
+  }
+}

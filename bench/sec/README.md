@@ -2,7 +2,7 @@
 
 This directory reproduces every number in [`packages/verify/docs/BENCHMARK-SEC.md`](../../packages/verify/docs/BENCHMARK-SEC.md)
 from the SEC's public Financial Statement Data Sets. Run everything from the repository root after
-`npm install && npm run build`.
+`npm install --legacy-peer-deps && npm run build` (plain `npm install` works under npm 11.6.2 and fails under npm 10.9.x).
 
 ## What's here
 
@@ -14,7 +14,7 @@ from the SEC's public Financial Statement Data Sets. Run everything from the rep
 - **Results:** [`RESULTS.md`](RESULTS.md), [`RESULTS-V02.md`](RESULTS-V02.md), [`RESULTS-MINE.md`](RESULTS-MINE.md).
   Each one lists every audited filing with its EDGAR link.
 - **Scripts** that produced them, and the small published outputs in `results/`: the seeded audit samples, automated
-  audit classes, hand labels with written reasons, the final audit tables, summaries, and the mining case tables.
+  audit classes, the audit labels with written reasons, the final audit tables, summaries, and the mining case tables.
 - **Paths in the frozen documents** refer to where the files lived when they were written. The texts are otherwise
   unchanged, so their sha256 values can be checked.
 
@@ -65,4 +65,6 @@ npx tsx bench/sec/sec-mine.mts && npx tsx bench/sec/sec-mine-explore.mts
 ```
 
 Outputs are written next to the scripts. Compare them with `results/`. The automated audit steps are deterministic.
-The hand labels (`results/manual-labels*.json`) are the human part, and each one gives its reason.
+The labels (`results/manual-labels*.json`) are the judgment part of each audit, and each one gives its reason. The first
+study's files do not record whether a person or an AI agent made its labels; the second study's audit was done by a
+separate AI agent (`RESULTS-V02.md`).

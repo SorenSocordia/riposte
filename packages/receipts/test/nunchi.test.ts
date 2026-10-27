@@ -9,7 +9,7 @@ const at = (iso: string) => () => new Date(iso)
 const LEVELS = ['record', 'advise', 'gate', 'autonomy'] as const
 const TIERS = [...DEFAULT_TIERS, 'not-a-declared-tier']
 
-// Three real verdicts from the engine: a FAIL (an account outside the approved set), an ABSTAIN (no value has a declared
+// Three real verdicts from the engine: a FAIL (an account outside the approved set), an INSUFFICIENT_DATA (no value has a declared
 // source) and a PASS (every value grounded).
 const transfer = { tool: 'mcp__bank__transfer', arguments: { to_account: '110-234-5678', amount: 500, memo: 'INV-1042' } }
 const failV = verifyAction(transfer, { allowed: { to_account: ['220-000-1111'], amount: [500], memo: ['INV-1042'] } }, { now: at('2026-09-28T09:00:00Z') })
@@ -30,11 +30,11 @@ function everyRegister(facts: DeliveryFacts, fn: (d: ReturnType<typeof deliver>,
 }
 
 describe('nunchi: the facts never flex', () => {
-  it('the engine gives a FAIL, an ABSTAIN and a PASS to deliver', () => {
+  it('the engine gives a FAIL, an INSUFFICIENT_DATA and a PASS to deliver', () => {
     expect([failV.outcome, abstainV.outcome, passV.outcome]).toEqual(['FAIL', 'INSUFFICIENT_DATA', 'PASS'])
   })
 
-  for (const [name, v] of [['FAIL', failV], ['ABSTAIN', abstainV], ['PASS', passV]] as [string, Verdict][]) {
+  for (const [name, v] of [['FAIL', failV], ['INSUFFICIENT_DATA', abstainV], ['PASS', passV]] as [string, Verdict][]) {
     for (const level of LEVELS) {
       it(`${name} at ${level}: the same facts and facts_hash in all ${MOMENTS.length * TIERS.length * AUDIENCES.length} registers, every fact verbatim in the text`, () => {
         const notice = actionNotice(v, level)
@@ -80,7 +80,7 @@ describe('nunchi: the facts never flex', () => {
     expect(x.evidence[0]).toContain('contract:allowed.to_account')
     expect(x.dispute).toBe(`verify opinion --ledger <chain.jsonl> --dispute ${failV.verdict_id} --claim arg.to_account`)
     const ab = factsFromNotice(actionNotice(abstainV, 'gate'), 's')
-    expect(ab.outcome).toBe('ABSTAIN')
+    expect(ab.outcome).toBe('INSUFFICIENT_DATA')
     expect(ab.findings[0]!.statement).toMatch(/^REFERENCE_NOT_PROVIDED: /)
   })
 })
@@ -106,7 +106,7 @@ describe('nunchi: weight scales with the declared consequence tier', () => {
 })
 
 describe('nunchi: the values floor', () => {
-  const cases: [string, Verdict, typeof LEVELS[number]][] = [['FAIL', failV, 'gate'], ['FAIL', failV, 'advise'], ['ABSTAIN', abstainV, 'autonomy'], ['ABSTAIN', abstainV, 'advise']]
+  const cases: [string, Verdict, typeof LEVELS[number]][] = [['FAIL', failV, 'gate'], ['FAIL', failV, 'advise'], ['INSUFFICIENT_DATA', abstainV, 'autonomy'], ['INSUFFICIENT_DATA', abstainV, 'advise']]
   for (const [name, v, level] of cases) {
     it(`${name} at ${level}, top tier: no softening in any audience or moment`, () => {
       const f = factsFromNotice(actionNotice(v, level), 'tool mcp__bank__transfer')
@@ -187,9 +187,9 @@ describe('nunchi: the "done" moment (closing claims and done checks)', () => {
       { kind: 'build_ok', claim: 'The build is clean.', status: 'SUPPORTED', reason: 'tsc exited 0' },
     ],
   }
-  it('closing claims: contradicted → FAIL, unsupported → ABSTAIN, supported omitted; facts invariant across registers', () => {
+  it('closing claims: contradicted → FAIL, unsupported → INSUFFICIENT_DATA, supported omitted; facts invariant across registers', () => {
     const f = factsFromClaims(claims, { action: 'HOLD' })
-    expect(f.findings.map((x) => [x.id, x.status])).toEqual([['tests_pass#0', 'FAIL'], ['pushed#1', 'ABSTAIN']])
+    expect(f.findings.map((x) => [x.id, x.status])).toEqual([['tests_pass#0', 'FAIL'], ['pushed#1', 'INSUFFICIENT_DATA']])
     expect(f.findings[0]!.evidence[0]).toBe('Bash: npm test @ 2026-09-28T09:10:00Z: Tests 3 failed | 118 passed')
     const hashes = new Set<string>()
     everyRegister(f, (d) => { hashes.add(d.facts_hash); for (const tok of factTokens(f)) expect(d.text).toContain(tok) })

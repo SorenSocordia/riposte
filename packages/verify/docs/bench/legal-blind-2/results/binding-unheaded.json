@@ -1,0 +1,251 @@
+{
+  "step": "binding",
+  "run_utc": "2026-10-05T14:27:25.020Z",
+  "engine": "0.6.0",
+  "bound": 0,
+  "cite_named": 0,
+  "parties_named": 40,
+  "n": 40,
+  "rows": [
+    {
+      "id": "L2-01",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-02",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-03",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-04",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-05",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-06",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-07",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-08",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-09",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-10",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-11",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-12",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-13",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-14",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-15",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-16",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-17",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-18",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-19",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-20",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-21",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-22",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-23",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-24",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-25",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-26",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-27",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-28",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-29",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-30",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-31",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-32",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-33",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-34",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-35",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-36",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-37",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-38",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-39",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    },
+    {
+      "id": "L2-40",
+      "bound": false,
+      "cite_named": false,
+      "parties_named": true
+    }
+  ]
+}

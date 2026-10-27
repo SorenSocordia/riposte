@@ -1,0 +1,229 @@
+{
+  "format": "bench-outside/1",
+  "entries": [
+    {
+      "id": "sec-check-blind",
+      "title": "Footing identities on filed SEC statements, blind by the authors' records (v0.1)",
+      "where": "BENCHMARK-SEC.md, sections 1 and 2; bench/sec/RESULTS.md; the methods page (docs/doors/methods.md, Real SEC filings)",
+      "numbers": "precision 1% to 17% (0 genuine inconsistencies, 1 tagging error) on 86 audited of 4,284 FAILs, with the unresolved counted both ways",
+      "reason": "Preregistered, with a sha256 a reader can check from bench/sec/README.md, but its results sit in bench/sec/ in the run's own format and were never emitted as a bench table; no third party timed the prereg."
+    },
+    {
+      "id": "sec-check-v02",
+      "title": "Footing identities, redesigned v0.2, on a held-out quarter",
+      "where": "BENCHMARK-SEC.md, sections 1 and 2; bench/sec/RESULTS-V02.md; the methods page (docs/doors/methods.md, Real SEC filings)",
+      "numbers": "precision 12.5% to 18.8% against a 50% bar (FAIL) on 80 audited of 419 FAILs; flags cut by 90% (4,273 to 419); 100%, 96% and 100% of v0.1's PASS decisions kept on three coverage checks; 0 genuine inconsistencies in 166 audited flags across both runs",
+      "reason": "Preregistered, with a sha256 a reader can check from bench/sec/README.md, but its results sit in bench/sec/ in the run's own format and were never emitted as a bench table; no third party timed the prereg. v0.2 was designed from the v0.1 audit."
+    },
+    {
+      "id": "sec-mine",
+      "title": "Mining the SEC's large-accelerated-filer rule from filer-status labels",
+      "where": "BENCHMARK-SEC.md, section 3; bench/sec/RESULTS-MINE.md; the methods page (docs/doors/methods.md, Real SEC filings)",
+      "numbers": "ENTER: learned cut $874.7M against the statute's $700M (FAIL; 37 filers above $700M not labelled, 2.4% of approvals against a 2% tolerance); STAY: $556.5M against $560M (MISSES, within 0.6%); after the verdict, 11 of 38 disagreements explained",
+      "reason": "Preregistered, with a sha256 a reader can check from bench/sec/README.md, but its results sit in bench/sec/ in the run's own format and were never emitted as a bench table; no third party timed the prereg."
+    },
+    {
+      "id": "ap-mine",
+      "title": "Mining an AP policy from pay/hold labels",
+      "where": "BENCHMARK-MINE.md; RULESETS.md, \"Mining a ruleset from labelled decisions\"; the methods page (docs/doors/methods.md, Rules learned from labels)",
+      "numbers": "4 of 4 rules recovered with 0 false rules; 68 of 68 holds explained; tolerance 0.02 inside a data interval of 1.90% to 2.20%; 100 of 100 agreement when the mined rules are enforced (in-sample); at a 25% exception rate, 52 of 68 holds explained",
+      "reason": "Its prereg (sha256 09d94446355a50f28791fe44c0063cccfb0019516a8197113b0c95e3e72937ed) is not in this tree, because its text names internal tools and an edited copy could not match its hash; its timing rests on the authors' file times."
+    },
+    {
+      "id": "peppol-declared-accuracy",
+      "title": "Peppol ruleset declared accuracy on 4 and 7 constructed cases",
+      "where": "RULESETS.md, \"Declared accuracy, side by side\"",
+      "numbers": "4 cases: false-positive and false-negative rates 0% under 0.1.0 and 0.2.0; 7 cases built after the rules: false-negative rate 60% (0.1.0) and 20% (0.2.0), false-positive rate 0%",
+      "reason": "Cases labelled by the rules' authors and scored by the test suite (measureRuleset); there is no prereg, so no bar and no table."
+    },
+    {
+      "id": "einvoice-ruleset-corrections",
+      "title": "E-invoice ruleset corrections on a constructed set",
+      "where": "RULESET-CORRECTIONS-2026-09-28.md, \"What it costs, measured\"",
+      "numbers": "false alarms 5/10, 5/10 and 7/13 to 0, and missed errors 5/8 and 6/9 to 0 and 0/4 to 2/4 (Peppol, ZATCA, KSeF, 0.0.1 to 0.1.0); 0.0.1 failed 7 of 13 clean KSeF cases",
+      "reason": "Measured by the test suite on a set built from the specs to exercise these defects; the prereg the page cites is not in this tree, and the set is not field data."
+    },
+    {
+      "id": "po-price-kind",
+      "title": "Purchase-order price kind on a constructed set",
+      "where": "CHANGELOG.md, the rulesets' record, \"Sourced abstention and full-precision prices (2026-09-28)\", the LINE_PRICE note",
+      "numbers": "false alarms 8/8 to 0/8, misses 3/6 to 0/6",
+      "reason": "A constructed set whose prereg is not in this tree."
+    },
+    {
+      "id": "einvoice-twin-correction",
+      "title": "E-invoice twin correction",
+      "where": "EINVOICE-TWIN-CORRECTION-2026-09-29.md",
+      "numbers": "8 of 8 items of a held-out ambiguity class read PASS before the fix; after it, 0 of 69 verdicts moved on official sample documents, and 2,159 of 2,159 seeded errors were caught",
+      "reason": "The held-out set is sealed and not in this tree; the 69-document figures are a regression check its harness repeats, with no prereg in this tree."
+    },
+    {
+      "id": "twin-accuracy-study",
+      "title": "The twin's internal accuracy study",
+      "where": "VERDICT-SCHEMA-v0.md, the measured posture",
+      "numbers": "7.2% false FAILs on correct values (a kill criterion that fired)",
+      "reason": "An internal study whose prereg and results are not in this tree."
+    },
+    {
+      "id": "cord-95-tolerance",
+      "title": "Invoice tolerance correction on 95 real receipts",
+      "where": "NUMERIC-HONESTY-2026-09-28.md, the tolerance correction",
+      "numbers": "1 of 95 receipts false-FAILed under the rounding cap as first preregistered, restored by the cash step",
+      "reason": "Tuned on the same receipts it is reported on, as the page says; its preregistrations are not in a bench folder."
+    },
+    {
+      "id": "replay-0-0-1",
+      "title": "Replays of engine 0.0.1 verdicts",
+      "where": "CHANGELOG.md, the engine 0.1.0 note",
+      "numbers": "8 of 130 replays differ, all corrections",
+      "reason": "An earlier measurement with no prereg and no results file in this tree."
+    },
+    {
+      "id": "remedies-replay",
+      "title": "Replay of the AP verdicts across the remedies change",
+      "where": "REMEDIES.md, the frozen AP cases",
+      "numbers": "100 of 100 verdicts replay, before and after the change",
+      "reason": "A determinism check the test suite repeats over the AP set, not an accuracy result; listed so no count sits unlisted."
+    },
+    {
+      "id": "ap-run-2",
+      "title": "AP benchmark, the disclosed tuned run",
+      "where": "BENCHMARK-AP.md; bench/ap/README.md",
+      "numbers": "100 of 100 decided, 0 wrong, after two wording rules tuned on the test set",
+      "reason": "Tuned on its own test set, so it is a ceiling, not a test; the AP prereg's sha256 was never recorded (see the refused list)."
+    },
+    {
+      "id": "ap-audit-configs",
+      "title": "AP audit, split by published configuration",
+      "where": "BENCHMARK-AP.md, the audit table",
+      "numbers": "every wrong decision caught in each of the seven configurations (23/23, 25/25, 16/16, 24/24, 19/19 and 4/4 among them); 63% to 82% of invoices needed no person",
+      "reason": "The per-configuration split of the audit rows above (111 of 111); the same unrecorded prereg, so it is not a table."
+    },
+    {
+      "id": "ap-stress-by-class",
+      "title": "AP stress, coverage by perturbation class",
+      "where": "BENCHMARK-AP.md, the fixed-seed result; bench/ap/README.md",
+      "numbers": "74% to 100% decided by class (100% for line order and wording, 81% to 85% for number formatting, 87% to 96% for OCR letter noise, 74% to 85% for everything at once), 0 wrong in each",
+      "reason": "The per-class split of the stress rows above, on five fixed seeds (files named holdout1 to holdout5). The seeds were re-banked fourteen times (four times on 2026-10-05; at 00:18Z on 2026-10-06, and at 06:07Z, 08:35Z and 11:45Z that day, digest only; three times on 2026-10-13, under engine 0.7.0, then digest only, then for the engine 0.7.1 label only; twice on 2026-10-14, under engine 0.7.2 and ap-threeway@0.3.0, then digest only; once on 2026-10-20, digest only, after ap-threeway@0.4.0 joined the pack as a selectable ruleset) under a pack that kept changing after their first run, the 00:18Z one after a cold review found the banked files no longer reproduced; no banked decision moved, and that re-bank followed a change to the AP text path made with these seeds' results in view, as did the first re-bank of 2026-10-13, after a first run on these seeds moved 120 decisions (5 of them wrong) and the readings were corrected, so they are not a holdout (bench/ap-blind/STRESS-AMENDMENT-2026-10-05.md)."
+    },
+    {
+      "id": "xr-compiler-posthoc",
+      "title": "Compiled XRechnung after the currency-count fix, post-hoc",
+      "where": "COMPILER.md, \"Post hoc: the same run after the currency count\"",
+      "numbers": "planted defects 8 / 12 / 0 to 13 / 7 / 0, and 8 / 4 / 8 to 13 / 3 / 4 (caught / abstain / wrong PASS); 4/20 wrong PASS (8.1% to 41.6%) and 13/20 caught (43.3% to 81.9%)",
+      "reason": "A post-hoc regression re-run on a corpus and defects already seen; its prereg addendum (sha256 197fcb3e268ae6468ed54952f0041b2ec7da35d8bde7644dea647f8f4f239988) and its results are not in this tree. The first run is the table xr-einvoice-compiled."
+    },
+    {
+      "id": "compiler-reproduction",
+      "title": "Compiled Peppol checks against the hand-written rulesets",
+      "where": "RULESETS.md, \"Recompiled Peppol, against the hand rulesets\"; COMPILER.md",
+      "numbers": "8 of 11 checks reproduced against 0.2.0 and 10 of 12 against 0.3.0; the same gate decision as the hand-written 0.2.0 on all 60 documents of the e-invoice PDF test",
+      "reason": "A structural comparison from the compiler's comparison report, with no prereg bar; the report is not in this tree."
+    },
+    {
+      "id": "legal-020-on-first-set",
+      "title": "legal@0.2.0 on the first legal blind set, post-hoc",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"The replication table on both blind sets, and the earlier runs\", the paragraph \"Earlier runs, for the record\"",
+      "numbers": "0.2.0 gave every outcome 0.1.0 gave on the 58 items",
+      "reason": "A post-hoc re-run with no prereg; the 0.1.0 figures it matches are the table x2b-legal-fix."
+    },
+    {
+      "id": "legal-ops-brief",
+      "title": "A cold reader's adversarial legal brief (an AI agent in the role of a legal-operations director that had not worked on this tree), legal@0.2.0 against legal@0.3.0",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"Cold readers' adversarial briefs (AI agents, not people)\", the first table; CHANGELOG.md, the rulesets' record, the legal 0.3.0 section",
+      "numbers": "eight quotations legal@0.2.0 passed and should not have, of 26; caught, 0.2.0 then 0.3.0: invented and similar 5 of 5 and 5 of 5; meaning-flipping brackets 5 of 5 and 5 of 5; a later opinion that cites the right case 0 of 3 and 3 of 3; a dropped condition 1 of 6 and 6 of 6. The fix's own written expectation that one control (n1) would PASS failed: it abstains, by design, because it starts right after a negation",
+      "reason": "A post-hoc check on 26 quotations that reader typed from memory, run after the rule was changed to answer them; no prereg hash was recorded and there is no bench folder."
+    },
+    {
+      "id": "legal-030-regression",
+      "title": "legal@0.3.0 on the first legal blind set (58 items), post-hoc",
+      "where": "CHANGELOG.md, LEGAL.md's record, the replication table; CHANGELOG.md, the rulesets' record, \"What it costs\" in the legal 0.3.0 section",
+      "numbers": "58 of 58 outcomes equal to legal@0.2.0's and 0 of 20 known-bad passed, each text given a caption line; 57 of 58 before one change prompted by this set (a hyphenated party name in control CT14)",
+      "reason": "A post-hoc replication with no prereg hash recorded before it, after a rule change prompted by the set itself; its results file is not in this tree. The second set's 40 of 40 is the post-hoc table legal-blind-2-030."
+    },
+    {
+      "id": "legal-040-default",
+      "title": "legal@0.4.0, the default legal rule under engine 0.6.0 until legal@0.5.0 took it the same day, on both legal blind sets, post-hoc",
+      "where": "LEGAL.md, \"The current blind number\"; CHANGELOG.md, LEGAL.md's record, \"How the default is chosen: each time it was applied\" and the replication table; CHANGELOG.md, the rulesets' record, the legal 0.4.0 section",
+      "numbers": "second blind set, half B: known-bad quotations passed 0/10 (0.0% to 27.8%); genuine quotations failed 1/10 (1.8% to 40.4%), passed 4/10 (16.8% to 68.7%), can't tell 5/10; 19 of 20 outcomes equal to legal@0.3.0's. Both halves: 39 of 40 outcomes equal to legal@0.3.0's, 0 of 20 known-bad passed. First blind set, each text given a caption line: 58 of 58 equal, 0 of 20 known-bad passed",
+      "reason": "The default rule was chosen by LEGAL.md's stated rule on half B, a half already seen: legal@0.4.0 was built from the cases of a cold reader (an AI agent in the role of a legal-operations director that had not worked on this tree), run on both sets with their outcomes known and no note hashed or stamped before the run, then narrowed once after that run (its negation reading), so neither set is held-out for that change; its results file is not in this tree."
+    },
+    {
+      "id": "legal-050-default",
+      "title": "legal@0.5.0, the default legal rule under engine 0.6.0 from 2026-10-05 until legal@0.5.1 took it on 2026-10-06, on both legal blind sets, post-hoc",
+      "where": "LEGAL.md, \"The current blind number\"; CHANGELOG.md, LEGAL.md's record, \"How the default is chosen: each time it was applied\" and the replication table; CHANGELOG.md, the rulesets' record, the legal 0.5.0 section",
+      "numbers": "second blind set, half B: known-bad quotations passed 0/10 (0.0% to 27.8%); genuine quotations failed 1/10 (1.8% to 40.4%), passed 4/10 (16.8% to 68.7%), can't tell 5/10; 20 of 20 outcomes equal to legal@0.4.0's. Both halves: 40 of 40 equal, 0 of 20 known-bad passed. First blind set, each text given a caption line: 58 of 58 equal, 0 of 20 known-bad and 0 of 18 supplementary false quotations passed",
+      "reason": "The default is chosen by LEGAL.md's stated rule on half B, a half already seen: legal@0.5.0 was built from the cases of a cold reader (an AI agent in the role of a legal-operations director that had not worked on this tree) and run on both sets with their outcomes known and no note hashed or stamped before the run; its section reader was shaped with both sets' texts in view, and one change followed an outcome (an OPINION heading in control CT19, FAIL to can't tell before the change), so neither set is held-out; its results file and harness are not in this tree."
+    },
+    {
+      "id": "legal-051-default",
+      "title": "legal@0.5.1, the default legal rule under engine 0.6.0 from 2026-10-06 until legal@0.5.2 took it later that day, on both legal blind sets, post-hoc",
+      "where": "LEGAL.md, \"The current blind number\"; CHANGELOG.md, LEGAL.md's record, \"How the default is chosen: each time it was applied\" and the replication table",
+      "numbers": "second blind set, half B: known-bad quotations passed 0/10 (0.0% to 27.8%); genuine quotations failed 1/10 (1.8% to 40.4%), passed 4/10 (16.8% to 68.7%), can't tell 5/10; with the 4 label errors set apart, genuine passed 4/6 (30.0% to 90.3%); 20 of 20 outcomes equal to legal@0.5.0's. Both halves: 40 of 40 equal, 0 of 20 known-bad passed. First blind set, each text given a caption line: 58 of 58 equal, 0 of 20 known-bad and 0 of 18 supplementary false quotations passed; the wording of 2 genuine PASSes changed",
+      "reason": "The default is chosen by LEGAL.md's stated rule on half B, a half already seen: legal@0.5.1 was built from the cases of a cold reader (an AI agent in the role of a legal-operations director that had not worked on this tree) and run on both sets with their outcomes known and no note hashed or stamped before the run; three changes followed outcomes on the first set (concessions taken off the limitation list after control CT01 moved PASS to can't tell; the whole-sentence check narrowed to the quotation's own line after control CT13; a citation-only continuation read as the end after control CT06), so neither set is held-out; its results file and harness are not in this tree."
+    },
+    {
+      "id": "legal-052-default",
+      "title": "legal@0.5.2, the default legal rule from 2026-10-06 (later that day) under engines 0.6.0 and 0.7.0, until legal@0.5.3 took it under engine 0.7.1 on 2026-10-13, on both legal blind sets, post-hoc",
+      "where": "LEGAL.md, \"The current blind number\"; CHANGELOG.md, LEGAL.md's record, \"How the default is chosen: each time it was applied\" and the replication table",
+      "numbers": "second blind set, half B: known-bad quotations passed 0/10 (0.0% to 27.8%); genuine quotations failed 1/10 (1.8% to 40.4%), passed 4/10 (16.8% to 68.7%), can't tell 5/10; with the 4 label errors set apart, genuine passed 4/6 (30.0% to 90.3%); 20 of 20 outcomes equal to legal@0.5.1's. Both halves: 40 of 40 equal, 0 of 20 known-bad passed. First blind set, each text given a caption line: 58 of 58 equal, 0 of 20 known-bad and 0 of 18 supplementary false quotations passed; the wording of 14 genuine PASSes changed over both sets (each prints how its sentence begins; 8 were \"verbatim\")",
+      "reason": "The default is chosen by LEGAL.md's stated rule on half B, a half already seen: legal@0.5.2 was built from the cases of a cold reader (an AI agent in the role of a legal-operations director that had not worked on this tree) and run on both sets with their outcomes known and no note hashed or stamped before the run; no change followed a run on either set, and one followed a run on the cold readers' own briefs (the opinion adopting what it reports, read as its own voice, after a quotation a reader counted genuine was held), so neither set is held-out; its harness is not in this tree."
+    },
+    {
+      "id": "legal-053-default",
+      "title": "legal@0.5.3, the default legal rule under engine 0.7.1 from 2026-10-13, on both legal blind sets, post-hoc",
+      "where": "LEGAL.md, \"The current blind number\" and \"The rules, and which one runs\"; CHANGELOG.md, the legal rule 0.5.3 entry",
+      "numbers": "second blind set, half B: known-bad quotations passed 0/10 (0.0% to 27.8%); genuine quotations failed 1/10 (1.8% to 40.4%), passed 4/10 (16.8% to 68.7%), can't tell 5/10; with the 4 label errors set apart, genuine passed 4/6 (30.0% to 90.3%); 20 of 20 outcomes equal to legal@0.5.2's. Both halves: 40 of 40 equal, 0 of 20 known-bad passed. First blind set, each text given a caption line: 58 of 58 equal, 0 of 20 known-bad and 0 of 18 supplementary false quotations passed; the wording of 3 genuine PASSes changed",
+      "reason": "The default is chosen by LEGAL.md's stated rule on half B, a half already seen: legal@0.5.3 was built from the cases of two cold readers (AI agents in the role of a legal-operations director that had not worked on this tree) and run on both sets with their outcomes known and no note hashed or stamped before the run; its first run gave every outcome legal@0.5.2 gives, and the three changes that followed runs on the readers' own briefs left them so, so neither set is held-out; its harness is not in this tree."
+    },
+    {
+      "id": "legal-054-default",
+      "title": "legal@0.5.4, the default legal rule from engine 0.7.2 (2026-10-14), on the second legal blind set, post-hoc",
+      "where": "LEGAL.md, \"The current blind number\" and \"How the default is chosen: each time it was applied\"; CHANGELOG.md, the legal rule 0.5.4 entry",
+      "numbers": "second blind set, half B: known-bad quotations passed 0/10 (0.0% to 27.8%); genuine quotations failed 1/10 (1.8% to 40.4%), passed 4/10 (16.8% to 68.7%), can't tell 5/10; with the 4 label errors set apart, genuine passed 4/6 (30.0% to 90.3%). Both halves: 40 of 40 outcomes equal to legal@0.5.3's, run from the shipped texts on 2026-10-14. No number on the first blind set is published for it",
+      "reason": "The default is chosen by LEGAL.md's stated rule on half B, a half already seen: legal@0.5.4 was built from the cases of two cold readers (AI agents, one reading the pack as a legal-operations buyer and one in the ninth review round; not people) and run on the second set with its outcomes known and no note hashed or stamped before the run, so neither half is held-out."
+    },
+    {
+      "id": "legal-ops-r4-brief",
+      "title": "The third cold legal reader's briefs (an AI agent in a legal-operations director's role that had not worked on this tree; 42 citations, Westlaw- and Lexis-shaped mock-ups), legal@0.4.0 against legal@0.5.0",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"Cold readers' adversarial briefs (AI agents, not people)\", the third table",
+      "numbers": "editorial matter quoted as the opinion: 3 of 3 PASS under 0.4.0, 3 of 3 can't tell under 0.5.0; a dissent quoted as the opinion: 2 of 2 PASS, then 2 of 2 can't tell; a genuine quotation across n7: FAIL, then can't tell; full citations with a pin: 3 of 3 can't tell, then 3 of 3 PASS; the Lexis header as delivered: 8 of 8 can't tell, then 3 PASS, 1 FAIL, 4 can't tell; altered or unresolvable quotations: 0 of 17 PASS under both",
+      "reason": "A post-hoc check on mock-ups that reader typed from memory, run after the rule was changed to answer them; no prereg hash was recorded and there is no bench folder."
+    },
+    {
+      "id": "legal-ops-r5-brief",
+      "title": "The fourth cold legal reader's briefs (an AI agent in a legal-operations director's role that had not worked on this tree; 57 citations, Westlaw- and Lexis-shaped mock-ups of Ashcroft v. Iqbal), legal@0.5.0 against legal@0.5.1",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"Cold readers' adversarial briefs (AI agents, not people)\", the fourth table",
+      "numbers": "exact-word cuts that reverse the opinion: 4 of 4 PASS under 0.5.0 (2 verbatim), 4 of 4 can't tell under 0.5.1; a cut before \", but it does not unlock …\" the reader counted genuine: PASS, then can't tell; a citation sentence left out under \"(citation omitted)\", \"(citations omitted)\" or \"(cleaned up)\": 3 of 3 FAIL, then 3 of 3 can't tell (each also stops before \", but …\"); an em dash against \"--\": FAIL, then PASS; a quotation across a Westlaw headnote number: can't tell, then PASS; changed words, editorial or dissent words, fabrications, ellipses over a negation: 0 of 26 PASS under both; other genuine quotations: 14 of 14 PASS under both; on the earlier readers' briefs (243 checks over four rounds) 15 answers move",
+      "reason": "A post-hoc check on mock-ups that reader typed, run after the rule was changed to answer them; no prereg hash was recorded and there is no bench folder."
+    },
+    {
+      "id": "legal-ops-r6-brief",
+      "title": "The fifth cold legal reader's briefs (an AI agent in a legal-operations director's role that had not worked on this tree; 91 checks against Westlaw-, PDF-, KeyCite- and Lexis-shaped mock-ups of Daubert v. Merrell Dow Pharmaceuticals, an invented opinion of cuts and lead-ins, and an invented plurality), legal@0.5.1 against legal@0.5.2",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"Cold readers' adversarial briefs (AI agents, not people)\", the fifth table",
+      "numbers": "words the opinion reports or frames, quoted as its own: 6 of 6 PASS under 0.5.1 (4 verbatim), 6 of 6 can't tell under 0.5.2; a plurality part: PASS labelled the majority opinion, then PASS labelled a plurality opinion; across a PDF page footer and header: 2 of 2 FAIL, then 2 of 2 PASS; a download opening on its KeyCite flag: 5 of 5 can't tell with the text misnamed, then 3 PASS, 1 FAIL and 1 can't tell (a parallel citation with no key); across a Lexis HN4 marker: 1 FAIL and 2 PASS with a false note, then 3 PASS; the sealed 46-citation brief: 44 of 46 match the reader's sealed expectations, 2 move on purpose (a standard the opinion reports from the decision under review and a party's reported contention, both expected PASS, now can't tell); altered words and wrong-section words: none PASS under either; on the earlier readers' briefs (334 checks over five rounds, this reader's included) 14 answers move",
+      "reason": "A post-hoc check on mock-ups that reader typed, run after the rule was changed to answer them; the reader hashed its expected answers for one brief before its run (sha256 0d90589a…), but no prereg was recorded for the rule change, and there is no bench folder."
+    },
+    {
+      "id": "legal-ops-r7-brief",
+      "title": "The seventh cold legal reader's briefs (an AI agent in a legal-operations director's role that had not worked on this tree; 55 citations against Westlaw-, Lexis- and public-archive-shaped mock-ups, five designation styles and twelve lead-ins), legal@0.5.2 against legal@0.5.3",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"Cold readers' adversarial briefs (AI agents, not people)\", the seventh reader's table",
+      "numbers": "against its own written expectations (expect.json), the 55-citation brief agreed on 46 of 54 under legal@0.5.2 and 52 of 54 under legal@0.5.3; known-bad quotations passed 3 of 36, then 0 of 36; genuine: 13 PASS, 1 FAIL, 4 can't tell, then 16 PASS, 0 FAIL, 2 can't tell. A dissent whose designation carries a join clause, quoted as the holding: 4 of 4 PASS as the majority's, then 4 of 4 can't tell; the plain designation forms: 2 of 2 can't tell under both; twelve party or court positions after a lead-in: 7 PASS and 5 can't tell, then 12 of 12 can't tell, the court's own holding still PASS; a genuine quotation across a Westlaw page break whose header carries a looseleaf citation: FAIL, then PASS; Conley's standard, which the next sentence retires: PASS, then FAIL; a genuine Twombly quotation after \"we do not require …, but only\": can't tell, then PASS; 16 of this reader's answers move",
+      "reason": "A post-hoc check on mock-ups that reader typed, run after the rule was changed to answer them; the reader wrote its expected answers (expect.json) on 2026-10-06, by its file time, before legal@0.5.3 was built, but no prereg was recorded for the rule change, three changes to the rule followed runs on this reader's own brief (its I05, T15 and I09), and there is no bench folder."
+    },
+    {
+      "id": "legal-ops-r8-brief",
+      "title": "The eighth cold legal reader's briefs (an AI agent in a legal-operations director's role that had not worked on this tree; 36 quotations against Westlaw PDF-, Lexis- and public-archive-shaped mock-ups, then 8 variants and 8 designation styles), legal@0.5.2 against legal@0.5.3",
+      "where": "CHANGELOG.md, LEGAL.md's record, \"Cold readers' adversarial briefs (AI agents, not people)\", the eighth reader's table",
+      "numbers": "on its 36 quotations (23 altered or misattributed, 12 genuine, one it marked uncertain): altered quotations not passed, 19 of 23 under legal@0.5.2 and 23 of 23 under legal@0.5.3; genuine: 9 PASS, 2 FAIL, 1 can't tell, then 11 PASS, 0 FAIL, 1 can't tell. Eight separate-opinion designation styles, the separate opinion's words quoted without a parenthetical: 3 PASS as the majority's and 5 can't tell, then 8 of 8 can't tell; Conley's retired standard after \"relying on Conley's statement that\": PASS, then FAIL; another court's holding after \"held (1) that …, and (2) that\": PASS, then can't tell; a party's view in the sentence after \"In his view, …\": PASS (verbatim), then can't tell; a genuine quotation across a page break whose header carries a looseleaf citation: FAIL, then PASS; \"(citations omitted)\" over a citation clause: 2 of 2 FAIL, then 2 of 2 PASS; its other altered quotations: none PASS under either; on the readers' own briefs (461 checks over seven rounds) 26 answers move, this reader's 10 and the seventh reader's 16, and none of the five earlier readers' answers moves",
+      "reason": "A post-hoc check on mock-ups that reader typed and labelled, run after the rule was changed to answer them; no prereg was recorded for the rule change, and there is no bench folder."
+    },
+    {
+      "id": "t1-untabled-rows",
+      "title": "Extraction contract: the envelope count its table does not carry",
+      "where": "EXTRACTION-CONTRACT.md, the measured table",
+      "numbers": "envelopes satisfying their schema 60/60",
+      "reason": "Printed from the run's report; the shipped results files do not record a per-envelope schema check, so it cannot be a row of the table t1-extraction-contract."
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "format": "bench-table/1",
+  "id": "legal-blind-2-030",
+  "title": "legal@0.3.0 on the second legal blind set, post-hoc",
+  "prereg": {
+    "path": "ADDENDUM-legal-0.3.0.md",
+    "sha256": "6e6cf86f7a46233fc302ff8d0ddff32b9343a51330cde1b60e0a245a3b358dad",
+    "frozen_sha256": "6e6cf86f7a46233fc302ff8d0ddff32b9343a51330cde1b60e0a245a3b358dad",
+    "amendments": [],
+    "stamp": {
+      "status": "stamped after the run",
+      "proofs": [
+        {
+          "proof": "ADDENDUM-legal-0.3.0.md.tsr",
+          "covers": "ADDENDUM-legal-0.3.0.md",
+          "gen_time": "2026-10-05T19:12:24Z",
+          "serial": "00d64412e7a14d04633c692348271ff7e7",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "note hashed before run; outcomes already known; post-hoc: legal@0.3.0 on half B, run once two seconds after its note was hashed (legal@0.3.0 was not tuned on this set)",
+    "date": "2026-10-05T17:50:41Z",
+    "engine_version": "0.6.0",
+    "ruleset": "legal@0.3.0",
+    "results": {
+      "path": ".",
+      "sha256": "07f374187bdfb2a8a9d97a06e033f0d9d0051ae49da00bef55d9d2f8e0e1c1ca"
+    },
+    "spec_sha256": "805aeb256dc2c2abedd30a58abd62d7c3f3cdd2577305d27147b2f5ad9c2d3c6",
+    "shipped_edited": [
+      {
+        "file": "run-halfB-030.ts",
+        "recorded_sha256": "0f952e25d4db8ea597a99a215d2138dfd2d2918fa347a42cfec438ea5d729c07",
+        "sha256": "bdf10ae9a0fece4dd33ffc42cfc8d6569ec096208a540d04d265147c0317c314",
+        "reason": "the run's script. Two comment lines were edited: the run command named the authors' private folder, and the first line carried an internal work label; the code is unchanged. The original does not ship, so the difference cannot be checked here."
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "Its script ships (two comment lines edited), but it imports the engine from the authors' working tree and reads the second legal set from the folder above its own, so it does not run as shipped. The opinion texts it reads now ship in legal-blind-2/sources/, and legal-blind-2/rerun.mjs reruns that set under legal@0.0.1 to legal@0.2.0, not under legal@0.3.0."
+    }
+  },
+  "rows": [
+    {
+      "claim": "legal@0.3.0, half B: known-bad quotations certified PASS",
+      "n": 10,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.277533
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; post-hoc: the blind rows for the earlier rules are the table legal-blind-2. Stamp after the run: the note was hashed 2 s before the run (17:50:39Z) and stamped by the timestamp authority 81 min after it (19:12:24Z), although stamping had begun at 16:07Z that day, so the stamp shows the note existed by then, not that it came before the run"
+    },
+    {
+      "claim": "legal@0.3.0, half B: genuine quotations FAILed (false FAIL)",
+      "n": 10,
+      "k": 1,
+      "rate": 0.1,
+      "ci95": [
+        0.017876,
+        0.404151
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.3.0, half B: genuine quotations PASS",
+      "n": 10,
+      "k": 5,
+      "rate": 0.5,
+      "ci95": [
+        0.236593,
+        0.763407
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "legal@0.3.0, half B: genuine quotations abstained",
+      "n": 10,
+      "k": 4,
+      "rate": 0.4,
+      "ci95": [
+        0.16818,
+        0.687327
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; the same four label errors as legal-blind-2"
+    },
+    {
+      "claim": "half-B items whose legal@0.3.0 outcome differs from legal@0.2.0's",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; compared with the shipped legal@0.2.0 rows of legal-blind-2"
+    },
+    {
+      "claim": "all 40 items whose legal@0.3.0 outcome differs from legal@0.2.0's (an earlier comparison, hashed in the note's list)",
+      "n": 40,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.087622
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; run before the note was written, after the set had been seen"
+    },
+    {
+      "claim": "all 40 items: known-bad quotations certified PASS under legal@0.3.0",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    }
+  ],
+  "misses": [],
+  "blind": false,
+  "label": "post-hoc",
+  "audit": "no new audit: the labels are the blind set's, with its five label errors (see the table legal-blind-2)"
+}

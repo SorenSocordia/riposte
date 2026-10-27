@@ -1,6 +1,6 @@
 /**
  * Wiring for the e-invoice twin (src/twin-einvoice/, logic untouched here): the package root exports it, and the
- * `verify twin-einvoice` CLI verb runs it with exit codes 0 PASS · 1 FAIL · 2 ABSTAIN · 3 usage/input error.
+ * `verify twin-einvoice` CLI verb runs it with exit codes 0 PASS · 1 FAIL · 2 PASS-WITH-OPEN or INSUFFICIENT_DATA · 3 usage/input error.
  * Constructed fixture only (test/fixtures/einvoice/peppol-bis3-invoice.xml).
  */
 import { describe, it, expect, afterEach } from 'vitest'

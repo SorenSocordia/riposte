@@ -19,7 +19,7 @@
  *      the linkbase text, with the same parenthetical rule.
  *
  * Deterministic and dependency-free (regular expressions over the text, no network, no clock). Nothing is guessed:
- * no presentation link at all → null (the judge ABSTAINs with NO_PRESENTATION_LINKBASE); links but no statement role →
+ * no presentation link at all → null (the judge answers INSUFFICIENT_DATA with NO_PRESENTATION_LINKBASE); links but no statement role →
  * `statementRoles` is empty (NO_STATEMENT_ROLES).
  */
 import { sha256 } from '../verdict/canonical.js'

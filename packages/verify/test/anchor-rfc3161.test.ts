@@ -1,5 +1,5 @@
 /**
- * RFC 3161 time-stamp tokens over a checkpoint, verified offline (2026-09-28, anchor lane). The fixture was issued by a
+ * RFC 3161 time-stamp tokens over a checkpoint, verified offline (2026-09-28). The fixture was issued by a
  * throwaway OpenSSL TSA (RSA and EC signers under one root; private keys deleted) over checkpointDigest(body), and OpenSSL's
  * own `ts -verify` accepted both tokens: an independent oracle for what this verifier accepts.
  */

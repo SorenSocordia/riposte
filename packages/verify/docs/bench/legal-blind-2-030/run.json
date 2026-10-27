@@ -1,0 +1,72 @@
+{
+  "format": "bench-run/1",
+  "id": "legal-blind-2-030",
+  "prereg": "ADDENDUM-legal-0.3.0.md",
+  "results": ".",
+  "spec": "spec.json",
+  "chains": [
+    "ADDENDUM.sha256"
+  ],
+  "stamps": [
+    {
+      "proof": "ADDENDUM-legal-0.3.0.md.tsr"
+    }
+  ],
+  "shipped_edited": [
+    {
+      "file": "run-halfB-030.ts",
+      "recorded_sha256": "0f952e25d4db8ea597a99a215d2138dfd2d2918fa347a42cfec438ea5d729c07",
+      "sha256": "bdf10ae9a0fece4dd33ffc42cfc8d6569ec096208a540d04d265147c0317c314",
+      "reason": "the run's script. Two comment lines were edited: the run command named the authors' private folder, and the first line carried an internal work label; the code is unchanged. The original does not ship, so the difference cannot be checked here."
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "Its script ships (two comment lines edited), but it imports the engine from the authors' working tree and reads the second legal set from the folder above its own, so it does not run as shipped. The opinion texts it reads now ship in legal-blind-2/sources/, and legal-blind-2/rerun.mjs reruns that set under legal@0.0.1 to legal@0.2.0, not under legal@0.3.0."
+  },
+  "sources": [
+    {
+      "file": "ADDENDUM-legal-0.3.0.md",
+      "sha256": "6e6cf86f7a46233fc302ff8d0ddff32b9343a51330cde1b60e0a245a3b358dad",
+      "from": "posthoc/ADDENDUM-legal-0.3.0.md"
+    },
+    {
+      "file": "ADDENDUM.sha256",
+      "sha256": "4d174ec2b87821674520dbe0d2726dba08a5d083fda2d87320d9ca2499a6ce76",
+      "from": "posthoc/ADDENDUM.sha256"
+    },
+    {
+      "file": "run-halfB-030.ts",
+      "sha256": "bdf10ae9a0fece4dd33ffc42cfc8d6569ec096208a540d04d265147c0317c314",
+      "from": "posthoc/run-halfB-030.ts",
+      "from_sha256": "0f952e25d4db8ea597a99a215d2138dfd2d2918fa347a42cfec438ea5d729c07",
+      "note": "two comment lines are edited: the run command named the authors' private folder, and the first line carried an internal work label; the code is unchanged"
+    },
+    {
+      "file": "run-halfB-legal-0.3.0.json",
+      "sha256": "3e9abddc89927134f0905becf2e637b148068557b2db31a996bff310df2ad581",
+      "from": "posthoc/run-halfB-legal-0.3.0.json"
+    },
+    {
+      "file": "legal-0.3.0.json",
+      "sha256": "a9fae8c35966aa190c0a8bbd0c34f48bf6b3bc887497dc3e37a3892a25c7cb77",
+      "from": "posthoc/legal-0.3.0.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "805aeb256dc2c2abedd30a58abd62d7c3f3cdd2577305d27147b2f5ad9c2d3c6",
+      "from": "written 2026-10-05 in this folder: maps the post-hoc results to descriptive rows",
+      "note": "edited later on 2026-10-05, after an outside review: the first row's note records that the note was stamped after the run"
+    },
+    {
+      "file": "ADDENDUM-legal-0.3.0.md.tsr",
+      "sha256": "9814a4a4b4ae6415a624940a2b70138baad1d913ad1314228715f644becab10f",
+      "from": "a timestamp reply from DigiCert's authority, written beside the note on 2026-10-05 (19:12Z), after the run"
+    },
+    {
+      "file": "ADDENDUM-legal-0.3.0.md.tsq",
+      "sha256": "4977e5ef4a77e8ce5702118b6326f71fbb0588b853ca10c5d0fec7023d8833b6",
+      "from": "the timestamp query sent for that reply, written beside the note on 2026-10-05"
+    }
+  ]
+}

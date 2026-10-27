@@ -1,0 +1,220 @@
+{
+  "format": "bench-table/1",
+  "id": "r4-peppol-posthoc",
+  "title": "E-invoice PDFs re-run under the Peppol 0.2.0 ruleset, post-hoc",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "91e055f30e8286e2fa2d4c7d2e9c71100e9d1d08a106ffef17d2f865ac4f26c0",
+    "frozen_sha256": "91e055f30e8286e2fa2d4c7d2e9c71100e9d1d08a106ffef17d2f865ac4f26c0",
+    "amendments": [],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:16Z",
+          "serial": "090c7954b57e263016abaac6a45d2506",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "R4 post-hoc re-run of X1's 60 PDFs (peppol-en16931@0.2.0 alone, blind extractor unchanged)",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "peppol-en16931@0.2.0",
+    "results": {
+      "path": "results/results.json",
+      "sha256": "3be1408c1916ef7acc574a4797c1e2fb3ff2fadc417d4fe03452934084d95ac3"
+    },
+    "spec_sha256": "1c33a99d6442daaccafb28265c42aff1ffb2c2bb3289fb727775e8728a2c98ff",
+    "not_shipped": [
+      {
+        "file": "corpus/manifest.json",
+        "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+        "reason": "the e-invoice corpus manifest, pinned in PREREG.md section 2 (this run reuses that prereg). It does not ship: the e-invoice PDF run's folder, x1-einvoice-pdf/, lists the same file with the reason"
+      },
+      {
+        "file": "corpus/render-receipt.json",
+        "sha256": "1fefac4cccb98873ccbf8cfd745fa5fe5171d552cda7dc39ba036f3dff632a71",
+        "reason": "the render receipt, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/corpus/render-receipt.json"
+      },
+      {
+        "file": "lib/extract.mjs",
+        "sha256": "470fb72882fd280d378bc75a05742b5bdb25dcda8a72fb07c3b8636e3a11576b",
+        "reason": "the blind extractor, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/lib/extract.mjs"
+      },
+      {
+        "file": "rulesets/x1-supplement.ruleset.json",
+        "sha256": "af4956020143fdc92fd3f26ee1ce8c60ebb72a506f6fb7e3cbe69f1ea8a6c607",
+        "reason": "the supplement ruleset, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/rulesets/x1-supplement.ruleset.json"
+      },
+      {
+        "file": "run.mjs",
+        "sha256": "82e533959b23462caae11f52d30a1308f3c09f9bb806c98cde5eace0c9cc885c",
+        "reason": "the e-invoice run's harness, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/run.mjs"
+      },
+      {
+        "file": "score.mjs",
+        "sha256": "103df3794cffabc204e089686990d2b6f36050a1a3ac0d08bab9e1a0c2149264",
+        "reason": "the e-invoice run's scorer, pinned in PREREG.md section 2. Not copied here: the same bytes ship in x1-einvoice-pdf/score.mjs"
+      },
+      {
+        "file": "dist/cli.js",
+        "sha256": "60d9d0f737cd33305c85447441c87d153aedb6c2c22cef96761a773482d8c522",
+        "reason": "the engine build the e-invoice run called (engine 0.0.1), pinned in PREREG.md section 2. A build output does not ship, and the source in this tree has changed since, so a build made now will not have this sha256"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The run scored the e-invoice PDF run's per-document extractions under ruleset 0.2.0 with that run's scorer and engine 0.0.1. The extractions and the 60 rendered PDFs are not in this tree. The harness files its prereg pins ship in x1-einvoice-pdf/."
+    }
+  },
+  "rows": [
+    {
+      "claim": "planted defects certified PASS under 0.2.0 alone (wrong PASS)",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "POST-HOC",
+      "bar": {
+        "text": "X1's B1, re-run post-hoc: 0 wrong PASS on the 20 planted defects",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        },
+        "reused_from": "the e-invoice PDF run's prereg"
+      },
+      "note": "post-hoc: the bar was written for the e-invoice PDF run's prereg, not for this run, so the row has no verdict; its counts meet that bar's test; the 0.2.0 ruleset sits in the shipped slot of X1's scorer"
+    },
+    {
+      "claim": "planted defects caught",
+      "n": 20,
+      "k": 17,
+      "rate": 0.85,
+      "ci95": [
+        0.639581,
+        0.947632
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "planted defects abstained",
+      "n": 20,
+      "k": 3,
+      "rate": 0.15,
+      "ci95": [
+        0.052368,
+        0.360419
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "clean invoices correctly PASS",
+      "n": 20,
+      "k": 17,
+      "rate": 0.85,
+      "ci95": [
+        0.639581,
+        0.947632
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "noisy scans certified PASS wrongly",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "noisy scans false FAIL",
+      "n": 20,
+      "k": 2,
+      "rate": 0.1,
+      "ci95": [
+        0.027866,
+        0.301034
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "FAILs on planted documents (FAIL precision, all 60)",
+      "n": 19,
+      "k": 17,
+      "rate": 0.894737,
+      "ci95": [
+        0.686059,
+        0.970642
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    }
+  ],
+  "misses": [
+    {
+      "id": "X1-D15-still-luck",
+      "kind": "near-miss",
+      "description": "X1-D15 is still caught only because the blind extractor invented SEK, which R051 FAILs: a ruleset cannot fix an invented value",
+      "post_hoc": true,
+      "fixed_by": "T1 / extraction contract (a label heads its row segment and is maximal)"
+    },
+    {
+      "id": "X1-N06-false-fail",
+      "kind": "false-fail",
+      "description": "X1-N06 (stamped scan): false FAIL on R051, a stamped GBP read as CEN by OCR",
+      "post_hoc": true
+    },
+    {
+      "id": "X1-N20-false-fail",
+      "kind": "false-fail",
+      "description": "X1-N20 (rotated scan): false FAIL from the OCR misread of 1 as 4",
+      "post_hoc": true
+    },
+    {
+      "id": "presence-on-misread",
+      "kind": "scope",
+      "description": "presence checks (BR-02, BR-03, BR-05, BR-15) pass on any readable value, so a misread identifier passes",
+      "post_hoc": true
+    },
+    {
+      "id": "labels-from-renderer",
+      "kind": "method",
+      "description": "the 0.2.0 label lists include the phrasings X1's renderer prints beside the EN 16931 term names, so this run is not independent evidence for label coverage",
+      "post_hoc": true
+    }
+  ],
+  "blind": false,
+  "label": "post-hoc",
+  "audit": "no new audit: the planted defects of the X1 corpus are known by construction"
+}

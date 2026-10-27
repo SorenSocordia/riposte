@@ -1,0 +1,252 @@
+{
+  "format": "bench-table/1",
+  "id": "s4-bpi2019",
+  "title": "Three-way match on a real purchase log (BPI Challenge 2019)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+    "frozen_sha256": "37f97a990eae538196933f7172560fb512a6f7829a4dbe2c1883430c40f4229f",
+    "amendments": [
+      {
+        "sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+        "recorded_in": "PREREG-HASHES.txt",
+        "doc": "PREREG-final.frozen.md",
+        "at": "2026-10-03T06:54:39Z",
+        "note": "A (v0 + Amendment A; before any scored trace parsed; seed = 0x41e0908d = 1105236109)",
+        "text": "## Amendment A (2026-10-03 ~03:10 EDT): after the schema pass and the dev slice, before any scored trace is parsed\n\n**A1. Data received.** `BPI_Challenge_2019.xes`, 728,558,522 bytes, md5 `4eb909242351193a61e1c15b9c3cc814` (equals the supplied\nmd5), **sha256 `af63bc687fc4152f2123b05c3af7772b37ef3fce2d3f67f812666c9e356baae7`**.\n\n**A2. Schema pass** (`results/schema.json`): 42 activities, matching the description. Event attributes are only\n`concept:name`, `time:timestamp`, `Cumulative net worth (EUR)`, `User`, `org:resource`. No quantity, no unit price, no\nper-event amount other than that one value attribute. Category strings as in §4; Item Types Consignment, Limit, Service,\nStandard, Subcontracting, Third-party.\n\n**A3. Q1 answered, and it retires the v0 design.** The value attribute is the item's net worth repeated on every event: **1,477\nof the 1,500 dev traces carry one single value on every event** (`dev-probe.mjs`). Example: case `2000000014_00001` has five\ngoods receipts, five invoice receipts and five clearings, every one at 17,414.00, the creation value. Neither reading in §5 Q1\nholds (the values neither sum to nor climb to the creation value). The 23 traces whose values vary do so on receipt, invoice,\nservice-entry, block-removal and cancellation events, and not consistently (case `2000000030_00001`: two receipts at 549.00,\nthen invoices at 549.00 and 1,098.00). **So the money on receipts and invoices cannot be reconstructed from this file, and the\nv0 value ruleset `bpi-threeway-value@1.0.0` (R0/R1/R2 on amounts) cannot be computed.** It is retired here, before any scored\noutcome is seen. That is a finding about the data and is published as one.\n\n**A4. Replacement design: `bpi-threeway-messages@1.0.0`, a message-level three-way match, still through verify `reconcile`.**\nThe log does carry the messages themselves: goods receipts, invoice receipts, their cancellations, clearings.\n- `receipt.messages` = #`Record Goods Receipt` − #`Cancel Goods Receipt`. Where a trace has no `Record Goods Receipt`,\n  #`Record Service Entry Sheet` stands in (Q2: on the dev slice, service items post a goods receipt and a service entry sheet in\n  the same minute, e.g. `2000000001_00001`, `2000000002_00001`; no dev trace has a sheet without a receipt).\n- `invoice.messages` = #`Record Invoice Receipt` − #`Cancel Invoice Receipt` (Q3: `Vendor creates invoice` and `Vendor creates\n  debit memo` are vendor-side events, not postings; their counts differ from the invoice-receipt counts in 69 dev traces, so\n  they are not the same messages and are not counted).\n- `Record Subsequent Invoice` / `Cancel Subsequent Invoice` adjust a posted invoice and need no receipt of their own; they count\n  only for consignment.\n- **`R1M_INVOICES_LE_RECEIPTS`** (both 3-way categories): `inv <= gr`, exact on integers (ruleset tolerance rel 0, abs 0.01).\n  \"Every posted invoice receipt has a goods-receipt message.\"\n- **`R0M_CONSIGNMENT_NO_INVOICE`** (consignment): net invoice receipts + net subsequent invoices `= 0`.\n- **2-way items ABSTAIN `NO_AMOUNTS_FOR_TWO_WAY`**: their only leg is invoice amount vs PO value, and no invoice amount exists.\n  (The dev slice holds no 2-way item.)\n- The value attribute is not an operand. It is reported only: each item's creation value, and the share of items whose value\n  is constant.\n- Q4 (PO value updates) and Q6 (clearing value) are moot.\n- **Abstain rules:** `CATEGORY_CONFLICT`; `NO_AMOUNTS_FOR_TWO_WAY`; `TIMESTAMP_FORMAT` (a timestamp not in the file's ISO UTC\n  form, which would break ordering); `TRUNCATED` (no `Create Purchase Order Item`, or a receipt / invoice / cancellation /\n  clearing dated before it); `NEGATIVE_NET` (an operand the category uses is below zero; the dev slice showed `Cancel Subsequent\n  Invoice` with no `Record Subsequent Invoice` in 7 traces, so subsequent-invoice nets are checked only for consignment).\n- **In scope:** at least one `Record Invoice Receipt` or `Record Subsequent Invoice`.\n- **Remedies:** verify's reconciliation rulesets declare none, so a FAIL carries verify's `none` remedy (\"the finding stands\").\n  Recorded per item as issued.\n- Each document carries the case id, so every verdict id binds to its item.\n\n**A5. `LOG_HELD` fixed (§8).** A `Set Payment Block` or `Remove Payment Block` event (dev: 392 traces show a removal and only 2 a\nset; blocks are mostly set by the system without an event, so a removal is the evidence a block existed); or a `Cancel Invoice\nReceipt`; or uncleared: #`Record Invoice Receipt` > #`Clear Invoice` (dev: clearings equal gross invoice receipts in 1,300 of\n1,404 invoiced traces; a cancelled invoice's reversal is cleared against it, e.g. `2000000071_00001`, `4507000322_00030`).\n\n**A6. Audit protocol re-specified for message-level flags.** The v0 label (invoiced *value* exceeds received value) cannot be\njudged on this file. Each sampled FAIL gets two labels:\n- **Primary (the bar applies):** **CONFIRMED** if, reading every event, more invoice receipts stand than goods receipts at the end\n  of the log after every cancellation and reversal, and no event the harness ignores accounts for the excess. **FALSE** if such\n  an event or artifact accounts for it: a receipt recorded under another activity, one invoice logged twice, a truncated\n  history. **UNCLEAR** if the raw events cannot settle it, for example two invoice receipts by one user in the same minute that\n  may be one document. UNCLEAR counts as not confirmed.\n- **Secondary (descriptive, no bar):** does the trace show a reason a clerk would accept for invoices outnumbering receipts?\n  **VISIBLE_REASON** (a vendor debit memo, a PO quantity or price change, or the extra invoice still unpaid at log end) or\n  **NO_VISIBLE_REASON**. Without per-event amounts, partial invoicing against one receipt cannot be told from over-billing, so\n  NO_VISIBLE_REASON is not a finding of over-billing.\n- **Miss audit** (§8, 50 PASS items): **MISSED** if the events show an invoice receipt with no goods receipt to match that the\n  harness netted away, otherwise **OK**, or **UNCLEAR**.\n\n**A7. Unchanged:** the primary metric (audited precision of FAIL flags, 200 sampled, Wilson 95%), the bar (**PASS iff the lower\nbound ≥ 0.80**), the auditor (Claude Opus 5.5, an agent audit, not independent of the harness author), the secondaries, the\ndeterminism check, the reporting rules. The seed is the first 8 hex digits of the sha256 of `PREREG-final.frozen.md`, a copy of\nthis file as of this amendment.\n\n**A8. Dev-slice outcomes seen (disclosed).** On the first 1,500 traces the frozen harness gives 1,404 invoiced items, 10 FAIL,\n1,394 PASS, 0 ABSTAIN. All 10 FAIL items are `LOG_HELD`. I read four of them (traces 670, 673 and 683 in full, 942 in part);\nthe other six I saw only as event counts. Those 10 are excluded from every scored number.\n\n**A9. What the scored number can and cannot say.** It is a message-level fact about a real purchase-to-pay log: posted invoices\nthat outnumber goods receipts. It is not a money-level match, not an invoice-reading number, and not a measure of\nover-billing. The log-agreement table is the only external check: whether the company's own system blocked, cancelled or left\nunpaid the items the check flags.\n\n**A10. Freeze.** Harness files (`run.mjs`, `mapping.mjs`, `xes.mjs`, `score.mjs`, `stats.mjs`, `dump.mjs`) and the verify snapshot\nare hashed in `PREREG-HASHES.txt` before the scored run.",
+        "text_from": "PREREG.md:139-219"
+      }
+    ],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:17Z",
+          "serial": "00ba17b297c2b2e8b0be528027a76b60dd",
+          "before_run": false
+        },
+        {
+          "proof": "PREREG-final.frozen.md.tsr",
+          "covers": "PREREG-final.frozen.md",
+          "gen_time": "2026-10-05T16:07:21Z",
+          "serial": "53b4338a332dc76db8e99434c7971e85",
+          "before_run": false
+        },
+        {
+          "proof": "PREREG-v0.frozen.md.tsr",
+          "covers": "PREREG-v0.frozen.md",
+          "gen_time": "2026-10-05T16:07:22Z",
+          "serial": "7f4691b96e33942a120de226a1a746e8",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "S4 blind scored run (250,234 items)",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "bpi-threeway-messages@1.0.0",
+    "dist_sha256": "e4673ab6c50127cac2c3e9c70486c751b5aedbba9bfecfc92787983cbe6e3b6c",
+    "results": {
+      "path": "results",
+      "sha256": "935f7effca2ccfbfc8f48b2aae9179fce4a21a0d7ac49765e5c31c437dd5db6a"
+    },
+    "spec_sha256": "cb8f5b466f727a45911be4700498bd8d36724745dbea798ba93a9ff4736200ea",
+    "not_shipped": [
+      {
+        "file": "BPI_Challenge_2019.xes",
+        "sha256": "af63bc687fc4152f2123b05c3af7772b37ef3fce2d3f67f812666c9e356baae7",
+        "reason": "the public event log (728,558,522 bytes, md5 4eb909242351193a61e1c15b9c3cc814), not redistributed here. It is published by 4TU.ResearchData, doi 10.4121/uuid:d06aff4b-79f0-45e6-8ec8-e19730c248f1; this sha256 identifies the copy the run read."
+      },
+      {
+        "file": "results/run-blind.jsonl",
+        "sha256": "4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103",
+        "reason": "the per-case file (250,234 rows, 97,323,075 bytes), not shipped for its size. The coverage and flag-rate rows are read from results/summary-blind.json, which names this file by this sha256; they are summary only."
+      },
+      {
+        "file": "verify-snapshot",
+        "sha256": "e4673ab6c50127cac2c3e9c70486c751b5aedbba9bfecfc92787983cbe6e3b6c",
+        "reason": "a tree hash in PREREG-HASHES.txt: the copy of the engine build (engine 0.0.1) that run.mjs imports. A build output does not ship, and the source in this tree has changed since"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "Its scripts ship in this folder, but run.mjs imports a copy of the engine build as the run used it (engine 0.0.1), which is not in this tree, and it reads the public BPI Challenge 2019 event log (728 MB, 4TU.ResearchData, doi 10.4121/uuid:d06aff4b-79f0-45e6-8ec8-e19730c248f1), which is not redistributed here. The 97 MB per-case file is not shipped for its size, so the audit counts re-tally only from results/audit-labels.json and results/summary-blind.json."
+    },
+    "blind_basis": "PREREG-HASHES.txt records the first prereg's sha256 at 2026-10-03T06:19:45Z, noted as made while the log was still downloading and before any trace was parsed, and the amended prereg's at 06:54:39Z, before any scored trace was parsed; the amendment says 1,500 development traces were read before it and are left out of every scored number. The list and its notes were written by the authors"
+  },
+  "rows": [
+    {
+      "claim": "log agreement: decided items where the check and the company's own log agree (FAIL and held, or PASS and not held)",
+      "n": 209254,
+      "k": 129053,
+      "rate": 0.616729,
+      "ci95": [
+        0.614643,
+        0.61881
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; the only check in this table against something outside the run: the company's own log of what it held. PREREG §8 secondary, reported with no bar; Amendment A9 calls the log-agreement table the only external check; summary only (the 2x2 counts in results/summary-blind.json); the 61.7% is mostly items that passed and were not held (127,385 of the 129,053 that agree); the next row gives the recall side"
+    },
+    {
+      "claim": "held items the check flagged: P(FAIL | held), the recall side of the log agreement",
+      "n": 81771,
+      "k": 1668,
+      "rate": 0.020398,
+      "ci95": [
+        0.019451,
+        0.021391
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; not a preregistered row: added on 2026-10-06 from the same 2x2 counts in results/summary-blind.json, after a cold reader asked for the recall side beside the agreement figure; the check flagged about 2.0% of the items the company's log held"
+    },
+    {
+      "claim": "flags the check's own count confirmed on audit (the preregistered primary metric: audited precision of 200 sampled FAIL flags)",
+      "n": 200,
+      "k": 196,
+      "rate": 0.98,
+      "ci95": [
+        0.949712,
+        0.992196
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "PASS if the Wilson 95% lower bound is >= 0.80; FAIL otherwise (PREREG §7, unchanged by Amendment A7)",
+        "test": {
+          "ci_lo": {
+            "ge": 0.8
+          }
+        }
+      },
+      "note": "the primary metric re-counts the check's own rule: CONFIRMED means the trace shows more invoice receipts than goods receipts after every cancellation and reversal (Amendment A6), which is what the check computes, so a high rate shows the count was done as specified, not that a flag is over-billing; the external check is the log-agreement row above it; the audit is by the harness author; dist_sha256 is the verify snapshot's tree hash (sorted per-file sha256 of dist *.js)"
+    },
+    {
+      "claim": "seeded PASS items found missed on audit (miss audit)",
+      "n": 50,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.071348
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; PREREG §8: reported, no pass bar"
+    },
+    {
+      "claim": "in-scope items decided (coverage)",
+      "n": 209975,
+      "k": 209254,
+      "rate": 0.996566,
+      "ci95": [
+        0.996306,
+        0.996808
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; summary only; per-case file sha256 4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103 not shipped (97 MB)"
+    },
+    {
+      "claim": "decided items flagged (flag rate)",
+      "n": 209254,
+      "k": 1766,
+      "rate": 0.00844,
+      "ci95": [
+        0.008056,
+        0.008841
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; summary only; per-case file sha256 4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103 not shipped (97 MB)"
+    },
+    {
+      "claim": "flagged items the log held (blocked, cancelled or left uncleared): P(held | FAIL)",
+      "n": 1766,
+      "k": 1668,
+      "rate": 0.944507,
+      "ci95": [
+        0.932833,
+        0.954253
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; PREREG §8 secondary, reported with no bar"
+    },
+    {
+      "claim": "passed items the log held anyway: P(held | PASS)",
+      "n": 207488,
+      "k": 80103,
+      "rate": 0.386061,
+      "ci95": [
+        0.383968,
+        0.388158
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; PREREG §8 secondary, reported with no bar; relative risk P(held | FAIL) / P(held | PASS) = 2.45, 95% CI 2.42 to 2.48 (results/summary-blind.json, log_agreement.rr)"
+    },
+    {
+      "claim": "audited flags whose trace shows a reason a clerk would accept (VISIBLE_REASON, the secondary audit label)",
+      "n": 200,
+      "k": 161,
+      "rate": 0.805,
+      "ci95": [
+        0.744559,
+        0.853945
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; Amendment A6 secondary label, reported with no bar; NO_VISIBLE_REASON is not a finding of over-billing (A6); the audit is by the harness author"
+    }
+  ],
+  "misses": [
+    {
+      "id": "value-design-retired",
+      "kind": "data-limit",
+      "description": "the preregistered money-level match (v0) cannot be computed from this log: its only money field is the item's net worth repeated on every event; retired on dev-slice evidence before any scored outcome and replaced by a message-level match (Amendment A)",
+      "post_hoc": false
+    },
+    {
+      "id": "audit-37",
+      "kind": "audited-UNCLEAR",
+      "description": "audited flag #37 (case 4508047123_00030) read UNCLEAR on audit: no goods receipt; vendor debit memo; IR 09-20 09:41, Cancel Subsequent Invoice 12:44 with no subsequent invoice in the trace; 2 clears. The cancel may reverse the only IR, which the harness does not net",
+      "post_hoc": false
+    },
+    {
+      "id": "audit-90",
+      "kind": "audited-UNCLEAR",
+      "description": "audited flag #90 (case 4508050757_00100) read UNCLEAR on audit: service after-GR: GR1 but two service entry sheets (09:24, 09:25); IR2 both cleared. The second sheet may be a receipt the log did not mirror as a GR; the harness counts sheets only when no GR exists",
+      "post_hoc": false
+    },
+    {
+      "id": "audit-144",
+      "kind": "audited-FALSE",
+      "description": "audited flag #144 (case 4508062505_00010) read FALSE on audit: GR record/cancel/record/cancel/cancel/record: two cancels in the same minute (15:17) while only one GR stood, so one is a duplicate log line; netted correctly 1 GR stands and matches the 1 IR (paid after block removal)",
+      "post_hoc": false
+    },
+    {
+      "id": "audit-160",
+      "kind": "audited-UNCLEAR",
+      "description": "audited flag #160 (case 4507023132_00050) read UNCLEAR on audit: GR1; vendor debit memo; IR2 (05-14, 05-15); Cancel Subsequent Invoice 05-22 with no subsequent invoice in the trace; 1 clear. The cancel may reverse the second IR, which the harness does not net",
+      "post_hoc": false
+    }
+  ],
+  "blind": true,
+  "label": "blind",
+  "audit": "an AI agent audit: Claude Opus 5.5 (claude-opus-5-5), the same agent that wrote the harness, labelled every sampled case (the auditor field of results/audit-labels.json); no person labelled"
+}

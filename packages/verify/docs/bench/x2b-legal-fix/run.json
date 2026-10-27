@@ -1,0 +1,63 @@
+{
+  "format": "bench-run/1",
+  "id": "x2b-legal-fix",
+  "prereg": "PREREG.md",
+  "results": "results/run-v010.json",
+  "spec": "spec.json",
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "not_shipped": [
+    {
+      "file": "harness/run.mjs",
+      "sha256": "2a09e4f8c9a12af7e0f36b54d50a868ad586bfb66aa7277980011008563fa145",
+      "reason": "the run's harness. It names the authors' private folders, so it does not ship."
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The run's harness, a copy of the first legal blind set's harness with its paths changed, names the authors' folders and does not ship. The opinion texts and decision files it reads are not in this tree either."
+  },
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "c50c51a9b98784167554154564be3f54f9b16d977eadce2a8e7c0ce63c52656a",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "4cf06c7412b056dd8ad162ffd073ab2ba33d9b532ee3440012bafe65aee66bf3",
+      "from": "PREREG.sha256"
+    },
+    {
+      "file": "results/run-v010.json",
+      "sha256": "00775e1b4585367480f0df5fe6b78b29cb60a79b43027fbe7d2e799a21c9f231",
+      "from": "run-v010.json, which the run wrote outside its own folder"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "cdf9398a54a231a04f2bfbdbf70b063f634f9e4cfa9791e03ff73f580e3e1d8e",
+      "from": "the run spec written when the tables were first emitted",
+      "from_sha256": "1482a7c90430f9bc019552dcf48689357244be96e99bad13f853f3f273d9dab7",
+      "note": "audit statement added from the run's files"
+    },
+    {
+      "file": "PREREG-2026-10-05.sha256",
+      "sha256": "037112fdb1288a362cec4ca93b2451f4c3690c6556cd9c7225e37750f32ac5a4",
+      "from": "written 2026-10-05 in this folder, beside PREREG.sha256: the same two hashes and time, the files named as they sit here"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "3665fc80264a207ec9323017ccb54b9536a4abc84ba2ecf298468ba254ae209a",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "6f989656e20e11d7378082b252d74fb2088c7cd8d83014314dd3153600fa1d70",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ]
+}

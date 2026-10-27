@@ -1,9 +1,9 @@
 /**
- * Per-action notices — what happens to one action's FAIL or ABSTAIN, by rung (design ruling, 2026-09-28, as
+ * Per-action notices — what happens to one action's FAIL or can't tell (INSUFFICIENT_DATA), by rung (design ruling, 2026-09-28, as
  * corrected 08:35: *"the human should be made aware of what fails in case they want to dispute"*: awareness at every rung,
  * holding only where the rung holds).
  *
- *   rung       FAIL / ABSTAIN                                              PASS
+ *   rung       FAIL / INSUFFICIENT_DATA                                    PASS
  *   record     recorded + surfaced as a notice (evidence, dispute path)    unchanged (Riposte does not intervene)
  *   advise     surfaced prominently in-flow to the person and the agent    unchanged
  *   gate       HELD until a person resolves it                             human review
@@ -18,8 +18,9 @@
  * verdict's outcome.
  */
 
-import type { ClaimVerdict, Evidence, Insufficiency, Outcome, Value, Verdict } from './schema.js'
+import type { ClaimVerdict, Evidence, Insufficiency, Outcome, Value, Verdict, VerdictScope } from './schema.js'
 import type { VoiceLevel } from './voice.js'
+import { renderScope } from './scope.js'
 
 /** The dispute path for one verdict (and optionally one claim) on the book of record. */
 export const disputeCommand = (verdict_id: string, claim_id?: string): string =>
@@ -29,7 +30,7 @@ export const disputeCommand = (verdict_id: string, claim_id?: string): string =>
 export interface ActionHandling {
   /** A FAIL is SURFACED (shown, not held) or HELD until a person resolves it. */
   FAIL: 'SURFACE' | 'HOLD'
-  /** An ABSTAIN (INSUFFICIENT_DATA) likewise. */
+  /** A can't tell (INSUFFICIENT_DATA) likewise. */
   INSUFFICIENT_DATA: 'SURFACE' | 'HOLD'
   /** Where a PASS goes: UNCHANGED (Riposte does not intervene), HUMAN_REVIEW, or ACT_WITHIN_BOUNDS. */
   PASS: 'UNCHANGED' | 'HUMAN_REVIEW' | 'ACT_WITHIN_BOUNDS'
@@ -83,6 +84,8 @@ export interface ActionNotice extends VerdictFindings {
   handling: ActionHandling
   /** HOLD: a person resolves it before the action proceeds. SURFACE: shown, not held. PROCEED: every check that ran held. */
   action: 'HOLD' | 'SURFACE' | 'PROCEED'
+  /** The verdict's scope block (engine 0.3.0): the notice ends with it. Absent for an earlier engine's verdict. */
+  scope?: VerdictScope
 }
 
 function findingOf(v: Verdict, c: ClaimVerdict): Finding {
@@ -94,7 +97,7 @@ function findingOf(v: Verdict, c: ClaimVerdict): Finding {
     field: c.field,
     asserted: c.asserted,
     // A boolean computation result is a rule's pass/fail bit (e.g. GROUNDED), not a value the claim should have had.
-    // Rendering it as "expected false" misled (delivery-lane finding F2, 2026-09-28), so only real values are "expected".
+    // Rendering it as "expected false" misled (2026-09-28), so only real values are "expected".
     ...(c.computation && typeof c.computation.result !== 'boolean' ? { expected: c.computation.result } : {}),
     ...(c.variance !== undefined ? { variance: c.variance } : {}),
     explanation: c.explanation,
@@ -111,7 +114,7 @@ export function verdictFindings(verdict: Verdict): VerdictFindings {
   const fail = det.some(c => c.outcome === 'FAIL')
   const checked = det.filter(c => c.outcome !== 'INSUFFICIENT_DATA').length
   const aggregated: Outcome = fail ? 'FAIL' : checked === 0 ? 'INSUFFICIENT_DATA' : 'PASS'
-  // Never softer than the verdict's own deterministic outcome (fixed 2026-09-28, delivery-lane finding F1). Some producers
+  // Never softer than the verdict's own deterministic outcome (fixed 2026-09-28). Some producers
   // are stricter than this aggregation: `verifyAction` returns INSUFFICIENT_DATA when ANY value is ungrounded ("execute
   // only when every value is grounded"). A partially grounded transfer (the amount allow-listed, the account number with
   // no source) used to read PASS / PROCEED here, and at autonomy the ungrounded account number went through. The
@@ -138,7 +141,7 @@ export function actionNotice(verdict: Verdict, level: VoiceLevel): ActionNotice 
   if (!handling) throw new RangeError(`unknown rung ${JSON.stringify(level)} (record | advise | gate | autonomy)`)
   const f = verdictFindings(verdict)
   const action: ActionNotice['action'] = f.outcome === 'PASS' ? 'PROCEED' : handling[f.outcome] === 'HOLD' ? 'HOLD' : 'SURFACE'
-  return { ...f, level, handling, action }
+  return { ...f, level, handling, action, ...(verdict.scope ? { scope: verdict.scope } : {}) }
 }
 
 const val = (v: Value | undefined): string => (v === undefined ? '—' : JSON.stringify(v))
@@ -168,11 +171,11 @@ export function renderFindings(f: VerdictFindings): string[] {
 
 /** The notice as Markdown: the handling at this rung first, then every finding with its evidence and dispute path. */
 export function renderActionNotice(n: ActionNotice): string {
-  const what = n.outcome === 'FAIL' ? 'a check FAILed' : 'the checks could not decide (ABSTAIN)'
+  const what = n.outcome === 'FAIL' ? 'a check FAILed' : `the checks could not decide (INSUFFICIENT_DATA: can't tell)`
   const head = n.action === 'HOLD'
     ? `**HELD for a person** · rung \`${n.level}\` · verdict \`${n.verdict_id}\` · ${what}. It stays held until a person resolves it.`
     : n.action === 'SURFACE'
-      ? `**${n.outcome === 'FAIL' ? 'FAIL' : 'ABSTAIN'}: surfaced, not held** · rung \`${n.level}\` (${n.handling.delivery === 'in-flow' ? 'shown in-flow to the person and the agent' : 'a notice on the record'}) · verdict \`${n.verdict_id}\` · ${what}. Dispute it if you disagree.`
+      ? `**${n.outcome === 'FAIL' ? 'FAIL' : 'INSUFFICIENT_DATA'}: surfaced, not held** · rung \`${n.level}\` (${n.handling.delivery === 'in-flow' ? 'shown in-flow to the person and the agent' : 'a notice on the record'}) · verdict \`${n.verdict_id}\` · ${what}. Dispute it if you disagree.`
       : `**PROCEED** · rung \`${n.level}\` · verdict \`${n.verdict_id}\` · every deterministic check that ran held (a PASS here: ${n.handling.PASS === 'ACT_WITHIN_BOUNDS' ? 'proceeds unreviewed within the declared bounds' : n.handling.PASS === 'HUMAN_REVIEW' ? 'goes to human review' : 'Riposte does not intervene'}).`
-  return [head, '', ...renderFindings(n), '', `Dispute the whole verdict: \`${n.dispute}\``, ''].join('\n')
+  return [head, '', ...renderFindings(n), '', `Dispute the whole verdict: \`${n.dispute}\``, ...(n.scope ? ['', ...renderScope(n.scope)] : []), ''].join('\n')
 }

@@ -6,7 +6,7 @@
  * policy (by hash), or a hash nobody holds, or omits its signature count, is still judged against the declared tier's
  * grant_signatures: until a second anchored person co-signs it, it is PENDING, has no effect on the rung (the rung falls back
  * to the grant in force before it), and its notice is returned. The first describe block is the regression: on the code
- * before this lane, a hand-built grant naming another policy read as autonomy on POST /v1/action/check.
+ * before this change, a hand-built grant naming another policy read as autonomy on POST /v1/action/check.
  */
 import { describe, it, expect, afterEach } from 'vitest'
 import { createPrivateKey, createPublicKey } from 'node:crypto'

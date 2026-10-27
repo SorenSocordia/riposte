@@ -1,0 +1,7 @@
+{ "source": "generic-csv",
+  "columns": {
+    "bills": { "invoice_number": "invoice_number", "vendor": "vendor", "date": "date", "currency": "currency", "total": "total", "tax": "tax", "po": "po", "status": "status", "line_id": "line_id", "item": "item", "description": "description", "quantity": "quantity", "rate": "rate", "amount": "amount" },
+    "purchase_orders": { "number": "number", "vendor": "vendor", "currency": "currency", "line_id": "line_id", "item": "item", "description": "description", "quantity": "quantity", "rate": "rate", "amount": "amount" },
+    "item_receipts": { "number": "number", "po": "po", "date": "date", "item": "item", "quantity": "quantity" } },
+  "status": { "pay": ["paid"], "hold": ["held"] },
+  "ignore": [] }

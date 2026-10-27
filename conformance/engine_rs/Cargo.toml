@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: Apache-2.0
+[package]
+name = "riposte-record"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "A reader of the record tier in Rust (it verifies; it never issues): canonical JSON, the strict readers, sha256 bindings, Ed25519, the receipts ledger, frag open and workgraph open. Prototype; no measured accuracy."
+publish = false
+
+[lib]
+name = "riposte_record"
+path = "src/lib.rs"
+# rlib for Rust callers and the tests; cdylib for the C ABI and for wasm32-unknown-unknown; staticlib for C linkers
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+[[bin]]
+name = "riposte-record-cli"
+path = "src/main.rs"
+
+[dependencies]
+sha2 = { version = "0.10", default-features = false }
+ed25519-dalek = { version = "2", default-features = false }
+
+[profile.release]
+opt-level = "s"
+lto = true

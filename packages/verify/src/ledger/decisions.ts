@@ -11,7 +11,7 @@
  *   POLICY_REVISION  a person revises the promotion policy: who, when, why, what changed, the full new version, and the hash
  *                    of the version it supersedes (the revisePolicy() record, made durable).
  *
- * Evidence integrity (2026-09-28, wave 3), so the evidence behind a grant cannot quietly rot or be gamed:
+ * Evidence integrity (2026-09-28), so the evidence behind a grant cannot quietly rot or be gamed:
  *
  *   KEY_REGISTER / KEY_REVOKE   the key registry on the book, anchored to a registry ROOT key (./registry.ts): who may sign,
  *                               in which roles, from when, until when. trusted_keys is then read from the book.
@@ -31,13 +31,13 @@
  * that key. Binding a key to a PERSON is out of band: either `trusted_keys` (signer_id → public key, passed in), or ONE root
  * key (`root_keys`) that registers the rest on the book. Without either, the book lists every signer as unanchored, and says so.
  *
- * D-ANCHOR (security fix, 2026-09-28; red team R4): only a person moves a rung, so only an ANCHORED decision has any
+ * D-ANCHOR (security fix, 2026-09-28): only a person moves a rung, so only an ANCHORED decision has any
  * effect. An unanchored GRANT, DECLINE, POLICY_REVISION or CANARY_* stays on the book (it verifies, it is listed, a reader
  * says so: noEffect()), but the selection functions below never return it: the rung falls back to the last anchored grant,
  * and an unanchored decline holds back no proposal. On a default book (no trusted_keys, no root key) that means no signed
  * decision moves anything until a signer is anchored. Every reader inherits this, because every reader selects through here.
  *
- * R3 (red team, 2026-09-28): the verdict door is re-applied on read to every RECORD payload (recordedVerdictProblem), so a
+ * 2026-09-28: the verdict door is re-applied on read to every RECORD payload (recordedVerdictProblem), so a
  * COUNSEL object or a malformed verdict spliced into a re-linked book fails verification with a named reason.
  *
  * D-DUAL (dual authorization, design ruling 2026-09-28; "Automated-approval evidence", 2026-09-28, §5.6): a GRANT may need
@@ -67,6 +67,8 @@ import { GENESIS, payloadViewOf, verifyChainAgainst, type ChainCheck, type Ledge
 import type { Review, ReviewDecision } from './types.js'
 import { KeyRegistry, ROLE_FOR, ROLES, isRole, keyFingerprint, tenantOfWorkflow, type Authorization, type KeyEntry, type Role, type RootKeys } from './registry.js'
 import { chainPeriods, deriveSample, isPeriodUnit, recordWorkflow, sampleKey, sampleSubject, type PeriodSpan, type PeriodUnit, type SampleBody, type SampleEntry } from './sampling.js'
+import { apLineMathProblem } from '../ap/line-math.js'
+import { actionVersionProblem } from '../action/door.js'
 
 /** The RUNG decisions: a person's GRANT, DECLINE and POLICY_REVISION (what `decisions()` and `DecisionBook.decisions` list). */
 export type DecisionKind = 'GRANT' | 'DECLINE' | 'POLICY_REVISION'
@@ -233,7 +235,7 @@ export interface KeyRegisterDecision extends DecisionBase {
   /** SPKI PEM of the Ed25519 public key. */
   public_key: string
   roles: Role[]
-  /** The tenants this key may act for (F-B). Absent: deployment-wide. Sorted, unique. */
+  /** The tenants this key may act for. Absent: deployment-wide. Sorted, unique. */
   tenants?: string[]
 }
 
@@ -278,7 +280,7 @@ export interface GrantCosignDecision extends DecisionBase {
   level: VoiceLevel
 }
 
-/** A rung decision (unchanged since wave 2: every consumer that reads `decisions` sees exactly these). */
+/** A rung decision (unchanged since 2026-09-28: every consumer that reads `decisions` sees exactly these). */
 export type Decision = GrantDecision | DeclineDecision | PolicyRevisionDecision
 export type KeyDecision = KeyRegisterDecision | KeyRevokeDecision
 export type CanaryDecision = CanarySealDecision | CanaryRevealDecision
@@ -714,7 +716,7 @@ export function authorizeSigner(registry: KeyRegistry, seq: number, kind: BookDe
   return { ok: true, via: 'unanchored' }
 }
 
-/** The tenant a decision concerns (F-B): a workflow's, for GRANT / GRANT_COSIGN / DECLINE / CANARY_*; none (deployment-wide) otherwise. */
+/** The tenant a decision concerns: a workflow's, for GRANT / GRANT_COSIGN / DECLINE / CANARY_*; none (deployment-wide) otherwise. */
 export function decisionTenant(d: BookDecision): string | undefined {
   return d.kind === 'GRANT' || d.kind === 'GRANT_COSIGN' || d.kind === 'DECLINE' || d.kind === 'CANARY_SEAL' || d.kind === 'CANARY_REVEAL' ? tenantOfWorkflow(d.workflow_id) : undefined
 }
@@ -792,7 +794,7 @@ const EINVOICE_PRE_CORRECTION: ReadonlySet<unknown> = new Set(['0.1.0', '0.2.0']
 const EINVOICE_AGGREGATION: Aggregation = 'ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVER_PASSES'
 
 /**
- * R3 (red team, 2026-09-28): the verdict door, re-applied on read to a RECORD payload. The first reason `x` does not belong
+ * 2026-09-28: the verdict door, re-applied on read to a RECORD payload. The first reason `x` does not belong
  * on the book of record as a VERDICT, or undefined. The same checks as the HTTP door (http/service.ts verdictDoorProblem; a
  * test pins the two in agreement): never generated (a COUNSEL tag, a GENERATED provenance, the marks of counsel or an
  * opinion); the VERDICT-channel contract (verdict/channel.ts proofProblem: verdict-shaped, replayable, bound to its inputs,
@@ -801,15 +803,15 @@ const EINVOICE_AGGREGATION: Aggregation = 'ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVE
  *
  * TWO TOLERANCES, so every book valid today stays valid:
  *   - a judgement-tier (REASONED) finding still reads (DECISION R3-LEGACY). Such a verdict was recordable before the ledger's
- *     door existed (wave 2), and the read side already excludes it from evidence (voice.ts notVerdictEvidence).
+ *     door existed, and the read side already excludes it from evidence (voice.ts notVerdictEvidence).
  *   - the PASS / INSUFFICIENT_DATA edge is not recomputed (DECISION R3-OUTCOME): a held action with a PASS claim and an
- *     ungrounded one is INSUFFICIENT_DATA (verifyAction, F1), which the HTTP door's exact recompute wrongly refuses.
+ *     ungrounded one is INSUFFICIENT_DATA (verifyAction, since 2026-09-28), which the HTTP door's exact recompute wrongly refuses.
  * Everything else is enforced. A verdict naming ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVER_PASSES (the e-invoice twin since 0.3.0)
  * is recomputed EXACTLY under that rule: it has no tolerated edge.
  *
  * HONEST BOUNDARY: this catches a COUNSEL object or a malformed or inconsistent verdict spliced into a re-linked book. It
  * cannot catch a SELF-CONSISTENT forged outcome (claims, outcome and coverage all rewritten together): verdict_id binds the
- * inputs, not the result (red team R1), so only re-executing the engine, a signed envelope, or an externally anchored head
+ * inputs, not the result, so only re-executing the engine, a signed envelope, or an externally anchored head
  * shows that.
  */
 export function recordedVerdictProblem(x: unknown): string | undefined {
@@ -841,7 +843,7 @@ export function recordedVerdictProblem(x: unknown): string | undefined {
   }
   // The outcome must be CONSISTENT with its claims: FAIL exactly when a claim FAILs, and PASS only on a PASS claim. The
   // engines differ, legitimately, on the PASS / can't-tell edge (verify() passes a document with abstentions; verifyAction,
-  // since F1, holds a partially grounded action as INSUFFICIENT_DATA), so the book does not recompute that edge
+  // since 2026-09-28, holds a partially grounded action as INSUFFICIENT_DATA), so the book does not recompute that edge
   // (DECISION R3-OUTCOME; fork: here).
   if ((fail > 0) !== (v.outcome === 'FAIL')) return `verdict ${v.verdict_id}: outcome ${v.outcome} does not follow from its claims under ${v.aggregation} (${fail} FAIL claim(s))`
   if (v.outcome === 'PASS' && pass === 0) return `verdict ${v.verdict_id}: outcome PASS with no PASS claim does not follow from its claims`
@@ -865,6 +867,17 @@ export function recordedVerdictProblem(x: unknown): string | undefined {
     && v.aggregation !== EINVOICE_AGGREGATION) {
     return `verdict ${v.verdict_id}: an e-invoice twin verdict from 0.3.0 names aggregation ${EINVOICE_AGGREGATION} (its footing alone never makes it PASS), not ${v.aggregation}`
   }
+  // The AP line recompute (ap-threeway 0.2.0, LN1, 2026-09-29): each version is held to its own rules. A 0.2.0 verdict carries
+  // a line-amount claim for every line it prices, and each PASS/FAIL one recomputes from its own operands, so a line FAIL
+  // flipped to PASS (or deleted) with the outcome and coverage rewritten to match is refused. 0.1.0 verdicts read as before.
+  const apLine = apLineMathProblem(v)
+  if (apLine) return apLine
+  // The typed action comparison (action@0.2.0, 2026-09-29): each version is held to its own rules. A 0.2.0 PASS in another
+  // written form recomputes from its own operands, and a 0.2.0 verdict has one claim per consequential argument, so a FAIL
+  // flipped to PASS (or deleted) with the outcome and coverage rewritten to match is refused; a 0.1.0 or 0.0.1 PASS cites a
+  // value equal as written, so a 0.2.0 PASS relabelled to dodge the recompute is refused too. Their verdicts read as before.
+  const actionVersion = actionVersionProblem(v)
+  if (actionVersion) return actionVersion
   const cov = v.coverage as unknown
   if (!isObj(cov) || cov.claims_total !== v.claims.length || cov.claims_pass !== pass || cov.claims_fail !== fail || cov.claims_insufficient !== ins || cov.claims_checked !== pass + fail) {
     return `verdict ${v.verdict_id}: coverage does not recount from its claims (${pass} PASS · ${fail} FAIL · ${ins} can't-tell of ${v.claims.length})`

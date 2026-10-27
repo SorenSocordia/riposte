@@ -1,0 +1,294 @@
+{
+  "synth_version": "riposte.attest-synth/0.1.0",
+  "seed": 303,
+  "month": "2026-09",
+  "runs": [
+    {
+      "run": "run-c01",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c02",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c03",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c04",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c05",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c06",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c07",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c08",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c09",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-c10",
+      "plant": "clean",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-p01",
+      "plant": "announced",
+      "expected": {
+        "switches": [
+          {
+            "cause": "user_command",
+            "announced": true
+          }
+        ],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-p02",
+      "plant": "host_fallback",
+      "expected": {
+        "switches": [
+          {
+            "cause": "host_fallback",
+            "announced": false
+          }
+        ],
+        "violations": 5,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p03",
+      "plant": "unrecorded",
+      "expected": {
+        "switches": [
+          {
+            "cause": "unrecorded",
+            "announced": false
+          }
+        ],
+        "violations": 9,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p04",
+      "plant": "unrecorded",
+      "expected": {
+        "switches": [
+          {
+            "cause": "unrecorded",
+            "announced": false
+          }
+        ],
+        "violations": 7,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p05",
+      "plant": "alias_float_latest",
+      "expected": {
+        "switches": [
+          {
+            "cause": "alias_float",
+            "announced": false
+          }
+        ],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "ABSTAIN"
+      }
+    },
+    {
+      "run": "run-p06",
+      "plant": "alias_float_snapshot",
+      "expected": {
+        "switches": [
+          {
+            "cause": "alias_float",
+            "announced": false
+          }
+        ],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p07",
+      "plant": "codex_announced",
+      "expected": {
+        "switches": [
+          {
+            "cause": "user_command",
+            "announced": true
+          }
+        ],
+        "violations": 0,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "PASS"
+      }
+    },
+    {
+      "run": "run-p08",
+      "plant": "codex_unrecorded",
+      "expected": {
+        "switches": [
+          {
+            "cause": "unrecorded",
+            "announced": false
+          }
+        ],
+        "violations": 15,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p09",
+      "plant": "billing_request",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 1,
+        "bucket_shortfalls": 1,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p10",
+      "plant": "billing_bucket",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 1,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p11",
+      "plant": "announced_undeclared",
+      "expected": {
+        "switches": [
+          {
+            "cause": "user_command",
+            "announced": true
+          }
+        ],
+        "violations": 10,
+        "contradictions": 0,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    },
+    {
+      "run": "run-p12",
+      "plant": "anchor_edited",
+      "expected": {
+        "switches": [],
+        "violations": 0,
+        "contradictions": 1,
+        "bucket_shortfalls": 0,
+        "outcome": "FAIL"
+      }
+    }
+  ]
+}

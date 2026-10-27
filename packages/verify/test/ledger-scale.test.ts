@@ -1,16 +1,16 @@
 /**
  * Ledger scale (2026-09-28): a book of record used to stop at ~40k verdicts (one-string export, one-string reopen, a full
  * re-hash on every read). These pin the replacements, and that every byte, head and verification result stays the same:
- *   F2   ledger.snapshot() by reference (frozen, point-in-time); chainJSONL throws a NAMED error past its ceiling; the
+ *   -    ledger.snapshot() by reference (frozen, point-in-time); chainJSONL throws a NAMED error past its ceiling; the
  *        streaming writers produce chainJSONL's exact bytes.
- *   F4b  a streamed reopen reads exactly what parseChainJSONL reads (chunk boundaries, CRLF, BOM, blank lines, UTF-8).
- *   F4a  one held file descriptor: the same bytes as appendFileSync per event; close / dispose; read-only; fsync.
- *   R5   the red team's torn-tail cases (redteam/r5-partial-line-bricks-book.redteam.ts), turned around: a torn LAST line
+ *   -    a streamed reopen reads exactly what parseChainJSONL reads (chunk boundaries, CRLF, BOM, blank lines, UTF-8).
+ *   -    one held file descriptor: the same bytes as appendFileSync per event; close / dispose; read-only; fsync.
+ *   -    the red team's torn-tail cases (redteam/r5-partial-line-bricks-book.redteam.ts), turned around: a torn LAST line
  *        opens read-only and is never silently dropped; repairTornTail backs up, truncates and records; a torn MIDDLE line
  *        is corruption.
- *   F5b  the verified prefix: a later check re-hashes only what was appended, and says so; full re-checks and reopens re-hash
+ *   -    the verified prefix: a later check re-hashes only what was appended, and says so; full re-checks and reopens re-hash
  *        everything; the trust it adds (in-process memory) is pinned as a stated boundary, not hidden.
- *   F5c  the door's incremental indexes (decision list, key registry, sample keys) decide exactly as a fresh read of the book.
+ *   -    the door's incremental indexes (decision list, key registry, sample keys) decide exactly as a fresh read of the book.
  */
 import { describe, it, expect, afterAll } from 'vitest'
 import { createPrivateKey, createPublicKey } from 'node:crypto'
@@ -53,7 +53,7 @@ function book(led: Ledger = createLedger({ now: tick }), count = 12): Ledger {
 
 const legacyExport = (led: Ledger): string => { const s = led.snapshot(); return s.events.map((e, i) => JSON.stringify({ ...e, payload: s.payloads[i] })).join('\n') }
 
-describe('F2: the chain by reference, and exports that never build one string', () => {
+describe('the chain by reference, and exports that never build one string', () => {
   it('snapshot() is the parsed export, with no string in between; point-in-time; the caller\'s copy, the ledger\'s frozen events', () => {
     const led = book()
     const snap = led.snapshot()
@@ -117,7 +117,7 @@ describe('F2: the chain by reference, and exports that never build one string', 
   })
 })
 
-describe('F4b: the streamed reopen reads exactly what parseChainJSONL reads', () => {
+describe('the streamed reopen reads exactly what parseChainJSONL reads', () => {
   const variants: [string, (s: string) => string][] = [
     ['a file ledger (every line ends in a newline)', s => s + '\n'],
     ['a chain export (no final newline)', s => s],
@@ -145,7 +145,7 @@ describe('F4b: the streamed reopen reads exactly what parseChainJSONL reads', ()
   }
 })
 
-describe('F4a: one held file descriptor, the same bytes', () => {
+describe('one held file descriptor, the same bytes', () => {
   it('appends write what appendFileSync per event wrote: each event line + newline; reopen continues the chain', () => {
     const p = tmpPath()
     const led = book(openFileLedger(p, { now: tick }))
@@ -200,7 +200,7 @@ describe('F4a: one held file descriptor, the same bytes', () => {
   })
 })
 
-describe('R5: a torn tail never bricks the book (red team cases, turned around)', () => {
+describe('a torn tail never bricks the book (red team cases, turned around)', () => {
   /** The PoC's book: two real events written by the file ledger itself. */
   function goodBook(path: string): string {
     const led = openFileLedger(path, { now: () => new Date('2026-09-28T00:00:00Z') })
@@ -270,7 +270,7 @@ describe('R5: a torn tail never bricks the book (red team cases, turned around)'
     writeFileSync(q, src.chainJSONL())
     const led = openFileLedger(q, { now: tick })
     expect(led.torn).toBeUndefined()
-    led.record(PASSES[25]!, { tenant_id: 'acme' }) // N1: the missing newline is written first
+    led.record(PASSES[25]!, { tenant_id: 'acme' }) // the missing newline is written first
     expect(openFileLedger(q).verifyContent().ok).toBe(true)
   })
 
@@ -288,7 +288,7 @@ describe('R5: a torn tail never bricks the book (red team cases, turned around)'
   })
 })
 
-describe('F5b: a later check re-hashes only what was appended, and says so', () => {
+describe('a later check re-hashes only what was appended, and says so', () => {
   it('reused covers the verified prefix; an unchanged book re-hashes nothing; full re-hashes all; a reopen re-hashes all', () => {
     const p = tmpPath()
     const led = book(openFileLedger(p, { now: tick }))
@@ -308,7 +308,7 @@ describe('F5b: a later check re-hashes only what was appended, and says so', () 
   })
 
   // The alterations below are self-consistent (issued_at), so only the payload hash can catch them: the read side's verdict
-  // door (R3) re-checks every RECORD's claims and outcome whenever the book is read.
+  // door re-checks every RECORD's claims and outcome whenever the book is read.
   it('a payload appended AFTER the verified prefix and then altered in memory is caught by the incremental check', () => {
     const led = book()
     expect(led.verifyContent().ok).toBe(true)
@@ -354,7 +354,7 @@ describe('F5b: a later check re-hashes only what was appended, and says so', () 
   })
 })
 
-// ── F5c needs keys, a policy and a clock that crosses days ─────────────────────────────────────────────────────────
+// ── the incremental indexes need keys, a policy and a clock that crosses days ─────────────────────────────────────────────────────────
 function keyFromSeed(seedHex: string): { priv: string; pub: string } {
   const der = Buffer.concat([Buffer.from('302e020100300506032b657004220420', 'hex'), Buffer.from(seedHex, 'hex')])
   const k = createPrivateKey({ key: der, format: 'der', type: 'pkcs8' })
@@ -369,7 +369,7 @@ const POLICY: PromotionPolicy = {
 }
 const WF = `acme/${PASSES[0]!.ruleset.id}@${PASSES[0]!.ruleset.version}`
 
-describe('F5c: the door\'s incremental indexes decide exactly as a fresh read of the book', () => {
+describe('the door\'s incremental indexes decide exactly as a fresh read of the book', () => {
   it('differential: at every step, the live ledger and a ledger reopened from its snapshot accept and refuse the same', () => {
     let c = Date.parse('2026-09-01T09:00:00Z')
     const clock = (): Date => new Date((c += 3_600_000))

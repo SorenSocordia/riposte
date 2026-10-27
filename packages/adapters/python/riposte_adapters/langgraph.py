@@ -18,7 +18,9 @@ Delivery of the disposition:
   surface        → the tool runs; ``on_notice(check)`` is called and, with ``surface_to_agent``, the notice is appended to a
                    string ToolMessage's content so the agent sees it in-flow.
   record, proceed, pass-through → the handler runs untouched (record also calls ``on_notice``).
-  a failed check → the handler runs (fail open) and ``on_error`` is called.
+  a failed check → the safest rung (core.safe_check): a consequential call is refused at once with the degraded check's
+                   text (no interrupt: it is held until the setup is fixed, not until a person approves it); any other
+                   call runs. ``on_error`` is called either way.
 """
 from __future__ import annotations
 
@@ -118,6 +120,8 @@ class RiposteToolMiddleware(_Base):  # type: ignore[misc,valid-type]
 
     def _held(self, check: Check, name: str, call_id: Optional[str]) -> tuple[bool, Any]:
         """(run_it, refusal_or_None) for a hold/review disposition."""
+        if check.degraded:  # the check could not run: held until the setup is fixed, not for a person's approval
+            return False, self._refusal(check, call_id, name, check.text)
         key = check.call_hash
         if self.memory.seen(key) > 0:
             return False, self._refusal(check, call_id, name, hold_message(check, repeat=True))

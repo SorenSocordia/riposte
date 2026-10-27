@@ -8,14 +8,26 @@
  */
 import { describe, it, expect } from 'vitest'
 import { runDemo, type DemoResult } from '../examples/earned-autonomy/demo'
+import { ENGINE_VERSION } from '../src/version'
 
-const BOOK_SHA256 = 'd227a3bbc863dbf699afca439fea642e8ba04bfa84b740e40beadb7fadb17dd3'
-const HEAD = '0e91336fdfa56e1e142a7aa2fbc44abd145640c8257758cb5610ba320c9dd180'
+// Re-pinned 2026-10-02 (typed remedies): the book records verdicts, and a non-PASS verdict now carries its remedies, so the
+// book's bytes moved; nothing else did. Proven, not asserted: test/e2e-earned-autonomy-remedies.test.ts switches remedies off
+// and gets the previous pins back byte for byte (book d227a3bb…, head 0e91336f…). Every other assertion here is unchanged.
+const BOOK_SHA256 = '10d15faabf4ec81542989b69939d30c4f5048751181bdd82327d42f56802e544'
+const HEAD = 'ab85fa8345a1729e1da422bd133c7ad25ed7d8dda139ebaf5ba93fd38a5eb06b'
 const FIXTURE_SHA256 = 'b083277587eb39979e9300f0befc58706f411836a73bb43d8eaf36fbcc15b2b4'
+// Engine 0.1.0 (2026-10-03). The pins above are the book engine 0.0.1 wrote, and the demo still writes it byte for byte
+// when its verdicts are made under 0.0.1 (the describe below runs it so: not re-pinned). Under this build's engine the book
+// moves in identity only, shown in the second describe: the same record, assessment, rungs, surveillance counts (the seeded
+// draw picks its items by the book, so which items moves with the ids), decisions, attacks and replay, and a book that equals the 0.0.1 book once verdict ids, the engine stamp and the hashes, ids and signatures
+// derived from them are set aside (checked line by line, 754 of 754, when these pins were taken). Pinned here so it cannot drift.
+const BOOK_SHA256_E010 = '33b4da18cafe6899df8531b9982281426da79eeaa6967b4987919aa1ebb2a6a4'
+const HEAD_E010 = '345a1f8b992d217a9ec9e3341c1de178f79b66d10ec7a67843d864d14dae9fc8'
 
 describe('earned autonomy, end to end, on real data', () => {
   const lines: string[] = []
-  const r: DemoResult = runDemo({ log: l => lines.push(l), documents: true })
+  // Engine 0.0.1: the engine these pins were taken under (see BOOK_SHA256_E010 for this build's).
+  const r: DemoResult = runDemo({ log: l => lines.push(l), documents: true, engine: '0.0.1' })
 
   it('pins what it ran: engine, schema, twin map v0.2 (statement-anchored), policy, fixture', () => {
     expect(r.versions).toEqual({
@@ -74,5 +86,30 @@ describe('earned autonomy, end to end, on real data', () => {
   it('labels every synthetic element, and says the reviewer is a stand-in', () => {
     const text = lines.join('\n')
     for (const label of ['SYNTHETIC demo keys', 'SYNTHETIC MISS', 'SYNTHETIC population', 'GOLD LABELS', 'Not a human']) expect(text).toContain(label)
+  })
+})
+
+describe('earned autonomy under engine 0.1.0: the same story, a new identity', () => {
+  const old: DemoResult = runDemo({ log: () => {}, documents: true, engine: '0.0.1' })
+  // 2026-10-03: the pins for the 0.1.0 book, taken under engine 0.1.0 and named so (the current engine is 0.2.0)
+  const now: DemoResult = runDemo({ log: () => {}, documents: true, engine: '0.1.0' })
+  /** Every hash, id and signature set aside: what is left is the story the book tells. */
+  const story = (x: unknown): string => JSON.stringify(x).replace(/[0-9a-f]{12,}/g, 'H')
+  it('names the current engine; everything else it pins is as under 0.0.1', () => {
+    expect(now.versions).toEqual({ ...old.versions, engine: '0.1.0' })
+    expect(ENGINE_VERSION).toBe('0.7.2') // 2026-10-04: 0.4.0, then 0.5.0; 2026-10-05: 0.6.0
+  })
+  it('the same record, assessment, rungs, surveillance, decisions, reconciliation, attacks and replay', () => {
+    for (const k of ['record', 'assessment', 'ladder', 'demotion', 'after_decision', 'replay'] as const) expect(now[k], k).toEqual(old[k])
+    for (const k of ['reconcile', 'attacks'] as const) expect(story(now[k]), k).toBe(story(old[k]))
+    // The draw is seeded by the book, which carries the verdict ids, so WHICH verdicts are drawn moves with them (and so does
+    // the drawn PASS the demo plants its synthetic miss on); the period, the population and the counts drawn do not.
+    const { seed: _s1, synthetic_miss: m0, ...s0 } = old.surveillance
+    const { seed: _s2, synthetic_miss: m1, ...s1 } = now.surveillance
+    expect(s1).toEqual(s0)
+    expect([typeof m0, typeof m1]).toEqual(['string', 'string'])
+  })
+  it('the whole book verifies and is byte-for-byte the one pinned for engine 0.1.0', () => {
+    expect(now.chain).toEqual({ ok: true, length: 754, head: HEAD_E010, book_sha256: BOOK_SHA256_E010 })
   })
 })

@@ -1,0 +1,9 @@
+{
+  "configuration": "format-example",
+  "note": "The decision-file format, on three benchmark invoices. These decisions were written by hand to show the format; they are not any model's output.",
+  "decisions": [
+    { "id": "T001", "action": "hold", "confidence": 0.92 },
+    { "id": "T002", "decision": "approve", "confidence": 0.88 },
+    { "id": "T003", "action": "pay", "confidence": 0.97 }
+  ]
+}

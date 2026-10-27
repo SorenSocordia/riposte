@@ -1,0 +1,515 @@
+{
+  "format": "bench-table/1",
+  "id": "cold-review-r2",
+  "title": "Cold review, round 2: defects found by four cold readers (AI agents that had not worked on this tree)",
+  "prereg": {
+    "path": "SCOPE.md",
+    "sha256": "022aff876110ac4947049eab0b5ef733192c50749e77c5e16021484083b92309",
+    "frozen_sha256": "022aff876110ac4947049eab0b5ef733192c50749e77c5e16021484083b92309",
+    "amendments": [],
+    "stamp": {
+      "status": "stamped after the run",
+      "proofs": [
+        {
+          "proof": "SCOPE.md.tsr",
+          "covers": "SCOPE.md",
+          "gen_time": "2026-10-14T17:53:57Z",
+          "serial": "00ad4a65a525bef4b214a45b54502fdcc6",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "review round 2: four reports written on 2026-10-05; rows written the same day from the summary of the round and the reports",
+    "date": "2026-10-05",
+    "engine_version": null,
+    "ruleset": null,
+    "report": {
+      "name": "FINDINGS.md",
+      "sha256": "64a0fc315ec3bbe9eeb48ff68178e3f3716fa991c77150ceba6e31868e0ffaba"
+    },
+    "spec_sha256": "b5eda7efdf39d6df7976b60ee50fc1328ad5226acf336f02255b542d5238bea5",
+    "not_shipped": [
+      {
+        "file": "reader-report-r2-controller-2026-10-05-1212.md",
+        "sha256": "0c40b504870d77ada0380b9e9faa7c43498ceb89afe7d9220822e9d0030b2966",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "reader-report-r2-engineer-2026-10-05-1232.md",
+        "sha256": "314923a1d72c0921ad3e59a8765616f785a65460fa095d0fd3de1407ce156b61",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "reader-report-r2-legal-ops-2026-10-05-1211.md",
+        "sha256": "e1e8ffb17cb86ebba07d398ecc3e367c71c597ddbdc610b11351c648c25353b4",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "reader-report-r2-reviewer-2026-10-05-1220.md",
+        "sha256": "5467b629ba199e7acf2ad7b0711af0b8020da598a1c5b8ed7afdc672b13861c5",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "There is no run to repeat: the rows are transcribed from four readers' reports. The reports are hashed, not shipped, because they name working folders on the authors' machine."
+    }
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "r2-01",
+      "kind": "docs-defect",
+      "description": "J1 (controller), J2 (platform engineer), J3 (legal operations): README.md:224-228 and PILOT.md:15 leave the publisher, price and support terms as unfilled placeholders ([ENTITY], [PRICE], [SUPPORT-TERMS]); the only liability term is the licence's \"as is\"",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-02",
+      "kind": "docs-defect",
+      "description": "J1 (controller), J2 (platform engineer), J3 (legal operations): REPLAYERS.md:4 and the front page give the contact for kills, questions and security reports as a literal [ADDRESS] placeholder, so a break cannot be reported anywhere",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a contact address for kills, questions and security reports, and a SECURITY.md that says what happens to a report"
+    },
+    {
+      "id": "r2-03",
+      "kind": "engine",
+      "description": "J1 (controller): `ap` on a bill with no payment history printed APPROVE, payable: true and exit 0 with the duplicate check not run, while the library gate returned REVIEW for the same bill; docs/GLOSSARY.md:13 says the AP gate never pays on PASS-WITH-OPEN",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / ap fails closed: a bill with a check that could not run reads A PERSON DECIDES, payable false, exit 2"
+    },
+    {
+      "id": "r2-04",
+      "kind": "engine",
+      "description": "J1 (controller): `ap --gate` was accepted silently and changed nothing, and `ap --help` did not list it",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / ap --help lists --gate as the default reading, which fails closed; --allow-open is the one opt-out"
+    },
+    {
+      "id": "r2-05",
+      "kind": "engine",
+      "description": "J2 (platform engineer): README.md:13-15 and the CLI defaults: a PASS-WITH-OPEN verdict exited 0 unless --gate was given, so a CI user wiring exit codes got fail-open by default",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the commands exit 2 on PASS-WITH-OPEN by default; --allow-open is the opt-out"
+    },
+    {
+      "id": "r2-06",
+      "kind": "engine",
+      "description": "J2 (platform engineer): the tolerance identity spread roundingCap.perLine with [...x], so the string \"TAX_INT\" and its seven-character array hashed alike while the engine's .includes() read them differently: one verdict_id for a PASS and a FAIL, reachable through the library and HTTP /v1/verify",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a tolerance override is checked for one strict shape wherever a verdict is issued; a string rule list is refused"
+    },
+    {
+      "id": "r2-07",
+      "kind": "engine",
+      "description": "J2 (platform engineer): the non-finite refusal covered CLI file reads and declarative rules only: built-in verify() gave one hash for null, Infinity, -Infinity and NaN, with PASS for null and FAIL for the rest, and the HTTP and MCP servers parsed bodies with plain JSON.parse",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / verify() and the HTTP and MCP servers refuse non-finite numbers before hashing, as the command line does"
+    },
+    {
+      "id": "r2-08",
+      "kind": "engine",
+      "description": "J2 (platform engineer): duplicate JSON keys were accepted everywhere, including inside a signed envelope: an \"outcome\":\"FAIL\" inserted before the real \"outcome\":\"PASS\" verified under --trusted-key --strict",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a key repeated in one JSON object is refused at every reader, signed envelopes included"
+    },
+    {
+      "id": "r2-09",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): REPLAY.md:70-71 said three kinds of input are refused before any engine sees them, and the hash-input source comment said two inputs that differ never share a hash; the library, HTTP and MCP paths broke both (the tolerance, non-finite and duplicate-key rows of this table)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / REPLAY.md states the refusals at every entry point, and the library, HTTP and MCP paths now hold them"
+    },
+    {
+      "id": "r2-10",
+      "kind": "engine",
+      "description": "J3 (legal operations): binding was satisfied by any opinion text that cites the case: a Cooper v. Aaron text passed for Brown and for Marbury under the default strict binding, against LEGAL.md:10-12",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a text binds to a cite only through its caption; a text that cites the case only in its body abstains"
+    },
+    {
+      "id": "r2-11",
+      "kind": "engine",
+      "description": "J3 (legal operations): a parties-only binding gave outcome PASS, gate status PASS and exit 0 even when the JSON marked the choice load_bearing: true (LEGAL.md:76-81)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a quotation bound by parties only is not certified: the verdict is not PASS and the command exits 2"
+    },
+    {
+      "id": "r2-12",
+      "kind": "engine",
+      "description": "J3 (legal operations): a trailing ellipsis that drops a condition passed (\"except where ...\"; \"provided the waiver is made voluntarily ...\"), reported as an ellipsis at the edge of the quotation, not located",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / an ellipsis at the end of a quotation that leaves out a condition abstains as an elided condition"
+    },
+    {
+      "id": "r2-13",
+      "kind": "engine",
+      "description": "J3 (legal operations): a leading ellipsis and a bracketed capital that drop a leading \"Unless\" clause both passed (two Strickland quotations)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / an ellipsis or a bracketed capital at the start that cuts off a leading condition abstains"
+    },
+    {
+      "id": "r2-14",
+      "kind": "engine",
+      "description": "J3 (legal operations): a mid-quotation ellipsis over \"after adequate time for discovery and upon motion\" passed: the condition carried no word the guard looked for",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / an ellipsis that leaves out a clause opened by \"after\" abstains as an elided condition"
+    },
+    {
+      "id": "r2-15",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): LEGAL.md:26 said an ellipsis over a condition abstains, and MISSES.md:19 marks the condition-dropping ellipsis row fixed by legal@0.2.0, while edge ellipses and a bracketed capital that drop a condition still passed",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the edge-ellipsis and bracketed-capital guards make both statements hold for the forms this row names"
+    },
+    {
+      "id": "r2-16",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer), J3 (legal operations): README.md:77-78 described the negation guard backwards (\"when a quotation stops right after a negation\"): a quotation ending in \"cannot\" passed, and the guard fires when a quotation starts right after a negation",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page describes the negation guard as built: a quotation that starts right after a negation it leaves out"
+    },
+    {
+      "id": "r2-17",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): an ALL-CAPS quotation passed as \"appears verbatim\": the match ignores letter case, but the message called it verbatim",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a quotation whose letter case differs from the text is not certified, and a PASS says same words, same letter case"
+    },
+    {
+      "id": "r2-18",
+      "kind": "method",
+      "description": "J3 (legal operations), J4 (methods reviewer): the second legal blind set, the stated basis for moving the legal default, shipped no prereg, no per-case results, no bench table and no misses rows, and LEGAL.md:42-43 cited its prereg by eight hex characters",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the second legal blind set ships as the bench table legal-blind-2, with its prereg, per-case results and misses rows"
+    },
+    {
+      "id": "r2-19",
+      "kind": "method",
+      "description": "J4 (methods reviewer): COMPILER.md:139-147 published a 60-document XRechnung accuracy table with a truncated prereg hash, and it was not in BENCH.md, not refused and not withdrawn",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the 60-document XRechnung run ships as the bench table xr-einvoice-compiled"
+    },
+    {
+      "id": "r2-20",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCH.md:27-28 said the bench rule covers every number the project publishes, while its own pages carried numbers outside it (the second legal blind set, XRechnung, three SEC studies, rule mining, the Peppol 4- and 7-case figures, \"8 of 130\")",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / BENCH.md scopes the rule to its tables and lists every number published outside it, with the reason"
+    },
+    {
+      "id": "r2-21",
+      "kind": "engine",
+      "description": "J4 (methods reviewer): six tests of the public suite failed: two read a file by a path in the authors' working tree and four expected the command name `verify` where the public binary prints `riposte-verify` (README.md:241 implies the suite passes)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / those tests read only files inside the package and take the binary's name from its package.json"
+    },
+    {
+      "id": "r2-22",
+      "kind": "message-defect",
+      "description": "J4 (methods reviewer): the CLI's hint on an unknown option, \"see: riposte-verify replay --help\", could not be typed as printed in a source checkout",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the CLI's hints print the command as it was invoked, so they can be copied in a source checkout"
+    },
+    {
+      "id": "r2-23",
+      "kind": "engine",
+      "description": "J4 (methods reviewer): the test suite wrote scratch folders to the system temp folder, so a reviewer confined to one folder could not run the tests",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the test suites keep their scratch folders inside each package"
+    },
+    {
+      "id": "r2-24",
+      "kind": "engine",
+      "description": "J1 (controller): a one-letter vendor typo (\"Sumit\" for \"Summit\") or a trade name, with the same invoice number but a different PO and total, got APPROVE and the gate's EXECUTE / PAY",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a look-alike vendor name (a one-letter typo, initials, a trade name) with the same invoice number is held for the controller"
+    },
+    {
+      "id": "r2-25",
+      "kind": "message-defect",
+      "description": "J1 (controller): AP-INPUT.md:84: when the invoice number was booked under another vendor, the plain-English answer said \"all checks passed, including the duplicate check\" and the other-vendor fact was in the JSON only",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the plain-English answer names the other vendor the invoice number is booked under"
+    },
+    {
+      "id": "r2-26",
+      "kind": "message-defect",
+      "description": "J1 (controller): the duplicate explanation said a booked row had \"another PO and another total\" when the row carried neither",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the explanation says when the booked row carries no PO or amount to compare"
+    },
+    {
+      "id": "r2-27",
+      "kind": "engine",
+      "description": "J1 (controller): the \"could be a different supplier\" duplicate case was clearable by an AP clerk, while a confirmed duplicate needs the controller, and no setting for the level was documented",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a look-alike vendor duplicate is cleared only by the AP controller"
+    },
+    {
+      "id": "r2-28",
+      "kind": "method",
+      "description": "J1 (controller): the synthetic month planted only suffix and punctuation vendor variants, which the matcher handles, so its perfect score could not show the near-match gap",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the synthetic month plants near-match vendor duplicates (a one-edit typo, an abbreviation, a trade name)"
+    },
+    {
+      "id": "r2-29",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): one answer goes by several names: README.md:5-6 says can't tell, the CLI prints ABSTAIN, the verdict says INSUFFICIENT_DATA; README.md:15 says PASS-WITH-OPEN and the CLI prints PASS_WITH_OPEN",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-30",
+      "kind": "docs-defect",
+      "description": "J1 (controller), J3 (legal operations): one command, three spellings in copyable examples: README.md:244-245 says node packages/verify/dist/cli.js, AP-INPUT.md:248 says verify ap, LEGAL.md:101 says verify citations, and other pages say riposte-verify",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-31",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): the MCP tool description (src/mcp/server.ts:220) said peppol-en16931 is 0.2.0, the default, while the bare name issued 0.3.0 and the CLI help said 0.3.0",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the MCP description reads the default ruleset version from the build itself"
+    },
+    {
+      "id": "r2-32",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations), J4 (methods reviewer): the shipped legal example's sources.json:10 carried an internal test label, printed in the output of the front page's first legal command",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the shipped legal example's source note no longer carries an internal test label"
+    },
+    {
+      "id": "r2-33",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): LEGAL.md:30 said \"The owner moved the default\" without naming the role or the rule",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / LEGAL.md says the maintainers move the default by a stated rule, and gives the rule"
+    },
+    {
+      "id": "r2-34",
+      "kind": "message-defect",
+      "description": "J1 (controller): PILOT.md:37: the prereg template put its placeholders inside quotes, so a filled-in 0.85 kept in quotes was refused with \"primary.bar is a number between 0 and 1\"",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the prereg template writes numbers unquoted, and a quoted number is refused with the fix"
+    },
+    {
+      "id": "r2-35",
+      "kind": "message-defect",
+      "description": "J1 (controller): the pilot report's remedy column was unreadable in the default hashes-only mode (\"recompute-with line[4].amount -> AP_LINE_MATH; ...\")",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the pilot writes its report, audit sheet and remedies in words by default; hashes-only is an option"
+    },
+    {
+      "id": "r2-36",
+      "kind": "engine",
+      "description": "J1 (controller): the audit sheet carried sample number, bill, invoice number and rule id, but no vendor, amount or reason, so a labeller had to open every bill",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the audit sheet carries vendor, amount, currency and the discrepancy in words"
+    },
+    {
+      "id": "r2-37",
+      "kind": "docs-defect",
+      "description": "J1 (controller): PILOT.md:124-127 put a quotation from an unnamed reviewer of the pilot into the buyer's own prereg template",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the unnamed testimonial is gone from the pilot page and the buyer's prereg template"
+    },
+    {
+      "id": "r2-38",
+      "kind": "message-defect",
+      "description": "J1 (controller): `riposte-pilot report` on a ledger with one edited entry said entries were removed or the file was cut short, where `riposte-ledger verify` named the altered entry",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / riposte-pilot report names the broken entry, as riposte-ledger verify does"
+    },
+    {
+      "id": "r2-39",
+      "kind": "engine",
+      "description": "J1 (controller): PILOT.md:16-22: by default the pilot wrote the run's private signing key next to the receipts, so the signatures proved nothing to an auditor until --key was set",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a pilot run refuses without an explicit key choice (--key, --key-dir or --key-here)"
+    },
+    {
+      "id": "r2-40",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:169-176: the AP results led with Wilson bounds and tiers, and the labour cost (13 of 32 good bills to a person) was not said first in words",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page states the labour cost first: 13 of 32 good invoices went to a person"
+    },
+    {
+      "id": "r2-41",
+      "kind": "engine",
+      "description": "J1 (controller): pay applications were absent from the pilot, though pay applications are a headline document type",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the pilot checks G702/G703 pay applications beside the bills, in their own section"
+    },
+    {
+      "id": "r2-42",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:47-48 and PILOT.md:87-92: no construction ERP export (Sage 300 CRE, Viewpoint Vista, Spectrum, Foundation) is read, and QuickBooks Desktop was not mentioned",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-43",
+      "kind": "engine",
+      "description": "J2 (platform engineer): REPLAYERS.md:10-12 and REPLAY.md:109: --strict failed the genuine shipped legal bundles for carrying document.producer, while a copy with the producer deleted passed",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / --strict reports document.producer as a note and no longer fails a genuine bundle for carrying it"
+    },
+    {
+      "id": "r2-44",
+      "kind": "engine",
+      "description": "J2 (platform engineer): REPLAY.md:95 against :109: issued_at was not validated as a timestamp, so {\"lol\":1} passed --strict",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / issued_at must be an ISO-8601 timestamp; anything else is refused before the replay"
+    },
+    {
+      "id": "r2-45",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): REPLAY.md:118 said --trusted-key accepts an inline PEM, but a PEM starts with \"-\", so the value was read as an unknown option",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / --trusted-key reads a value that starts with -----BEGIN as a key, so an inline PEM works as documented"
+    },
+    {
+      "id": "r2-46",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): replay printed only 12 characters of the signing key's fingerprint on stderr, and a 12-character pin was refused",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / replay prints the full 64-hex fingerprint on stderr and says why a prefix is refused"
+    },
+    {
+      "id": "r2-47",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): a mistyped subcommand (\"verify replya verdict.json\") or a forgotten \"replay\" ran a fresh invoice check on the verdict file and exited 2, with no \"unknown command\" and no hint that the file is a verdict",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / an unknown command is refused with a suggestion, and a verdict file given without replay gets a hint"
+    },
+    {
+      "id": "r2-48",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): a mistyped --ruleset name gave a raw ENOENT instead of naming the known rulesets",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / an unknown ruleset name is refused with the nearest name and the known list"
+    },
+    {
+      "id": "r2-49",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): --source \"some text\" gave a raw ENOENT without saying the flag takes a file",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / --source says it takes a file path when no file has the given name"
+    },
+    {
+      "id": "r2-50",
+      "kind": "engine",
+      "description": "J2 (platform engineer): 9 of 10 prebuilt plugin bundles differed in sha256 from BUILD.json after a rebuild from the shipped source (a class-field emission difference), so the bins could not be reproduced from the public tree",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the plugin bins rebuild byte for byte from the public tree, and check-plugin --reproduce checks it"
+    },
+    {
+      "id": "r2-51",
+      "kind": "method",
+      "description": "J2 (platform engineer): no public CI runs the repository's own tests (.github/workflows holds examples only, while README:257 calls the Action \"CI\"), and there are no signed tags",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-52",
+      "kind": "engine",
+      "description": "J2 (platform engineer): src/version.ts:8-66: seven engine versions in three days are behaviour gates inside one build, not pinned artifacts, and no build hash is recorded in each verdict",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-53",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): README.md:147-148 said each bench table's per-case results ship beside it, but s4-bpi2019 ships a summary, not the per-case file it names",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page and the table say the BPI 2019 table ships a summary only, and list the per-case file as hashed, not shipped"
+    },
+    {
+      "id": "r2-54",
+      "kind": "method",
+      "description": "J4 (methods reviewer): s4-bpi2019's 250,234-item per-case file (results/run-blind.jsonl, sha256 4365d239...) does not ship, so its coverage and flag-rate rows are read from a summary, not per-case data",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-55",
+      "kind": "method",
+      "description": "J4 (methods reviewer): harness files are hashed but absent for x1-einvoice-pdf, x2-legal-blind, s4-bpi2019, t1-extraction-contract and t3-closed-loop, so those tables can be re-tallied from their results but not rerun",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-56",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): x2b-legal-fix/PREREG.sha256 names its files by paths in the authors' working tree",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-57",
+      "kind": "method",
+      "description": "J4 (methods reviewer): s4-bpi2019's preregistered secondaries were computed and left unprinted (log agreement 0.617; P(held given FAIL) 0.945 against P(held given PASS) 0.386, relative risk 2.45; 161 of 200 audited flags with a visible reason)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the s4-bpi2019 table prints the log-agreement and held-given-verdict secondaries and the reason-label count"
+    },
+    {
+      "id": "r2-58",
+      "kind": "method",
+      "description": "J4 (methods reviewer): the PREREG.sha256 lists of x1-einvoice-pdf, r4-peppol-posthoc, t1-extraction-contract and t3-closed-loop held one hash line and no time",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the four hash lists carry an appended time, labelled as the authors' own record and not a third party's"
+    },
+    {
+      "id": "r2-59",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): CHANGELOG.md:9-10 said any earlier verdict replays byte for byte, while CHANGELOG.md:366-368 said 8 of 130 replays differ",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the changelog's head names the exception: some 0.0.1 verdicts, 8 of 130 in an earlier measurement, do not replay"
+    },
+    {
+      "id": "r2-60",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): README.md:176 called the stress seeds holdout seeds without saying they were re-banked on 2026-10-05 under a pack changed for 12 days, and did not name the three ways the generator differs from its written protocol",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page's stress row states the re-banking and the three generator deviations"
+    },
+    {
+      "id": "r2-61",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCHMARK-AP.md:1 said \"zero wrong payments\" for a tool that moves no money, and bench/ap/README.md:59 said \"0 wrong in 3,000 perturbed invoices\" when 245 were not decided",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the AP note's title and the harness README state 0 wrong of 82 decided and 0 wrong of 2,755 decided"
+    },
+    {
+      "id": "r2-62",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): the AP provenance archive says who audited the run but not whether a person or an AI agent built the checker",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-63",
+      "kind": "method",
+      "description": "J4 (methods reviewer): the AP benchmark data, gold labels included, was on disk 13 minutes before the prereg file was created, and the prereg was last written 0.503 s before run 1's results, so \"blind\" rests on the authors' own records (disclosed in the provenance archive)",
+      "post_hoc": false
+    },
+    {
+      "id": "r2-64",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): NOTICE omitted the EUPL-1.2 Schematron excerpts in packages/verify/test/fixtures/compile/*.sch (they were attributed in-file only)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / NOTICE lists the EUPL-1.2 Schematron excerpts and ships the licence text"
+    },
+    {
+      "id": "r2-65",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): NOTICE gave no provenance for the Peppol, ZATCA and KSeF sample XMLs in test/fixtures/einvoice/",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / NOTICE says the sample e-invoices were constructed for the tests, from the specifications it names"
+    },
+    {
+      "id": "r2-66",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer), J3 (legal operations): the shipped KB02 bundle's remedy quotes the opinion from mid-sentence (\"appeals. But Cochran and Axon ...\"), which looks like a sentence-boundary error",
+      "post_hoc": false
+    }
+  ],
+  "blind": false,
+  "label": "transcribed"
+}

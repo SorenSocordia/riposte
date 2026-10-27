@@ -73,7 +73,7 @@ describe('the rule changed, so the label changed: twin 0.3.0', () => {
   it('a verdict under a pre-correction label is not re-performed by this build (STRUCTURE_ONLY), never re-judged as if it were 0.3.0', () => {
     const r = verifyEinvoiceTwin(PEPPOL, [ABSENT], OPTS)
     const ruleset = { ...r.verdict.ruleset, version: '0.2.0' }
-    const legacy: Verdict = { ...r.verdict, outcome: 'PASS', ruleset, verdict_id: deriveVerdictId(r.verdict.input_hash, ruleset, r.verdict.engine_version) }
+    const legacy: Verdict = { ...r.verdict, outcome: 'PASS', ruleset, verdict_id: deriveVerdictId(r.verdict.input_hash, ruleset, r.verdict.engine_version, r.verdict.remedy_table_hash) }
     expect(verifyReplay(legacy, einvoiceVerdictInput(r.twin.sha256, 'peppol-bis3', [ABSENT], OPTS), { document: PEPPOL })).toMatchObject({ ok: true, status: 'STRUCTURE_ONLY', outcome_verified: false })
   })
   it('the CLI: a passing footing with nothing extracted verified exits 2 (was 0)', () => {
@@ -135,7 +135,7 @@ describe('the door holds the rule (book of record and HTTP)', () => {
   })
   it('a book holding a pre-correction (0.2.0) footing-only PASS stays valid: the engine issued exactly that before 0.3.0, under ANY_FAIL_FAILS', () => {
     const ruleset = { ...held.ruleset, version: '0.2.0' }
-    const legacy: Verdict = { ...held, outcome: 'PASS', aggregation: 'ANY_FAIL_FAILS', ruleset, verdict_id: deriveVerdictId(held.input_hash, ruleset, held.engine_version) }
+    const legacy: Verdict = { ...held, outcome: 'PASS', aggregation: 'ANY_FAIL_FAILS', ruleset, verdict_id: deriveVerdictId(held.input_hash, ruleset, held.engine_version, held.remedy_table_hash) }
     expect(recordedVerdictProblem(legacy)).toBeUndefined()
   })
   it('a reader that recomputes (the dispute opinion) does it under the named rule, and the held verdict verifies', () => {

@@ -1,0 +1,9 @@
+{
+  "550 U.S. 544": { "file": "twombly-wl.txt", "source": "mock Westlaw PDF layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" },
+  "556 U.S. 662": { "file": "iqbal-lexis.txt", "source": "mock Lexis layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" },
+  "509 U.S. 579": { "file": "daubert-wl.txt", "source": "mock Westlaw layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" },
+  "480 U.S. 102": { "file": "asahi.txt", "source": "mock public-archive layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" },
+  "563 U.S. 333": { "file": "concepcion.txt", "source": "mock public-archive layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" },
+  "477 U.S. 317": { "file": "celotex-wl.txt", "source": "mock Westlaw layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" },
+  "589 U.S. 8": { "file": "rotkiske.txt", "source": "mock public-archive layout typed from memory by the evaluator", "retrieved_at": "2026-10-06" }
+}

@@ -4,14 +4,19 @@ The decision is never made in Python. ``NodeChecker`` runs the bundled engine (`
 ``products/adapters/src`` by ``npm run build``) and returns its disposition verbatim:
 
     pass-through  the tool is not a declared action: do nothing
-    hold          FAIL or ABSTAIN at gate/autonomy: wait until a person resolves it
+    hold          FAIL or INSUFFICIENT_DATA at gate/autonomy: wait until a person resolves it
     review        PASS at gate: a person reviews it before it runs
-    surface       FAIL or ABSTAIN at advise: show it in-flow; do not hold
-    record        FAIL or ABSTAIN at record: book of record only; nothing in-flow; do not hold
+    surface       FAIL or INSUFFICIENT_DATA at advise: show it in-flow; do not hold
+    record        FAIL or INSUFFICIENT_DATA at record: book of record only; nothing in-flow; do not hold
     proceed       nothing to do
 
-Adapters fail OPEN: if the check itself errors (no node, a broken policy, a timeout), the tool call proceeds and the error
-is reported through ``on_error`` (default: a logging warning). Riposte's own failures never hold the host hostage.
+A failed check fails to the SAFEST rung (2026-10-05, the policy-error ruling; it reverses the old "fail open"): when the
+check itself cannot run (no node, a missing or broken policy, a timeout, malformed arguments), a CONSEQUENTIAL call (the
+policy's rule for it is gate or autonomy; with no readable rule, a tool name that moves money or files something) is held
+with a degraded check whose text names the problem and the fix, and any other call proceeds, with the error reported
+through ``on_error`` ("governance degraded"). ``RIPOSTE_ACTION_ON_ERROR=open`` (or ``on_policy_error="open"``) restores
+the old fail-open behaviour, loudly: every affected call logs a warning saying so. The same rule as the Claude Code hook
+(src/degraded.ts); ``CONSEQUENTIAL_WORDS`` is that file's list (a test holds the two equal).
 """
 from __future__ import annotations
 
@@ -24,6 +29,15 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Mapping, Optional, Protocol
 
 log = logging.getLogger("riposte_adapters")
+
+ON_ERROR_ENV = "RIPOSTE_ACTION_ON_ERROR"
+# src/degraded.ts CONSEQUENTIAL_WORDS (tests/test_core.py holds the two lists equal)
+CONSEQUENTIAL_WORDS = (
+    "pay", "pays", "paid", "payment", "payments", "payout", "payouts", "payroll", "transfer", "transfers", "wire", "wires", "remit",
+    "remittance", "refund", "refunds", "disburse", "disbursement", "charge", "charges", "withdraw", "withdrawal", "settle",
+    "settlement", "capture", "purchase", "buy", "sell", "trade", "ach", "sepa", "swift", "apply", "approve", "submit", "filing",
+    "lodge",
+)
 
 DISPOSITIONS = ("pass-through", "hold", "review", "surface", "record", "proceed")
 HOLDING = ("hold", "review")
@@ -81,6 +95,11 @@ class Check:
     @property
     def facts_hash(self) -> Optional[str]:
         return (self.raw.get("delivery") or {}).get("facts_hash")
+
+    @property
+    def degraded(self) -> Optional[Mapping[str, Any]]:
+        """Set on a check made because the real one could not run (the safest rung): the class, the error, the fix."""
+        return self.raw.get("degraded")
 
     def info(self) -> Dict[str, Any]:
         """A compact, JSON-safe summary for a host's result/metadata slot."""
@@ -150,16 +169,79 @@ class NodeChecker:
 
 
 def _warn(e: BaseException) -> None:
-    log.warning("riposte: check failed, failing open (the tool call proceeds): %s", e)
+    log.warning("riposte: governance degraded, the check could not run: %s", e)
 
 
-def safe_check(checker: Checker, tool: str, arguments: Mapping[str, Any], on_error: Callable[[BaseException], None] = _warn) -> Optional[Check]:
-    """The check, or None when the check itself failed (the caller then proceeds: fail open)."""
+def _words(name: str) -> list[str]:
+    import re
+    return [w.lower() for w in re.split(r"[^A-Za-z0-9]+", re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", name)) if w]
+
+
+def classify_call(tool: str, policy_path: Optional[str] = None) -> tuple[str, str]:
+    """(class, why) for a call whose check could not run: "consequential", "record-advise" or "pass-through"."""
+    rules = None
+    valid = False
+    if policy_path:
+        try:
+            p = json.loads(Path(policy_path).read_text(encoding="utf-8"))
+            if isinstance(p, dict) and isinstance(p.get("actions"), list):
+                rules = [a for a in p["actions"] if isinstance(a, dict)]
+                valid = p.get("policy_version") == "riposte-action-policy-v0" and all(
+                    isinstance(a.get("tool"), str) and a.get("level") in ("record", "advise", "gate", "autonomy") for a in rules
+                ) and len(rules) == len(p["actions"])
+        except (OSError, ValueError):
+            rules = None
+    if rules is not None:
+        rule = next((a for a in rules if a.get("tool") == tool), None)
+        if rule is not None:
+            lv = rule.get("level")
+            if lv in ("gate", "autonomy"):
+                return "consequential", f"the policy's rule for {tool} sets rung {lv}"
+            if lv in ("record", "advise"):
+                return "record-advise", f"the policy's rule for {tool} sets rung {lv}"
+            return "consequential", f"the policy's rule for {tool} has a rung that cannot be read ({lv!r})"
+        if valid:
+            return "pass-through", f"{tool} is not a declared action"
+    words = _words(tool)
+    hit = next((w for w in words if w in CONSEQUENTIAL_WORDS), None)
+    own = _words(tool.split("__")[-1])
+    if hit is None and own[:1] == ["file"]:
+        hit = "file"
+    if hit:
+        return "consequential", f'the policy cannot say, and the tool name\'s word "{hit}" moves money or files something'
+    return "record-advise", "the policy cannot say, and nothing in the tool name moves money or files something"
+
+
+def degraded_check(tool: str, error: BaseException, why: str) -> Check:
+    """The check a held consequential call gets when the real check could not run: disposition hold, its text the fix."""
+    text = (
+        f"Riposte held this {tool} call: governance degraded, the check could not run ({error}). While the action policy "
+        f"cannot be applied, calls that move money or file something are held and other calls proceed ({why}). "
+        "Fix: repair the setup (riposte-action --doctor checks it), then retry through a person."
+    )
+    return Check(matched=True, tool=tool, disposition="hold", raw={"degraded": {"class": "consequential", "why": why, "error": str(error)}, "delivery": {"text": text}})
+
+
+def safe_check(
+    checker: Checker,
+    tool: str,
+    arguments: Mapping[str, Any],
+    on_error: Callable[[BaseException], None] = _warn,
+    *,
+    on_policy_error: Optional[str] = None,
+) -> Optional[Check]:
+    """The check; or, when the check itself failed, the safest rung: a degraded hold for a consequential call, else None
+    (the caller proceeds). ``on_policy_error="open"`` (or RIPOSTE_ACTION_ON_ERROR=open) restores fail-open, loudly."""
     try:
         return checker.check(tool, arguments)
-    except Exception as e:  # noqa: BLE001 - failing open is the contract
+    except Exception as e:  # noqa: BLE001 - every failure of the check is an equipment error: the safest rung below
         on_error(e)
-        return None
+        mode = (on_policy_error or os.environ.get(ON_ERROR_ENV, "") or "hold").strip().lower()
+        cls, why = classify_call(tool, getattr(checker, "policy", None))
+        if mode == "open":
+            log.warning("riposte: %s=open: failing OPEN on a failed check, as the operator chose (the old behaviour); %s is not held (%s)", ON_ERROR_ENV, tool, cls)
+            return None
+        return degraded_check(tool, e, why) if cls == "consequential" else None
 
 
 class HoldMemory:

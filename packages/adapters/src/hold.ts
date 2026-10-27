@@ -9,10 +9,10 @@
  *
  * Dispositions:
  *   pass-through  the tool is not a declared action. The adapter does nothing at all.
- *   hold          FAIL or ABSTAIN at gate/autonomy: the action waits until a person resolves it.
+ *   hold          FAIL or INSUFFICIENT_DATA at gate/autonomy: the action waits until a person resolves it.
  *   review        PASS at gate: a person reviews it before it runs (ACTION_HANDLING.gate.PASS = HUMAN_REVIEW).
- *   surface       FAIL or ABSTAIN at advise: shown in-flow to the person and the agent; the action is not held.
- *   record        FAIL or ABSTAIN at record: written to the book of record; nothing in-flow; the action is not held.
+ *   surface       FAIL or INSUFFICIENT_DATA at advise: shown in-flow to the person and the agent; the action is not held.
+ *   record        FAIL or INSUFFICIENT_DATA at record: written to the book of record; nothing in-flow; the action is not held.
  *   proceed       PASS at record/advise (Riposte does not intervene) or at autonomy (proceeds within the declared bounds).
  *
  * THE GUARD (a finding, 2026-09-28): verify's `verdictFindings` aggregates with the engine-wide rule (PASS when any claim was
@@ -36,7 +36,7 @@ export interface ProposedCall {
 }
 
 export interface CheckDeps {
-  /** Reads a rule's `text_file`. Unreadable → the text is absent (the values then cannot be grounded in it: ABSTAIN). */
+  /** Reads a rule's `text_file`. Unreadable → the text is absent (the values then cannot be grounded in it: INSUFFICIENT_DATA). */
   readText?: (path: string) => string
   now?: () => Date
   /** Default 'pre-action' (the adapters run before the tool). */
@@ -66,10 +66,23 @@ export interface ActionCheck {
 export type ActionCheckResult = { matched: false; tool: string; disposition: 'pass-through' } | ActionCheck
 
 const SEVERITY = { PASS: 0, INSUFFICIENT_DATA: 1, FAIL: 2 } as const
+const knownOutcome = (o: unknown): o is keyof typeof SEVERITY => typeof o === 'string' && Object.prototype.hasOwnProperty.call(SEVERITY, o)
 
-/** verify's notice, never softer than the verdict's own outcome. Returns the notice unchanged when they agree. */
+/**
+ * verify's notice, never softer than the verdict's own outcome. Returns the notice unchanged when they agree.
+ *
+ * FAIL CLOSED (2026-10-04): an outcome outside PASS, INSUFFICIENT_DATA and
+ * FAIL, on the verdict or on the notice, is held at every rung, and the guard says so on the receipt. It used to fall through
+ * the severity table and land on SURFACE, which lets the call run.
+ */
 export function guardNotice(verdict: Verdict, notice: ActionNotice): { notice: ActionNotice; guard?: string } {
-  const v = verdict.outcome
+  const v = verdict.outcome as unknown
+  if (!knownOutcome(v) || !knownOutcome(notice.outcome)) {
+    return {
+      notice: { ...notice, action: 'HOLD' },
+      guard: `the verdict reads ${JSON.stringify(v)} and verify's notice read ${JSON.stringify(notice.outcome)}/${notice.action}: an outcome outside PASS, INSUFFICIENT_DATA and FAIL is held at every rung, so this action is HOLD at rung ${notice.level}`,
+    }
+  }
   if (SEVERITY[v] <= SEVERITY[notice.outcome]) return { notice }
   const outcome = v as 'FAIL' | 'INSUFFICIENT_DATA'
   const action: ActionNotice['action'] = notice.handling[outcome] === 'HOLD' ? 'HOLD' : 'SURFACE'
@@ -79,11 +92,12 @@ export function guardNotice(verdict: Verdict, notice: ActionNotice): { notice: A
   }
 }
 
-/** The disposition of a (guarded) notice. */
+/** The disposition of a (guarded) notice. An action outside HOLD, SURFACE and PROCEED holds. */
 export function dispositionOf(notice: ActionNotice): Exclude<Disposition, 'pass-through'> {
   if (notice.action === 'HOLD') return 'hold'
   if (notice.action === 'SURFACE') return notice.handling.delivery === 'in-flow' ? 'surface' : 'record'
-  return notice.handling.PASS === 'HUMAN_REVIEW' ? 'review' : 'proceed'
+  if (notice.action === 'PROCEED') return notice.handling.PASS === 'HUMAN_REVIEW' ? 'review' : 'proceed'
+  return 'hold'
 }
 
 function sourcesOf(rule: ActionRule, deps: CheckDeps, problems: string[]): ActionSources {

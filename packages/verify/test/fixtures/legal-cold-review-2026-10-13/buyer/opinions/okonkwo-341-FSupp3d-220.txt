@@ -1,0 +1,16 @@
+341 F.Supp.3d 220
+United States District Court, D. Delaware.
+OKONKWO DATA SYSTEMS, INC., Plaintiff,
+v.
+BRIGHTWATER CAPITAL PARTNERS, L.P., Defendant.
+C.A. No. 16-1184
+Signed September 27, 2018
+Opinion
+MEMORANDUM OPINION
+VOSS, District Judge.
+I. Limitations
+Under Delaware law a claim for breach of contract accrues at the moment of breach, and the three-year limitations period begins to run then, whether or not the plaintiff knows of the breach. *224 The period may be tolled where the injury is inherently unknowable and the plaintiff is blamelessly ignorant of it, but tolling lasts only until the plaintiff is on inquiry notice. Brightwater argues that Okonkwo was on inquiry notice no later than the closing date. In Brightwater's view, the purchase-price adjustment schedule disclosed every fact Okonkwo needed. The Court disagrees. The schedule reported totals, not the per-account figures from which the overcharge could be seen, and a plaintiff is not required to audit a counterparty's books to preserve a claim.
+II. The Damages Expert
+Rule 702 assigns the court a gatekeeping role, but the inquiry is a flexible one and its focus "must be solely on principles and methodology, not on the conclusions that they generate." Daubert v. Merrell Dow Pharm., Inc., 509 U.S. 579, 595 (1993). The question is not whether the expert is right but whether the method is reliable and reliably applied to the facts of the case. *225 A lost-profits model that assumes growth the business never achieved, and that ignores the plaintiff's own contemporaneous forecasts, is not a reliable application of an otherwise accepted method. The expert's model projects revenue growth of forty percent a year for six years, a rate the plaintiff never reached in any prior year, and it does so without explaining why the plaintiff's own budget, which forecast eight percent, should be disre-
+garded. Those defects go to admissibility, not merely to weight. The motion to exclude the lost-profits opinion is GRANTED. The motion to exclude the expert's opinion on unpaid invoices, which rests on the parties' own records, is DENIED.
+IT IS SO ORDERED.

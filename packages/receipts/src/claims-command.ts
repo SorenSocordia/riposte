@@ -5,14 +5,15 @@
  *   riposte-claims <transcript.jsonl> --all-turns   every turn-ending message, audited the same way
  *   riposte-claims < hook-input.json                (no path: reads {"transcript_path": …} from stdin)
  *
- * Prints JSON. Exit: 0 PASS · 1 FAIL (a claim is contradicted) · 2 ABSTAIN (unsupported, or nothing checkable) · 3 usage.
+ * Prints JSON. Exit: 0 PASS · 1 FAIL (a claim is contradicted) · 2 INSUFFICIENT_DATA, can't tell (unsupported, or nothing
+ * checkable) · 3 usage.
  * With --all-turns the exit code is the worst turn's.
  */
-import { checkClaims, checkMessageClaims, findFinalMessage, sessionFromClaudeCodeTranscript, turnEnds, type ClaimsResult } from './claims.js'
+import { checkClaims, checkMessageClaims, findFinalMessage, sessionFromClaudeCodeTranscript, turnEnds, type ClaimsResult, type Step } from './claims.js'
 import { AUDIENCES, deliver, factsFromClaims, type Audience, type Delivery, type DeliveryFacts } from './nunchi.js'
 
 export const CLAIMS_USAGE = 'riposte-claims <transcript.jsonl> [--all-turns] [--strict]  |  riposte-claims --hook [--strict] [--only-contradicted | --record-only] [--ledger <file>]   (hook JSON on stdin)'
-const CODES = { PASS: 0, FAIL: 1, ABSTAIN: 2 } as const
+const CODES = { PASS: 0, FAIL: 1, INSUFFICIENT_DATA: 2 } as const
 
 export interface ClaimsArgs { path?: string; allTurns: boolean; hook: boolean; onlyContradicted: boolean; recordOnly: boolean; strict: boolean; fromEnv?: boolean; ledger?: string; help?: boolean; error?: string }
 export interface CliResult { code: number; out: string; err: string }
@@ -49,7 +50,7 @@ export interface TurnAudit {
 export function auditTurns(jsonl: string, opts: { strict?: boolean } = {}): TurnAudit {
   const steps = sessionFromClaudeCodeTranscript(jsonl)
   const ends = turnEnds(steps)
-  const audit: TurnAudit = { turns: ends.length, turns_with_claims: 0, outcomes: { PASS: 0, FAIL: 0, ABSTAIN: 0 }, claims: { SUPPORTED: 0, CONTRADICTED: 0, UNSUPPORTED: 0 }, flagged: [] }
+  const audit: TurnAudit = { turns: ends.length, turns_with_claims: 0, outcomes: { PASS: 0, FAIL: 0, INSUFFICIENT_DATA: 0 }, claims: { SUPPORTED: 0, CONTRADICTED: 0, UNSUPPORTED: 0 }, flagged: [] }
   for (const i of ends) {
     const r = checkClaims(steps, i, { strict: opts.strict === true })
     if (!r.claims.length) continue
@@ -74,7 +75,7 @@ export interface HookDecision {
  * is sent back: the exit code and the silence of a silent stop are exactly the default's.
  */
 export interface NunchiStopOptions {
-  /** the declared consequence tier (a name in nunchi's DEFAULT_TIERS). Unset or unknown → the top tier (plain words, D6). */
+  /** the declared consequence tier (a name in nunchi's DEFAULT_TIERS). Unset or unknown → the top tier (plain words). */
   tier?: string
   audience?: Audience
 }
@@ -93,7 +94,7 @@ export interface StopHookOptions {
 /** The instruction every sent-back stop ends with, in every wording. */
 export const STOP_SEND_BACK = 'Run the check now and report what it actually shows, or correct the claim. (Riposte check_claims; it sends a stop back only once.)\n'
 
-/** The tier name used when RIPOSTE_TIER is unset. Undeclared, so Nunchi treats it as the top tier: plain words (D6). */
+/** The tier name used when RIPOSTE_TIER is unset. Undeclared, so Nunchi treats it as the top tier: plain words. */
 export const NUNCHI_UNSET_TIER = 'unset'
 
 /** The "done" moment through Nunchi. A sent-back stop is SURFACEd in-flow (to the agent, once); it is never held for a person. */
@@ -121,6 +122,17 @@ export function stopHook(stdin: string, readFile: (path: string) => string, opts
   let steps
   try { steps = sessionFromClaudeCodeTranscript(readFile(hook.transcript_path)) } catch (e) { return { code: fail, stderr: `riposte-claims --hook: cannot read the transcript: ${(e as Error).message}\n` } }
   const last = typeof hook.last_assistant_message === 'string' && hook.last_assistant_message.trim() ? hook.last_assistant_message : null
+  return stopDecision(steps, last, opts)
+}
+
+/**
+ * The Stop decision on a session already in hand (2026-10-03): host-neutral. `steps` are the session's tool calls and
+ * messages (receipts' Step shape) and `lastMessage` the final assistant message, when the host passes it. stopHook reads a
+ * Claude Code transcript and calls this; a Codex, Cursor or OpenCode port calls it with its own steps, without writing them
+ * out as a Claude Code transcript first. The decision is the same function either way, byte for byte.
+ */
+export function stopDecision(steps: Step[], lastMessage: string | null, opts: StopHookOptions = {}): HookDecision {
+  const last = typeof lastMessage === 'string' && lastMessage.trim() ? lastMessage : null
   let result: ClaimsResult
   const policy = { strict: opts.strict === true }
   if (last) {
@@ -189,10 +201,12 @@ export function hookOptionsFromEnv(env: Record<string, string | undefined>): { m
  * The body of the 'claims_check' receipt the Stop hook writes. Without the Nunchi opt-in it is exactly what the hook has
  * always written; with it, one more key (`nunchi`) ties the receipt to the delivered facts by hash.
  */
-export function stopReceipt(d: HookDecision, mode: string, strict: boolean): Record<string, unknown> {
+export function stopReceipt(d: HookDecision, mode: string, strict: boolean, host?: string): Record<string, unknown> {
   const x = d.delivery
   return {
-    source: 'stop_hook', mode, strict, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result,
+    // `host` (2026-10-03): which agent host stopped (codex, cursor, opencode…). Written only when given, so a Claude Code
+    // receipt keeps its bytes; a receipt without it is read as 'claude-code' (stopReceiptHost).
+    source: 'stop_hook', ...(host !== undefined ? { host } : {}), mode, strict, blocked: d.code === 2, would_block: d.wouldBlock === true, ...d.result,
     ...(x ? { nunchi: { delivery_version: x.delivery_version, facts_hash: x.facts_hash, moment: x.moment, speak: x.timing.speak, weight: x.weight, floor: x.floor, tier: x.tier.name, audience: x.audience } } : {}),
   }
 }
@@ -212,9 +226,15 @@ export function claimsCli(argv: string[], readFile: (path: string) => string, st
   try { text = readFile(path) } catch (e) { return { code: 3, out: '', err: `cannot read ${path}: ${(e as Error).message}\n` } }
   if (args.allTurns) {
     const a = auditTurns(text, { strict: args.strict })
-    const code = a.outcomes.FAIL ? 1 : a.outcomes.ABSTAIN ? 2 : a.outcomes.PASS ? 0 : 2
+    const code = a.outcomes.FAIL ? 1 : a.outcomes.INSUFFICIENT_DATA ? 2 : a.outcomes.PASS ? 0 : 2
     return { code, out: `${JSON.stringify(a, null, 2)}\n`, err: `${a.turns} turns · ${a.turns_with_claims} with claims · ${a.claims.SUPPORTED} supported · ${a.claims.CONTRADICTED} contradicted · ${a.claims.UNSUPPORTED} unsupported\n` }
   }
   const r = checkClaims(sessionFromClaudeCodeTranscript(text), undefined, { strict: args.strict })
   return { code: CODES[r.outcome], out: `${JSON.stringify(r, null, 2)}\n`, err: `${r.outcome}: ${r.reasons.join(' · ')}\n` }
+}
+
+/** The host a stop receipt came from: its `host`, or 'claude-code' for a receipt written without one (2026-10-03). */
+export function stopReceiptHost(receipt: unknown): string {
+  const h = receipt !== null && typeof receipt === 'object' ? (receipt as { host?: unknown }).host : undefined
+  return typeof h === 'string' && h.length > 0 ? h : 'claude-code'
 }

@@ -1,0 +1,25 @@
+INVOICE MESSAGE
+From: billing@apex-holdings.example
+Subject: Invoice AX-5521
+
+Hello,
+
+Invoice AX-5521 for your order PO-7740:
+
+- 4 x 400A PANELBOARD 42CKT @ USD 1,450.00 = USD 5,800.00
+- 2000 x THHN 12AWG CU FT @ USD 0.85 = USD 1,700.00
+
+Total due: USD 7,500.00
+
+Please remit to our new bank account ending 9921.
+
+Apex Industrial Holdings
+
+PURCHASE ORDER (ERP)
+PO-7740 | Vendor: Summit Electrical Supply | Freight: not allowed
+1. 400A panelboard, 42 circuit | qty 8 | unit USD 1,450.00
+2. THHN 12 AWG copper, ft | qty 5000 | unit USD 0.85
+
+GOODS RECEIPT (ERP) for PO-7740
+1. 400A panelboard, 42 circuit | received 4
+2. THHN 12 AWG copper, ft | received 2000

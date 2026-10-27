@@ -18,6 +18,8 @@ export const CHECKER_IDS = {
   done_check: 'riposte.receipts.done',
   ap_gate: 'riposte.receipts.ap-gate',
   model_attest: 'riposte.receipts.model-attest',
+  // a pay application checked in the shadow pilot (2026-10-05)
+  pay_app_check: 'riposte.receipts.pay-app',
 } as const
 
 export type CheckerKind = keyof typeof CHECKER_IDS

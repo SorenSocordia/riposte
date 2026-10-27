@@ -1,5 +1,5 @@
 /**
- * POST /v1/action/check and the MCP action_check tool (wave 4, BOOK-FIRST lane, 2026-09-28): one proposed tool call and its
+ * POST /v1/action/check and the MCP action_check tool (2026-09-28): one proposed tool call and its
  * declared sources at a rung → the verify_action verdict, its notice and the disposition the hold adapters deliver, so a
  * Python host can check an action over HTTP without a node subprocess.
  *   - the disposition table (every outcome × every rung) is the adapters' dispositionOf, restated here and held to it;
@@ -26,7 +26,7 @@ const APPROVED = { allowed: { amount: [500], to_account: ['110-234-5678'] } }
 const CASES = {
   PASS: { action: WIRE, sources: APPROVED },
   FAIL: { action: WIRE, sources: { allowed: { amount: [500], to_account: ['999-000-1111'] } } },
-  // partially grounded: the amount is allow-listed, the account number has no declared source (delivery-lane finding F1)
+  // partially grounded: the amount is allow-listed, the account number has no declared source
   INSUFFICIENT_DATA: { action: WIRE, sources: { allowed: { amount: [500] } } },
 } as const
 /** The hold adapters' dispositionOf (products/adapters/src/hold.ts), restated: every outcome × rung. */

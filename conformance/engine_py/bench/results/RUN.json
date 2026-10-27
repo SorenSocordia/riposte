@@ -1,0 +1,328 @@
+{
+  "summary": {
+    "run": "two-engines-1, the preregistered run",
+    "total": {
+      "checks": 667,
+      "agree": 643,
+      "python_scope": 22,
+      "disagree": 2,
+      "full_stderr_same": 501
+    },
+    "by_arm": {
+      "whetstone": {
+        "checks": 636,
+        "agree": 613,
+        "python_scope": 21,
+        "disagree": 2,
+        "full_stderr_same": 478
+      },
+      "vectors": {
+        "checks": 23,
+        "agree": 23,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 20
+      },
+      "pack": {
+        "checks": 8,
+        "agree": 7,
+        "python_scope": 1,
+        "disagree": 0,
+        "full_stderr_same": 3
+      }
+    },
+    "by_split": {
+      "whetstone half 1 dev": {
+        "checks": 150,
+        "agree": 144,
+        "python_scope": 6,
+        "disagree": 0,
+        "full_stderr_same": 104
+      },
+      "whetstone half 1 heldout": {
+        "checks": 50,
+        "agree": 46,
+        "python_scope": 2,
+        "disagree": 2,
+        "full_stderr_same": 36
+      },
+      "whetstone half 2 dev": {
+        "checks": 327,
+        "agree": 321,
+        "python_scope": 6,
+        "disagree": 0,
+        "full_stderr_same": 258
+      },
+      "whetstone half 2 heldout": {
+        "checks": 109,
+        "agree": 102,
+        "python_scope": 7,
+        "disagree": 0,
+        "full_stderr_same": 80
+      },
+      "vectors": {
+        "checks": 23,
+        "agree": 23,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 20
+      },
+      "pack": {
+        "checks": 8,
+        "agree": 7,
+        "python_scope": 1,
+        "disagree": 0,
+        "full_stderr_same": 3
+      }
+    },
+    "development_rows_replayed_before_the_stamp": {
+      "checks": 26,
+      "agree": 26,
+      "python_scope": 0,
+      "disagree": 0,
+      "full_stderr_same": 24
+    },
+    "development_rows_not_replayed_before_the_stamp": {
+      "checks": 451,
+      "agree": 439,
+      "python_scope": 12,
+      "disagree": 0,
+      "full_stderr_same": 338
+    },
+    "by_family": {
+      "outside": {
+        "checks": 48,
+        "agree": 48,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 46
+      },
+      "inside": {
+        "checks": 60,
+        "agree": 58,
+        "python_scope": 0,
+        "disagree": 2,
+        "full_stderr_same": 51
+      },
+      "words": {
+        "checks": 50,
+        "agree": 50,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 43
+      },
+      "confusable": {
+        "checks": 56,
+        "agree": 56,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 27
+      },
+      "issued-at": {
+        "checks": 60,
+        "agree": 55,
+        "python_scope": 5,
+        "disagree": 0,
+        "full_stderr_same": 43
+      },
+      "signature": {
+        "checks": 58,
+        "agree": 52,
+        "python_scope": 6,
+        "disagree": 0,
+        "full_stderr_same": 43
+      },
+      "appended": {
+        "checks": 60,
+        "agree": 55,
+        "python_scope": 5,
+        "disagree": 0,
+        "full_stderr_same": 45
+      },
+      "layout": {
+        "checks": 64,
+        "agree": 59,
+        "python_scope": 5,
+        "disagree": 0,
+        "full_stderr_same": 35
+      },
+      "trusted-key": {
+        "checks": 90,
+        "agree": 90,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 61
+      },
+      "lenient-remedies": {
+        "checks": 90,
+        "agree": 90,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 84
+      },
+      "vectors": {
+        "checks": 23,
+        "agree": 23,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 20
+      },
+      "pack": {
+        "checks": 8,
+        "agree": 7,
+        "python_scope": 1,
+        "disagree": 0,
+        "full_stderr_same": 3
+      }
+    },
+    "by_mode": {
+      "replay": {
+        "checks": 200,
+        "agree": 191,
+        "python_scope": 8,
+        "disagree": 1,
+        "full_stderr_same": 143
+      },
+      "strict": {
+        "checks": 200,
+        "agree": 191,
+        "python_scope": 8,
+        "disagree": 1,
+        "full_stderr_same": 143
+      },
+      "trusted": {
+        "checks": 100,
+        "agree": 99,
+        "python_scope": 1,
+        "disagree": 0,
+        "full_stderr_same": 94
+      },
+      "lenient": {
+        "checks": 100,
+        "agree": 96,
+        "python_scope": 4,
+        "disagree": 0,
+        "full_stderr_same": 69
+      },
+      "trusted-strict": {
+        "checks": 18,
+        "agree": 18,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 14
+      },
+      "lenient-strict": {
+        "checks": 18,
+        "agree": 18,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 15
+      },
+      "vectors": {
+        "checks": 23,
+        "agree": 23,
+        "python_scope": 0,
+        "disagree": 0,
+        "full_stderr_same": 20
+      },
+      "pack": {
+        "checks": 8,
+        "agree": 7,
+        "python_scope": 1,
+        "disagree": 0,
+        "full_stderr_same": 3
+      }
+    },
+    "wall_time": {
+      "node": {
+        "total_s": 327.9,
+        "median_ms": 460
+      },
+      "python_through_the_shim": {
+        "total_s": 275.1,
+        "median_ms": 360.6
+      },
+      "jobs": 1
+    }
+  },
+  "pins_now": {
+    "engine_sources": {
+      "sha256": "66a645e738a7a40483b59e2094cee5f6d40a09d08849adc763f2fb973d149ad8",
+      "files": 218
+    },
+    "python_engine": {
+      "sha256": "41a95efae6721ef953655ab6ae28e61642ef38ee84a906a6b44c186d925bbbc0",
+      "files": 43
+    },
+    "binding_verifier": {
+      "sha256": "d8b4113d662463c7c03bd86ec32535c7f15aeb4c03e89b5fa51162051761e94d"
+    },
+    "harness": {
+      "sha256": "98eb87217099411b2499063b7b22e618343bd174e500e99105b404d078e08076"
+    },
+    "whetstone_files": {
+      "mutations.json": "b59513f1522b5253832c88943167eef4b71c8f6773a1beb8fb78c60d36182c8e",
+      "mutations-2.json": "97f96a7bea0d190e78bc5688d074bed9a5c7fab1053641727c599bb76d0eb86b",
+      "HELDOUT.sha256": "3c6054518484333686fb4368555775ddb8463ccea222440c3bb4688bd9391658",
+      "HELDOUT-2.sha256": "5a176ee7bb515901429b22fb3b2c6090286b9ed96f256edf38df538d85aeba89"
+    },
+    "whetstone_dev_replayed": {
+      "sha256": "998c7b1c11a73356ce03f75549074ad95f3dba75d77490d9dcd18dbe8b9bc898",
+      "rows": 150
+    },
+    "vectors_manifest": {
+      "sha256": "c5c5923cd2ef30043e62d886b12dbfc6464fd53763533b0e1ca91a9515ba0b1b"
+    },
+    "pack": {
+      "sha256": "5c8d6c1f9f1a50af6925017d84c1c45e471b41d514e9b17489aa2eaf37181453"
+    },
+    "node": "v25.2.1",
+    "python": "3.10.16",
+    "platform": "win32",
+    "with_heldout": true
+  },
+  "pins_expected": {
+    "engine_sources": {
+      "sha256": "66a645e738a7a40483b59e2094cee5f6d40a09d08849adc763f2fb973d149ad8",
+      "files": 218
+    },
+    "python_engine": {
+      "sha256": "41a95efae6721ef953655ab6ae28e61642ef38ee84a906a6b44c186d925bbbc0",
+      "files": 43
+    },
+    "binding_verifier": {
+      "sha256": "d8b4113d662463c7c03bd86ec32535c7f15aeb4c03e89b5fa51162051761e94d"
+    },
+    "harness": {
+      "sha256": "98eb87217099411b2499063b7b22e618343bd174e500e99105b404d078e08076"
+    },
+    "whetstone_files": {
+      "mutations.json": "b59513f1522b5253832c88943167eef4b71c8f6773a1beb8fb78c60d36182c8e",
+      "mutations-2.json": "97f96a7bea0d190e78bc5688d074bed9a5c7fab1053641727c599bb76d0eb86b",
+      "HELDOUT.sha256": "3c6054518484333686fb4368555775ddb8463ccea222440c3bb4688bd9391658",
+      "HELDOUT-2.sha256": "5a176ee7bb515901429b22fb3b2c6090286b9ed96f256edf38df538d85aeba89"
+    },
+    "whetstone_dev_replayed": {
+      "sha256": "998c7b1c11a73356ce03f75549074ad95f3dba75d77490d9dcd18dbe8b9bc898",
+      "rows": 150
+    },
+    "vectors_manifest": {
+      "sha256": "c5c5923cd2ef30043e62d886b12dbfc6464fd53763533b0e1ca91a9515ba0b1b"
+    },
+    "pack": {
+      "sha256": "5c8d6c1f9f1a50af6925017d84c1c45e471b41d514e9b17489aa2eaf37181453"
+    },
+    "node": "v25.2.1",
+    "python": "3.10.16",
+    "platform": "win32",
+    "computed_at": "2026-10-20T14:38:31Z",
+    "note": "engine_sources over the export of 2026-10-20 06:30 local (the Linux lane run 8 export, the tree after the legal citation reader fix); the rest over the tree that export is made from, whose pinned files ship byte for byte"
+  },
+  "pin_problems": [],
+  "notes": [],
+  "node_cli": "packages\\verify\\dist\\cli.js",
+  "commands": {
+    "node": "node packages/verify/dist/cli.js",
+    "python": "python3 conformance/engine_py/cli.py"
+  }
+}

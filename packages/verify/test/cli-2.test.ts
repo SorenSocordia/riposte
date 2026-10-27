@@ -1,13 +1,13 @@
 /**
- * CLI-2 (Riposte recursion, wave 6, 2026-09-28), end to end through run(argv, io) on real temp files:
- *   - R1, replay truth: `verify replay` / verifyReplay never say the OUTCOME is verified unless the check was re-performed.
+ * The CLI (2026-09-28), end to end through run(argv, io) on real temp files:
+ *   - replay truth: `verify replay` / verifyReplay never say the OUTCOME is verified unless the check was re-performed.
  *     With the inputs, the engine for the verdict's ruleset runs again and the recomputed verdict is byte-compared (the
  *     first differing field is named); without them the answer is "structure verified; outcome NOT re-performed" (exit 2).
- *     The red-team R1 PoC's BROKEN cases are regressions here.
- *   - SW4: `verify opinion --from-book`, `verify rule`, `verify statute`.
+ *     A red-team PoC's BROKEN cases are regressions here.
+ *   - `verify opinion --from-book`, `verify rule`, `verify statute`.
  *   - The evidence-integrity verbs: `sample commit`, `queue`, `review --sign`, `key register|revoke`, `canary seal|reveal`,
- *     `policy lint`, `--root-keys`; `grant` through grantUnderPolicy; `decline` through declineOnBook (C6/N4 closed).
- *   - Twin v0.2 flags (`--ruleset 0.1|0.2|0.2.1 --pre --filing-summary --schema`), N2 (`mine --ruleset-out` never
+ *     `policy lint`, `--root-keys`; `grant` through grantUnderPolicy; `decline` through declineOnBook.
+ *   - Twin v0.2 flags (`--ruleset 0.1|0.2|0.2.1 --pre --filing-summary --schema`), `mine --ruleset-out` (never
  *     overwrites) and D-DECLINED-COPY ("Kept at <rung> by <person>, <date>; stands until …" / "Not now: …").
  * Every grant here is signed by an ANCHORED key (--trusted-keys / --root-keys): under D-ANCHOR an unanchored one moves nothing.
  */
@@ -58,7 +58,7 @@ function go(argv: string[]): { code: number; out: string; err: string; json: () 
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-describe('R1, replay truth: the outcome is verified only when the check is re-performed', () => {
+describe('replay truth: the outcome is verified only when the check is re-performed', () => {
   // The red-team PoC's forgery: SAME inputs (so the same verdict_id), a self-consistent FAIL where the engine says PASS.
   const action = { tool: 'transfer', arguments: { amount: 500 } }
   const sources = { allowed: { amount: [500] } }
@@ -74,7 +74,7 @@ describe('R1, replay truth: the outcome is verified only when the check is re-pe
     coverage: { claims_total: 1, claims_checked: 1, claims_pass: 0, claims_fail: 1, claims_insufficient: 0 },
   }
 
-  it('R1 regression (library): the forgery with its real inputs is re-performed and FAILS at `outcome`', () => {
+  it('regression (library): the forgery with its real inputs is re-performed and FAILS at `outcome`', () => {
     expect(forged.verdict_id).toBe(genuine.verdict_id) // the id commits to the inputs only: the premise of the attack
     const r = verifyReplay(forged, { action, sources })
     expect(r).toMatchObject({ ok: false, id_ok: true, input_ok: true, outcome_verified: false, status: 'FAILED', reperformed: { engine: 'action', identical: false, first_difference: 'outcome' } })
@@ -83,14 +83,14 @@ describe('R1, replay truth: the outcome is verified only when the check is re-pe
     expect(verifyReplay(genuine, { action, sources })).toMatchObject({ ok: true, outcome_verified: true, status: 'REPERFORMED', reperformed: { engine: 'action', identical: true } })
   })
 
-  it('R1 regression (library): without inputs the binding is all that holds, and it never reads as an outcome attestation', () => {
+  it('regression (library): without inputs the binding is all that holds, and it never reads as an outcome attestation', () => {
     const r = verifyReplay(forged)
     expect(r).toMatchObject({ id_ok: true, outcome_verified: false, status: 'STRUCTURE_ONLY' })
     expect(r.not_reperformed).toMatch(/^structure verified; outcome NOT re-performed: no inputs were supplied/)
     expect(r.reperformed).toBeUndefined()
   })
 
-  it('R1 regression (CLI): the forgery alone exits 2 (was 0); with --inputs it exits 1 naming the field; the genuine one exits 0', () => {
+  it('regression (CLI): the forgery alone exits 2 (was 0); with --inputs it exits 1 naming the field; the genuine one exits 0', () => {
     const d = scratch()
     const inputs = put(d, 'inputs.json', { action, sources })
     const alone = go(['replay', put(d, 'forged.json', forged)])
@@ -177,12 +177,12 @@ describe('R1, replay truth: the outcome is verified only when the check is re-pe
 
   it('never "verified" when nothing here can re-perform it: another engine version, an unknown input shape', () => {
     const v = verify(clean, { now: FIXED_NOW })
-    const old = { ...v, engine_version: '0.0.0-old', verdict_id: deriveVerdictId(v.input_hash, v.ruleset, '0.0.0-old') }
+    const old = { ...v, engine_version: '0.0.0-old', verdict_id: deriveVerdictId(v.input_hash, v.ruleset, '0.0.0-old', v.remedy_table_hash) }
     const inputs = { extraction: clean, references: { contract: null, evidence: [], history: [] }, source: null }
     expect(verifyReplay(old, inputs)).toMatchObject({ ok: true, input_ok: true, outcome_verified: false, status: 'STRUCTURE_ONLY' })
     expect(verifyReplay(old, inputs).not_reperformed).toMatch(new RegExp(`issued by engine 0\\.0\\.0-old; this is engine ${ENGINE_VERSION.replace(/\./g, '\\.')}`))
     const odd = { foo: 1 }
-    const shaped = { ...v, input_hash: hashOf(odd), verdict_id: deriveVerdictId(hashOf(odd), v.ruleset, v.engine_version) }
+    const shaped = { ...v, input_hash: hashOf(odd), verdict_id: deriveVerdictId(hashOf(odd), v.ruleset, v.engine_version, v.remedy_table_hash) }
     const r = verifyReplay(shaped, odd)
     expect(r).toMatchObject({ ok: true, input_ok: true, outcome_verified: false, status: 'STRUCTURE_ONLY' })
     expect(r.not_reperformed).toMatch(/no engine in this build takes inputs shaped \{ foo \}/)
@@ -266,12 +266,13 @@ describe('verify twin --ruleset 0.1|0.2|0.2.1 --pre --filing-summary --schema (C
     expect(r.json().verdict.ruleset).toMatchObject({ id: FS_CORE_TWIN_MAP.id, version: FS_CORE_TWIN_MAP.version })
   })
 
-  it('--ruleset 0.2 without a linkbase: every claim ABSTAINs NO_PRESENTATION_LINKBASE, exit 2', () => {
+  it('--ruleset 0.2 without a linkbase: every claim is INSUFFICIENT_DATA NO_PRESENTATION_LINKBASE, exit 2', () => {
     const f = files()
     const r = go([...base(f), '--ruleset', '0.2'])
     expect(r.code).toBe(2)
-    expect(r.json().judgments.map((j: { outcome: string; reason: string }) => [j.outcome, j.reason])).toEqual([['ABSTAIN', 'NO_PRESENTATION_LINKBASE']])
-    expect(r.err).toMatch(/no presentation linkbase was read .* every claim abstains \(NO_PRESENTATION_LINKBASE\)/)
+    expect(r.json().judgments.map((j: { outcome: string; reason: string }) => [j.outcome, j.reason])).toEqual([['INSUFFICIENT_DATA', 'NO_PRESENTATION_LINKBASE']])
+    expect(r.err).toMatch(/no presentation linkbase was read .* every claim is can't tell \(INSUFFICIENT_DATA, NO_PRESENTATION_LINKBASE\)/)
+    expect(r.out + r.err).not.toContain('ABSTAIN')
   })
 
   it('--ruleset 0.2 / 0.2.1 with the linkbase: the library\'s statement-anchored result, byte for byte', () => {
@@ -304,7 +305,7 @@ describe('verify twin --ruleset 0.1|0.2|0.2.1 --pre --filing-summary --schema (C
 })
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-describe('N2: verify mine --ruleset-out never writes over a file', () => {
+describe('verify mine --ruleset-out never writes over a file', () => {
   it('refuses an existing path (exit 1, the file untouched), writes a fresh one, and refuses it the second time', () => {
     const d = scratch()
     const rows = [
@@ -350,7 +351,7 @@ function freshClockAt(iso: string): () => Date {
   return () => new Date((ms += 60_000))
 }
 
-describe('SW4: verify opinion --from-book', () => {
+describe('verify opinion --from-book', () => {
   it('reads the rung from the GRANT in force and cites it: the library\'s opinion, byte for byte', () => {
     const b = tinyBook('gate')
     const r = go(['opinion', '--from-book', '--ledger', b.chain, '--policy', b.policy, '--workflow', WF(), '--trusted-keys', b.trusted, '--json'])
@@ -394,7 +395,7 @@ describe('SW4: verify opinion --from-book', () => {
   })
 })
 
-describe('SW4: verify rule → rulings.jsonl → verify statute', () => {
+describe('verify rule → rulings.jsonl → verify statute', () => {
   it('a person rules on a disputed FAIL (one JSON line, anchored); the statute re-verifies every ruling: the library\'s, byte for byte', () => {
     const b = tinyBook(null)
     const text = readFileSync(b.chain, 'utf8')
@@ -631,7 +632,7 @@ const grantP = (b: ReturnType<typeof bigBook>, level: string, extra: string[] = 
   ['grant', '--ledger', b.chain, '--key', b.owner, '--signer', 'owner', '--workflow', WF(), '--level', level, '--tier', 'low', '--policy', b.policy, '--trusted-keys', b.trusted, '--signed-at', '2026-09-28T09:40:00Z', ...extra]
 const voiceP = (b: ReturnType<typeof bigBook>): string[] => ['voice', '--from-book', '--ledger', b.chain, '--policy', b.policy, '--workflow', WF(), '--trusted-keys', b.trusted]
 
-describe('verify decline through declineOnBook (C6/N4 closed), in the product\'s own words (D-DECLINED-COPY)', () => {
+describe('verify decline through declineOnBook, in the product\'s own words (D-DECLINED-COPY)', () => {
   it('a kept demotion: "Kept at <rung> by <person>, <date>; stands until …", on decline and on every later read', () => {
     const b = bigBook(MISSES.ledger.chainJSONL())
     expect(go(grantP(b, 'autonomy', ['--bounds', 'all'])).code).toBe(0)

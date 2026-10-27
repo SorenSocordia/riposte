@@ -1,0 +1,35 @@
+{
+  "id": "rar-sparc",
+  "version": "0.1.0",
+  "domain": "astronomy/galaxy-kinematics",
+  "name": "DEMO, never a benchmark: the radial acceleration relation's one-parameter fit, replayed over its points (log10 g_bar, log10 g_obs and their 1-sigma uncertainties, one row per rotation-curve point), checked against what the paper publishes: g_dagger = 1.20 (within 0.10, a tolerance the replayer sets, not the paper), an rms scatter of 0.13 dex (within 0.02) and 2693 points. Every free choice the numbers depend on is a choice slot. The paper states the fitting procedure, the mass-to-light ratios and the selection; it does not state the fit's weights, so the weights are supplied, and the ledger says so. Engine 0.5.0.",
+  "sources": {
+    "RAR-PAPER": "McGaugh, Lelli & Schombert 2016, PRL 117, 201101, https://doi.org/10.1103/PhysRevLett.117.201101 (arXiv:1609.05917v1, PDF sha256 80357e5b689f1ae7c087359ff936a4543ad09bd4619498026d9e0bcf828fe8a8; LaTeX source PRL_RAR_arXiv.tex sha256 45ec63024e6a77b1c53ea92bf4305edf81bc069ebbd85a7d6da0eb897fbee9e2): g_dagger = 1.20 +- 0.02 (random) +- 0.24 (systematic) x 1e-10 m s^-2 (line 293); rms scatter 0.13 dex (line 304); 2693 points in 153 galaxies (line 38); the fit (lines 200-201), pinned in this build as rar.fit@1",
+    "SPARC": "Lelli, McGaugh & Schombert 2016, AJ 152, 157, https://doi.org/10.3847/0004-6256/152/6/157: the rotation curves and mass models (https://astroweb.case.edu/SPARC/Rotmod_LTG.zip, sha256 0a80cc90714828cc28b7dd57923576714d209f2490328c087c4a4ad607faf588; Table1 https://astroweb.case.edu/SPARC/SPARC_Lelli2016c.mrt, sha256 5aa0501f6b0d881fa579030e315e7b5b6ef561a5bd3a07472f9929c7e5728243)",
+    "POINTS": "the points as SCI-R1's preregistered script builds them from SPARC (r1_sparc.py, sha256 c332cce0b57823c663ea1996e7c3a3ff591c6bc630daf0d78c8ed597798fc63d, build_rows): the paper's 153-galaxy sample, errV/Vobs <= 0.10, mass-to-light 0.5 (disk) and 0.7 (bulge); sigma_y from the velocity, inclination and distance errors in quadrature; sigma_x = 0.11 dex times the stellar share of g_bar, floor 0.01 dex"
+  },
+  "lineArrayKeys": ["points"],
+  "tolerance": { "rel": 0, "absCap": 0 },
+  "choices": [
+    { "id": "RAR_ALGORITHM", "kind": "algorithm", "load_bearing": true, "name": "the fitting procedure (G_DAGGER, RMS_V)", "default": { "value": "rar.fit@1", "source": "RAR-PAPER lines 200-201 (orthogonal distance regression on the unbinned data, errors on both variables), as SCI-R1 read it; pinned in this build as rar.fit@1" } },
+    { "id": "RAR_WEIGHTS", "kind": "weights", "load_bearing": true, "name": "the fit's weights: \"errors\" takes each point's SIG_X and SIG_Y as its 1-sigma; \"unweighted\" gives every point sigma = 1", "default": { "value": "errors", "source": "SCI-R1's preregistered weights, carried in the points' SIG_X and SIG_Y (POINTS). The paper says only that the fit \"considers errors on both variables\"; it states no weights, so these are the replayer's" } },
+    { "id": "UPS_DISK", "kind": "ratio", "load_bearing": true, "name": "the disk mass-to-light ratio the points' g_bar is computed at (in POINTS, before the table reaches the engine)", "default": { "value": 0.5, "source": "POINTS: SCI-R1 computes g_bar at a disk mass-to-light ratio of 0.5" } },
+    { "id": "UPS_BUL", "kind": "ratio", "load_bearing": true, "name": "the bulge mass-to-light ratio the points' g_bar is computed at (in POINTS)", "default": { "value": 0.7, "source": "POINTS: SCI-R1 computes g_bar at a bulge mass-to-light ratio of 0.7" } },
+    { "id": "SELECTION", "kind": "selection", "load_bearing": true, "name": "which galaxies and which points enter the fit (in POINTS)", "governs": ["A_GDAGGER", "S_RMS_V", "N_POINTS"], "default": { "value": "153 galaxies (inclination at least 30 degrees; asymmetric curves rejected); points with a velocity precision of 10% or better", "source": "POINTS: SCI-R1 applies the paper's cuts" } }
+  ],
+  "fields": {
+    "LOG_GBAR": { "paths": ["log_gbar"], "kind": "quantity", "line": true, "term": "log10 g_bar, the baryonic acceleration (m s^-2) at the point [POINTS]" },
+    "LOG_GOBS": { "paths": ["log_gobs"], "kind": "quantity", "line": true, "term": "log10 g_obs, the observed acceleration (m s^-2) at the point [POINTS]" },
+    "SIG_X": { "paths": ["sig_x"], "kind": "quantity", "line": true, "term": "the 1-sigma uncertainty of log10 g_bar, in dex [POINTS]" },
+    "SIG_Y": { "paths": ["sig_y"], "kind": "quantity", "line": true, "term": "the 1-sigma uncertainty of log10 g_obs, in dex [POINTS]" }
+  },
+  "algorithms": {
+    "G_DAGGER": { "algorithm": "rar.fit@1", "inputs": { "x": "LOG_GBAR", "y": "LOG_GOBS", "sx": "SIG_X", "sy": "SIG_Y" }, "output": "g_dagger", "choice": "RAR_ALGORITHM", "params": { "weighting": "RAR_WEIGHTS" } },
+    "RMS_V": { "algorithm": "rar.fit@1", "inputs": { "x": "LOG_GBAR", "y": "LOG_GOBS", "sx": "SIG_X", "sy": "SIG_Y" }, "output": "rms_v", "choice": "RAR_ALGORITHM", "params": { "weighting": "RAR_WEIGHTS" } }
+  },
+  "checks": [
+    { "code": "A_GDAGGER", "field": "g_dagger", "left": "G_DAGGER", "op": "=", "right": "1.20", "tol": 0.10, "exact_tolerance": true, "abstain_if": [{ "left": "UPS_DISK", "op": "!=", "right": "0.5" }, { "left": "UPS_BUL", "op": "!=", "right": "0.7" }], "guard_reason": "the points' g_bar is computed at mass-to-light 0.5 (disk) and 0.7 (bulge) (POINTS): a document that states other ratios is about other points", "name": "A: the fit's g_dagger (1e-10 m s^-2) equals the published 1.20 within 0.10 [RAR-PAPER line 293]" },
+    { "code": "S_RMS_V", "field": "rms", "left": "RMS_V", "op": "=", "right": "0.13", "tol": 0.02, "exact_tolerance": true, "abstain_if": [{ "left": "UPS_DISK", "op": "!=", "right": "0.5" }, { "left": "UPS_BUL", "op": "!=", "right": "0.7" }], "guard_reason": "the points' g_bar is computed at mass-to-light 0.5 (disk) and 0.7 (bulge) (POINTS): a document that states other ratios is about other points", "name": "S: the rms of the vertical residuals about the fit (dex) equals the published 0.13 within 0.02 [RAR-PAPER line 304]" },
+    { "code": "N_POINTS", "field": "points", "left": "count(LOG_GBAR)", "op": "=", "right": "2693", "tol": 0, "exact_tolerance": true, "name": "N: the fit uses 2693 points [RAR-PAPER line 38]" }
+  ]
+}

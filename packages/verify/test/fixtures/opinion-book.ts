@@ -1,5 +1,5 @@
 /**
- * Shared fixtures for the book-aware opinion, tenant-scope and statute tests (opinion lane, 2026-09-28): deterministic
+ * Shared fixtures for the book-aware opinion, tenant-scope and statute tests (2026-09-28): deterministic
  * Ed25519 keys (a fixed seed → the same key every run), a tiny lint-clean policy so promotions and demotions happen within
  * a few dozen reviews (◇ illustrative only), and a signed GRANT helper.
  */

@@ -1,0 +1,9 @@
+{
+  "format": "riposte-governance-expected/1",
+  "note": "Governance is set up for the Riposte hook beside this file. If its RIPOSTE_GOV_* settings do not reach the hook, every tool call is denied (governance.config_missing). Delete this file only to take governance down on purpose.",
+  "host": "codex",
+  "agent": "your-agent-id",
+  "charter": "the charter's sha256",
+  "receipts": "/absolute/path/to/governance-receipts.jsonl",
+  "enrolled_at": "2026-10-04T00:00:00.000Z"
+}

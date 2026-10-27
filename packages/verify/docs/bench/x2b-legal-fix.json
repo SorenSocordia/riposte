@@ -1,0 +1,238 @@
+{
+  "format": "bench-table/1",
+  "id": "x2b-legal-fix",
+  "title": "Legal quotation conventions, post-hoc fix (legal@0.1.0)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "c50c51a9b98784167554154564be3f54f9b16d977eadce2a8e7c0ce63c52656a",
+    "frozen_sha256": "c50c51a9b98784167554154564be3f54f9b16d977eadce2a8e7c0ce63c52656a",
+    "amendments": [],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:31Z",
+          "serial": "268ea1103bfe2babea9a5054551e2c82",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "X2b run 2 on the 58 items of X2",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "legal@0.1.0",
+    "dist_sha256": "12dc60a76781af3d5894fea8d1495c50ca1d74b8d0e3f0b0db73391111fef667",
+    "results": {
+      "path": "results/run-v010.json",
+      "sha256": "00775e1b4585367480f0df5fe6b78b29cb60a79b43027fbe7d2e799a21c9f231"
+    },
+    "spec_sha256": "cdf9398a54a231a04f2bfbdbf70b063f634f9e4cfa9791e03ff73f580e3e1d8e",
+    "not_shipped": [
+      {
+        "file": "harness/run.mjs",
+        "sha256": "2a09e4f8c9a12af7e0f36b54d50a868ad586bfb66aa7277980011008563fa145",
+        "reason": "the run's harness. It names the authors' private folders, so it does not ship."
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The run's harness, a copy of the first legal blind set's harness with its paths changed, names the authors' folders and does not ship. The opinion texts and decision files it reads are not in this tree either."
+    }
+  },
+  "rows": [
+    {
+      "claim": "B1: the 11 convention false FAILs now PASS",
+      "n": 11,
+      "k": 9,
+      "rate": 0.818182,
+      "ci95": [
+        0.523019,
+        0.948633
+      ],
+      "method": "wilson",
+      "verdict": "FAIL",
+      "bar": {
+        "text": "B1: the 11 convention false FAILs (CT01, CT02, CT03, CT05, CT06, CT09, CT10, CT11, CT14, CT16, CT18) PASS",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "B2: the two misquoting controls still FAIL",
+      "n": 2,
+      "k": 2,
+      "rate": 1,
+      "ci95": [
+        0.34238,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "B2: CT12 (Celotex) and CT19 (Keys v. Humana) stay FAIL",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "B3: known-bad and supplementary items certified PASS",
+      "n": 38,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.09181
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "B3: 0 PASS on the 20 known-bad items and 0 PASS on the 18 supplementary items",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "B4: fabricated cases not abstained",
+      "n": 5,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.434483
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "B4: the 5 fabricated cases ABSTAIN (0 FAIL, 0 PASS)",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "B5: the six blind PASSes still PASS",
+      "n": 6,
+      "k": 6,
+      "rate": 1,
+      "ci95": [
+        0.609665,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "B5: the 6 controls that passed blind (CT04, CT07, CT13, CT15, CT17, CT20) still PASS",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "B6: propositions abstained OUT_OF_RULESET_SCOPE",
+      "n": 2,
+      "k": 2,
+      "rate": 1,
+      "ci95": [
+        0.34238,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "B6: the 2 propositions still ABSTAIN OUT_OF_RULESET_SCOPE",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "controls PASS under legal@0.1.0",
+      "n": 20,
+      "k": 15,
+      "rate": 0.75,
+      "ci95": [
+        0.531299,
+        0.888139
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; post-hoc: the thresholds were chosen with X2's anchor lengths in view"
+    },
+    {
+      "claim": "bad quotations still FAILed (known-bad and supplementary)",
+      "n": 38,
+      "k": 1,
+      "rate": 0.026316,
+      "ci95": [
+        0.00466,
+        0.134949
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    }
+  ],
+  "misses": [
+    {
+      "id": "CT18",
+      "kind": "false-fail",
+      "description": "CT18 stays FAIL: the quotation's apostrophe against the OCR source's 'plaintiffs' (predicted by the prereg)",
+      "post_hoc": true
+    },
+    {
+      "id": "CT09",
+      "kind": "unpredicted-abstain",
+      "description": "CT09 abstains SELECTIVE_QUOTE: the preceding-negation guard reads only the opinion ('cannot take on the responsibility of serving'), so a quotation whose own sentence supplies the negation cannot pass",
+      "post_hoc": true
+    },
+    {
+      "id": "KB02-pointer-lost",
+      "kind": "regression",
+      "description": "KB02 no longer shows the related passage X2's audit named; it abstains asking for the complete opinion or a pin cite",
+      "post_hoc": true
+    },
+    {
+      "id": "SP02-pointer-lost",
+      "kind": "regression",
+      "description": "SP02 no longer shows the related passage X2's audit named; it abstains asking for the complete opinion or a pin cite",
+      "post_hoc": true
+    },
+    {
+      "id": "SP17-pointer-lost",
+      "kind": "regression",
+      "description": "SP17 no longer shows the related passage X2's audit named; it abstains asking for the complete opinion or a pin cite",
+      "post_hoc": true
+    }
+  ],
+  "blind": false,
+  "label": "post-hoc",
+  "audit": "no new audit: the classes are X2's, from an AI agent's audit (Claude Opus 5.5 (claude-opus-5-5)); no person labelled"
+}

@@ -1,0 +1,193 @@
+{
+  "spec": "bench-spec/1",
+  "id": "s4-bpi2019",
+  "title": "Three-way match on a real purchase log (BPI Challenge 2019)",
+  "adapter": "items",
+  "label": "blind",
+  "blind": true,
+  "files": {
+    "summary": "summary-blind.json",
+    "labels": "audit-labels.json"
+  },
+  "run": {
+    "id": "S4 blind scored run (250,234 items)",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "bpi-threeway-messages@1.0.0",
+    "dist_sha256": "e4673ab6c50127cac2c3e9c70486c751b5aedbba9bfecfc92787983cbe6e3b6c"
+  },
+  "rows": [
+    {
+      "claim": "log agreement: decided items where the check and the company's own log agree (FAIL and held, or PASS and not held)",
+      "n": {
+        "$from": "summary:log_agreement.n"
+      },
+      "k": {
+        "$sum": [
+          "summary:log_agreement.a",
+          "summary:log_agreement.d"
+        ]
+      },
+      "method": "wilson",
+      "note": "the only check in this table against something outside the run: the company's own log of what it held. PREREG §8 secondary, reported with no bar; Amendment A9 calls the log-agreement table the only external check; summary only (the 2x2 counts in results/summary-blind.json); the 61.7% is mostly items that passed and were not held (127,385 of the 129,053 that agree); the next row gives the recall side",
+      "reported": {
+        "k": 129053,
+        "n": 209254
+      }
+    },
+    {
+      "claim": "held items the check flagged: P(FAIL | held), the recall side of the log agreement",
+      "n": {
+        "$sum": [
+          "summary:log_agreement.a",
+          "summary:log_agreement.c"
+        ]
+      },
+      "k": {
+        "$from": "summary:log_agreement.a"
+      },
+      "method": "wilson",
+      "note": "not a preregistered row: added on 2026-10-06 from the same 2x2 counts in results/summary-blind.json, after a cold reader asked for the recall side beside the agreement figure; the check flagged about 2.0% of the items the company's log held"
+    },
+    {
+      "claim": "flags the check's own count confirmed on audit (the preregistered primary metric: audited precision of 200 sampled FAIL flags)",
+      "n": {
+        "$from": "summary:audit.n"
+      },
+      "k": {
+        "$from": "summary:audit.confirmed"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "PASS if the Wilson 95% lower bound is >= 0.80; FAIL otherwise (PREREG §7, unchanged by Amendment A7)",
+        "test": {
+          "ci_lo": {
+            "ge": 0.8
+          }
+        }
+      },
+      "note": "the primary metric re-counts the check's own rule: CONFIRMED means the trace shows more invoice receipts than goods receipts after every cancellation and reversal (Amendment A6), which is what the check computes, so a high rate shows the count was done as specified, not that a flag is over-billing; the external check is the log-agreement row above it; the audit is by the harness author; dist_sha256 is the verify snapshot's tree hash (sorted per-file sha256 of dist *.js)",
+      "reported": {
+        "k": 196,
+        "n": 200
+      }
+    },
+    {
+      "claim": "seeded PASS items found missed on audit (miss audit)",
+      "n": {
+        "$from": "summary:audit.miss_audit.n"
+      },
+      "k": {
+        "$from": "summary:audit.miss_audit.misses.length"
+      },
+      "method": "wilson",
+      "note": "PREREG §8: reported, no pass bar",
+      "reported": {
+        "k": 0,
+        "n": 50
+      }
+    },
+    {
+      "claim": "in-scope items decided (coverage)",
+      "n": {
+        "$from": "summary:counts.inScope"
+      },
+      "k": {
+        "$from": "summary:counts.decided"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 209254,
+        "n": 209975
+      },
+      "note": "summary only; per-case file sha256 4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103 not shipped (97 MB)"
+    },
+    {
+      "claim": "decided items flagged (flag rate)",
+      "n": {
+        "$from": "summary:counts.decided"
+      },
+      "k": {
+        "$from": "summary:counts.fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 1766,
+        "n": 209254
+      },
+      "note": "summary only; per-case file sha256 4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103 not shipped (97 MB)"
+    },
+    {
+      "claim": "flagged items the log held (blocked, cancelled or left uncleared): P(held | FAIL)",
+      "n": {
+        "$sum": [
+          "summary:log_agreement.a",
+          "summary:log_agreement.b"
+        ]
+      },
+      "k": {
+        "$from": "summary:log_agreement.a"
+      },
+      "method": "wilson",
+      "note": "PREREG §8 secondary, reported with no bar",
+      "reported": {
+        "k": 1668,
+        "n": 1766
+      }
+    },
+    {
+      "claim": "passed items the log held anyway: P(held | PASS)",
+      "n": {
+        "$sum": [
+          "summary:log_agreement.c",
+          "summary:log_agreement.d"
+        ]
+      },
+      "k": {
+        "$from": "summary:log_agreement.c"
+      },
+      "method": "wilson",
+      "note": "PREREG §8 secondary, reported with no bar; relative risk P(held | FAIL) / P(held | PASS) = 2.45, 95% CI 2.42 to 2.48 (results/summary-blind.json, log_agreement.rr)",
+      "reported": {
+        "k": 80103,
+        "n": 207488
+      }
+    },
+    {
+      "claim": "audited flags whose trace shows a reason a clerk would accept (VISIBLE_REASON, the secondary audit label)",
+      "items": "labels:fail",
+      "hit": {
+        "secondary": "VISIBLE_REASON"
+      },
+      "method": "wilson",
+      "note": "Amendment A6 secondary label, reported with no bar; NO_VISIBLE_REASON is not a finding of over-billing (A6); the audit is by the harness author",
+      "reported": {
+        "k": 161,
+        "n": 200
+      }
+    }
+  ],
+  "misses_from": [
+    {
+      "items": "labels:fail",
+      "where": {
+        "label": {
+          "$ne": "CONFIRMED"
+        }
+      },
+      "id": "audit-${n}",
+      "kind": "audited-${label}",
+      "description": "audited flag #${n} (case ${case}) read ${label} on audit: ${note}",
+      "post_hoc": false
+    }
+  ],
+  "misses": [
+    {
+      "id": "value-design-retired",
+      "kind": "data-limit",
+      "description": "the preregistered money-level match (v0) cannot be computed from this log: its only money field is the item's net worth repeated on every event; retired on dev-slice evidence before any scored outcome and replaced by a message-level match (Amendment A)",
+      "post_hoc": false
+    }
+  ],
+  "audit": "an AI agent audit: Claude Opus 5.5 (claude-opus-5-5), the same agent that wrote the harness, labelled every sampled case (the auditor field of results/audit-labels.json); no person labelled"
+}

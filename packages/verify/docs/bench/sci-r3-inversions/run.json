@@ -1,0 +1,84 @@
+{
+  "format": "bench-run/1",
+  "id": "sci-r3-inversions",
+  "prereg": "PREREG.frozen.md",
+  "results": "results/below-result.run1.json",
+  "spec": "spec.json",
+  "chains": [
+    "PREREG.sha256"
+  ],
+  "docs": [
+    "PREREG.md"
+  ],
+  "amendment_text": [
+    {
+      "sha256": "bf3ea7f2012ba233a21cbccba3ad8655d3abff4ad860f20fc21f14a013665e75",
+      "from": "PREREG.md:140-157"
+    },
+    {
+      "sha256": "a931994eb40fb5c410a983ad279bd67aee40bf937c95f4bcc43aff28bb518262",
+      "from": "PREREG.md:158-162"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "PREREG.frozen.md.tsr"
+    },
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The run's script is not in this tree. Its inputs are public grids from topex.ucsd.edu (topo_19.1, topo_27.1 and grav_34.1), read by byte range and named by URL and sha256 in results/below-result.run1.json, plus the SPARC files; none is redistributed here."
+  },
+  "blind_basis": "PREREG.sha256 records the frozen prereg's sha256 at 2026-10-04T03:42:06Z, the prereg says no bathymetry or gravity data had been read and the grids were to be downloaded after the freeze, and both first-run outputs name that sha256 as the prereg in force; no download time ships. The list, the prereg and the outputs were written by the authors",
+  "sources": [
+    {
+      "file": "PREREG.frozen.md",
+      "sha256": "4c493f6cdde006b1fb0dc16527c84ca5709a558444c38c6de930ca6b21b36194",
+      "from": "scratch/PREREG.frozen.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "0e828a6fcfd83d7ff7da46eb4bc05db6e9055dcf10aaef6f78bcc66f630f26d3",
+      "from": "PREREG.sha256"
+    },
+    {
+      "file": "PREREG.md",
+      "sha256": "a931994eb40fb5c410a983ad279bd67aee40bf937c95f4bcc43aff28bb518262",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "results/below-result.run1.json",
+      "sha256": "a5c06504f55abfd8e21e146bf851c57a4a4fd67436daa1130e4ec545864d7b85",
+      "from": "scratch/below-result.run1.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "c344e2dab82c33771cfeaeff16bfc936eba83f0e23aa039d5d56094ce7664921",
+      "from": "the run spec written when the tables were first emitted"
+    },
+    {
+      "file": "PREREG.frozen.md.tsr",
+      "sha256": "eb74d8a6d1b611ec7b0be852a6c83891c7bf5edbb8b91103600d9a39e4d5f1c6",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.frozen.md.tsq",
+      "sha256": "d705460b5c84138f7fe0b6ecc04cce286ebc0fa906a3b38467c9d18f5a70cafe",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "b20e33be244b26c36dacafa0f36475af938b9af09bed038457cab21f0dca5714",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "e9a2af49b55f79c1d3f67b3c36fff91642eca5755de80572d1997bfd87efdda4",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ]
+}

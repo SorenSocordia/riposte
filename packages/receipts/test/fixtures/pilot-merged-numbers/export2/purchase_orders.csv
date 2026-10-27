@@ -1,0 +1,8 @@
+number,vendor,currency,line_id,item,description,quantity,rate,amount
+PO-7731,Gulf Coast Supply,USD,1,EMT-34,3/4 EMT conduit 10ft,40,8.12,324.80
+PO-7731,Gulf Coast Supply,USD,2,PNL-200,200A panelboard,12,410.00,4920.00
+PO-7740,Gulf Coast Supply,USD,1,EMT-34,3/4 EMT conduit 10ft,200,8.12,1624.00
+PO-7740,Gulf Coast Supply,USD,2,STR-34,3/4 strut strap,400,0.55,220.00
+PO-7752,Rexel,USD,1,THHN-12,12 AWG THHN per 1000ft,20,150.05,3001.00
+PO-7760,Wesco,USD,1,BOX-4SQ,4in square box,500,2.00,1000.00
+PO-7771,Graybar,USD,1,FIT-12,1/2 EMT fitting,100,12.50,1250.00

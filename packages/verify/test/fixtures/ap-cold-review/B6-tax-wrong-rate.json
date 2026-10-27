@@ -1,0 +1,85 @@
+{
+  "schema": "riposte.ap-input/0.1.0",
+  "bill": {
+    "invoice_number": "SES-20602",
+    "vendor": {
+      "name": "Summit Electrical Supply",
+      "id": "V-1022"
+    },
+    "purchase_order_number": "PO-7740",
+    "currency": "USD",
+    "line_items": [
+      {
+        "purchase_order_line_item_id": "pol-1",
+        "quantity": 40,
+        "unit_price": "189.00",
+        "amount": "7560.00"
+      },
+      {
+        "purchase_order_line_item_id": "pol-2",
+        "quantity": 2,
+        "unit_price": "2850.00",
+        "amount": "5700.00"
+      },
+      {
+        "purchase_order_line_item_id": "pol-3",
+        "quantity": 300,
+        "unit_price": "6.25",
+        "amount": "1875.00"
+      }
+    ],
+    "tax": "1437.83",
+    "amount": "16572.83"
+  },
+  "purchase_order": {
+    "id": "po-7740",
+    "purchase_order_number": "PO-7740",
+    "vendor": {
+      "name": "Summit Electrical Supply",
+      "id": "V-1022"
+    },
+    "currency": "USD",
+    "freight_allowed": false,
+    "tax_rate": 0.0825,
+    "line_items": [
+      {
+        "id": "pol-1",
+        "description": "MC cable 12/2 250ft roll",
+        "quantity": 40,
+        "unit_price": "189.00"
+      },
+      {
+        "id": "pol-2",
+        "description": "Panelboard 200A 42-circuit",
+        "quantity": 2,
+        "unit_price": "2850.00"
+      },
+      {
+        "id": "pol-3",
+        "description": "EMT 3/4in x 10ft",
+        "quantity": 300,
+        "unit_price": "6.25"
+      }
+    ]
+  },
+  "item_receipts": [
+    {
+      "purchase_order_id": "po-7740",
+      "line_items": [
+        {
+          "purchase_order_line_item_id": "pol-1",
+          "quantity": 40
+        },
+        {
+          "purchase_order_line_item_id": "pol-2",
+          "quantity": 2
+        },
+        {
+          "purchase_order_line_item_id": "pol-3",
+          "quantity": 300
+        }
+      ]
+    }
+  ],
+  "payment_history": []
+}

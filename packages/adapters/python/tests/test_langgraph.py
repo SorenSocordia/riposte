@@ -105,12 +105,17 @@ def test_hold_reject_strategy_short_circuits_without_a_checkpointer():
     assert "it did not run" in out.content
 
 
-def test_fails_open_when_the_check_errors():
+def test_a_failed_check_takes_the_safest_rung(monkeypatch):
+    monkeypatch.delenv("RIPOSTE_ACTION_ON_ERROR", raising=False)
     errors = []
-    m = RiposteToolMiddleware(FakeChecker(error=RuntimeError("engine down")), on_error=errors.append, tool_message_cls=FakeToolMessage)
+    m, ints = mw(FakeChecker(error=RuntimeError("engine down")), on_error=errors.append)
     h = Handler()
-    assert m.wrap_tool_call(request(), h).content == "transfer sent"
+    out = m.wrap_tool_call(request(), h)  # a transfer: held, refused at once, no interrupt
+    assert h.calls == 0 and ints == [] and out.status == "error" and "governance degraded" in out.content
+    assert m.wrap_tool_call(request(name="Read", args={"file_path": "x"}), h).content == "transfer sent"  # not consequential: runs
     assert h.calls == 1 and str(errors[0]) == "engine down"
+    monkeypatch.setenv("RIPOSTE_ACTION_ON_ERROR", "open")  # the opt-out: the old fail-open
+    assert m.wrap_tool_call(request(), h).content == "transfer sent"
 
 
 def test_async_hook_holds_and_proceeds():

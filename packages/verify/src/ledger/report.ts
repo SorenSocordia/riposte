@@ -15,7 +15,7 @@
  *     an ask and not an alarm: listed apart from the asks, and the rung stays as a person set it;
  *   - what a person declined (D-DECLINED-COPY): "Kept at <rung> by <person>, <date>; stands until …" for a kept rung, "Not
  *     now: <person>, <date>; re-raises when …" for a declined promotion. A declined proposal is never listed as an ask;
- *   - the FAIL / ABSTAIN notices by rung: surfaced at record and advise, held at gate and autonomy, each with its dispute
+ *   - the FAIL / INSUFFICIENT_DATA notices by rung: surfaced at record and advise, held at gate and autonomy, each with its dispute
  *     path. Every FAIL is visible and disputable at every rung.
  * Riposte proposes; a person decides. Nothing here changes a rung.
  *
@@ -181,7 +181,7 @@ export interface TenantReportOptions {
     trusted_keys?: TrustedKeys
     declarations?: readonly WorkflowDeclaration[] | ((workflow_id: string) => WorkflowSettings | undefined)
   }
-  /** The reporting window for the FAIL / ABSTAIN notices (e.g. this month). Omit for the whole record. */
+  /** The reporting window for the FAIL / INSUFFICIENT_DATA notices (e.g. this month). Omit for the whole record. */
   period?: ReportPeriod
   /** Open notices listed per workflow before "… N more" (default 10). */
   max_notices?: number
@@ -276,7 +276,8 @@ export interface NoticeRow {
 export interface WorkflowNotices {
   workflow_id: string
   fail: number
-  abstain: number
+  /** can't tell (INSUFFICIENT_DATA) verdicts; this field was `abstain` before 2026-10-06 */
+  insufficient_data: number
   /** Reviewed by a person already (resolved). */
   resolved: number
   /** Awaiting a person, in recorded order. */
@@ -302,7 +303,7 @@ export interface TenantOpinions {
   standing: OpenProposal[]
   /** What a person declined and Riposte is NOT asking again (until the evidence changes): urgent demotions first, by workflow. */
   declined: DeclinedProposal[]
-  /** FAIL / ABSTAIN notices in the period, by the rung each workflow runs at (ladder order; rungs with none omitted). */
+  /** FAIL / INSUFFICIENT_DATA notices in the period, by the rung each workflow runs at (ladder order; rungs with none omitted). */
   notices: RungNotices[]
   /** Notices of workflows whose rung could not be read (the book did not verify): whether they are held cannot be shown. */
   notices_unread?: WorkflowNotices[]
@@ -326,7 +327,7 @@ const bookCommand = (wf: string, r: RungRead, tenant?: string): string =>
 
 const oneRung = (from: VoiceLevel, up: boolean): VoiceLevel => VOICE_LADDER[Math.min(VOICE_LADDER.length - 1, Math.max(0, levelRank(from) + (up ? 1 : -1)))] as VoiceLevel
 
-/** The opinions section as data: open proposals with their rulings, and the FAIL / ABSTAIN notices by rung. Deterministic. */
+/** The opinions section as data: open proposals with their rulings, and the FAIL / INSUFFICIENT_DATA notices by rung. Deterministic. */
 export function tenantOpinions(ledger: Ledger, opts: TenantReportOptions = {}): TenantOpinions {
   const tenant = opts.tenant_id
   const period = opts.period ?? {}
@@ -424,7 +425,7 @@ export function tenantOpinions(ledger: Ledger, opts: TenantReportOptions = {}): 
   standingNotices.sort((x, y) => x.workflow_id.localeCompare(y.workflow_id))
   declined.sort((x, y) => Number(y.kind === 'DEMOTION_PROPOSAL') - Number(x.kind === 'DEMOTION_PROPOSAL') || x.workflow_id.localeCompare(y.workflow_id))
 
-  // FAIL / ABSTAIN in the period, grouped by workflow, then by the rung the workflow runs at (or unread, when it cannot be).
+  // FAIL / INSUFFICIENT_DATA in the period, grouped by workflow, then by the rung the workflow runs at (or unread, when it cannot be).
   const levelOf = new Map(workflows.filter(w => w.rung_from !== 'unread').map(w => [w.workflow_id, w.granted]))
   const unreadIds = new Set(workflows.filter(w => w.rung_from === 'unread').map(w => w.workflow_id))
   const byWf = new Map<string, WorkflowNotices>()
@@ -438,10 +439,10 @@ export function tenantOpinions(ledger: Ledger, opts: TenantReportOptions = {}): 
     const wf = defaultWorkflowOf(rec)
     const level = levelOf.get(wf) ?? 'record'
     let w = byWf.get(wf)
-    if (!w) { w = { workflow_id: wf, fail: 0, abstain: 0, resolved: 0, open: [] }; byWf.set(wf, w) }
+    if (!w) { w = { workflow_id: wf, fail: 0, insufficient_data: 0, resolved: 0, open: [] }; byWf.set(wf, w) }
     const rv = factsOf(rec)
     if (rv.outcome === 'FAIL') w.fail++
-    else w.abstain++
+    else w.insufficient_data++
     if (rec.review) { w.resolved++; continue }
     let n
     try { n = actionNotice(rec.verdict, level) } catch { continue }
@@ -612,18 +613,18 @@ export function renderOpinionsSection(o: TenantOpinions, opts: { max_notices?: n
     L.push('')
   }
 
-  L.push(`### FAIL / ABSTAIN notices, by rung${when ? ` (${when})` : ''}`, '')
-  L.push('> Every FAIL and ABSTAIN is shown with its dispute path at every rung. At `record` and `advise` it is surfaced, not held; at `gate` and `autonomy` it holds the action until a person resolves it.', '')
+  L.push(`### FAIL / INSUFFICIENT_DATA notices, by rung${when ? ` (${when})` : ''}`, '')
+  L.push("> Every FAIL and every can't tell (INSUFFICIENT_DATA) is shown with its dispute path at every rung. At `record` and `advise` it is surfaced, not held; at `gate` and `autonomy` it holds the action until a person resolves it.", '')
   if (!o.book.content_verified) L.push(`⚠ Read from a book of record that did not verify (${o.book.reason ?? 'content not re-hashed'}).`, '')
   const unreadNotices = o.notices_unread ?? []
   if (o.notices.length === 0 && unreadNotices.length === 0) {
-    L.push(`No FAIL or ABSTAIN on record${when ? ' in the period' : ''}.`, '')
+    L.push(`No FAIL or INSUFFICIENT_DATA on record${when ? ' in the period' : ''}.`, '')
     return L.join('\n')
   }
   const listWorkflow = (w: WorkflowNotices, handled: (n: NoticeRow) => string): void => {
-    L.push(`- \`${w.workflow_id}\`: ${w.fail} FAIL · ${w.abstain} ABSTAIN; ${w.open.length} awaiting a person, ${w.resolved} resolved.`)
+    L.push(`- \`${w.workflow_id}\`: ${w.fail} FAIL · ${w.insufficient_data} INSUFFICIENT_DATA; ${w.open.length} awaiting a person, ${w.resolved} resolved.`)
     for (const n of w.open.slice(0, max)) {
-      L.push(`  - ${n.outcome === 'FAIL' ? '✗ FAIL' : '⚠ ABSTAIN'} \`${short(n.verdict_id, 16)}\` · ${n.recorded_at} · ${handled(n)} · ${n.finding}${n.findings > 1 ? ` (+${n.findings - 1} more)` : ''} · dispute: \`${n.dispute}\``)
+      L.push(`  - ${n.outcome === 'FAIL' ? '✗ FAIL' : '⚠ INSUFFICIENT_DATA'} \`${short(n.verdict_id, 16)}\` · ${n.recorded_at} · ${handled(n)} · ${n.finding}${n.findings > 1 ? ` (+${n.findings - 1} more)` : ''} · dispute: \`${n.dispute}\``)
     }
     if (w.open.length > max) L.push(`  - … ${w.open.length - max} more awaiting a person`)
   }

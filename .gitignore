@@ -11,4 +11,5 @@ bench/sec/*.jsonl
 bench/sec/*.json
 bench/sec/*.txt
 bench/sec/*.tsv
+tmp/
 .export-stamp

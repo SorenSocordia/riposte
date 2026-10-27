@@ -1,0 +1,1361 @@
+{
+  "verdict": {
+    "schema_version": "v0",
+    "verdict_id": "a4ac150bf0000cb5db0bb681a1a0efb7",
+    "issued_at": "2026-10-19T21:56:51.399Z",
+    "engine_version": "0.7.2",
+    "ruleset": {
+      "id": "ap-structured",
+      "version": "0.1.0",
+      "domain": "accounts-payable"
+    },
+    "input_hash": "ed3586f737d31ed28e3f9755222f16aec587ab1f498c9faed8ab7b0c2ee75c9a",
+    "remedy_table_hash": "dfeada8c6ecb422a8a6448de85725e2161d05edb078ccb05b7537fe33b893d99",
+    "replayable": true,
+    "document": {
+      "extraction_hash": "3d36a9ec8a4e4679ae09ebaa7a8c0245a50e62a01afe85b529deb50dd015a210",
+      "line_items": 2
+    },
+    "references": {
+      "contract": true,
+      "evidence": 1,
+      "history": 1,
+      "source": false
+    },
+    "outcome": "FAIL",
+    "gate_status": "FAIL",
+    "aggregation": "ANY_FAIL_FAILS",
+    "claims": [
+      {
+        "claim_id": "ap.duplicate",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "invoice_number",
+        "rule_id": "AP_DUPLICATE",
+        "rule_name": "Invoice not already booked",
+        "outcome": "FAIL",
+        "asserted": "GCE-5512",
+        "computation": {
+          "formula": "invoice_number not in history (same vendor; vendors compared by tax id, vendor id, then normalized name)",
+          "operands": {
+            "invoice_number": "GCE-5512",
+            "booked_as": "GCE-5512",
+            "booked_vendor": "Gulf Coast Electric Supply",
+            "bill_vendor": "Gulf Coast Electric Supply",
+            "vendor_match": "same"
+          },
+          "result": "GCE-5512"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/invoice_number"
+            },
+            "value": "GCE-5512",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "history",
+              "path": "/payment_history/0"
+            },
+            "value": "GCE-5512",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Invoice GCE-5512 is already in the books (paid 2026-09-02). Paying it again would be a duplicate payment."
+      },
+      {
+        "claim_id": "ap.po_number",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "po_number",
+        "asserted": "PO-7781",
+        "rule_id": "AP_PO_MATCH",
+        "rule_name": "Invoice references the purchase order",
+        "computation": {
+          "formula": "invoice.po_number = po.number",
+          "operands": {
+            "invoice_po": "PO-7781",
+            "po": "PO-7781"
+          },
+          "result": "PO-7781"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/purchase_order_number"
+            },
+            "value": "PO-7781",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "contract",
+              "path": "/purchase_order/purchase_order_number"
+            },
+            "value": "PO-7781",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "The bill cites PO-7781, which is the purchase order."
+      },
+      {
+        "claim_id": "ap.vendor",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "vendor",
+        "rule_id": "AP_VENDOR_MATCH",
+        "rule_name": "Bill is from the purchase order's vendor",
+        "outcome": "PASS",
+        "asserted": "Gulf Coast Electric Supply",
+        "computation": {
+          "formula": "bill.vendor = purchase_order.vendor (tax id, then vendor id, then normalized name)",
+          "operands": {
+            "bill_vendor": "Gulf Coast Electric Supply",
+            "po_vendor": "Gulf Coast Electric Supply",
+            "vendor_match": "same"
+          },
+          "result": "Gulf Coast Electric Supply"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/vendor/name"
+            },
+            "value": "Gulf Coast Electric Supply",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "contract",
+              "path": "/purchase_order/vendor/name"
+            },
+            "value": "Gulf Coast Electric Supply",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "The bill is from the purchase order's vendor, Gulf Coast Electric Supply."
+      },
+      {
+        "claim_id": "ap.line[1].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].quantity",
+        "asserted": 20,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 20,
+            "received": 40
+          },
+          "result": 40
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/quantity"
+            },
+            "value": 20,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "evidence",
+              "path": "/item_receipts/0/line_items/0/quantity"
+            },
+            "value": 40,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "200A panelboard, 42 circuit: billed 20, received 40. (Bill line 1.)"
+      },
+      {
+        "claim_id": "ap.line[1].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].unit_price",
+        "asserted": 125,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 125,
+            "po_unit": 125
+          },
+          "result": 127.5,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/unit_price"
+            },
+            "value": 125,
+            "original": "125.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "contract",
+              "path": "/purchase_order/line_items/0/unit_price"
+            },
+            "value": 125,
+            "original": "125.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "200A panelboard, 42 circuit: invoiced 125, PO 125 (max 127.5000 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[1].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].amount",
+        "asserted": 2500,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 20,
+            "unit_price": 125,
+            "exact_product": "2500",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 2500,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/amount"
+            },
+            "value": 2500,
+            "original": "2500.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/quantity"
+            },
+            "value": 20,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/unit_price"
+            },
+            "value": 125,
+            "original": "125.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "200A panelboard, 42 circuit: 20 × 125 = 2500; the line says 2500."
+      },
+      {
+        "claim_id": "ap.line[2].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].quantity",
+        "asserted": 5,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 5,
+            "received": 5
+          },
+          "result": 5
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/quantity"
+            },
+            "value": 5,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "evidence",
+              "path": "/item_receipts/0/line_items/1/quantity"
+            },
+            "value": 5,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Ground rod clamp: billed 5, received 5. (Bill line 2.)"
+      },
+      {
+        "claim_id": "ap.line[2].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].unit_price",
+        "asserted": 5,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 5,
+            "po_unit": 5
+          },
+          "result": 5.1,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/unit_price"
+            },
+            "value": 5,
+            "original": "5.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "contract",
+              "path": "/purchase_order/line_items/1/unit_price"
+            },
+            "value": 5,
+            "original": "5.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Ground rod clamp: invoiced 5, PO 5 (max 5.1000 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[2].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].amount",
+        "asserted": 25,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 5,
+            "unit_price": 5,
+            "exact_product": "25",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 25,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/amount"
+            },
+            "value": 25,
+            "original": "25.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/quantity"
+            },
+            "value": 5,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/unit_price"
+            },
+            "value": 5,
+            "original": "5.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "Ground rod clamp: 5 × 5 = 25; the line says 25."
+      },
+      {
+        "claim_id": "ap.total",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "total",
+        "asserted": 2525,
+        "rule_id": "AP_TOTAL_SUM",
+        "rule_name": "Stated total equals the lines (+ allowed freight)",
+        "computation": {
+          "formula": "total = Σ line.amount + (freight if PO allows)",
+          "operands": {
+            "lines": 2525,
+            "freight": 0,
+            "freight_allowed": false
+          },
+          "result": 2525,
+          "tolerance": {
+            "abs": 0.005
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/amount"
+            },
+            "value": 2525,
+            "original": "{\"amount\":252500,\"currency_code\":\"USD\"}",
+            "normalizations": [
+              "minor_units_divided_by_100"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/amount"
+            },
+            "value": 2500,
+            "original": "2500.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/amount"
+            },
+            "value": 25,
+            "original": "25.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "The lines add to 2,525.00; the bill says 2,525.00."
+      },
+      {
+        "claim_id": "ap.po_balance",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "po_balance",
+        "rule_id": "AP_PO_BALANCE",
+        "rule_name": "Billed to date within the purchase order",
+        "outcome": "PASS",
+        "asserted": 2525,
+        "computation": {
+          "formula": "Σ booked on this PO (same vendor) + Σ this bill's line amounts ≤ Σ PO line quantity × unit price",
+          "operands": {
+            "po": "PO-7781",
+            "booked": 0,
+            "this_bill": 2525,
+            "booked_invoices": 0,
+            "history_size": 1
+          },
+          "result": null
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/0/amount"
+            },
+            "value": 2500,
+            "original": "2500.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "invoice",
+              "path": "/bill/line_items/1/amount"
+            },
+            "value": 25,
+            "original": "25.00",
+            "normalizations": [
+              "decimal_string"
+            ],
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "No booked invoice is on PO-7781 (1 booked invoice compared), so there is nothing to net against this bill."
+      }
+    ],
+    "coverage": {
+      "claims_total": 11,
+      "claims_checked": 11,
+      "claims_pass": 10,
+      "claims_fail": 1,
+      "claims_insufficient": 0
+    },
+    "remedies": [
+      {
+        "kind": "authority",
+        "detail": "Invoice GCE-5512 is already booked (GCE-5512, vendor Gulf Coast Electric Supply). Paying it again is lawful only if that booking was voided or credited, or it belongs to another supplier: the controller rules, for this verdict only.",
+        "authority": "ap-controller",
+        "clears": [
+          "AP_DUPLICATE"
+        ],
+        "claims": [
+          "ap.duplicate"
+        ]
+      }
+    ],
+    "scope": {
+      "ruleset": "ap-structured@0.1.0",
+      "engine_version": "0.7.2",
+      "evidence_floor": "unstated",
+      "statements": [
+        "advisories are counsel, not verdicts",
+        "this is a check, not a decision"
+      ]
+    }
+  },
+  "decision": "hold_duplicate",
+  "payable": false,
+  "grounding": {
+    "invoice_number": "GCE-5512",
+    "po_number": "PO-7781",
+    "item": null,
+    "invoiced": "GCE-5512",
+    "expected": "GCE-5512"
+  },
+  "reasons": [
+    "Invoice GCE-5512 is already in the books (paid 2026-09-02). Paying it again would be a duplicate payment."
+  ],
+  "not_checked": [],
+  "proof": {
+    "verdict": {
+      "schema_version": "v0",
+      "verdict_id": "a4ac150bf0000cb5db0bb681a1a0efb7",
+      "issued_at": "2026-10-19T21:56:51.399Z",
+      "engine_version": "0.7.2",
+      "ruleset": {
+        "id": "ap-structured",
+        "version": "0.1.0",
+        "domain": "accounts-payable"
+      },
+      "input_hash": "ed3586f737d31ed28e3f9755222f16aec587ab1f498c9faed8ab7b0c2ee75c9a",
+      "remedy_table_hash": "dfeada8c6ecb422a8a6448de85725e2161d05edb078ccb05b7537fe33b893d99",
+      "replayable": true,
+      "document": {
+        "extraction_hash": "3d36a9ec8a4e4679ae09ebaa7a8c0245a50e62a01afe85b529deb50dd015a210",
+        "line_items": 2
+      },
+      "references": {
+        "contract": true,
+        "evidence": 1,
+        "history": 1,
+        "source": false
+      },
+      "outcome": "FAIL",
+      "gate_status": "FAIL",
+      "aggregation": "ANY_FAIL_FAILS",
+      "claims": [
+        {
+          "claim_id": "ap.duplicate",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "field": "invoice_number",
+          "rule_id": "AP_DUPLICATE",
+          "rule_name": "Invoice not already booked",
+          "outcome": "FAIL",
+          "asserted": "GCE-5512",
+          "computation": {
+            "formula": "invoice_number not in history (same vendor; vendors compared by tax id, vendor id, then normalized name)",
+            "operands": {
+              "invoice_number": "GCE-5512",
+              "booked_as": "GCE-5512",
+              "booked_vendor": "Gulf Coast Electric Supply",
+              "bill_vendor": "Gulf Coast Electric Supply",
+              "vendor_match": "same"
+            },
+            "result": "GCE-5512"
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/invoice_number"
+              },
+              "value": "GCE-5512",
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "history",
+                "path": "/payment_history/0"
+              },
+              "value": "GCE-5512",
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "Invoice GCE-5512 is already in the books (paid 2026-09-02). Paying it again would be a duplicate payment."
+        },
+        {
+          "claim_id": "ap.po_number",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "po_number",
+          "asserted": "PO-7781",
+          "rule_id": "AP_PO_MATCH",
+          "rule_name": "Invoice references the purchase order",
+          "computation": {
+            "formula": "invoice.po_number = po.number",
+            "operands": {
+              "invoice_po": "PO-7781",
+              "po": "PO-7781"
+            },
+            "result": "PO-7781"
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/purchase_order_number"
+              },
+              "value": "PO-7781",
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "contract",
+                "path": "/purchase_order/purchase_order_number"
+              },
+              "value": "PO-7781",
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "The bill cites PO-7781, which is the purchase order."
+        },
+        {
+          "claim_id": "ap.vendor",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "field": "vendor",
+          "rule_id": "AP_VENDOR_MATCH",
+          "rule_name": "Bill is from the purchase order's vendor",
+          "outcome": "PASS",
+          "asserted": "Gulf Coast Electric Supply",
+          "computation": {
+            "formula": "bill.vendor = purchase_order.vendor (tax id, then vendor id, then normalized name)",
+            "operands": {
+              "bill_vendor": "Gulf Coast Electric Supply",
+              "po_vendor": "Gulf Coast Electric Supply",
+              "vendor_match": "same"
+            },
+            "result": "Gulf Coast Electric Supply"
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/vendor/name"
+              },
+              "value": "Gulf Coast Electric Supply",
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "contract",
+                "path": "/purchase_order/vendor/name"
+              },
+              "value": "Gulf Coast Electric Supply",
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "The bill is from the purchase order's vendor, Gulf Coast Electric Supply."
+        },
+        {
+          "claim_id": "ap.line[1].quantity",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "line[1].quantity",
+          "asserted": 20,
+          "rule_id": "AP_QTY_RECEIVED",
+          "rule_name": "Billed units were received",
+          "computation": {
+            "formula": "invoice.qty ≤ receipt.received",
+            "operands": {
+              "invoiced": 20,
+              "received": 40
+            },
+            "result": 40
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/quantity"
+              },
+              "value": 20,
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "evidence",
+                "path": "/item_receipts/0/line_items/0/quantity"
+              },
+              "value": 40,
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "200A panelboard, 42 circuit: billed 20, received 40. (Bill line 1.)"
+        },
+        {
+          "claim_id": "ap.line[1].price",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "line[1].unit_price",
+          "asserted": 125,
+          "rule_id": "AP_PRICE_PO",
+          "rule_name": "Unit price within PO tolerance",
+          "computation": {
+            "formula": "invoice.unit ≤ po.unit × 1.02",
+            "operands": {
+              "invoiced": 125,
+              "po_unit": 125
+            },
+            "result": 127.5,
+            "tolerance": {
+              "rel": 0.02
+            }
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/unit_price"
+              },
+              "value": 125,
+              "original": "125.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "contract",
+                "path": "/purchase_order/line_items/0/unit_price"
+              },
+              "value": 125,
+              "original": "125.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "200A panelboard, 42 circuit: invoiced 125, PO 125 (max 127.5000 at the 2% price tolerance)."
+        },
+        {
+          "claim_id": "ap.line[1].amount",
+          "kind": "RECOMPUTE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "line[1].amount",
+          "asserted": 2500,
+          "rule_id": "AP_LINE_MATH",
+          "rule_name": "Line amount equals quantity × unit price",
+          "computation": {
+            "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+            "operands": {
+              "quantity": 20,
+              "unit_price": 125,
+              "exact_product": "2500",
+              "currency": "USD",
+              "minor_unit_digits": 2
+            },
+            "result": 2500,
+            "tolerance": {
+              "abs": 0.01
+            }
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/amount"
+              },
+              "value": 2500,
+              "original": "2500.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/quantity"
+              },
+              "value": 20,
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/unit_price"
+              },
+              "value": 125,
+              "original": "125.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            }
+          ],
+          "locked": true,
+          "explanation": "200A panelboard, 42 circuit: 20 × 125 = 2500; the line says 2500."
+        },
+        {
+          "claim_id": "ap.line[2].quantity",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "line[2].quantity",
+          "asserted": 5,
+          "rule_id": "AP_QTY_RECEIVED",
+          "rule_name": "Billed units were received",
+          "computation": {
+            "formula": "invoice.qty ≤ receipt.received",
+            "operands": {
+              "invoiced": 5,
+              "received": 5
+            },
+            "result": 5
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/quantity"
+              },
+              "value": 5,
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "evidence",
+                "path": "/item_receipts/0/line_items/1/quantity"
+              },
+              "value": 5,
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "Ground rod clamp: billed 5, received 5. (Bill line 2.)"
+        },
+        {
+          "claim_id": "ap.line[2].price",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "line[2].unit_price",
+          "asserted": 5,
+          "rule_id": "AP_PRICE_PO",
+          "rule_name": "Unit price within PO tolerance",
+          "computation": {
+            "formula": "invoice.unit ≤ po.unit × 1.02",
+            "operands": {
+              "invoiced": 5,
+              "po_unit": 5
+            },
+            "result": 5.1,
+            "tolerance": {
+              "rel": 0.02
+            }
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/unit_price"
+              },
+              "value": 5,
+              "original": "5.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "contract",
+                "path": "/purchase_order/line_items/1/unit_price"
+              },
+              "value": 5,
+              "original": "5.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "REFERENCE"
+            }
+          ],
+          "locked": true,
+          "explanation": "Ground rod clamp: invoiced 5, PO 5 (max 5.1000 at the 2% price tolerance)."
+        },
+        {
+          "claim_id": "ap.line[2].amount",
+          "kind": "RECOMPUTE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "line[2].amount",
+          "asserted": 25,
+          "rule_id": "AP_LINE_MATH",
+          "rule_name": "Line amount equals quantity × unit price",
+          "computation": {
+            "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+            "operands": {
+              "quantity": 5,
+              "unit_price": 5,
+              "exact_product": "25",
+              "currency": "USD",
+              "minor_unit_digits": 2
+            },
+            "result": 25,
+            "tolerance": {
+              "abs": 0.01
+            }
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/amount"
+              },
+              "value": 25,
+              "original": "25.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/quantity"
+              },
+              "value": 5,
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/unit_price"
+              },
+              "value": 5,
+              "original": "5.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            }
+          ],
+          "locked": true,
+          "explanation": "Ground rod clamp: 5 × 5 = 25; the line says 25."
+        },
+        {
+          "claim_id": "ap.total",
+          "kind": "RECOMPUTE",
+          "tier": "DETERMINISTIC",
+          "outcome": "PASS",
+          "field": "total",
+          "asserted": 2525,
+          "rule_id": "AP_TOTAL_SUM",
+          "rule_name": "Stated total equals the lines (+ allowed freight)",
+          "computation": {
+            "formula": "total = Σ line.amount + (freight if PO allows)",
+            "operands": {
+              "lines": 2525,
+              "freight": 0,
+              "freight_allowed": false
+            },
+            "result": 2525,
+            "tolerance": {
+              "abs": 0.005
+            }
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/amount"
+              },
+              "value": 2525,
+              "original": "{\"amount\":252500,\"currency_code\":\"USD\"}",
+              "normalizations": [
+                "minor_units_divided_by_100"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/amount"
+              },
+              "value": 2500,
+              "original": "2500.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/amount"
+              },
+              "value": 25,
+              "original": "25.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            }
+          ],
+          "locked": true,
+          "explanation": "The lines add to 2,525.00; the bill says 2,525.00."
+        },
+        {
+          "claim_id": "ap.po_balance",
+          "kind": "CROSS_REFERENCE",
+          "tier": "DETERMINISTIC",
+          "field": "po_balance",
+          "rule_id": "AP_PO_BALANCE",
+          "rule_name": "Billed to date within the purchase order",
+          "outcome": "PASS",
+          "asserted": 2525,
+          "computation": {
+            "formula": "Σ booked on this PO (same vendor) + Σ this bill's line amounts ≤ Σ PO line quantity × unit price",
+            "operands": {
+              "po": "PO-7781",
+              "booked": 0,
+              "this_bill": 2525,
+              "booked_invoices": 0,
+              "history_size": 1
+            },
+            "result": null
+          },
+          "evidence": [
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/0/amount"
+              },
+              "value": 2500,
+              "original": "2500.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            },
+            {
+              "locator": {
+                "kind": "field",
+                "source": "invoice",
+                "path": "/bill/line_items/1/amount"
+              },
+              "value": 25,
+              "original": "25.00",
+              "normalizations": [
+                "decimal_string"
+              ],
+              "confidence": 100,
+              "role": "OPERAND"
+            }
+          ],
+          "locked": true,
+          "explanation": "No booked invoice is on PO-7781 (1 booked invoice compared), so there is nothing to net against this bill."
+        }
+      ],
+      "coverage": {
+        "claims_total": 11,
+        "claims_checked": 11,
+        "claims_pass": 10,
+        "claims_fail": 1,
+        "claims_insufficient": 0
+      },
+      "remedies": [
+        {
+          "kind": "authority",
+          "detail": "Invoice GCE-5512 is already booked (GCE-5512, vendor Gulf Coast Electric Supply). Paying it again is lawful only if that booking was voided or credited, or it belongs to another supplier: the controller rules, for this verdict only.",
+          "authority": "ap-controller",
+          "clears": [
+            "AP_DUPLICATE"
+          ],
+          "claims": [
+            "ap.duplicate"
+          ]
+        }
+      ],
+      "scope": {
+        "ruleset": "ap-structured@0.1.0",
+        "engine_version": "0.7.2",
+        "evidence_floor": "unstated",
+        "statements": [
+          "advisories are counsel, not verdicts",
+          "this is a check, not a decision"
+        ]
+      }
+    },
+    "inputs": {
+      "ap_structured": {
+        "schema": "riposte.ap-input/0.1.0",
+        "bill": {
+          "invoice_number": "GCE-5512",
+          "vendor": {
+            "name": "Gulf Coast Electric Supply"
+          },
+          "purchase_order_number": "PO-7781",
+          "currency": "USD",
+          "amount": {
+            "amount": 252500,
+            "currency_code": "USD"
+          },
+          "line_items": [
+            {
+              "purchase_order_line_item_id": "pol-1",
+              "quantity": 20,
+              "unit_price": "125.00",
+              "amount": "2500.00"
+            },
+            {
+              "purchase_order_line_item_id": "pol-2",
+              "quantity": 5,
+              "unit_price": "5.00",
+              "amount": "25.00"
+            }
+          ]
+        },
+        "purchase_order": {
+          "id": "po-1",
+          "purchase_order_number": "PO-7781",
+          "vendor": {
+            "name": "Gulf Coast Electric Supply"
+          },
+          "currency": "USD",
+          "freight_allowed": false,
+          "line_items": [
+            {
+              "id": "pol-1",
+              "description": "200A panelboard, 42 circuit",
+              "quantity": 40,
+              "unit_price": "125.00"
+            },
+            {
+              "id": "pol-2",
+              "description": "Ground rod clamp",
+              "quantity": 5,
+              "unit_price": "5.00"
+            }
+          ]
+        },
+        "item_receipts": [
+          {
+            "purchase_order_id": "po-1",
+            "line_items": [
+              {
+                "purchase_order_line_item_id": "pol-1",
+                "quantity": 40
+              },
+              {
+                "purchase_order_line_item_id": "pol-2",
+                "quantity": 5
+              }
+            ]
+          }
+        ],
+        "payment_history": [
+          {
+            "invoice_number": "GCE-5512",
+            "vendor": "Gulf Coast Electric Supply",
+            "purchase_order_number": "PO-7781",
+            "amount": "2525.00",
+            "paid_at": "2026-09-02"
+          }
+        ]
+      },
+      "policy": {
+        "price_tolerance": 0.02,
+        "total_tolerance": 0.005
+      }
+    }
+  }
+}

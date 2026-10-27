@@ -1,0 +1,2293 @@
+{
+  "schema": "riposte.forecast-vectors/0.1.0",
+  "about": "The cases of the forecast kind (riposte.forecast/0.1.0): ISO times as the format reads them, commit digests, ids, shape problems, proof headers, and whole checks with the sheet a person reads. Every expected answer was written by running the case through the frag package. The proofs are made here and prove nothing in time. vectors.json (riposte.record-vectors/0.1.0) is a separate, frozen file.",
+  "oracle": {
+    "package": {
+      "name": "riposte-frag",
+      "version": "0.0.1",
+      "forecast_sources": {
+        "over": "src/forecast/",
+        "rule": "the pin rule (packages/frag/SPEC.md)",
+        "sha256": "a79ef313a8150ce13e2b3dc929a869d15a7e0fbff98443c0a8b9c5f39abe6f67",
+        "files": 7
+      }
+    },
+    "generator_sha256": "9ed59b8fa457ddb914914459f331cbd5da1cf9a1289e9f3e66aaa6c9822c5bc8",
+    "node": "v25.2.1"
+  },
+  "counts": {
+    "iso": 19,
+    "digests": 7,
+    "ids": 7,
+    "shapes": 26,
+    "proofs": 7,
+    "checks": 25
+  },
+  "iso": [
+    {
+      "name": "a whole second",
+      "text": "2026-12-31T23:59:00Z",
+      "expect": {
+        "valid": true,
+        "ms": 1798761540000
+      }
+    },
+    {
+      "name": "milliseconds",
+      "text": "2026-12-31T23:59:00.250Z",
+      "expect": {
+        "valid": true,
+        "ms": 1798761540250
+      }
+    },
+    {
+      "name": "one decimal",
+      "text": "2026-01-01T00:00:00.5Z",
+      "expect": {
+        "valid": true,
+        "ms": 1767225600500
+      }
+    },
+    {
+      "name": "a leap day",
+      "text": "2028-02-29T12:00:00Z",
+      "expect": {
+        "valid": true,
+        "ms": 1835438400000
+      }
+    },
+    {
+      "name": "the year 2000 is a leap year",
+      "text": "2000-02-29T00:00:00Z",
+      "expect": {
+        "valid": true,
+        "ms": 951782400000
+      }
+    },
+    {
+      "name": "2100 is not a leap year",
+      "text": "2100-02-29T00:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "2026 is not a leap year",
+      "text": "2026-02-29T00:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "February 30 (Date.parse reads it as March 2)",
+      "text": "2026-02-30T00:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "April 31",
+      "text": "2026-04-31T10:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "hour 24 (Date.parse reads it as the next day)",
+      "text": "2026-01-01T24:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "a leap second",
+      "text": "2026-06-30T23:59:60Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "before 2000",
+      "text": "1999-12-31T23:59:59Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "an offset, not Z",
+      "text": "2026-12-31T23:59:00+00:00",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "a space for T",
+      "text": "2026-12-31 23:59:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "four decimals",
+      "text": "2026-12-31T23:59:00.1234Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "no seconds",
+      "text": "2026-12-31T23:59Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "digits of another script",
+      "text": "٢٠٢٦-01-01T00:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "month 13",
+      "text": "2026-13-01T00:00:00Z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    },
+    {
+      "name": "lower-case z",
+      "text": "2026-12-31T23:59:00z",
+      "expect": {
+        "valid": false,
+        "ms": null
+      }
+    }
+  ],
+  "digests": [
+    {
+      "name": "a decimal",
+      "input": {
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231",
+        "question_ref": "manifold:PUu5UdNR6E"
+      },
+      "expect": {
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7"
+      }
+    },
+    {
+      "name": "zero",
+      "input": {
+        "p": 0,
+        "salt": "10e362bd314ed9e84b7e91cfd833194cc087a208be5d0eacb856f910ae3f98d4",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3"
+      },
+      "expect": {
+        "commit_digest": "6cb43fbe9fd316fd53d9a899e71de002d886954daa90524bd89bbdab07b238ba"
+      }
+    },
+    {
+      "name": "one",
+      "input": {
+        "p": 1,
+        "salt": "fe98fb0c5d86194afec010dc20119f419024c8c3c9d16dacdb8bb72ae1d7d126",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3"
+      },
+      "expect": {
+        "commit_digest": "3af535b16be89ebbfbdd49d18af3796dc1d371a56a7eb3e699778e844f9b41d3"
+      }
+    },
+    {
+      "name": "a double that prints long",
+      "input": {
+        "p": 0.30000000000000004,
+        "salt": "7fb07d67594b223a61ba7931a731cb86348e3132bcfedde42a9348383505ce8f",
+        "question_ref": "manifold:PUu5UdNR6E"
+      },
+      "expect": {
+        "commit_digest": "e3467a3f0f99842c06c9f90c7782de1e0445a35d32e4e7dc01261c6816fb087f"
+      }
+    },
+    {
+      "name": "a small number in exponent form",
+      "input": {
+        "p": 1e-7,
+        "salt": "1926f079c2d394ec8d2cc05f43eef0b68a03794830369f024891128e2383b6c6",
+        "question_ref": "manifold:PUu5UdNR6E"
+      },
+      "expect": {
+        "commit_digest": "169feda5a6b31699129f0adb1a7279883d612c81c5a264fab1cc3ffa65dd9892"
+      }
+    },
+    {
+      "name": "minus zero writes as 0",
+      "input": {
+        "p": 0,
+        "salt": "10e362bd314ed9e84b7e91cfd833194cc087a208be5d0eacb856f910ae3f98d4",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3"
+      },
+      "expect": {
+        "commit_digest": "6cb43fbe9fd316fd53d9a899e71de002d886954daa90524bd89bbdab07b238ba"
+      }
+    },
+    {
+      "name": "a question id with non-ASCII letters (the digest is defined on any string)",
+      "input": {
+        "p": 0.5,
+        "salt": "37ccd2bdd7f5bd692938ee6a33561f5b2ca880a30b10954b755ef1bc89c9c963",
+        "question_ref": "manifold:café-€"
+      },
+      "expect": {
+        "commit_digest": "e3a12827eb023ca6b3ed8e1ce5c0b86724cd27b802819601880e12774e6b04ce"
+      }
+    }
+  ],
+  "ids": [
+    {
+      "name": "commit a",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "expect": {
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "stamp_bytes_sha256": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897"
+      }
+    },
+    {
+      "name": "reveal a",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "expect": {
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5"
+      }
+    },
+    {
+      "name": "commit b",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "resolution_source": "https://external-api.kalshi.com/trade-api/v2/markets/KXEXAMPLE-26DEC31-T3",
+        "resolves_by": "2026-12-31T00:00:00.000Z",
+        "commit_digest": "3af535b16be89ebbfbdd49d18af3796dc1d371a56a7eb3e699778e844f9b41d3",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "expect": {
+        "id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "stamp_bytes_sha256": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8"
+      }
+    },
+    {
+      "name": "reveal b",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "35137df051d70a695f5ba64d067c504bd46c146a49b8dbade21b79cb59bdf896",
+        "commit_ref": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "p": 1,
+        "salt": "fe98fb0c5d86194afec010dc20119f419024c8c3c9d16dacdb8bb72ae1d7d126"
+      },
+      "expect": {
+        "id": "35137df051d70a695f5ba64d067c504bd46c146a49b8dbade21b79cb59bdf896"
+      }
+    },
+    {
+      "name": "commit c",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "e3467a3f0f99842c06c9f90c7782de1e0445a35d32e4e7dc01261c6816fb087f",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "expect": {
+        "id": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+        "stamp_bytes_sha256": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1"
+      }
+    },
+    {
+      "name": "reveal c",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "61fcc40ddf2295157d5b1b5c2dc32e5bb6b71b8c8bb68990eb5e56585eb763c8",
+        "commit_ref": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.30000000000000004,
+        "salt": "7fb07d67594b223a61ba7931a731cb86348e3132bcfedde42a9348383505ce8f"
+      },
+      "expect": {
+        "id": "61fcc40ddf2295157d5b1b5c2dc32e5bb6b71b8c8bb68990eb5e56585eb763c8"
+      }
+    },
+    {
+      "name": "commit a with its proof path filled (the id does not move)",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": "proofs/a.stamp-input.ots"
+        }
+      },
+      "expect": {
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "stamp_bytes_sha256": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897"
+      }
+    }
+  ],
+  "shapes": [
+    {
+      "name": "not an object",
+      "object": [
+        1,
+        2
+      ],
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: not a JSON object"
+        ]
+      }
+    },
+    {
+      "name": "another schema",
+      "object": {
+        "schema": "riposte.frag/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: schema_wrong: schema must be \"riposte.forecast/0.1.0\""
+        ]
+      }
+    },
+    {
+      "name": "another kind",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.guess",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: kind must be one of forecast.commit, forecast.reveal"
+        ]
+      }
+    },
+    {
+      "name": "a field missing",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_missing: missing resolves_by",
+          "commit: field_type: resolves_by is an ISO-8601 UTC time, e.g. 2026-12-31T23:59:00Z"
+        ]
+      }
+    },
+    {
+      "name": "a field too many",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231",
+        "note": "x"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_unexpected: note is not part of a forecast.reveal"
+        ]
+      }
+    },
+    {
+      "name": "two fields too many, sorted",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231",
+        "zeta": 1,
+        "alpha": 2
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_unexpected: alpha, zeta is not part of a forecast.reveal"
+        ]
+      }
+    },
+    {
+      "name": "p above one",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 1.5,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: p is a number from 0 to 1"
+        ]
+      }
+    },
+    {
+      "name": "p below zero",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": -0.1,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: p is a number from 0 to 1"
+        ]
+      }
+    },
+    {
+      "name": "p as a string",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": "0.37",
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: p is a number from 0 to 1"
+        ]
+      }
+    },
+    {
+      "name": "p as true",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": true,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: p is a number from 0 to 1"
+        ]
+      }
+    },
+    {
+      "name": "a short salt",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "abc"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: salt is 64 lowercase hex (32 random bytes)"
+        ]
+      }
+    },
+    {
+      "name": "an upper-case salt",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ECE56AE64DFF8BDFC17879D277760B794DCAB189B0EB4366E9D5618C86D9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: salt is 64 lowercase hex (32 random bytes)"
+        ]
+      }
+    },
+    {
+      "name": "a question with a space",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:two words",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: question_ref is \"<source>:<market id>\": a lower-case source name, a colon, then the market id with no spaces"
+        ]
+      }
+    },
+    {
+      "name": "a question with no source",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: question_ref is \"<source>:<market id>\": a lower-case source name, a colon, then the market id with no spaces"
+        ]
+      }
+    },
+    {
+      "name": "a question with a non-ASCII id",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:café",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: question_ref is \"<source>:<market id>\": a lower-case source name, a colon, then the market id with no spaces"
+        ]
+      }
+    },
+    {
+      "name": "a question with a no-break space",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:a b",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": [
+          "reveal: field_type: question_ref is \"<source>:<market id>\": a lower-case source name, a colon, then the market id with no spaces"
+        ]
+      }
+    },
+    {
+      "name": "an http source",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "http://api.manifold.markets/v0/market/x",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: resolution_source is an https address with no spaces"
+        ]
+      }
+    },
+    {
+      "name": "resolves_by on February 30",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-02-30T00:00:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: resolves_by is an ISO-8601 UTC time, e.g. 2026-12-31T23:59:00Z"
+        ]
+      }
+    },
+    {
+      "name": "a stamp path that climbs",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": "../a.ots"
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: stamp.ots is a relative path beside the commit (letters, digits, \".\", \"_\", \"-\", \"/\"; no \"..\" segment), or null"
+        ]
+      }
+    },
+    {
+      "name": "an absolute stamp path",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": "/tmp/a.ots"
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: stamp.ots is a relative path beside the commit (letters, digits, \".\", \"_\", \"-\", \"/\"; no \"..\" segment), or null"
+        ]
+      }
+    },
+    {
+      "name": "a drive-letter stamp path",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": "C:/a.ots"
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: stamp.ots is a relative path beside the commit (letters, digits, \".\", \"_\", \"-\", \"/\"; no \"..\" segment), or null"
+        ]
+      }
+    },
+    {
+      "name": "a stamp with two fields",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null,
+          "at": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: stamp is { ots }: the proof's path, or null until it is minted"
+        ]
+      }
+    },
+    {
+      "name": "a stamp that is null",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": null
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: stamp is { ots }: the proof's path, or null until it is minted"
+        ]
+      }
+    },
+    {
+      "name": "an upper-case id",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3F676BF0DC43387DA8EC963A1419888ACFAEEBB9DF1D540DA1878446BB644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": [
+          "commit: field_type: id must be 64 lowercase hex"
+        ]
+      }
+    },
+    {
+      "name": "a well-formed commit",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "where": "commit",
+      "expect": {
+        "problems": []
+      }
+    },
+    {
+      "name": "a well-formed reveal",
+      "object": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "where": "reveal",
+      "expect": {
+        "problems": []
+      }
+    }
+  ],
+  "proofs": [
+    {
+      "name": "over commit a",
+      "base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+      "expect": {
+        "ok": true,
+        "digest": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897"
+      }
+    },
+    {
+      "name": "not a proof",
+      "base64": "anVzdCBzb21lIHRleHQsIGxvbmcgZW5vdWdoIHRvIGJlIGEgaGVhZGVyIGFuZCB0aGVuIHNvbWUgbW9yZQ==",
+      "expect": {
+        "ok": false,
+        "code": "not-a-proof",
+        "words": "the file does not start with the OpenTimestamps proof header"
+      }
+    },
+    {
+      "name": "version 2",
+      "base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAIIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+      "expect": {
+        "ok": false,
+        "code": "unsupported-version",
+        "words": "the proof's major version is not 1"
+      }
+    },
+    {
+      "name": "made over sha1",
+      "base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAECP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+      "expect": {
+        "ok": false,
+        "code": "not-sha256",
+        "words": "the proof was made over a digest other than sha256, so it cannot name a commit id"
+      }
+    },
+    {
+      "name": "cut inside the digest",
+      "base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOA==",
+      "expect": {
+        "ok": false,
+        "code": "too-short",
+        "words": "the file ends inside the digest"
+      }
+    },
+    {
+      "name": "cut inside the header",
+      "base64": "AE9wZW5UaW1lc3RhbXBzAABQcm8=",
+      "expect": {
+        "ok": false,
+        "code": "too-short",
+        "words": "the file is shorter than a proof's header"
+      }
+    },
+    {
+      "name": "empty",
+      "base64": "",
+      "expect": {
+        "ok": false,
+        "code": "too-short",
+        "words": "the file is shorter than a proof's header"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "counts: the proof is over the commit and the attested time is before resolves_by",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "before",
+          "counts": "yes",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 0
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "COUNTS: the reveal opens the commit, and the stamp lands before the cutoff",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "counts, with the Brier score of a YES",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z",
+        "outcome": "yes"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "before",
+          "counts": "yes",
+          "brier": 0.39690000000000003,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 0
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "COUNTS: the reveal opens the commit, and the stamp lands before the cutoff",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  Brier score: 0.39690000000000003",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "counts, with the Brier score of a NO and a close time after resolves_by (the cutoff stays resolves_by)",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z",
+        "closed_at": "2027-01-05T00:00:00Z",
+        "outcome": "no"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "before",
+          "counts": "yes",
+          "brier": 0.1369,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 0
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "COUNTS: the reveal opens the commit, and the stamp lands before the cutoff",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  Brier score: 0.1369"
+        ]
+      }
+    },
+    {
+      "name": "does not count: the attested time is after resolves_by",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2027-01-01T00:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2027-01-01T00:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "after",
+          "counts": "no",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 1
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "DOES NOT COUNT: the reveal opens the commit, but the stamp does not land before the cutoff",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: 2027-01-01T00:00:00Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "does not count: the market closed early, before the attested time",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-11-20T00:00:00Z",
+        "closed_at": "2026-11-15T00:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2026-11-20T00:00:00Z",
+          "cutoff": "2026-11-15T00:00:00Z",
+          "timing": "after",
+          "counts": "no",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 1
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "DOES NOT COUNT: the reveal opens the commit, but the stamp does not land before the cutoff",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: 2026-11-20T00:00:00Z",
+          "  cutoff: 2026-11-15T00:00:00Z"
+        ]
+      }
+    },
+    {
+      "name": "does not count: the attested time equals the cutoff (the stamp must land before it)",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-12-31T23:59:00.000Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2026-12-31T23:59:00.000Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "after",
+          "counts": "no",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 1
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "DOES NOT COUNT: the reveal opens the commit, but the stamp does not land before the cutoff",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: 2026-12-31T23:59:00.000Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "can't tell: no proof",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "attested_time": "2026-10-27T01:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "absent",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [
+            "no proof was given: the commit's time cannot be tied to it"
+          ],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 2
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "can't tell whether it counts: the reveal opens the commit; the timing cannot be told here",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: absent",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  can't tell: no proof was given: the commit's time cannot be tied to it",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "can't tell: a proof, no attested time",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw=="
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": null,
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [
+            "no attested time was given: run an OpenTimestamps verifier on the proof and pass the time it reports"
+          ],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 2
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "can't tell whether it counts: the reveal opens the commit; the timing cannot be told here",
+          "  commit 3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "  proof: matches",
+          "  attested time: not given",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  can't tell: no attested time was given: run an OpenTimestamps verifier on the proof and pass the time it reports",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "can't tell: nothing but the two files",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "resolution_source": "https://external-api.kalshi.com/trade-api/v2/markets/KXEXAMPLE-26DEC31-T3",
+        "resolves_by": "2026-12-31T00:00:00.000Z",
+        "commit_digest": "3af535b16be89ebbfbdd49d18af3796dc1d371a56a7eb3e699778e844f9b41d3",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "35137df051d70a695f5ba64d067c504bd46c146a49b8dbade21b79cb59bdf896",
+        "commit_ref": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "p": 1,
+        "salt": "fe98fb0c5d86194afec010dc20119f419024c8c3c9d16dacdb8bb72ae1d7d126"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": "2026-12-31T00:00:00.000Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [
+            "no proof was given: the commit's time cannot be tied to it",
+            "no attested time was given: run an OpenTimestamps verifier on the proof and pass the time it reports"
+          ],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 2
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "can't tell whether it counts: the reveal opens the commit; the timing cannot be told here",
+          "  commit 40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+          "  proof: absent",
+          "  attested time: not given",
+          "  cutoff: 2026-12-31T00:00:00.000Z",
+          "  can't tell: no proof was given: the commit's time cannot be tied to it",
+          "  can't tell: no attested time was given: run an OpenTimestamps verifier on the proof and pass the time it reports",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "counts: the proof path filled in the commit after stamping (outside the id)",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "resolution_source": "https://external-api.kalshi.com/trade-api/v2/markets/KXEXAMPLE-26DEC31-T3",
+        "resolves_by": "2026-12-31T00:00:00.000Z",
+        "commit_digest": "3af535b16be89ebbfbdd49d18af3796dc1d371a56a7eb3e699778e844f9b41d3",
+        "stamp": {
+          "ots": "b.stamp-input.ots"
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "35137df051d70a695f5ba64d067c504bd46c146a49b8dbade21b79cb59bdf896",
+        "commit_ref": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "p": 1,
+        "salt": "fe98fb0c5d86194afec010dc20119f419024c8c3c9d16dacdb8bb72ae1d7d126"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIQLOKB85nYSm2hrpUwdGg8kYaRk2r+JZ7bn2uUIus3vgAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z",
+        "outcome": "no"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T00:00:00.000Z",
+          "timing": "before",
+          "counts": "yes",
+          "brier": 1,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 0
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "COUNTS: the reveal opens the commit, and the stamp lands before the cutoff",
+          "  commit 40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+          "  proof: matches",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T00:00:00.000Z",
+          "  Brier score: 1",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "counts: p = 0.1 + 0.2 and a YES (the score of a double)",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "e3467a3f0f99842c06c9f90c7782de1e0445a35d32e4e7dc01261c6816fb087f",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "61fcc40ddf2295157d5b1b5c2dc32e5bb6b71b8c8bb68990eb5e56585eb763c8",
+        "commit_ref": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.30000000000000004,
+        "salt": "7fb07d67594b223a61ba7931a731cb86348e3132bcfedde42a9348383505ce8f"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIUiOmvGSDhU+e/zi/GhD59YdfJrC/6tQvlxaq0xj/vPEAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z",
+        "outcome": "yes"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "before",
+          "counts": "yes",
+          "brier": 0.48999999999999994,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 0
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "COUNTS: the reveal opens the commit, and the stamp lands before the cutoff",
+          "  commit 5223a6bc6483854f9eff38bf1a10f9f5875f26b0bfead42f9716aad318ffbcf1",
+          "  proof: matches",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T23:59:00Z",
+          "  Brier score: 0.48999999999999994",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "counts: p = 0 and a NO",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "5e96831190af9dbc7e19f97819221eba666bcd7590f468205a0ca4a94b3125b2",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "resolution_source": "https://external-api.kalshi.com/trade-api/v2/markets/KXEXAMPLE-26DEC31-T3",
+        "resolves_by": "2026-12-31T00:00:00.000Z",
+        "commit_digest": "6cb43fbe9fd316fd53d9a899e71de002d886954daa90524bd89bbdab07b238ba",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "3fc85314e7c23e23c68b13a8ebc90c8fe57beeb184b36825fac4216ad6eea04f",
+        "commit_ref": "5e96831190af9dbc7e19f97819221eba666bcd7590f468205a0ca4a94b3125b2",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "p": 0,
+        "salt": "10e362bd314ed9e84b7e91cfd833194cc087a208be5d0eacb856f910ae3f98d4"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIXpaDEZCvnbx+Gfl4GSIeumZrzXWQ9GggWgykqUsxJbIAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z",
+        "outcome": "no"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": true,
+          "problems": [],
+          "commit_id": "5e96831190af9dbc7e19f97819221eba666bcd7590f468205a0ca4a94b3125b2",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T00:00:00.000Z",
+          "timing": "before",
+          "counts": "yes",
+          "brier": 0,
+          "cant_tell": [],
+          "notes": [
+            "no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+          ],
+          "exit": 0
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "COUNTS: the reveal opens the commit, and the stamp lands before the cutoff",
+          "  commit 5e96831190af9dbc7e19f97819221eba666bcd7590f468205a0ca4a94b3125b2",
+          "  proof: matches",
+          "  attested time: 2026-10-27T01:00:00Z",
+          "  cutoff: 2026-12-31T00:00:00.000Z",
+          "  Brier score: 0",
+          "  note: no close time was given: the cutoff is the commit's resolves_by; a market that closed early has an earlier one"
+        ]
+      }
+    },
+    {
+      "name": "integrity: p changed and the reveal id recomputed",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "d9850473408e6d77e87e4f1563b853333a11ff8c44217e70073ae1643496e875",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.38,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIP2dr8NxDOH2o7JY6FBmIis+u67nfHVQNoYeERrtkSJcAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+          ],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "matches",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+        ]
+      }
+    },
+    {
+      "name": "integrity: p changed and the reveal id left as it was",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.38,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: id_mismatch: the reveal's id does not recompute from its fields: it was changed after it was written",
+            "reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+          ],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - reveal: id_mismatch: the reveal's id does not recompute from its fields: it was changed after it was written",
+          "  - reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+        ]
+      }
+    },
+    {
+      "name": "integrity: the salt changed",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "a8874b2697f223cca343d427218ba9e19bdf751fa6788e385a3e1553d00956fa",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "1d91ac69e717d3280e950fd32d79069622312f9eaf27a338e17ef932c87294b0"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+          ],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+        ]
+      }
+    },
+    {
+      "name": "integrity: the commit's resolves_by moved after it was written",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2027-06-30T00:00:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "commit: id_mismatch: the commit's id does not recompute from its fields: it was changed after it was written"
+          ],
+          "commit_id": "e5f206de8e3b231afb1867912ed75f7ce30de1783666a17ba746b716a266e2c2",
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": "2027-06-30T00:00:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - commit: id_mismatch: the commit's id does not recompute from its fields: it was changed after it was written"
+        ]
+      }
+    },
+    {
+      "name": "integrity: the reveal opens another commit",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "resolution_source": "https://external-api.kalshi.com/trade-api/v2/markets/KXEXAMPLE-26DEC31-T3",
+        "resolves_by": "2026-12-31T00:00:00.000Z",
+        "commit_digest": "3af535b16be89ebbfbdd49d18af3796dc1d371a56a7eb3e699778e844f9b41d3",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: commit_ref_differs: the reveal names another commit",
+            "reveal: question_differs: the reveal names another question than the commit",
+            "reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+          ],
+          "commit_id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": "2026-12-31T00:00:00.000Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - reveal: commit_ref_differs: the reveal names another commit",
+          "  - reveal: question_differs: the reveal names another question than the commit",
+          "  - reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+        ]
+      }
+    },
+    {
+      "name": "integrity: the reveal names another question (its id recomputed)",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "f8a63157eddc9d3f4b86889c9c0dc473e6006cd6f766244c34c17f727e5cc3d7",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: question_differs: the reveal names another question than the commit",
+            "reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+          ],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - reveal: question_differs: the reveal names another question than the commit",
+          "  - reveal: digest_differs: sha256 of { p, salt, question_ref } is not the commit's digest: the probability or the salt is not the one committed"
+        ]
+      }
+    },
+    {
+      "name": "integrity: the proof is over other bytes",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEIQLOKB85nYSm2hrpUwdGg8kYaRk2r+JZ7bn2uUIus3vgAg9/jDS75DI4iIWh0dHBzOi8vYS5wb29sLm9wZW50aW1lc3RhbXBzLm9yZw==",
+        "attested_time": "2026-10-27T01:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "proof: proof_differs: the proof is over other bytes than this commit (its digest is not the commit's id)"
+          ],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "differs",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - proof: proof_differs: the proof is over other bytes than this commit (its digest is not the commit's id)"
+        ]
+      }
+    },
+    {
+      "name": "integrity: the proof is not a proof",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "proof_base64": "bm90IGEgcHJvb2YgZmlsZSBhdCBhbGwsIGJ1dCBsb25nIGVub3VnaCB0byByZWFkIGEgaGVhZGVy",
+        "attested_time": "2026-10-27T01:00:00Z"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "proof: proof_unreadable: not-a-proof: the file does not start with the OpenTimestamps proof header"
+          ],
+          "commit_id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+          "proof": "unreadable",
+          "attested_time": "2026-10-27T01:00:00Z",
+          "cutoff": "2026-12-31T23:59:00Z",
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 4
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "FORECAST TAMPERED OR NOT AS COMMITTED",
+          "  - proof: proof_unreadable: not-a-proof: the file does not start with the OpenTimestamps proof header"
+        ]
+      }
+    },
+    {
+      "name": "not a forecast: the files in the wrong order",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "commit: kind_wrong: the first file is a forecast.reveal, not a forecast.commit"
+          ],
+          "commit_id": null,
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": null,
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 3
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "not a forecast commit and reveal",
+          "  - commit: kind_wrong: the first file is a forecast.reveal, not a forecast.commit"
+        ]
+      }
+    },
+    {
+      "name": "not a forecast: two commits",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "40b38a07ce676129b686ba54c1d1a0f2461a464dabf8967b6e7dae508bacdef8",
+        "question_ref": "kalshi:KXEXAMPLE-26DEC31-T3",
+        "resolution_source": "https://external-api.kalshi.com/trade-api/v2/markets/KXEXAMPLE-26DEC31-T3",
+        "resolves_by": "2026-12-31T00:00:00.000Z",
+        "commit_digest": "3af535b16be89ebbfbdd49d18af3796dc1d371a56a7eb3e699778e844f9b41d3",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: kind_wrong: the second file is a forecast.commit, not a forecast.reveal"
+          ],
+          "commit_id": null,
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": null,
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 3
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "not a forecast commit and reveal",
+          "  - reveal: kind_wrong: the second file is a forecast.commit, not a forecast.reveal"
+        ]
+      }
+    },
+    {
+      "name": "not a forecast: an attested time with an offset",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "attested_time": "2026-10-27T01:00:00+00:00"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "options: field_type: the attested time is an ISO-8601 UTC time"
+          ],
+          "commit_id": null,
+          "proof": "absent",
+          "attested_time": "2026-10-27T01:00:00+00:00",
+          "cutoff": null,
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 3
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "not a forecast commit and reveal",
+          "  - options: field_type: the attested time is an ISO-8601 UTC time"
+        ]
+      }
+    },
+    {
+      "name": "not a forecast: an outcome that is not yes or no",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231"
+      },
+      "options": {
+        "outcome": "maybe"
+      },
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "options: field_type: the outcome is yes or no"
+          ],
+          "commit_id": null,
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": null,
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 3
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "not a forecast commit and reveal",
+          "  - options: field_type: the outcome is yes or no"
+        ]
+      }
+    },
+    {
+      "name": "not a forecast: a reveal with a field too many",
+      "commit": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.commit",
+        "id": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "resolution_source": "https://api.manifold.markets/v0/market/PUu5UdNR6E",
+        "resolves_by": "2026-12-31T23:59:00Z",
+        "commit_digest": "95e6985e8192d3a9df7720b5224f1a0d28aa4314202f8c1a2d9d793c2f65e5e7",
+        "stamp": {
+          "ots": null
+        }
+      },
+      "reveal": {
+        "schema": "riposte.forecast/0.1.0",
+        "kind": "forecast.reveal",
+        "id": "39a06e40968ea1827acee14abb80cbe051f896f59dd19b19398aff03301020f5",
+        "commit_ref": "3f676bf0dc43387da8ec963a1419888acfaeebb9df1d540da1878446bb644897",
+        "question_ref": "manifold:PUu5UdNR6E",
+        "p": 0.37,
+        "salt": "6ece56ae64dff8bdfc17879d277760b794dcab189b0eb4366e9d5618c86d9231",
+        "note": "x"
+      },
+      "options": {},
+      "expect": {
+        "result": {
+          "schema": "riposte.forecast-check/0.1.0",
+          "intact": false,
+          "problems": [
+            "reveal: field_unexpected: note is not part of a forecast.reveal"
+          ],
+          "commit_id": null,
+          "proof": "absent",
+          "attested_time": null,
+          "cutoff": null,
+          "timing": "cant-tell",
+          "counts": "cant-tell",
+          "brier": null,
+          "cant_tell": [],
+          "notes": [],
+          "exit": 3
+        },
+        "sheet": [
+          "prototype; no measured accuracy",
+          "not a forecast commit and reveal",
+          "  - reveal: field_unexpected: note is not part of a forecast.reveal"
+        ]
+      }
+    }
+  ]
+}

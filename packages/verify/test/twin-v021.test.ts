@@ -13,6 +13,7 @@ import {
   type TwinJudgment, type TwinClaim,
 } from '../src/twin/index'
 import { verifyReplay } from '../src/protocol/replay'
+import { coreOf } from './fixtures/remedy-core'
 import { doc, nf, link, linkbase, FS, CCERC, INCL, CHANGE, DG_CASH, OPTS, LODGING, LODGING_PRE, TAX2025, TAX2025_PRE, KINETIC, KINETIC_PRE } from './fixtures/twin-v021'
 
 const strict = (pre: string, fs = FS) => parseTwinPresentation({ pre, filingSummary: fs }, { links: 'strict' })!
@@ -63,17 +64,17 @@ describe('strict presentation reading (the Outdoor Holding class)', () => {
     const a = legacy(LODGING_PRE), b = strict(LODGING_PRE)
     expect({ ...b, sha256: a.sha256, links: undefined }).toEqual({ ...a, links: undefined })
   })
-  it('v0.2.1 refuses a v0.2 reading: every claim ABSTAINs, nothing binds', () => {
+  it('v0.2.1 refuses a v0.2 reading: every claim is INSUFFICIENT_DATA, nothing binds', () => {
     const j = verifyAgainstTwin(LODGING, [{ id: 'e', field: 'ending_cash', value: 10_361_842 }], { ...OPTS, map: FS_CORE_TWIN_MAP_V021, presentation: legacy(LODGING_PRE) }).judgments[0]!
-    expect(j).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_PRESENTATION_LINKBASE' })
+    expect(j).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_PRESENTATION_LINKBASE' })
     expect(j.detail).toMatch(/strict reading/)
     expect(bindTwinFields(LODGING, { periodEnd: '2024-12-31', map: FS_CORE_TWIN_MAP_V021, presentation: legacy(LODGING_PRE) }).every((b) => !b.bound && b.reason === 'NO_PRESENTATION_LINKBASE')).toBe(true)
   })
 })
 
 describe('scope variants: the concept actually on the face statement\'s line binds', () => {
-  it('a 2025-taxonomy cash roll (variant endpoints, plain concept only in a note): v0.2 abstains, v0.2.1 binds the printed line', () => {
-    expect(judge(TAX2025, TAX2025_PRE, 'ending_cash', 80_000_000, '0.2')).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
+  it('a 2025-taxonomy cash roll (variant endpoints, plain concept only in a note): v0.2 cannot tell, v0.2.1 binds the printed line', () => {
+    expect(judge(TAX2025, TAX2025_PRE, 'ending_cash', 80_000_000, '0.2')).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
     expect(judge(TAX2025, TAX2025_PRE, 'ending_cash', 80_000_000)).toMatchObject({ outcome: 'PASS', reason: 'MATCH', binding: { concept: INCL, value: 80_000_000 } })
     expect(judge(TAX2025, TAX2025_PRE, 'beginning_cash', 70_000_000)).toMatchObject({ outcome: 'PASS', binding: { concept: INCL, period: '2023-12-31' } })
     expect(judge(TAX2025, TAX2025_PRE, 'ending_cash', 79_000_000)).toMatchObject({ outcome: 'FAIL' }) // the note's continuing figure is not the printed line
@@ -96,9 +97,9 @@ describe('the cash roll decides between disagreeing face lines (the Lodging Fund
     const j = judge(LODGING, LODGING_PRE, 'ending_cash', 10_361_842)
     expect(j).toMatchObject({ outcome: 'PASS', reason: 'MATCH', binding: { concept: INCL, value: 10_361_842, duplicates: 2 } })
   })
-  it('the other face line (the continuing total in the reconciliation) is ABSTAIN AMBIGUOUS_LINE, never a FAIL or a PASS', () => {
+  it('the other face line (the continuing total in the reconciliation) is INSUFFICIENT_DATA AMBIGUOUS_LINE, never a FAIL or a PASS', () => {
     const j = judge(LODGING, LODGING_PRE, 'ending_cash', 10_340_792)
-    expect(j).toMatchObject({ outcome: 'ABSTAIN', reason: 'AMBIGUOUS_LINE', binding: { concept: INCL } })
+    expect(j).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'AMBIGUOUS_LINE', binding: { concept: INCL } })
     expect(j.candidates!.map((c) => [c.concept, c.value])).toEqual([[CCERC, 10_340_792]])
   })
   it('a value that is neither line still FAILs, with its diagnosis', () => {
@@ -109,11 +110,11 @@ describe('the cash roll decides between disagreeing face lines (the Lodging Fund
     expect(judge(LODGING, LODGING_PRE, 'beginning_cash', 12_944_329)).toMatchObject({ outcome: 'PASS', binding: { concept: CCERC } })
     expect(judge(LODGING, LODGING_PRE, 'beginning_cash', 12_944_329, '0.2')).toMatchObject({ outcome: 'PASS', binding: { concept: CCERC } })
   })
-  it('when the roll cannot decide (no net change on the face) the field ABSTAINs AMBIGUOUS_LINE on both lines', () => {
+  it('when the roll cannot decide (no net change on the face) the field is INSUFFICIENT_DATA AMBIGUOUS_LINE on both lines', () => {
     const pre = linkbase([link('BalanceSheets', ['Assets']), link('CashFlows', [CCERC, INCL, DG_CASH])])
-    for (const v of [10_361_842, 10_340_792]) expect(judge(LODGING, pre, 'ending_cash', v)).toMatchObject({ outcome: 'ABSTAIN', reason: 'AMBIGUOUS_LINE' })
+    for (const v of [10_361_842, 10_340_792]) expect(judge(LODGING, pre, 'ending_cash', v)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'AMBIGUOUS_LINE' })
     const j = judge(LODGING, pre, 'ending_cash', 1)
-    expect(j).toMatchObject({ outcome: 'ABSTAIN', reason: 'AMBIGUOUS_LINE' }) // not decidable, so not a FAIL
+    expect(j).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'AMBIGUOUS_LINE' }) // not decidable, so not a FAIL
     expect(j.detail).toMatch(/net change \(net_change_in_cash\) does not bind/)
     expect(j.candidates!.map((c) => c.value)).toEqual([10_340_792, 10_361_842])
     const by = Object.fromEntries(bindTwinFields(LODGING, { periodEnd: '2024-12-31', map: FS_CORE_TWIN_MAP_V021, presentation: strict(pre) }).map((b) => [b.field, b]))
@@ -134,28 +135,28 @@ describe('the cash roll decides between disagreeing face lines (the Lodging Fund
 
 describe('anchored SCALE (the Kinetic Seas class)', () => {
   it('v0.2 routes a ×1000 error to NOT_ON_STATEMENT; v0.2.1 FAILs it (SCALE) because the value is anchored', () => {
-    expect(judge(KINETIC, KINETIC_PRE, 'cash', 4_947_000, '0.2')).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
+    expect(judge(KINETIC, KINETIC_PRE, 'cash', 4_947_000, '0.2')).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
     const j = judge(KINETIC, KINETIC_PRE, 'cash', 4_947_000)
     expect(j).toMatchObject({ outcome: 'FAIL', reason: 'MISMATCH', diagnosis: 'SCALE', binding: { concept: 'CashAndCashEquivalentsAtCarryingValue', value: 4947 }, anchor: { concept: 'Cash', value: 4947 } })
     expect(j.detail).toMatch(/exactly 10\^3 × 4947.*value-anchored/)
     expect(judge(KINETIC, KINETIC_PRE, 'cash', 4.947)).toMatchObject({ outcome: 'FAIL', diagnosis: 'SCALE' }) // ÷1000
   })
-  it('the anchored value itself stays ABSTAIN (NOT_ON_STATEMENT): an unanchored-concept PASS is not evidence', () => {
-    expect(judge(KINETIC, KINETIC_PRE, 'cash', 4_947)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
+  it('the anchored value itself stays INSUFFICIENT_DATA (NOT_ON_STATEMENT): an unanchored-concept PASS is not evidence', () => {
+    expect(judge(KINETIC, KINETIC_PRE, 'cash', 4_947)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
   })
   it('only an EXACT power of ten counts: a near miss is not a SCALE error', () => {
-    expect(judge(KINETIC, KINETIC_PRE, 'cash', 4_951_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
-    expect(judge(KINETIC, KINETIC_PRE, 'cash', 494_700)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' }) // ×100 is not a scale step
+    expect(judge(KINETIC, KINETIC_PRE, 'cash', 4_951_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
+    expect(judge(KINETIC, KINETIC_PRE, 'cash', 494_700)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' }) // ×100 is not a scale step
   })
   it('never applied to a value that is not anchored: the note\'s figure is printed nowhere on the face', () => {
-    expect(judge(KINETIC, KINETIC_PRE, 'operating_expenses', 7_121_627_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
-    expect(judge(KINETIC, KINETIC_PRE, 'operating_expenses', 105_109_040)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
+    expect(judge(KINETIC, KINETIC_PRE, 'operating_expenses', 7_121_627_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
+    expect(judge(KINETIC, KINETIC_PRE, 'operating_expenses', 105_109_040)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
   })
   it('accounts for the filing\'s scale and decimals: digits printed in thousands, reported without the multiplier', () => {
     const html = doc([`<td>Cash</td>${nf('Cash', 'I24', '4,947', { scale: '3', decimals: '-3' })}`, `<td>Cash (note)</td>${nf('CashAndCashEquivalentsAtCarryingValue', 'I24', '4,947,213')}`])
     expect(judge(html, KINETIC_PRE, 'cash', 4_947)).toMatchObject({ outcome: 'FAIL', diagnosis: 'SCALE', anchor: { concept: 'Cash', value: 4_947_000, decimals: -3 } })
-    expect(judge(html, KINETIC_PRE, 'cash', 4_947_213)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
-    expect(judge(html, KINETIC_PRE, 'cash', 4_947_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' }) // the face figure itself
+    expect(judge(html, KINETIC_PRE, 'cash', 4_947_213)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
+    expect(judge(html, KINETIC_PRE, 'cash', 4_947_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' }) // the face figure itself
   })
   it('the SCALE FAIL carries both facts as evidence', () => {
     const r = verifyAgainstTwin(KINETIC, [{ id: 'c', field: 'cash', value: 4_947_000 }], { ...OPTS, map: FS_CORE_TWIN_MAP_V021, presentation: strict(KINETIC_PRE) })
@@ -191,10 +192,19 @@ describe('v0.2.1 verdicts', () => {
 describe('v0.1 and v0.2 stay frozen on these documents (hash pins, captured at v0.2.1\'s introduction)', () => {
   // The real-data identity (CREDENCE-1: 400 v0.1 results / 7,706 rows; CREDENCE-2: 96 v0.2 results / 1,915 rows, byte for
   // byte) is proven by the TWIN-V021 identity replay (2026-09-28); these pins guard the synthetic path.
-  const sha = (x: unknown): string => createHash('sha256').update(JSON.stringify(x)).digest('hex').slice(0, 16)
+  // Hashed on the core: typed remedies (2026-10-02) are additive and outside it (fixtures/remedy-core.ts). Not re-pinned.
+  // The judgments said ABSTAIN when these pins were captured; since 2026-10-06 they say INSUFFICIENT_DATA, and nothing else
+  // moved (the verdicts are engine 0.0.1's, byte for byte). The pins are read with that one word restored, never re-pinned.
+  const asCaptured = (x: unknown): unknown => {
+    const r = x as { judgments: { outcome: string }[] }
+    return { ...r, judgments: r.judgments.map((j) => (j.outcome === 'INSUFFICIENT_DATA' ? { ...j, outcome: 'ABSTAIN' } : j)) }
+  }
+  const sha = (x: unknown): string => createHash('sha256').update(JSON.stringify(coreOf(asCaptured(x)))).digest('hex').slice(0, 16)
   const all = (html: string, pre: string, v: '0.1' | '0.2') => verifyAgainstTwin(html, FS_CORE_TWIN_MAP.fields.map((f, i) => ({ id: f.field, field: f.field, value: 1000 * (i + 1) })).concat([
     { id: 'e1', field: 'ending_cash', value: 10_361_842 }, { id: 'e2', field: 'ending_cash', value: 10_340_792 }, { id: 'c1', field: 'cash', value: 4_947_000 }, { id: 'c2', field: 'ending_cash', value: 80_000_000 }]),
-  v === '0.2' ? { ...OPTS, map: FS_CORE_TWIN_MAP_V02, presentation: legacy(pre) } : OPTS)
+  // Engine 0.0.1, the engine the pins were captured under (2026-10-03, moved the engine to 0.1.0 and changed no twin
+  // behaviour: under 0.1.0 these results differ in engine_version and verdict_id only; test/engine-defaults.test.ts).
+  { ...(v === '0.2' ? { ...OPTS, map: FS_CORE_TWIN_MAP_V02, presentation: legacy(pre) } : OPTS), engine: '0.0.1' })
   it('v0.2 and v0.1 results', () => {
     expect([sha(all(LODGING, LODGING_PRE, '0.2')), sha(all(TAX2025, TAX2025_PRE, '0.2')), sha(all(KINETIC, KINETIC_PRE, '0.2'))]).toMatchInlineSnapshot(`
       [

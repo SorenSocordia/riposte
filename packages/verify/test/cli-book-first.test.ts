@@ -1,5 +1,5 @@
 /**
- * The CLI, book first (wave 4, 2026-09-28), end to end through run(argv, io) on real temp files:
+ * The CLI, book first (2026-09-28), end to end through run(argv, io) on real temp files:
  *   - `verify revise-policy --from <prior.json> --draft <next.json> --reason …` builds the revision itself (revisePolicy),
  *     so a person never hand-builds the revised body; `--out` writes it (never over a file); the --revised form is unchanged;
  *   - `verify report` reads the book directly (no CLI adapter): it cites the GRANT, points a book-read rung at
@@ -47,7 +47,7 @@ const ok = (argv: string[]): Record<string, any> => {
   if (code !== 0) throw new Error(`expected exit 0 from ${argv[0]}, got ${code}: ${io.err_()}`)
   return JSON.parse(io.out_())
 }
-/** The version after the example policy's (E13: the example's version moves when its body does, so these tests follow it). */
+/** The version after the example policy's (the example's version moves when its body does, so these tests follow it). */
 const NEXT = ((v: string): string => { const [maj, min] = v.split('.').map(Number); return `${maj}.${(min as number) + 1}.0` })(P.version)
 const esc = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const NEXT_TIERS = P.tiers.map(t => (t.tier === 'low' ? { ...t, autonomy: { min_n: 150, max_error: 0.03 } } : t))

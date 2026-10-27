@@ -1,0 +1,59 @@
+{
+  "format": "bench-run/1",
+  "id": "sci-r0-rotation-curve",
+  "prereg": "PREREG.md",
+  "results": "results",
+  "spec": "spec.json",
+  "chains": [
+    "PREREG.md:84",
+    "results/scratch/recompute-result.json#prereg_sha256"
+  ],
+  "amendment_text": [
+    {
+      "sha256": "f20a9a23800728f341f87a6f170c22d9f3d00b2afe47ba65a1603968b6507633",
+      "from": "PREREG.md:74-84"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The script that computed the result is not in this tree. Its inputs are public SPARC files from astroweb.case.edu, named by sha256 in results/scratch/recompute-result.json and not redistributed here."
+  },
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "f20a9a23800728f341f87a6f170c22d9f3d00b2afe47ba65a1603968b6507633",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "results/scratch/recompute-result.json",
+      "sha256": "4b01c57e5bf4f1404a338b5852714dcfcdd5b3d0a3e089e6d0795ffbecea8d14",
+      "from": "scratch/recompute-result.json"
+    },
+    {
+      "file": "results/scratch/jwst-header-checks.json",
+      "sha256": "a9d51de8dd89601988eeb457006b4c387bf604675a1c1a66643f67efefe351fe",
+      "from": "scratch/jwst-header-checks.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "d7349425442821c44fa366658ce6ec004d5e855ef2eb6d025b9e58d8e3d1e26f",
+      "from": "the run spec written when the tables were first emitted"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "f795f449d7419083dae8a00fe08cc8d1d20edffcfb8f2d628b86a34a0c2702cd",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "4cad6d04d64e6cf2a5b02cd2631dac0d6435f47489534b38b0a2982802dc6cb8",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ]
+}

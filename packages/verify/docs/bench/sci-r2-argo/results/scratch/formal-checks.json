@@ -1,0 +1,173 @@
+{
+ "files_checked": 488,
+ "dirs": [
+  "data/f19019",
+  "data/f19021"
+ ],
+ "checks": {
+  "F01": {
+   "desc": "PROFILE_<PARAM>_QC equals the table 2a grade recomputed from <PARAM>_ADJUSTED_QC (else <PARAM>_QC) [UM 3.2.2]",
+   "checked": 1464,
+   "fail": 0,
+   "examples": []
+  },
+  "F02": {
+   "desc": "D mode: <PARAM>_ADJUSTED_QC = '4' implies <PARAM>_ADJUSTED and <PARAM>_ADJUSTED_ERROR are FillValue [QCM 3.4]",
+   "checked": 319,
+   "fail": 0,
+   "examples": []
+  },
+  "F03": {
+   "desc": "a value flagged '1' lies inside the variable's declared valid_min..valid_max [UM 2.2.5, R03]",
+   "checked": 105498,
+   "fail": 0,
+   "examples": []
+  },
+  "F04": {
+   "desc": "a value outside valid_min..valid_max carries flag '3' or '4' (global range test) [QCM Test 6]",
+   "checked": 55,
+   "fail": 0,
+   "examples": []
+  },
+  "F05": {
+   "desc": "every QC character is in the reference-table set {0..9, ' '} and never the 'Not used' 6 or 7 [UM 3.2.1]",
+   "checked": 144294,
+   "fail": 0,
+   "examples": []
+  },
+  "F06": {
+   "desc": "pressures flagged '1' are strictly increasing [QCM Test 8]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F07": {
+   "desc": "DATA_MODE matches the file-name prefix (D*.nc <-> 'D') [QCM 3.7.2]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F08": {
+   "desc": "a D file's DATA_STATE_INDICATOR is '2C' or '2C+' [QCM 3.7.2]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F09": {
+   "desc": "D mode: a non-fill <PARAM>_ADJUSTED has a non-fill <PARAM>_ADJUSTED_ERROR (compulsory) [QCM 3.7.1]",
+   "checked": 71810,
+   "fail": 0,
+   "examples": []
+  },
+  "F10": {
+   "desc": "units strings: PRES 'decibar', TEMP 'degree_Celsius', PSAL 'psu'; JULD 'days since 1950-01-01 00:00:00 UTC' [UM 2.2.5, R03]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F11": {
+   "desc": "global Conventions = 'Argo-3.1 CF-1.6' and featureType = 'trajectoryProfile'; FORMAT_VERSION '3.1' [UM 2.2.1]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F12": {
+   "desc": "CYCLE_NUMBER equals the cycle in the file name; DIRECTION 'A' for a file name without a trailing D [UM 2.2.4]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F13": {
+   "desc": "the file's DATE_UPDATE equals the GDAC index date_update for that file [UM 4 (index files)]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F14": {
+   "desc": "PRES carries axis = 'Z' [UM 2.2.5 note on the vertical axis]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  },
+  "F15": {
+   "desc": "_FillValue declared on every measurement variable equals the manual's 99999 (floats) / ' ' (flags) [UM 2.2.5]",
+   "checked": 488,
+   "fail": 0,
+   "examples": []
+  }
+ },
+ "database": [
+  {
+   "code": "DB01",
+   "check": "global Conventions attribute present (CF)",
+   "result": "FAIL",
+   "detail": "global attrs: ['description', 'date']"
+  },
+  {
+   "code": "DB02",
+   "check": "standard_name values are CF standard names",
+   "result": "FAIL",
+   "detail": "16 of 16 variables set standard_name to the variable's own name (e.g. 'dt_mld'); none is in the CF table"
+  },
+  {
+   "code": "DB03",
+   "check": "valid_min/valid_max share the variable's type (CF)",
+   "result": "FAIL",
+   "detail": "type mismatch on ['da_mlpd', 'da_mlt', 'dt_mlpd', 'dt_mlt']"
+  },
+  {
+   "code": "DB04",
+   "check": "_CoordinateAxis names an existing dimension",
+   "result": "FAIL",
+   "detail": "_CoordinateAxis = 'NPROF' on every variable; the dimension is named ['iNPROF', 'iTXT']"
+  },
+  {
+   "code": "DB05",
+   "check": "status meaning carried in flag_values/flag_meanings, not units (CF)",
+   "result": "FAIL",
+   "detail": "status units = '1 corresponds to delayed mode profile'"
+  },
+  {
+   "code": "DB06",
+   "check": "profiledate units are CF time units",
+   "result": "FAIL",
+   "detail": "profiledate units = 'Date referenced to Jan-1-0000.  1 corresponds to Jan-1-0000' (MATLAB datenum)"
+  },
+  {
+   "code": "DB07",
+   "check": "dt_mld units 'meters' match content",
+   "result": "PASS",
+   "detail": "content is depth from TEOS-10 z_from_p: the database MLDs invert to 0.1-dbar grid pressures exactly (post-hoc probe)"
+  },
+  {
+   "code": "DB08",
+   "check": "dt_mlt units 'Celsius' say which temperature",
+   "result": "FAIL",
+   "detail": "content is Conservative Temperature (TEOS-10), matching to <1e-4 on 191/259 profiles; in-situ T matches 0/259; the attribute does not say so"
+  },
+  {
+   "code": "DB09",
+   "check": "dt_mls units 'PSU' match content",
+   "result": "FAIL",
+   "detail": "content is Absolute Salinity (g/kg), matching to <1e-4 on 191/259; Practical Salinity matches 0/259 (offset ~0.175)"
+  },
+  {
+   "code": "DB10",
+   "check": "dt_mlpd units 'kg/m^3' state it is an anomaly",
+   "result": "FAIL",
+   "detail": "content is sigma0 = rho - 1000 (TEOS-10), valid_max 31; the attribute says kg/m^3 without the 1000 offset"
+  },
+  {
+   "code": "DB11",
+   "check": "row count matches the paper's abstract ('nearly 1,250,000 Argo profiles')",
+   "result": "FAIL",
+   "detail": "1,385,119 rows, all with a valid dt_mld (C0 FAIL)"
+  },
+  {
+   "code": "DB12",
+   "check": "profilenumber valid_max covers Argo cycle numbers",
+   "result": "PASS",
+   "detail": "valid_max = 999.0; observed max 999 (a ceiling, not a check of later cycles)"
+  }
+ ]
+}

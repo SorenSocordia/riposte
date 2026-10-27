@@ -1,7 +1,7 @@
 /**
- * The HTTP transport bounds what one request may cost (red-team R2, fixed 2026-09-28, SURFACES-2 lane).
+ * The HTTP transport bounds what one request may cost (fixed 2026-09-28).
  *
- * The R2 PoC (redteam/r2-http-transport-dos.redteam.ts) showed nodeHandler buffering a body of any size before parsing,
+ * The red team's PoC (redteam/r2-http-transport-dos.redteam.ts) showed nodeHandler buffering a body of any size before parsing,
  * routing or authenticating it. Its two BROKEN cases are here as the fixed behaviour (413, and nothing past the cap is kept),
  * its HELD case stays held, and the rest pins the other transport guarantees: a declared Content-Length over the cap is
  * refused before any body is read, per-route caps for the two routes that carry a whole document or book, malformed JSON is
@@ -41,7 +41,9 @@ function drive(
 ): { status: number; body: string; writes: number; paused: boolean; destroyed: boolean; headers: Record<string, string>; seen: HttpRequest[] } {
   const seen: HttpRequest[] = []
   const dispatch = o.dispatch ?? ((r: HttpRequest) => { seen.push(r); return route(r) })
-  const req = fakeReq(method, url, o.headers ?? {})
+  // every body is sent as JSON: since 2026-10-05 the transport reads a body only under Content-Type: application/json
+  // (test/http-host-and-content-type.test.ts covers the refusal)
+  const req = fakeReq(method, url, { 'content-type': 'application/json', ...(o.headers ?? {}) })
   const res = fakeRes()
   nodeHandler(dispatch, o.limits)(req as never, res as never)
   for (const c of chunks) req.emit('data', c)
@@ -54,7 +56,7 @@ const inChunks = (raw: Buffer, size = 65536): Buffer[] => {
   return out
 }
 
-describe('R2 fixed: the body is capped while it streams (fake stream, as the PoC drives it)', () => {
+describe('fixed: the body is capped while it streams (fake stream, as the PoC drives it)', () => {
   it('was BROKEN: a 6 MB body is refused with 413 at the 4 MiB default, never parsed or routed', () => {
     const raw = Buffer.from(JSON.stringify({ extraction: { note: 'x'.repeat(6 * 1024 * 1024) } }), 'utf8')
     let routed = 0
@@ -208,7 +210,7 @@ async function start(limits: TransportLimits = {}, dispatch: (r: HttpRequest) =>
 
 function call(port: number, method: string, path: string, body?: Buffer | string, headers: Record<string, string> = {}): Promise<{ status: number; body: string }> {
   return new Promise((resolve, reject) => {
-    const req = httpRequest({ host: '127.0.0.1', port, method, path, headers }, res => {
+    const req = httpRequest({ host: '127.0.0.1', port, method, path, headers: { 'content-type': 'application/json', ...headers } }, res => {
       const parts: Buffer[] = []
       res.on('data', c => parts.push(c as Buffer))
       res.on('end', () => resolve({ status: res.statusCode ?? 0, body: Buffer.concat(parts).toString('utf8') }))

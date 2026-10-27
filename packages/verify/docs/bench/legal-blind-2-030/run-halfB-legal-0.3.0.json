@@ -1,0 +1,338 @@
+{
+  "step": "post-hoc: legal@0.3.0 on half B (not the PREREG section 6 candidate; see ADDENDUM-legal-0.3.0.md)",
+  "label": "post-hoc",
+  "run_utc": "2026-10-05T17:50:41.575Z",
+  "engine": "0.6.0",
+  "tree": {
+    "src/legal/index.ts": "d66049f8c7521f8316733e0427faea625a7be85ea79bacfab9c66437e4e41680",
+    "src/legal/quotation.ts": "5a699290df2dff5e316dca71d446dba40261b6b35e099dc0cac80771045dc099",
+    "src/legal/binding.ts": "1e19c53bc5f96bd71d77d266d6322f3290c6ab34d156fe78ddf3ff24457476cd",
+    "src/version.ts": "9ad7ccf53c401d3c01129a3891fe34e6d506d7d5747dee0987d3133a3309ae5b"
+  },
+  "addendum_sha256": "6e6cf86f7a46233fc302ff8d0ddff32b9343a51330cde1b60e0a245a3b358dad",
+  "script_sha256": "0f952e25d4db8ea597a99a215d2138dfd2d2918fa347a42cfec438ea5d729c07",
+  "manifest_sha256": "d8550982fb54ca697e5a441e9e631d3e5d00158298eb57e99f65960a8c6e6499",
+  "rules": {
+    "legal@0.3.0": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 0,
+          "n": 10,
+          "rate": 0,
+          "ci95": [
+            0,
+            0.278
+          ]
+        },
+        "known_bad_fail": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 6,
+          "n": 10,
+          "rate": 0.6,
+          "ci95": [
+            0.313,
+            0.832
+          ]
+        },
+        "control_false_fail": {
+          "k": 1,
+          "n": 10,
+          "rate": 0.1,
+          "ci95": [
+            0.018,
+            0.404
+          ]
+        },
+        "control_pass": {
+          "k": 5,
+          "n": 10,
+          "rate": 0.5,
+          "ci95": [
+            0.237,
+            0.763
+          ]
+        },
+        "control_abstain": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "J": 4.5
+      },
+      "rows": [
+        {
+          "id": "L2-05",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Environmental Protection Agency v. Mink: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "5cd71adca1864d74766c690f23414c34"
+        },
+        {
+          "id": "L2-06",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Flast v. Cohen: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "7578e79da4ebcfad111248803f451ab5"
+        },
+        {
+          "id": "L2-07",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "United States v. Vuitch: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "fa5f0a19f0a3e3cc591d7302bc551610"
+        },
+        {
+          "id": "L2-08",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation alters the meaning of the opinion text supplied for Morey v. Doud: the bracket [reasonable] stands for \"purposes\", and \"reasonable\" is not \"purposes\", an inflection of it, or a pronoun or referent. The passage there reads: \"based on differences that are reasonably related to the purposes of the Act in which it is found.\".",
+          "verdict_id": "ac7db20a9149af899efa96afb3a529a0"
+        },
+        {
+          "id": "L2-09",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Dent v. West Virginia. The corresponding passage there reads: \"Reliance must be placed upon the assur-anee given by his license, issued by an authority competent to judge in that respect, that he possesses the requisite qualifications.\".",
+          "verdict_id": "cb00a94804a749824da56748bdc48e33"
+        },
+        {
+          "id": "L2-10",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Metropolis Theatre Co. v. City of Chicago. The corresponding passage there reads: \"The problems of government are practical ones and may justify, if they do not require, rough accommodations — illogical, it may be, and unscientific.\".",
+          "verdict_id": "20e6ef9db5bd8bc77e93ba54afcadd4d"
+        },
+        {
+          "id": "L2-11",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Pointer v. Texas: the same words, in the same letter case.",
+          "verdict_id": "ee5c6244283084ec7ebe15470cf83ba5"
+        },
+        {
+          "id": "L2-12",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Roman v. Sincock: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "8c48e14e380fef61035e10d101ef8be5"
+        },
+        {
+          "id": "L2-21",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Ahrens v. Clark: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "cc881175d705e9944a1c5a459748b3cc"
+        },
+        {
+          "id": "L2-22",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Blair v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "596904503ca8bd1d8a6a3eeb18e98ab3"
+        },
+        {
+          "id": "L2-23",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Dandridge v. Williams: the same words, in the same letter case.",
+          "verdict_id": "8e3ac04ee324655ec9e81604dd8b0b96"
+        },
+        {
+          "id": "L2-24",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Barry v. United States ex rel. Cunningham: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "560d5d301135e3f28b35d905e40337a0"
+        },
+        {
+          "id": "L2-25",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment: the same words, in the same letter case.",
+          "verdict_id": "fa64d0145bdf082d86946c55519b0b3c"
+        },
+        {
+          "id": "L2-26",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Zizzo v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "c510e2ba0afcf0c4039e9a1d0c16fcb6"
+        },
+        {
+          "id": "L2-27",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Cook v. Calhoun: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "34ad62f1aed5df2edba1d0a0b1fd62a1"
+        },
+        {
+          "id": "L2-28",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Indiana v. Kentucky. The corresponding passage there reads: \"When a great river is the boundary betAveen two nations or States, if the original property is in neither, and there be no convention respecting it, each holds to the middle of the stream. But when, as in this case, one State -is the original proprietor and grants the territory on one side only, it retains the river Avithin its own domain, and the neAvly created State extends to the river only. The river, however, is its boundary. ...\".",
+          "verdict_id": "aa3fe81cf000f1ae1c08db28d364e387"
+        },
+        {
+          "id": "L2-37",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for American Power & Light Co. v. Securities & Exchange Commission, read with the quotation conventions it uses: an ellipsis stands for \", however,\"; quotation marks not compared.",
+          "verdict_id": "b719777269512ce9f9375ff26a1a741b"
+        },
+        {
+          "id": "L2-38",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Chevron Oil Co. v. Huson: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "cd30db34dcbdb3c7949b6342931714d9"
+        },
+        {
+          "id": "L2-39",
+          "half": "B",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Norton v. Shelby County: the same words, in the same letter case.",
+          "verdict_id": "b2d780c1233ced8a5588bd5a46d99ec6"
+        },
+        {
+          "id": "L2-40",
+          "half": "B",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation alters the meaning of the opinion text supplied for Chicot County Drainage District v. Baxter State Bank: the bracket [reasonable] stands for \"attention\", and \"reasonable\" is not \"attention\", an inflection of it, or a pronoun or referent. The passage there reads: \"among the most difficult of those which have engaged the attention of courts, state and federal\".",
+          "verdict_id": "6761885e4c49e0bdf054b2e1154fafac"
+        }
+      ]
+    }
+  },
+  "compared_with_shipped_legal_0_2_0": {
+    "outcomes_that_differ": [],
+    "shipped_score": {
+      "known_bad_false_pass": {
+        "k": 0,
+        "n": 10,
+        "rate": 0,
+        "ci95": [
+          0,
+          0.278
+        ]
+      },
+      "known_bad_fail": {
+        "k": 4,
+        "n": 10,
+        "rate": 0.4,
+        "ci95": [
+          0.168,
+          0.687
+        ]
+      },
+      "known_bad_abstain": {
+        "k": 6,
+        "n": 10,
+        "rate": 0.6,
+        "ci95": [
+          0.313,
+          0.832
+        ]
+      },
+      "control_false_fail": {
+        "k": 1,
+        "n": 10,
+        "rate": 0.1,
+        "ci95": [
+          0.018,
+          0.404
+        ]
+      },
+      "control_pass": {
+        "k": 5,
+        "n": 10,
+        "rate": 0.5,
+        "ci95": [
+          0.237,
+          0.763
+        ]
+      },
+      "control_abstain": {
+        "k": 4,
+        "n": 10,
+        "rate": 0.4,
+        "ci95": [
+          0.168,
+          0.687
+        ]
+      },
+      "J": 4.5
+    }
+  }
+}

@@ -83,7 +83,7 @@ describe('verify measure', () => {
 
 describe('verify replay', () => {
   const v = verifyDeclarative({ subtotal: 100, tax: 10, total: 110 }, ruleset as DeclarativeRuleset, { now: () => new Date('2026-09-22T00:00:00Z') })
-  it('a genuine verdict with no inputs: structure verified, outcome NOT re-performed → exit 2 (R1)', () => {
+  it('a genuine verdict with no inputs: structure verified, outcome NOT re-performed → exit 2', () => {
     const io = cap()
     const vp = tmp('verdict.json', v)
     expect(run(['replay', vp], io)).toBe(2)

@@ -1,7 +1,7 @@
 /**
  * Structured-twin mode (src/twin): SYNTHETIC inline-XBRL only. The reader (contexts, units, formats, scale, sign, nil,
  * nesting, namespaces), the four mapping layers (concept priority, period incl. 52/53-week and prior instant, scale,
- * sign-not-judged), every FAIL diagnosis and ABSTAIN reason, evidence spans into the twin, and determinism / replay.
+ * sign-not-judged), every FAIL diagnosis and INSUFFICIENT_DATA reason, evidence spans into the twin, and determinism / replay.
  */
 import { describe, it, expect } from 'vitest'
 import {
@@ -112,7 +112,7 @@ describe('parseInlineXbrl: reading the twin', () => {
     expect(one('assets', 1_234_567_000, gaapAlias).outcome).toBe('PASS')
     // "us-gaap:" bound to a non-FASB namespace is not US-GAAP
     const impostor = HTML.replace('xmlns:us-gaap="http://fasb.org/us-gaap/2024"', 'xmlns:us-gaap="http://impostor.example.com/2024"')
-    expect(one('assets', 1_234_567_000, impostor)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_BINDING_FACT' })
+    expect(one('assets', 1_234_567_000, impostor)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_BINDING_FACT' })
   })
 })
 
@@ -181,28 +181,38 @@ describe('verifyAgainstTwin: FAIL, with a diagnosis', () => {
   })
 })
 
-describe('verifyAgainstTwin: ABSTAIN, always with a reason (never a flag)', () => {
+describe('verifyAgainstTwin: INSUFFICIENT_DATA, always with a reason (never a flag)', () => {
+  it('the judgments say INSUFFICIENT_DATA; under engine 0.6.0 the verdict says can\'t tell, and earlier engines keep "abstaining"', () => {
+    const claims = [{ id: 'x', field: 'operating_expenses', value: 850_000_000 }]
+    const now = verifyAgainstTwin(HTML, claims, OPTS)
+    expect(now.judgments[0]!.outcome).toBe('INSUFFICIENT_DATA')
+    expect(now.verdict.claims[0]!.explanation).toMatch(/; can't tell\.$/)
+    expect(JSON.stringify(now)).not.toContain('ABSTAIN')
+    const was = verifyAgainstTwin(HTML, claims, { ...OPTS, engine: '0.5.0' })
+    expect(was.verdict.claims[0]!.explanation).toMatch(/; abstaining\.$/)
+    expect(was.verdict.verdict_id).not.toBe(now.verdict.verdict_id) // the engine names itself in the id, as always
+  })
   it('NO_BINDING_FACT: the field\'s concepts are absent (a custom extension line is not guessed at)', () => {
-    expect(one('operating_expenses', 850_000_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_BINDING_FACT' })
+    expect(one('operating_expenses', 850_000_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_BINDING_FACT' })
   })
   it('CONFLICTING_FACTS: two facts for one concept and period disagree', () => {
-    expect(one('current_liabilities', 300_000_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'CONFLICTING_FACTS' })
+    expect(one('current_liabilities', 300_000_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'CONFLICTING_FACTS' })
   })
   it('NO_USD_FACT: the concept is reported only in another currency', () => {
-    expect(one('cash', 42_000_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_USD_FACT' })
+    expect(one('cash', 42_000_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_USD_FACT' })
   })
   it('FIELD_NOT_MAPPED and VALUE_UNPARSEABLE', () => {
-    expect(one('ebitda', 1)).toMatchObject({ outcome: 'ABSTAIN', reason: 'FIELD_NOT_MAPPED', cell: null })
-    expect(one('assets', Number.NaN)).toMatchObject({ outcome: 'ABSTAIN', reason: 'VALUE_UNPARSEABLE' })
+    expect(one('ebitda', 1)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'FIELD_NOT_MAPPED', cell: null })
+    expect(one('assets', Number.NaN)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'VALUE_UNPARSEABLE' })
   })
   it('PERIOD_UNRESOLVED: no fiscal-year duration context at all', () => {
     const instantsOnly = twinDoc([ctxI('c-I24', '2024-12-28')], [`<td>Total assets</td>${nf('us-gaap:Assets', 'c-I24', '1,234,567')}`])
-    expect(one('revenue', 900_000_000, instantsOnly)).toMatchObject({ outcome: 'ABSTAIN', reason: 'PERIOD_UNRESOLVED' })
+    expect(one('revenue', 900_000_000, instantsOnly)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'PERIOD_UNRESOLVED' })
     expect(one('assets', 1_234_567_000, instantsOnly).outcome).toBe('PASS')
   })
   it('NO_TWIN: a document with no facts for this period (or none at all)', () => {
-    expect(one('assets', 1, '<html><body><table><tr><td>Total assets</td><td>1</td></tr></table></body></html>')).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_TWIN' })
-    expect(verifyAgainstTwin(HTML, [{ id: 'a', field: 'assets', value: 1_234_567_000 }], { ...OPTS, periodEnd: '2021-12-31' }).judgments[0]).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_TWIN' })
+    expect(one('assets', 1, '<html><body><table><tr><td>Total assets</td><td>1</td></tr></table></body></html>')).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_TWIN' })
+    expect(verifyAgainstTwin(HTML, [{ id: 'a', field: 'assets', value: 1_234_567_000 }], { ...OPTS, periodEnd: '2021-12-31' }).judgments[0]).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_TWIN' })
   })
 })
 

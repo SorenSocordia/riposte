@@ -1,0 +1,223 @@
+citations: 34 checked under legal@0.5.4 (engine 0.7.2)
+
+PASS              cite.ADV0_rarely  Ardent Barge Co. v. Selwyn Cooperage, Inc., 900 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "rarely". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 900 F.4th 10 (character offset 149)
+PASS              cite.ADV1_seldom  Ardent Barge Co. v. Selwyn Cooperage, Inc., 901 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "seldom". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 901 F.4th 10 (character offset 149)
+PASS              cite.ADV2_hardly  Ardent Barge Co. v. Selwyn Cooperage, Inc., 902 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "hardly". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 902 F.4th 10 (character offset 149)
+PASS              cite.ADV3_scarcely  Ardent Barge Co. v. Selwyn Cooperage, Inc., 903 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "scarcely". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 903 F.4th 10 (character offset 149)
+PASS              cite.ADV4_barely  Ardent Barge Co. v. Selwyn Cooperage, Inc., 904 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "barely". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 904 F.4th 10 (character offset 149)
+INSUFFICIENT_DATA cite.ADV5_never  Ardent Barge Co. v. Selwyn Cooperage, Inc., 905 F.4th 10  [SELECTIVE_QUOTE]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.
+        remedy (recompute-with): Quote the passage with what the quotation leaves out or changes: a negation; a condition or a limitation, including one in the part of the sentence before or after the quoted words, or one that an ellipsis or a capital at the start or end of the quotation cuts off; the letter case; or the inner quotation marks that say whose words they are. Or quote a passage the cut does not change; the corrected brief is checked again.
+        remedy (authority): The attorney of record reads the full sentence in the opinion text and decides, for this verdict only.
+PASS              cite.ADV6_infrequently  Ardent Barge Co. v. Selwyn Cooperage, Inc., 906 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "infrequently". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 906 F.4th 10 (character offset 149)
+INSUFFICIENT_DATA cite.ADV7_only_rarely  Ardent Barge Co. v. Selwyn Cooperage, Inc., 907 F.4th 10  [SELECTIVE_QUOTE]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: elided condition — the ellipsis omits "only" and what it governs; not certified.
+        remedy (authority): The attorney of record reads the full sentence in the opinion text and decides, for this verdict only.
+        remedy (recompute-with): Quote the passage with what the quotation leaves out or changes: a negation; a condition or a limitation, including one in the part of the sentence before or after the quoted words, or one that an ellipsis or a capital at the start or end of the quotation cuts off; the letter case; or the inner quotation marks that say whose words they are. Or quote a passage the cut does not change; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.ADV8_not_always  Ardent Barge Co. v. Selwyn Cooperage, Inc., 908 F.4th 10  [SELECTIVE_QUOTE]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.
+        remedy (authority): The attorney of record reads the full sentence in the opinion text and decides, for this verdict only.
+        remedy (recompute-with): Quote the passage with what the quotation leaves out or changes: a negation; a condition or a limitation, including one in the part of the sentence before or after the quoted words, or one that an ellipsis or a capital at the start or end of the quotation cuts off; the letter case; or the inner quotation marks that say whose words they are. Or quote a passage the cut does not change; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.ADV9_not_ordinarily  Ardent Barge Co. v. Selwyn Cooperage, Inc., 909 F.4th 10  [SELECTIVE_QUOTE]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.
+        remedy (authority): The attorney of record reads the full sentence in the opinion text and decides, for this verdict only.
+        remedy (recompute-with): Quote the passage with what the quotation leaves out or changes: a negation; a condition or a limitation, including one in the part of the sentence before or after the quoted words, or one that an ellipsis or a capital at the start or end of the quotation cuts off; the letter case; or the inner quotation marks that say whose words they are. Or quote a passage the cut does not change; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.ADV10_almost_never  Ardent Barge Co. v. Selwyn Cooperage, Inc., 910 F.4th 10  [SELECTIVE_QUOTE]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.
+        remedy (authority): The attorney of record reads the full sentence in the opinion text and decides, for this verdict only.
+        remedy (recompute-with): Quote the passage with what the quotation leaves out or changes: a negation; a condition or a limitation, including one in the part of the sentence before or after the quoted words, or one that an ellipsis or a capital at the start or end of the quotation cuts off; the letter case; or the inner quotation marks that say whose words they are. Or quote a passage the cut does not change; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.ADV11_no_longer  Ardent Barge Co. v. Selwyn Cooperage, Inc., 911 F.4th 10  [SELECTIVE_QUOTE]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.
+        remedy (authority): The attorney of record reads the full sentence in the opinion text and decides, for this verdict only.
+        remedy (recompute-with): Quote the passage with what the quotation leaves out or changes: a negation; a condition or a limitation, including one in the part of the sentence before or after the quoted words, or one that an ellipsis or a capital at the start or end of the quotation cuts off; the letter case; or the inner quotation marks that say whose words they are. Or quote a passage the cut does not change; the corrected brief is checked again.
+PASS              cite.ADV12_usually  Ardent Barge Co. v. Selwyn Cooperage, Inc., 912 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "usually". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 912 F.4th 10 (character offset 149)
+PASS              cite.ADV13_typically  Ardent Barge Co. v. Selwyn Cooperage, Inc., 913 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "typically". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 913 F.4th 10 (character offset 149)
+PASS              cite.ADV14_generally  Ardent Barge Co. v. Selwyn Cooperage, Inc., 914 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "generally". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 914 F.4th 10 (character offset 149)
+PASS              cite.ADV15_sometimes  Ardent Barge Co. v. Selwyn Cooperage, Inc., 915 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "sometimes". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 915 F.4th 10 (character offset 149)
+PASS              cite.ADV16_occasionally  Ardent Barge Co. v. Selwyn Cooperage, Inc., 916 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "occasionally". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 916 F.4th 10 (character offset 149)
+PASS              cite.ADV17_presumptively  Ardent Barge Co. v. Selwyn Cooperage, Inc., 917 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "presumptively". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 917 F.4th 10 (character offset 149)
+PASS              cite.ADV18_in_limited_circumstances  Ardent Barge Co. v. Selwyn Cooperage, Inc., 918 F.4th 10
+        The quotation appears in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., read with the quotation conventions it uses: an ellipsis stands for "in limited circumstances". The sentence before it reads: "The barge charter contained a limitations clause." Found in the majority opinion, line 4 (character offset 149).
+        found at: line 4 of 918 F.4th 10 (character offset 149)
+PASS              cite.STY0  Ardent Barge Co. v. Selwyn Cooperage, Inc., 950 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 275).
+        found at: line 8 of 950 F.4th 20 (character offset 275)
+PASS              cite.STY1  Ardent Barge Co. v. Selwyn Cooperage, Inc., 951 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 275).
+        found at: line 8 of 951 F.4th 20 (character offset 275)
+INSUFFICIENT_DATA cite.STY2  Ardent Barge Co. v. Selwyn Cooperage, Inc., 952 F.4th 20  [SPAN_NOT_FOUND]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: the quoted words appear in Judge Lindqvist's opinion concurring in the result (line 8), not in the majority opinion; not certified.
+        remedy (recompute-with): Quote the words of the majority opinion for the point, or say whose words they are: a separate opinion by a parenthetical in the citation ("(Brennan, J., dissenting)"), and the quotation is checked against that opinion. Editorial matter (a synopsis, headnotes, a case summary, the syllabus) is not the opinion and is never checked as it; the corrected brief is checked again.
+        remedy (authority): The attorney of record reads the passage where it appears and decides, for this verdict only.
+INSUFFICIENT_DATA cite.STY3  Ardent Barge Co. v. Selwyn Cooperage, Inc., 953 F.4th 20  [SPAN_NOT_FOUND]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: the quoted words appear in Judge Lindqvist's opinion concurring in the judgment only (line 8), not in the majority opinion; not certified.
+        remedy (authority): The attorney of record reads the passage where it appears and decides, for this verdict only.
+        remedy (recompute-with): Quote the words of the majority opinion for the point, or say whose words they are: a separate opinion by a parenthetical in the citation ("(Brennan, J., dissenting)"), and the quotation is checked against that opinion. Editorial matter (a synopsis, headnotes, a case summary, the syllabus) is not the opinion and is never checked as it; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.STY4  Ardent Barge Co. v. Selwyn Cooperage, Inc., 954 F.4th 20  [SPAN_NOT_FOUND]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: the quoted words appear in Lindqvist's concurrence (line 8), not in the majority opinion; not certified.
+        remedy (authority): The attorney of record reads the passage where it appears and decides, for this verdict only.
+        remedy (recompute-with): Quote the words of the majority opinion for the point, or say whose words they are: a separate opinion by a parenthetical in the citation ("(Brennan, J., dissenting)"), and the quotation is checked against that opinion. Editorial matter (a synopsis, headnotes, a case summary, the syllabus) is not the opinion and is never checked as it; the corrected brief is checked again.
+PASS              cite.STY5  Ardent Barge Co. v. Selwyn Cooperage, Inc., 955 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 307).
+        found at: line 8 of 955 F.4th 20 (character offset 307)
+PASS              cite.STY6  Ardent Barge Co. v. Selwyn Cooperage, Inc., 956 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 302).
+        found at: line 8 of 956 F.4th 20 (character offset 302)
+PASS              cite.STY7  Ardent Barge Co. v. Selwyn Cooperage, Inc., 957 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 305).
+        found at: line 8 of 957 F.4th 20 (character offset 305)
+INSUFFICIENT_DATA cite.STY8  Ardent Barge Co. v. Selwyn Cooperage, Inc., 958 F.4th 20  [SPAN_NOT_FOUND]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: the quoted words appear in Judge Lindqvist's concurrence (line 8), not in the majority opinion; not certified.
+        remedy (authority): The attorney of record reads the passage where it appears and decides, for this verdict only.
+        remedy (recompute-with): Quote the words of the majority opinion for the point, or say whose words they are: a separate opinion by a parenthetical in the citation ("(Brennan, J., dissenting)"), and the quotation is checked against that opinion. Editorial matter (a synopsis, headnotes, a case summary, the syllabus) is not the opinion and is never checked as it; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.STY9  Ardent Barge Co. v. Selwyn Cooperage, Inc., 959 F.4th 20  [SPAN_NOT_FOUND]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: the quoted words appear in Judge Lindqvist's opinion dissenting in part (line 8), not in the majority opinion; not certified.
+        remedy (authority): The attorney of record reads the passage where it appears and decides, for this verdict only.
+        remedy (recompute-with): Quote the words of the majority opinion for the point, or say whose words they are: a separate opinion by a parenthetical in the citation ("(Brennan, J., dissenting)"), and the quotation is checked against that opinion. Editorial matter (a synopsis, headnotes, a case summary, the syllabus) is not the opinion and is never checked as it; the corrected brief is checked again.
+INSUFFICIENT_DATA cite.STY10  Ardent Barge Co. v. Selwyn Cooperage, Inc., 960 F.4th 20  [SPAN_NOT_FOUND]
+        Ardent Barge Co. v. Selwyn Cooperage, Inc.: the quoted words appear in Judge Lindqvist's opinion concurring in part (line 8), not in the majority opinion; not certified.
+        remedy (authority): The attorney of record reads the passage where it appears and decides, for this verdict only.
+        remedy (recompute-with): Quote the words of the majority opinion for the point, or say whose words they are: a separate opinion by a parenthetical in the citation ("(Brennan, J., dissenting)"), and the quotation is checked against that opinion. Editorial matter (a synopsis, headnotes, a case summary, the syllabus) is not the opinion and is never checked as it; the corrected brief is checked again.
+PASS              cite.STY11  Ardent Barge Co. v. Selwyn Cooperage, Inc., 961 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 266).
+        found at: line 8 of 961 F.4th 20 (character offset 266)
+PASS              cite.STY12  Ardent Barge Co. v. Selwyn Cooperage, Inc., 962 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 271).
+        found at: line 8 of 962 F.4th 20 (character offset 271)
+PASS              cite.STY13  Ardent Barge Co. v. Selwyn Cooperage, Inc., 963 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 268).
+        found at: line 8 of 963 F.4th 20 (character offset 268)
+PASS              cite.STY14  Ardent Barge Co. v. Selwyn Cooperage, Inc., 964 F.4th 20
+        The quotation appears as quoted in the opinion text supplied for Ardent Barge Co. v. Selwyn Cooperage, Inc., the same words in the same letter case, but it begins in the middle of its sentence; the sentence begins: "In my judgment…" Found in the majority opinion, line 8 (character offset 263).
+        found at: line 8 of 964 F.4th 20 (character offset 263)
+
+opinion texts:
+  900 F.4th 10: fictional probe; sha256 cd762ec58cb5c22968a60f971d7626a662d4d2179cf54cb7ff8d24a72bb3e683; 307 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV0_rarely: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 900 F.4th 10; the caption names the citation (900 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  901 F.4th 10: fictional probe; sha256 2e2f74d6e596bf1a42e8c23b8a12451f0ff5a354d084735591852b11922bec17; 307 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV1_seldom: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 901 F.4th 10; the caption names the citation (901 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  902 F.4th 10: fictional probe; sha256 618f68e1a7ebf71b90a123019102aa62c8e9360f4baffd2fafe3e6193ad24bbe; 307 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV2_hardly: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 902 F.4th 10; the caption names the citation (902 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  903 F.4th 10: fictional probe; sha256 4d1e99909fbe1a092b5e56508fec3cdea972acaab7d5c2d3f661e12a224bee46; 309 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV3_scarcely: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 903 F.4th 10; the caption names the citation (903 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  904 F.4th 10: fictional probe; sha256 b95ffab262b1253a1cdbf6bccf475b2784ba1c3faacab10aa92d4ca2b3f86edf; 307 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV4_barely: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 904 F.4th 10; the caption names the citation (904 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  905 F.4th 10: fictional probe; sha256 1d005d494be1ff8cbfaf5645fa08d3dd830d595be1e5cfbc390922217e622853; 306 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV5_never: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 905 F.4th 10; the caption names the citation (905 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  906 F.4th 10: fictional probe; sha256 a5c38ef4901ed571b0112a7978871dd986af71d4c15286b783fcdc78eca24705; 313 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV6_infrequently: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 906 F.4th 10; the caption names the citation (906 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  907 F.4th 10: fictional probe; sha256 422572dca653dcdecaafca56c07d7f1f0e133c4da124aba2bff86a8de3a60f4e; 312 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV7_only_rarely: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 907 F.4th 10; the caption names the citation (907 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  908 F.4th 10: fictional probe; sha256 8cfdedfaef931cf061fd09707c16c1bd34afaeba5572f7cef9cd2cf0abf87e65; 311 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV8_not_always: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 908 F.4th 10; the caption names the citation (908 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  909 F.4th 10: fictional probe; sha256 4595d41b2c740a792b01374502a2e272828f28da526eafcdaf5c84b2445b29ab; 315 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV9_not_ordinarily: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 909 F.4th 10; the caption names the citation (909 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  910 F.4th 10: fictional probe; sha256 9afb2df6b5108e49422025a54a53cf00bae79e5ae0804c9b33fe97e33ce77f4a; 313 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV10_almost_never: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 910 F.4th 10; the caption names the citation (910 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  911 F.4th 10: fictional probe; sha256 286089a101b0aa78807af108e13dae833836254c417643b790d87478fb9fbc7d; 310 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV11_no_longer: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 911 F.4th 10; the caption names the citation (911 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  912 F.4th 10: fictional probe; sha256 6a76fcef0e4495a675876b8fa20e74573be14b45992f24206e29f09de5ada83b; 308 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV12_usually: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 912 F.4th 10; the caption names the citation (912 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  913 F.4th 10: fictional probe; sha256 81e2e3d19c9c4a2f684601819dcb68b5f201ca917555c38ac63092fd0ea2de04; 310 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV13_typically: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 913 F.4th 10; the caption names the citation (913 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  914 F.4th 10: fictional probe; sha256 b5e1db5219bf5471bc4a368dfc20c9a8e0d5f014a791abb77727a879309692ba; 310 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV14_generally: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 914 F.4th 10; the caption names the citation (914 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  915 F.4th 10: fictional probe; sha256 684141ed590cdf467c10ec6ff1fd23445b1a3698031e1123b76376ad86b678d5; 310 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV15_sometimes: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 915 F.4th 10; the caption names the citation (915 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  916 F.4th 10: fictional probe; sha256 63ddf2676be632820f62fa0595ace0e1a2798dd6ae858a89fbb076c77fbe9c00; 313 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV16_occasionally: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 916 F.4th 10; the caption names the citation (916 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  917 F.4th 10: fictional probe; sha256 9a4dfbcdc1add890999a32b09d328a078bf579eef850d2a52ef774eef16e22a9; 314 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV17_presumptively: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 917 F.4th 10; the caption names the citation (917 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  918 F.4th 10: fictional probe; sha256 4f16bacd76a922815d39900fc67a3efc9a14d7d86f58936739173d37916da6f7; 325 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5)
+    for cite.ADV18_in_limited_circumstances: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 918 F.4th 10; the caption names the citation (918 F.4th 10 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  950 F.4th 20: fictional probe; sha256 af6cbd3fc3ba568a647c49971c05c859b232a51c1fdad1e8d547c5a90c9d3d62; 369 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY0: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 950 F.4th 20; the caption names the citation (950 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  951 F.4th 20: fictional probe; sha256 d066db1cd18ff5de972d45e2aa1097c8d324f3edbf41d68be673bf42a0ccb934; 369 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY1: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 951 F.4th 20; the caption names the citation (951 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  952 F.4th 20: fictional probe; sha256 aef308cdf88e16a64507c02ac9224d18604c45a9adbc76d3dc265385f888d39b; 373 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5); Judge Lindqvist's opinion concurring in the result (lines 6-9)
+    for cite.STY2: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 952 F.4th 20; the caption names the citation (952 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  953 F.4th 20: fictional probe; sha256 84796108e8c3a60e2b56968ecdd7c547db09473fc2d35ba1da071a741221b090; 380 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5); Judge Lindqvist's opinion concurring in the judgment only (lines 6-9)
+    for cite.STY3: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 953 F.4th 20; the caption names the citation (953 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  954 F.4th 20: fictional probe; sha256 329208e3ffbd8d4ae0e509fa3d151cb4d3383032c037b4af5cc874d9380dbb2f; 359 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5); Lindqvist's concurrence (lines 6-9)
+    for cite.STY4: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 954 F.4th 20; the caption names the citation (954 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  955 F.4th 20: fictional probe; sha256 a13ee644253e99ced17386e4e03e5142ea2bee1ce92c1db734f07aab1f951d00; 401 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY5: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 955 F.4th 20; the caption names the citation (955 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  956 F.4th 20: fictional probe; sha256 8e343f27227461c7db33b9eaa7442e42e380d5b51dc36872c090091ce2490294; 396 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY6: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 956 F.4th 20; the caption names the citation (956 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  957 F.4th 20: fictional probe; sha256 4885675e3549702795f3444177a6ec31dc5fae4284a514c022fbcc0bf326b5ea; 399 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY7: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 957 F.4th 20; the caption names the citation (957 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  958 F.4th 20: fictional probe; sha256 377039649978ad53545dac39987d0787f76e64e74caadd74b097f1a702420362; 359 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5); Judge Lindqvist's concurrence (lines 6-9)
+    for cite.STY8: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 958 F.4th 20; the caption names the citation (958 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  959 F.4th 20: fictional probe; sha256 036309c1c32abe72a0a17855a6bcaf385297b960c66d4fc317e25c12f230e9b9; 367 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5); Judge Lindqvist's opinion dissenting in part (lines 6-9)
+    for cite.STY9: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 959 F.4th 20; the caption names the citation (959 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  960 F.4th 20: fictional probe; sha256 91f93cec5a3cf2787753ab90864775ee520d8d126b6634b2370f3d1ff35b6abe; 374 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-5); Judge Lindqvist's opinion concurring in part (lines 6-9)
+    for cite.STY10: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 960 F.4th 20; the caption names the citation (960 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  961 F.4th 20: fictional probe; sha256 4b5d60b2d58f1f0f3f813afb669b0d8252c339a77052ec9e8d83ce493373dcd3; 360 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY11: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 961 F.4th 20; the caption names the citation (961 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  962 F.4th 20: fictional probe; sha256 72eab07aa395a7b0d5a874ea821b52f0e5158c93b1c9e7f6bdf6f1e855b410e0; 365 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY12: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 962 F.4th 20; the caption names the citation (962 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  963 F.4th 20: fictional probe; sha256 9c95bfea0088a7ebbaeaf5a27beacffcb4b0090720d4b9853eb111dd00e5a29d; 362 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY13: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 963 F.4th 20; the caption names the citation (963 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+  964 F.4th 20: fictional probe; sha256 4f3816b763de7dea26c049ebb386234b9c2b82df2892691b54d9eaa1ecbea384; 357 characters
+    sections read: the header above the opinion (lines 1-2); the majority opinion (lines 3-9)
+    for cite.STY14: its caption reads Ardent Barge Co. v. Selwyn Cooperage, 964 F.4th 20; the caption names the citation (964 F.4th 20 named; Ardent Barge Co. named; Selwyn Cooperage, Inc. named)
+
+verdict: PASS-WITH-OPEN: every citation that could be checked held, but some could not be checked (22 pass, 0 fail, 12 can't tell); verdict_id 508d4c196ef8d018ed74e69478af7189
+Checked: each quotation against the opinion text supplied for its cite. Not checked: that an authority exists, is good law, or stands for a proposition.

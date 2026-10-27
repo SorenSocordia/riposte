@@ -1,9 +1,9 @@
 {
   "name": "riposte-verify",
-  "version": "0.0.1",
+  "version": "0.7.2",
   "private": true,
   "description": "Deterministic post-extraction verification: recompute, quote-match, cross-reference. PASS | FAIL | INSUFFICIENT_DATA with per-claim provenance and replayable, signable proofs. Never guesses a verdict.",
-  "author": "Tucker Anderson",
+  "author": "E. Tucker Anderson",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SorenSocordia/riposte.git",
@@ -31,7 +31,7 @@
     "test:watch": "vitest",
     "test:determinism": "vitest run test/determinism",
     "mcp": "node dist/mcp/stdio.js",
-    "serve": "node dist/http/serve.js",
+    "serve": "node dist/cli.js serve",
     "demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
@@ -42,6 +42,14 @@
     "tsx": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17"
+  },
+  "peerDependencies": {
+    "pdfjs-dist": "^5.4.296"
+  },
+  "peerDependenciesMeta": {
+    "pdfjs-dist": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20"

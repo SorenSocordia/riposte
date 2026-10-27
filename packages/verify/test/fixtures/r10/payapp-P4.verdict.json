@@ -1,0 +1,3328 @@
+{
+  "schema_version": "v0",
+  "verdict_id": "eac7ef9895efd2a5c7bcffb110e472e3",
+  "issued_at": "2026-10-19T21:58:56.461Z",
+  "engine_version": "0.7.2",
+  "ruleset": {
+    "id": "pay-app",
+    "version": "0.0.1",
+    "domain": "pay-app"
+  },
+  "input_hash": "08b135176851dab3be7e76b655b1a225d0c7a83aba0c2204344438b1a3463899",
+  "remedy_table_hash": "ad4838d1d5e6af0cd34b8dda95ce84eac573db8e26d1c76fb19ec614dda28eda",
+  "replayable": true,
+  "document": {
+    "extraction_hash": "1237eb497d76e0dedd8a085144b8efdb92c01ed4cf8061eb5c1217c8dc7c52c1",
+    "line_items": 7
+  },
+  "references": {
+    "contract": false,
+    "evidence": 0,
+    "history": 1,
+    "source": false
+  },
+  "outcome": "FAIL",
+  "gate_status": "FAIL",
+  "aggregation": "ANY_FAIL_FAILS",
+  "claims": [
+    {
+      "claim_id": "document.G702_CSUM",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "contract_sum_to_date",
+      "asserted": 430500,
+      "rule_id": "G702_CSUM",
+      "rule_name": "Law of the Contract Sum",
+      "computation": {
+        "formula": "line 3 = line 1 + line 2",
+        "operands": {
+          "CONTRACT_SUM_TO_DATE": 430500,
+          "EXPECTED_CONTRACT_SUM_TO_DATE": 430500
+        },
+        "result": 430500,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "contract_sum_to_date"
+          },
+          "value": 430500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "line 1 + line 2"
+          },
+          "value": 430500,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "original_contract_sum"
+          },
+          "value": 412000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "net_change_orders"
+          },
+          "value": 18500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the original contract sum plus change orders is 430,500, as the contract sum to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_SOV",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "contract_sum_to_date",
+      "asserted": 430500,
+      "rule_id": "G702_SOV",
+      "rule_name": "Law of the Schedule of Values",
+      "computation": {
+        "formula": "line 3 = Σ C",
+        "operands": {
+          "CONTRACT_SUM_TO_DATE": 430500,
+          "SOV_SCHEDULED_SUM": 430500
+        },
+        "result": 430500,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "contract_sum_to_date"
+          },
+          "value": 430500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "Σ(schedule_of_values[0].scheduled_value + schedule_of_values[1].scheduled_value + schedule_of_values[2].scheduled_value + schedule_of_values[3].scheduled_value + schedule_of_values[4].scheduled_value + schedule_of_values[5].scheduled_value + schedule_of_values[6].scheduled_value)"
+          },
+          "value": 430500,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[0].scheduled_value"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[1].scheduled_value"
+          },
+          "value": 128000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[2].scheduled_value"
+          },
+          "value": 96000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[3].scheduled_value"
+          },
+          "value": 84500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[4].scheduled_value"
+          },
+          "value": 73500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[5].scheduled_value"
+          },
+          "value": 18000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[6].scheduled_value"
+          },
+          "value": 18500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the scheduled values add to 430,500, as the contract sum to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_DONE",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "total_completed_and_stored",
+      "asserted": 274825,
+      "rule_id": "G702_DONE",
+      "rule_name": "Law of the Carried Total",
+      "computation": {
+        "formula": "line 4 = Σ G",
+        "operands": {
+          "TOTAL_COMPLETED_STORED": 274825,
+          "SOV_COMPLETED_SUM": 274825
+        },
+        "result": 274825,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_completed_and_stored"
+          },
+          "value": 274825,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "Σ(schedule_of_values[0].completed_to_date + schedule_of_values[1].completed_to_date + schedule_of_values[2].completed_to_date + schedule_of_values[3].completed_to_date + schedule_of_values[4].completed_to_date + schedule_of_values[5].completed_to_date + schedule_of_values[6].completed_to_date)"
+          },
+          "value": 274825,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[0].completed_to_date"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[1].completed_to_date"
+          },
+          "value": 102400,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[2].completed_to_date"
+          },
+          "value": 72000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[3].completed_to_date"
+          },
+          "value": 57125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[4].completed_to_date"
+          },
+          "value": 22050,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[5].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[6].completed_to_date"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the lines' completed to date add to 274,825, as the total completed and stored says",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_RSUM",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "total_retainage",
+      "asserted": 27482.5,
+      "rule_id": "G702_RSUM",
+      "rule_name": "Law of Retainage (carried)",
+      "computation": {
+        "formula": "line 5 = Σ I",
+        "operands": {
+          "RETAINAGE_TOTAL": 27482.5,
+          "SOV_RETAINAGE_SUM": 27482.5
+        },
+        "result": 27482.5,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_retainage"
+          },
+          "value": 27482.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "Σ(schedule_of_values[0].retainage + schedule_of_values[1].retainage + schedule_of_values[2].retainage + schedule_of_values[3].retainage + schedule_of_values[4].retainage + schedule_of_values[5].retainage + schedule_of_values[6].retainage)"
+          },
+          "value": 27482.5,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[0].retainage"
+          },
+          "value": 1200,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[1].retainage"
+          },
+          "value": 10240,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[2].retainage"
+          },
+          "value": 7200,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[3].retainage"
+          },
+          "value": 5712.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[4].retainage"
+          },
+          "value": 2205,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[5].retainage"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[6].retainage"
+          },
+          "value": 925,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the lines' retainage adds to 27,482.50, as the total retainage says",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_RATE",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "total_retainage",
+      "asserted": 27482.5,
+      "rule_id": "G702_RATE",
+      "rule_name": "Law of Retainage (rate)",
+      "computation": {
+        "formula": "line 5 = line 4 × rate",
+        "operands": {
+          "RETAINAGE_TOTAL": 27482.5,
+          "EXPECTED_RETAINAGE_TOTAL": 27482.5
+        },
+        "result": 27482.5,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_retainage"
+          },
+          "value": 27482.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "line 4 × rate"
+          },
+          "value": 27482.5,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_completed_and_stored"
+          },
+          "value": 274825,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "retainage_rate"
+          },
+          "value": 0.1,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": "10%",
+          "normalizations": [
+            "percent_sign_removed",
+            "percent_to_fraction"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the total retainage, 27,482.50, is 10% of the total completed and stored, 274,825",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_EARN",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "total_earned_less_retainage",
+      "asserted": 247342.5,
+      "rule_id": "G702_EARN",
+      "rule_name": "Law of Earnings",
+      "computation": {
+        "formula": "line 6 = line 4 − line 5",
+        "operands": {
+          "TOTAL_EARNED_LESS_RETAINAGE": 247342.5,
+          "EXPECTED_EARNED_LESS_RETAINAGE": 247342.5
+        },
+        "result": 247342.5,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_earned_less_retainage"
+          },
+          "value": 247342.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "line 4 − line 5"
+          },
+          "value": 247342.5,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_completed_and_stored"
+          },
+          "value": 274825,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_retainage"
+          },
+          "value": 27482.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the total completed and stored minus retainage is 247,342.50, as the total earned less retainage says",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_DUE",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "FAIL",
+      "field": "current_payment_due",
+      "asserted": 131342.5,
+      "rule_id": "G702_DUE",
+      "rule_name": "Law of the Payment Due",
+      "computation": {
+        "formula": "line 8 = line 6 − line 7",
+        "operands": {
+          "CURRENT_PAYMENT_DUE": 131342.5,
+          "EXPECTED_CURRENT_PAYMENT_DUE": 130342.5
+        },
+        "result": 130342.5,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "current_payment_due"
+          },
+          "value": 131342.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "line 6 − line 7"
+          },
+          "value": 130342.5,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_earned_less_retainage"
+          },
+          "value": 247342.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "less_previous_certificates"
+          },
+          "value": 117000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": true,
+      "explanation": "earned less retainage minus previous certificates is 130,342.50, but the current payment due says 131,342.50",
+      "variance": 1000
+    },
+    {
+      "claim_id": "document.G702_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish_including_retainage",
+      "asserted": 183157.5,
+      "rule_id": "G702_BAL",
+      "rule_name": "Law of the Balance (including retainage)",
+      "computation": {
+        "formula": "line 9 = line 3 − line 6",
+        "operands": {
+          "BALANCE_INCL_RETAINAGE": 183157.5,
+          "EXPECTED_BALANCE_INCL_RETAINAGE": 183157.5
+        },
+        "result": 183157.5,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "balance_to_finish_including_retainage"
+          },
+          "value": 183157.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "line 3 − line 6"
+          },
+          "value": 183157.5,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "contract_sum_to_date"
+          },
+          "value": 430500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "total_earned_less_retainage"
+          },
+          "value": 247342.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the contract sum to date minus earned less retainage is 183,157.50, as the balance to finish (including retainage) says",
+      "variance": 0
+    },
+    {
+      "claim_id": "document.G702_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "less_previous_certificates",
+      "asserted": 117000,
+      "rule_id": "G702_PREV",
+      "rule_name": "Law of the Previous Certificate",
+      "computation": {
+        "formula": "line 7 = line 6(previous application)",
+        "operands": {
+          "PREVIOUS_CERTIFICATES": 117000,
+          "PREVIOUS_EARNED_LESS_RETAINAGE": 117000
+        },
+        "result": 117000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "less_previous_certificates"
+          },
+          "value": 117000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].total_earned_less_retainage"
+          },
+          "value": 117000,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "the previous certificates line says 117,000, last month's total earned less retainage",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[0].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 12000,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 12000,
+          "EXPECTED_COMPLETED_TO_DATE": 12000
+        },
+        "result": 12000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 1: previous work plus this period plus stored materials adds to 12,000, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[0].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 0,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 0,
+          "EXPECTED_BALANCE_TO_FINISH": 0
+        },
+        "result": 0,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 1: the scheduled value minus completed to date is 0, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[0].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 1,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 1,
+          "EXPECTED_PERCENT_COMPLETE": 1
+        },
+        "result": 1,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 1,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": 100,
+          "normalizations": [
+            "already_number",
+            "percent_to_fraction_heuristic"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 1,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 1: completed to date is 100% of the scheduled value; the percent complete says 100%",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[0].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 12000,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 12000,
+          "SCHEDULED_VALUE": 12000
+        },
+        "result": 12000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 1 bills 12,000 to date, within its scheduled value of 12,000",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[0].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 12000,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 12000,
+          "PREVIOUS_COMPLETED_TO_DATE": 12000
+        },
+        "result": 12000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[0].completed_to_date"
+          },
+          "value": 12000,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 1 is 12,000, last month's completed to date for that item",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[1].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 102400,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 102400,
+          "EXPECTED_COMPLETED_TO_DATE": 102400
+        },
+        "result": 102400,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 102400,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 102400,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 64000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 38400,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 2: previous work plus this period plus stored materials adds to 102,400, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[1].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 25600,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 25600,
+          "EXPECTED_BALANCE_TO_FINISH": 25600
+        },
+        "result": 25600,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 25600,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 25600,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 128000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 102400,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 2: the scheduled value minus completed to date is 25,600, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[1].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 0.8,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 0.8,
+          "EXPECTED_PERCENT_COMPLETE": 0.8
+        },
+        "result": 0.8,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 0.8,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": 80,
+          "normalizations": [
+            "already_number",
+            "percent_to_fraction_heuristic"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 0.8,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 128000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 102400,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 2: completed to date is 80% of the scheduled value; the percent complete says 80%",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[1].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 102400,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 102400,
+          "SCHEDULED_VALUE": 128000
+        },
+        "result": 128000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 102400,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 128000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 2 bills 102,400 to date, within its scheduled value of 128,000",
+      "variance": -25600
+    },
+    {
+      "claim_id": "line[1].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 64000,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 64000,
+          "PREVIOUS_COMPLETED_TO_DATE": 64000
+        },
+        "result": 64000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 64000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[1].completed_to_date"
+          },
+          "value": 64000,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 2 is 64,000, last month's completed to date for that item",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[2].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 72000,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 72000,
+          "EXPECTED_COMPLETED_TO_DATE": 72000
+        },
+        "result": 72000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 72000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 72000,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 24000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 48000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 3: previous work plus this period plus stored materials adds to 72,000, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[2].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 24000,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 24000,
+          "EXPECTED_BALANCE_TO_FINISH": 24000
+        },
+        "result": 24000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 24000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 24000,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 96000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 72000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 3: the scheduled value minus completed to date is 24,000, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[2].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 0.75,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 0.75,
+          "EXPECTED_PERCENT_COMPLETE": 0.75
+        },
+        "result": 0.75,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 0.75,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": 75,
+          "normalizations": [
+            "already_number",
+            "percent_to_fraction_heuristic"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 0.75,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 96000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 72000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 3: completed to date is 75% of the scheduled value; the percent complete says 75%",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[2].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 72000,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 72000,
+          "SCHEDULED_VALUE": 96000
+        },
+        "result": 96000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 72000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 96000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 3 bills 72,000 to date, within its scheduled value of 96,000",
+      "variance": -24000
+    },
+    {
+      "claim_id": "line[2].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 24000,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 24000,
+          "PREVIOUS_COMPLETED_TO_DATE": 24000
+        },
+        "result": 24000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 24000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[2].completed_to_date"
+          },
+          "value": 24000,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 3 is 24,000, last month's completed to date for that item",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[3].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 57125,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 57125,
+          "EXPECTED_COMPLETED_TO_DATE": 57125
+        },
+        "result": 57125,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 57125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 57125,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 30000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 21125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 6000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 4: previous work plus this period plus stored materials adds to 57,125, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[3].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 27375,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 27375,
+          "EXPECTED_BALANCE_TO_FINISH": 27375
+        },
+        "result": 27375,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 27375,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 27375,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 84500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 57125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 4: the scheduled value minus completed to date is 27,375, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[3].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 0.67604,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 0.67604,
+          "EXPECTED_PERCENT_COMPLETE": 0.676036
+        },
+        "result": 0.676036,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 0.67604,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": 67.604,
+          "normalizations": [
+            "already_number",
+            "percent_to_fraction_heuristic"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 0.676036,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 84500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 57125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 4: completed to date is 67.6% of the scheduled value; the percent complete says 67.6%, within half of one percent (the column is printed rounded)",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[3].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 57125,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 57125,
+          "SCHEDULED_VALUE": 84500
+        },
+        "result": 84500,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 57125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 84500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 4 bills 57,125 to date, within its scheduled value of 84,500",
+      "variance": -27375
+    },
+    {
+      "claim_id": "line[3].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 30000,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 30000,
+          "PREVIOUS_COMPLETED_TO_DATE": 30000
+        },
+        "result": 30000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 30000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[3].completed_to_date"
+          },
+          "value": 30000,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 4 is 30,000, last month's completed to date for that item",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[4].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 22050,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 22050,
+          "EXPECTED_COMPLETED_TO_DATE": 22050
+        },
+        "result": 22050,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 22050,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 22050,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 14700,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 7350,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 5: previous work plus this period plus stored materials adds to 22,050, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[4].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 51450,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 51450,
+          "EXPECTED_BALANCE_TO_FINISH": 51450
+        },
+        "result": 51450,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 51450,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 51450,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 73500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 22050,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 5: the scheduled value minus completed to date is 51,450, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[4].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 0.3,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 0.3,
+          "EXPECTED_PERCENT_COMPLETE": 0.3
+        },
+        "result": 0.3,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 0.3,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": 30,
+          "normalizations": [
+            "already_number",
+            "percent_to_fraction_heuristic"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 0.3,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 73500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 22050,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 5: completed to date is 30% of the scheduled value; the percent complete says 30%",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[4].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 22050,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 22050,
+          "SCHEDULED_VALUE": 73500
+        },
+        "result": 73500,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 22050,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 73500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 5 bills 22,050 to date, within its scheduled value of 73,500",
+      "variance": -51450
+    },
+    {
+      "claim_id": "line[4].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 0,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 0,
+          "PREVIOUS_COMPLETED_TO_DATE": 0
+        },
+        "result": 0,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[4].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 5 is 0, last month's completed to date for that item",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[5].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 0,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 0,
+          "EXPECTED_COMPLETED_TO_DATE": 0
+        },
+        "result": 0,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 6: previous work plus this period plus stored materials adds to 0, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[5].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 18000,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 18000,
+          "EXPECTED_BALANCE_TO_FINISH": 18000
+        },
+        "result": 18000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 18000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 18000,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 18000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 6: the scheduled value minus completed to date is 18,000, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[5].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 0,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 0,
+          "EXPECTED_PERCENT_COMPLETE": 0
+        },
+        "result": 0,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 18000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 6: completed to date is 0% of the scheduled value; the percent complete says 0%",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[5].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 0,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 0,
+          "SCHEDULED_VALUE": 18000
+        },
+        "result": 18000,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 18000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 6 bills 0 to date, within its scheduled value of 18,000",
+      "variance": -18000
+    },
+    {
+      "claim_id": "line[5].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 0,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 0,
+          "PREVIOUS_COMPLETED_TO_DATE": 0
+        },
+        "result": 0,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[5].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 6 is 0, last month's completed to date for that item",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[6].G703_TOTAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 9250,
+      "rule_id": "G703_TOTAL",
+      "rule_name": "Law of the Continuation Sheet",
+      "computation": {
+        "formula": "G = D + E + F",
+        "operands": {
+          "COMPLETED_TO_DATE": 9250,
+          "EXPECTED_COMPLETED_TO_DATE": 9250
+        },
+        "result": 9250,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "D + E + F"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].this_period"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].materials_stored"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 7: previous work plus this period plus stored materials adds to 9,250, as completed to date says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[6].G703_BAL",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "balance_to_finish",
+      "asserted": 9250,
+      "rule_id": "G703_BAL",
+      "rule_name": "Law of the Balance to Finish",
+      "computation": {
+        "formula": "H = C − G",
+        "operands": {
+          "BALANCE_TO_FINISH": 9250,
+          "EXPECTED_BALANCE_TO_FINISH": 9250
+        },
+        "result": 9250,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].balance_to_finish"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "C − G"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 18500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 7: the scheduled value minus completed to date is 9,250, as the balance to finish says",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[6].G703_PCT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "percent_complete",
+      "asserted": 0.5,
+      "rule_id": "G703_PCT",
+      "rule_name": "Law of the Percentage",
+      "computation": {
+        "formula": "% = G ÷ C",
+        "operands": {
+          "PERCENT_COMPLETE": 0.5,
+          "EXPECTED_PERCENT_COMPLETE": 0.5
+        },
+        "result": 0.5,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].percent_complete"
+          },
+          "value": 0.5,
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": 50,
+          "normalizations": [
+            "already_number",
+            "percent_to_fraction_heuristic"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "G ÷ C"
+          },
+          "value": 0.5,
+          "confidence": 100,
+          "role": "CONTEXT"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 18500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 7: completed to date is 50% of the scheduled value; the percent complete says 50%",
+      "variance": 0
+    },
+    {
+      "claim_id": "line[6].G703_CAP",
+      "kind": "CONSISTENCY",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "completed_to_date",
+      "asserted": 9250,
+      "rule_id": "G703_CAP",
+      "rule_name": "Law of No Overbilling",
+      "computation": {
+        "formula": "G ≤ C",
+        "operands": {
+          "COMPLETED_TO_DATE": 9250,
+          "SCHEDULED_VALUE": 18500
+        },
+        "result": 18500,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].completed_to_date"
+          },
+          "value": 9250,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].scheduled_value"
+          },
+          "value": 18500,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line 7 bills 9,250 to date, within its scheduled value of 18,500",
+      "variance": -9250
+    },
+    {
+      "claim_id": "line[6].G703_PREV",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "outcome": "PASS",
+      "field": "previous",
+      "asserted": 0,
+      "rule_id": "G703_PREV",
+      "rule_name": "Law of Continuity",
+      "computation": {
+        "formula": "D = G(previous application)",
+        "operands": {
+          "WORK_PREVIOUS": 0,
+          "PREVIOUS_COMPLETED_TO_DATE": 0
+        },
+        "result": 0,
+        "tolerance": {
+          "abs": 0.01
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "schedule_of_values[*].previous"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "history",
+            "path": "history[0].schedule_of_values[6].completed_to_date"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "REFERENCE",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "previous on line 7 is 0, last month's completed to date for that item",
+      "variance": 0
+    }
+  ],
+  "coverage": {
+    "claims_total": 44,
+    "claims_checked": 44,
+    "claims_pass": 43,
+    "claims_fail": 1,
+    "claims_insufficient": 0
+  },
+  "remedies": [
+    {
+      "kind": "recompute-with",
+      "detail": "Line 6 − line 7 is 130342.5; the payment due (line 8) says 131342.5. Re-read lines 6, 7 and 8.",
+      "operand": {
+        "source": "pay-app",
+        "role": "CURRENT_PAYMENT_DUE",
+        "path": "current_payment_due"
+      },
+      "clears": [
+        "G702_DUE"
+      ],
+      "claims": [
+        "document.G702_DUE"
+      ]
+    },
+    {
+      "kind": "authority",
+      "detail": "The person who certifies the application (the architect, on AIA G702) may certify the payment lines 6 and 7 support for this application only.",
+      "authority": "certifier",
+      "clears": [
+        "G702_DUE"
+      ],
+      "claims": [
+        "document.G702_DUE"
+      ]
+    }
+  ],
+  "scope": {
+    "ruleset": "pay-app@0.0.1",
+    "engine_version": "0.7.2",
+    "evidence_floor": "unstated",
+    "statements": [
+      "advisories are counsel, not verdicts",
+      "this is a check, not a decision"
+    ]
+  }
+}

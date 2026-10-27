@@ -1,12 +1,12 @@
 /**
- * The ledger's tenancy and door findings folded in by the evidence-integrity lane (2026-09-28):
- *   F-A (opinion lane, ✓ measured): a second tenant's RECORD of the same verdict id inherited the first tenant's review, wrote
+ * The ledger's tenancy and door findings, fixed 2026-09-28:
+ *   -   (✓ measured) a second tenant's RECORD of the same verdict id inherited the first tenant's review, wrote
  *        that reviewer and note into its own payload on the chain, and replaced the first tenant's record. Records are now
  *        keyed by (tenant, verdict_id); a review never crosses tenants; legacy chains still open (the leaked payload bytes stay,
  *        immutable, but no record shows them).
- *   N1 (CLI lane): a file ledger appending onto a chain export with no final newline fused two events onto one line.
- *   N4 (CLI lane): declineOnBook re-derives the proposal from the book and refuses a stale or forged proposal id.
- *   N5 (CLI lane): decide() refuses on a book that does not verify.
+ *   -   a file ledger appending onto a chain export with no final newline fused two events onto one line.
+ *   -   declineOnBook re-derives the proposal from the book and refuses a stale or forged proposal id.
+ *   -   decide() refuses on a book that does not verify.
  */
 import { describe, it, expect, afterEach } from 'vitest'
 import { tmpdir } from 'node:os'
@@ -42,7 +42,7 @@ function collision(led: Ledger = createLedger({ now: tick })): Ledger {
 }
 const leaks = (x: unknown): boolean => JSON.stringify(x).includes('ACME-PRIVATE') || JSON.stringify(x).includes('ap-lead')
 
-describe('F-A: one verdict id, two tenants: a review never crosses tenants', () => {
+describe('one verdict id, two tenants: a review never crosses tenants', () => {
   it('globex\'s record, its RECORD payload on the chain, its stats and its calibration carry nothing of acme\'s review', () => {
     const led = collision()
     const id = SHARED.verdict_id
@@ -114,7 +114,7 @@ describe('F-A: one verdict id, two tenants: a review never crosses tenants', () 
   })
 })
 
-describe('N1: a file ledger appending onto a chain export with no final newline', () => {
+describe('a file ledger appending onto a chain export with no final newline', () => {
   it('opening changes no byte; the first append writes the missing newline; the book keeps one event per line and verifies', () => {
     const src = createLedger({ now: tick })
     src.record(PASSES[0]!, { tenant_id: 'acme' })
@@ -135,7 +135,7 @@ describe('N1: a file ledger appending onto a chain export with no final newline'
   })
 })
 
-// ── N4 / N5 need a small policy and a signed grant ───────────────────────────────────────────────────────────────
+// ── declining and deciding need a small policy and a signed grant ───────────────────────────────────────────────────────────────
 function key(seedHex: string): { priv: string; pub: string } {
   const k = createPrivateKey({ key: Buffer.concat([Buffer.from('302e020100300506032b657004220420', 'hex'), Buffer.from(seedHex, 'hex')]), format: 'der', type: 'pkcs8' })
   return { priv: k.export({ type: 'pkcs8', format: 'pem' }).toString(), pub: createPublicKey(k).export({ type: 'spki', format: 'pem' }).toString() }
@@ -148,7 +148,7 @@ const TINY: PromotionPolicy = {
 const WF = wf('acme')
 const grantGate = () => signDecision(makeGrant({ workflow_id: WF, level: 'gate', consequence_tier: 'low', policy: policyRef(TINY), signer_id: 'owner', signed_at: iso() }), OWNER.priv)
 
-describe('N4: declineOnBook re-derives the proposal from the book', () => {
+describe('declineOnBook re-derives the proposal from the book', () => {
   it('declines the live proposal; refuses a stale or forged proposal id, and a book with nothing to decline', () => {
     const led = createLedger({ now: tick, trusted_keys: { owner: OWNER.pub } }) // D-ANCHOR: only an anchored signer's grant has effect
     for (const v of FAILS.slice(0, 6)) { led.record(v, { tenant_id: 'acme' }); led.review(v.verdict_id, { reviewer_id: 'r', decision: 'UPHELD' }) }
@@ -164,7 +164,7 @@ describe('N4: declineOnBook re-derives the proposal from the book', () => {
   })
 })
 
-describe('N5: nothing is decided on a book that does not verify', () => {
+describe('nothing is decided on a book that does not verify', () => {
   it('decide() refuses (appending nothing) when the chain it would extend is broken', () => {
     const led = createLedger({ now: tick })
     led.record(PASSES[0]!, { tenant_id: 'acme' })

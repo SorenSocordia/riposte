@@ -1,5 +1,5 @@
 /**
- * Surfaces for earned voice, opinions and the structured twin (wave 2, SURFACES lane):
+ * Surfaces for earned voice, opinions and the structured twin:
  *  - MCP tools voice_assess / opinion_render / verify_twin, equal to the core calls they wrap (deterministic, no clock);
  *  - HTTP POST /v1/opinion, POST /v1/twin, GET /v1/voice/{workflow} (managed tier), tenant-scoped;
  *  - THE DOOR: only a well-formed VERDICT enters the book over HTTP; COUNSEL never, however it is dressed;
@@ -202,7 +202,7 @@ describe('MCP opinion_render: the courtroom opinion, COUNSEL never VERDICT', () 
 
 describe('MCP verify_twin: the CLI verb as a tool', () => {
   const OPTS = { periodEnd: '2024-12-31' }
-  it('PASS / FAIL / ABSTAIN equal verifyAgainstTwin (same verdict_id, same judgments; only issued_at is a clock)', () => {
+  it('PASS / FAIL / INSUFFICIENT_DATA equal verifyAgainstTwin (same verdict_id, same judgments; only issued_at is a clock)', () => {
     for (const [claims, outcome] of [[PASS_CLAIMS, 'PASS'], [FAIL_CLAIMS, 'FAIL'], [ABSTAIN_CLAIMS, 'INSUFFICIENT_DATA']] as const) {
       const r = tool('verify_twin', { html: HTML, period_end: '2024-12-31', claims })
       expect(r.isError).toBe(false)
@@ -216,10 +216,10 @@ describe('MCP verify_twin: the CLI verb as a tool', () => {
     }
   })
 
-  it('map 0.2.0 without a presentation linkbase abstains NO_PRESENTATION_LINKBASE rather than guess', () => {
+  it('map 0.2.0 without a presentation linkbase answers INSUFFICIENT_DATA NO_PRESENTATION_LINKBASE rather than guess', () => {
     const got = tool('verify_twin', { html: HTML, period_end: '2024-12-31', claims: PASS_CLAIMS, map_version: '0.2.0' }).structuredContent as unknown as ReturnType<typeof verifyAgainstTwin>
     expect(got.verdict.ruleset.version).toBe('0.2.0')
-    expect(got.judgments[0]).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_PRESENTATION_LINKBASE' })
+    expect(got.judgments[0]).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_PRESENTATION_LINKBASE' })
   })
 
   it('map 0.2.0 with the filing\'s presentation binds statement-anchored, exactly as the judge does directly', () => {
@@ -464,7 +464,7 @@ describe('managed tier: GET /v1/voice/{workflow} and POST /v1/opinion, scoped to
     expect(op.ruling.disposition).toBe('PROPOSE_PROMOTION')
     expect(op.verified).toBe(true)
     // the same opinion a caller gets by supplying the chain and the same settings (stateless), read under the caller's
-    // tenant scope as the managed tier reads it (SW1, 2026-09-28)
+    // tenant scope as the managed tier reads it (2026-09-28)
     const stateless = post('/v1/opinion', { ledger: ledger.chainJSONL(), policy: P, workflow_id: ACME, ...SETTINGS[ACME], tenant_id: 'acme' })
     expect((stateless.json as { opinion: Opinion }).opinion.opinion_id).toBe(op.opinion_id)
     // restating the settings on record is fine; changing them is not
@@ -481,7 +481,7 @@ describe('managed tier: GET /v1/voice/{workflow} and POST /v1/opinion, scoped to
     const { svc, acme, beta, ledger } = shared()
     expect(postAs(svc, '/v1/opinion', { workflow_id: ACME }, 'kb').status).toBe(404)
     expect(postAs(svc, '/v1/opinion', { dispute: { verdict_id: acme.failIds[0] } }, 'kb').status).toBe(404)
-    // SW1 (2026-09-28): the opinion takes the caller's tenant scope, so the shared-book 409 is lifted.
+    // 2026-09-28: the opinion takes the caller's tenant scope, so the shared-book 409 is lifted.
     const d = postAs(svc, '/v1/opinion', { dispute: { verdict_id: beta.failIds[0] } }, 'kb')
     expect(d.status).toBe(200)
     const op = (d.json as { opinion: Opinion }).opinion
@@ -495,7 +495,7 @@ describe('managed tier: GET /v1/voice/{workflow} and POST /v1/opinion, scoped to
     const r = postAs(svc, '/v1/opinion', { dispute: { verdict_id: failIds[10] } }, 'ka')
     expect(r.status).toBe(200)
     const op = (r.json as { opinion: Opinion }).opinion
-    // the managed tier reads under the caller's tenant scope (SW1, 2026-09-28)
+    // the managed tier reads under the caller's tenant scope (2026-09-28)
     expect(JSON.stringify(op)).toBe(JSON.stringify(disputeOpinion({ snapshot: snapshotOfLedger(ledger), verdict_id: failIds[10]!, scope: { tenant_id: 'acme' } })))
   })
 

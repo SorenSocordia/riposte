@@ -1,6 +1,6 @@
 /**
  * Numeric honesty (2026-09-28, docs/NUMERIC-HONESTY-2026-09-28.md). Five promises:
- *  1. R6: the invoice rounding band is capped at what rounding can produce (U × k, plus half a cash step on the total),
+ *  1. the invoice rounding band is capped at what rounding can produce (U × k, plus half a cash step on the total),
  *     in a new ruleset version (0.1.0); 0.0.1 stays resolvable, and the cap only ever tightens.
  *  2. D-TOL-ID: any option that can change an outcome is committed to by the verdict_id.
  *  3. Could-not-compare is not FAIL: no string/number mismatch ever FAILs (the gavel's = and !=, and a junk tax in the
@@ -33,7 +33,7 @@ function rng(seed: number): () => number {
   return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
 }
 
-describe('R6: the invoice rounding band is capped at what rounding can produce (invoice 0.1.0)', () => {
+describe('the invoice rounding band is capped at what rounding can produce (invoice 0.1.0)', () => {
   const r6 = doc([line(1, 10_000_000, 10_002_500)], 10_002_500, 10_002_500)
 
   it('the red-team PoC: $2,500 on a $10M line FAILs, and the explanation names the cap', () => {
@@ -271,7 +271,7 @@ describe('replay binds a restated override (D-TOL-ID) and still re-performs an o
   it('a verdict issued before 2026-09-28 (input_hash without the override) still binds and re-performs, identity carried', () => {
     const v = verify(roundingDrift, { now: FIXED_NOW, tolerance: STRICT })
     const oldHash = hashOf(inputs)
-    const legacy = { ...v, input_hash: oldHash, verdict_id: deriveVerdictId(oldHash, v.ruleset, v.engine_version) }
+    const legacy = { ...v, input_hash: oldHash, verdict_id: deriveVerdictId(oldHash, v.ruleset, v.engine_version, v.remedy_table_hash) }
     const r = verifyReplay(legacy, inputs, { tolerance: STRICT })
     expect(r.status).toBe('REPERFORMED')
     expect(r.reperformed?.annotations).toEqual(['input_hash', 'verdict_id'])

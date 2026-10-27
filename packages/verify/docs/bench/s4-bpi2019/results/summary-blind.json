@@ -1,0 +1,130 @@
+{
+  "input": "results/run-blind.jsonl",
+  "input_sha256": "4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103",
+  "prereg": "PREREG-final.frozen.md",
+  "prereg_sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+  "seed": 1105236109,
+  "counts": {
+    "all": 250234,
+    "notInvoiced": 40259,
+    "inScope": 209975,
+    "pass": 207488,
+    "fail": 1766,
+    "abstain": 721,
+    "decided": 209254
+  },
+  "coverage_in_scope": 0.9965662578878438,
+  "coverage_all": 0.8362332856446366,
+  "abstain_rate_in_scope": 0.0034337421121562093,
+  "flag_rate_decided": 0.008439504143289972,
+  "abstain_reasons": {
+    "NO_AMOUNTS_FOR_TWO_WAY": 687,
+    "NEGATIVE_NET": 34
+  },
+  "check_fail_counts": {
+    "R1M_INVOICES_LE_RECEIPTS": 1766
+  },
+  "by_category": {
+    "consignment": {
+      "all": 14454,
+      "notInvoiced": 14454,
+      "inScope": 0,
+      "pass": 0,
+      "fail": 0,
+      "abstain": 0,
+      "decided": 0,
+      "coverage_in_scope": null,
+      "flag_rate": null
+    },
+    "threeway_after": {
+      "all": 14957,
+      "notInvoiced": 4038,
+      "inScope": 10919,
+      "pass": 10705,
+      "fail": 213,
+      "abstain": 1,
+      "decided": 10918,
+      "coverage_in_scope": 0.9999084165216595,
+      "flag_rate": 0.01950906759479758
+    },
+    "threeway_before": {
+      "all": 219779,
+      "notInvoiced": 21410,
+      "inScope": 198369,
+      "pass": 196783,
+      "fail": 1553,
+      "abstain": 33,
+      "decided": 198336,
+      "coverage_in_scope": 0.999833643361614,
+      "flag_rate": 0.00783014682155534
+    },
+    "twoway": {
+      "all": 1044,
+      "notInvoiced": 357,
+      "inScope": 687,
+      "pass": 0,
+      "fail": 0,
+      "abstain": 687,
+      "decided": 0,
+      "coverage_in_scope": 0,
+      "flag_rate": null
+    }
+  },
+  "log_agreement": {
+    "a": 1668,
+    "b": 98,
+    "c": 80103,
+    "d": 127385,
+    "n": 209254,
+    "agreement": 0.6167289514178941,
+    "p_held_given_fail": 0.9445073612684032,
+    "p_held_given_pass": 0.3860608806292412,
+    "rr": {
+      "rr": 2.4465243920309905,
+      "lo": 2.416037292034409,
+      "hi": 2.477396197706274
+    }
+  },
+  "cleared_despite_flag": {
+    "count": 98,
+    "first_20": [
+      "4507000821_00020",
+      "4507001388_00060",
+      "4507001688_00020",
+      "4507003995_00010",
+      "4507004224_00140",
+      "4507004617_00010",
+      "4507005312_00030",
+      "4507006756_00020",
+      "4507006848_00001",
+      "4507007772_00130",
+      "4507009869_00020",
+      "4507010762_00110",
+      "4507011262_00030",
+      "4507011516_00020",
+      "4507012060_00010",
+      "4507014555_00050",
+      "4507014650_00060",
+      "4507014940_00120",
+      "4507015899_00070",
+      "4507015933_00020"
+    ]
+  },
+  "audit": {
+    "n": 200,
+    "confirmed": 196,
+    "false": 1,
+    "unclear": 3,
+    "precision": 0.98,
+    "wilson95": [
+      0.9497129130941735,
+      0.9921955735836505
+    ],
+    "bar": 0.8,
+    "verdict": "PASS",
+    "miss_audit": {
+      "n": 50,
+      "misses": []
+    }
+  }
+}

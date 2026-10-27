@@ -82,19 +82,23 @@ describe('riposte-ledger CLI', () => {
     'forged.jsonl': forge(l.entries(), 0, (e) => { (e.body as { paid: number }).paid = 1 }, attacker.privateKeyPem).map((e) => JSON.stringify(e)).join('\n') + '\n',
     'owner.pub.pem': owner.publicKeyPem,
     'owner.key.pem': owner.privateKeyPem,
-    'junk.jsonl': '{"seq":0}\nnot json\n',
+    // 2026-10-13: the line that is not JSON sits before the last; a last line that is not a whole entry is a torn tail (exit 1,
+    // ledger-tails-and-broken-chain.test.ts)
+    'junk.jsonl': '{"seq":0}\nnot json\n{"seq":1}\n',
   }
   const read = (p: string) => { const f = files[p]; if (f === undefined) throw new Error('ENOENT'); return f }
 
   it('verify: 0 ok · 1 broken · 3 usage; warns when no trust anchor is given', () => {
-    const bare = ledgerCli(['verify', 'forged.jsonl'], read)
+    // these files are in memory, with no head record beside them: --no-sidecar says to verify without one (2026-10-05)
+    expect(ledgerCli(['verify', 'ledger.jsonl'], read)).toMatchObject({ code: 1, err: expect.stringMatching(/^NOT VERIFIED: no head record found \(ledger\.jsonl\.head\.json\)/) })
+    const bare = ledgerCli(['verify', 'forged.jsonl', '--no-sidecar'], read)
     expect(bare.code).toBe(0)
     expect(bare.err).toMatch(/no trust anchor given/)
-    const pinned = ledgerCli(['verify', 'forged.jsonl', '--key', 'owner.pub.pem'], read)
+    const pinned = ledgerCli(['verify', 'forged.jsonl', '--key', 'owner.pub.pem', '--no-sidecar'], read)
     expect(pinned.code).toBe(1)
-    expect(pinned.err).toMatch(/^BROKEN at entry 0: entry 0 is signed by key/)
-    expect(ledgerCli(['verify', 'ledger.jsonl', '--key', 'owner.key.pem', '--require-signed'], read)).toMatchObject({ code: 0, err: expect.stringMatching(/^OK: 3 entries/) })
-    expect(ledgerCli(['verify', 'ledger.jsonl', '--head', l.verify().head], read).code).toBe(0)
+    expect(pinned.err).toMatch(/^NOT VERIFIED: entry 0 is signed by key [0-9a-f]{64}, not the expected [0-9a-f]{64}/)
+    expect(ledgerCli(['verify', 'ledger.jsonl', '--key', 'owner.key.pem', '--require-signed', '--no-sidecar'], read)).toMatchObject({ code: 0, err: expect.stringMatching(/^OK: 3 entries/) })
+    expect(ledgerCli(['verify', 'ledger.jsonl', '--head', l.verify().head, '--no-sidecar'], read).code).toBe(0)
     expect(ledgerCli(['verify', 'junk.jsonl'], read)).toMatchObject({ code: 3, err: expect.stringMatching(/line 2 is not JSON/) })
     expect(ledgerCli(['verify'], read).code).toBe(3)
     expect(ledgerCli(['frobnicate', 'ledger.jsonl'], read).code).toBe(3)

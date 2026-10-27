@@ -124,11 +124,14 @@ export function resolveJsonPath(
     // Ensure path starts with $ (JSONPath root)
     const normalizedPath = jsonPath.startsWith('$') ? jsonPath : `$.${jsonPath}`
 
-    // Execute JSONPath query
+    // Execute JSONPath query. eval: false (2026-10-06, stated rather than left to the library's default): a filter or script
+    // expression ("[?(...)]", "[(...)]") is refused with an error, never evaluated, whoever wrote the path (a correlation map
+    // can come from a caller). No path this engine ships uses one.
     const results = JSONPath({
       path: normalizedPath,
       json: document,
       wrap: true, // Always return array
+      eval: false,
     })
 
     // Handle no matches

@@ -1,0 +1,542 @@
+{
+  "format": "bench-run/1",
+  "id": "legal-blind-2",
+  "prereg": "PREREG.md",
+  "results": "results",
+  "spec": "spec.json",
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "not_shipped": [
+    {
+      "file": "harness/build.mjs",
+      "sha256": "bcdad000334617aa84632923c189b82f8885bd909463ab7c601311f3e360e0ab",
+      "reason": "the script that built the set from the public texts. It names the authors' internal folders and a private user-agent string, so the export that assembles this public tree refuses it, and it is withheld. What it produced ships: the 39 opinion texts in sources/opinions/ (and the same texts without their header line in sources/opinions-unheaded/), each pinned by sha256 in items/MANIFEST.json, and the items themselves. The raw Caselaw Access Project files it read (about 48 MB of JSON) are not shipped; each is pinned by URL, fetch time and sha256 in sources/fetch-log.jsonl. rerun.mjs reruns every step of the run from the shipped texts with the package's engine and compares the outcomes with results/."
+    },
+    {
+      "file": "src/legal/index.ts",
+      "sha256": "35137247097483ca6da2c67de178e8a79cf74ac1ef7bd42e790546c02a843f36",
+      "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+    },
+    {
+      "file": "src/legal/quotation.ts",
+      "sha256": "9f5ffee86ab252c380d4111b23e142fd077d3c2919f97249c15532e90e4225e7",
+      "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+    },
+    {
+      "file": "src/legal/binding.ts",
+      "sha256": "02816bb723291150d5fdff4ed105d6cd26717a987a6faf3e293602e25b72cc3d",
+      "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+    },
+    {
+      "file": "src/version.ts",
+      "sha256": "9ad7ccf53c401d3c01129a3891fe34e6d506d7d5747dee0987d3133a3309ae5b",
+      "reason": "engine source as the run used it, hashed before the first engine call. It is not copied into this folder: the package's own src/ holds the current code, which has changed since, so compare its sha256 before relying on it."
+    }
+  ],
+  "shipped_edited": [
+    {
+      "file": "harness/run.ts",
+      "recorded_sha256": "9078818b096bfee73b9d3948c8556d2b63c974f3ea1b4d7d7e1c945b375b8817",
+      "sha256": "89183de7552d281226b7720ab6326ea96a4e71ecdf9ae2adc97cc54dd590bd1a",
+      "reason": "the run's harness. One comment line, the run command, named the authors' private folder and was replaced; the code is unchanged. The original does not ship, so the difference cannot be checked here."
+    },
+    {
+      "file": "items/EXCLUDED.json",
+      "recorded_sha256": "b3de36d5011d71f91f685821f8a440f6a909b507cf22a3ba370c0db3d38f0196",
+      "sha256": "7023f7fbdad3a78377dc4e41151a1b7a634abf7b8eaaac7f3ecc89a04937bab2",
+      "reason": "the exclusion list. One entry of its sources list named the authors' private folder and now names the first blind set's manifest in this tree; the names and cites it excludes are unchanged. The original does not ship, so the difference cannot be checked here."
+    }
+  ],
+  "rerun": {
+    "from_tree": "yes",
+    "detail": "The 39 opinion texts ship in sources/ (headed and unheaded), pinned by sha256 in items/MANIFEST.json. From the repository root, after npm install && npm run build, node packages/verify/docs/bench/legal-blind-2/rerun.mjs reruns half A, the tuning search, half B and the unheaded step with the package's engine and compares every case with results/; on 2026-10-06 every outcome the table counts was identical (160 of 160, and the tuning search's values and chosen limits). Two things differ and the script says so: the verdict ids and some explanation wording, because today's engine is not the build the run used (its sources are hashed below), and rerun.mjs was written after the run in place of harness/run.ts, which imports the authors' working tree. The script that built the texts from the raw Caselaw Access Project files does not ship (it names the authors' folders); the raw files are pinned by URL, time and sha256 in sources/fetch-log.jsonl.",
+    "identical": "outcomes"
+  },
+  "blind_basis": "PREREG.sha256 records the prereg's sha256 at 2026-10-05T14:00:36Z, and sources/fetch-log.jsonl records all 110 fetches of the opinion texts between 14:03:28Z and 14:06:31Z, after it; the built set and the harness were hashed at 14:26:01Z, nine seconds before the run. Both files were written by the authors, and the AI agent that wrote the prereg also built the set and audited it",
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "27cbb26aa8e5ca9e85b01a6deb5d353cc2ff91e5c1e228aa2c2ae92565cba7aa",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "7634fa9235102aa147dfd3916c9af5509f9e144c1930e47e8b2fe38275948e3d",
+      "from": "PREREG.sha256"
+    },
+    {
+      "file": "PREREG-CLARIFICATIONS.md",
+      "sha256": "92fa5cfbed24bfc936b722fbc32622142c01e79105d29295b0fcd0d2a91fc4e7",
+      "from": "PREREG-CLARIFICATIONS.md"
+    },
+    {
+      "file": "items/MANIFEST.json",
+      "sha256": "d8550982fb54ca697e5a441e9e631d3e5d00158298eb57e99f65960a8c6e6499",
+      "from": "items/MANIFEST.json"
+    },
+    {
+      "file": "items/EXCLUDED.json",
+      "sha256": "7023f7fbdad3a78377dc4e41151a1b7a634abf7b8eaaac7f3ecc89a04937bab2",
+      "from": "items/EXCLUDED.json",
+      "from_sha256": "b3de36d5011d71f91f685821f8a440f6a909b507cf22a3ba370c0db3d38f0196",
+      "note": "one entry of its sources list named the authors' private folder; it now names the first blind set's manifest in this tree"
+    },
+    {
+      "file": "harness/run.ts",
+      "sha256": "89183de7552d281226b7720ab6326ea96a4e71ecdf9ae2adc97cc54dd590bd1a",
+      "from": "harness/run.ts",
+      "from_sha256": "9078818b096bfee73b9d3948c8556d2b63c974f3ea1b4d7d7e1c945b375b8817",
+      "note": "one comment line (the run command) named the authors' private folder; it is replaced, and the code is unchanged"
+    },
+    {
+      "file": "results/run-halfA.json",
+      "sha256": "8fb5cf8ada8b27fd52481ab68da757d4e8021f820473f779ab3c92830b436382",
+      "from": "results/run-halfA.json"
+    },
+    {
+      "file": "results/run-halfB.json",
+      "sha256": "80fde82d1f7512fc61098ac9aafbe9760d2395800ad50b0ed4832cc6d4d478a6",
+      "from": "results/run-halfB.json"
+    },
+    {
+      "file": "results/tuning.json",
+      "sha256": "4bf5e5fe97c2f93b30439c04a87b3c2ef372dae34c00677f8925d591320bb73c",
+      "from": "results/tuning.json"
+    },
+    {
+      "file": "results/FREEZE.json",
+      "sha256": "4b203696c548bf3486569a026282f2b7dc691956d4543d66a445cf9b592dda53",
+      "from": "results/FREEZE.json"
+    },
+    {
+      "file": "results/binding-unheaded.json",
+      "sha256": "63d60f20339b80096592e87dc7924765093abe0f61ec252599e131fe038a4683",
+      "from": "results/binding-unheaded.json"
+    },
+    {
+      "file": "sources/fetch-log.jsonl",
+      "sha256": "215c7155c88dba009b921fe49f2d059583b1759b02fc14da39481144671557ff",
+      "from": "sources/fetch-log.jsonl"
+    },
+    {
+      "file": "sources/opinions/118-U-S-425.txt",
+      "sha256": "6d7c3cb1b58638cfa92feaeb1d560a18699c392399a37272d2072865bcc5a4b1",
+      "from": "sources/opinions/118-U-S-425.txt",
+      "note": "the 39 opinion texts the set was built from, public-domain US Reports opinions from the Caselaw Access Project, copied byte for byte; each one's sha256 is the one items/MANIFEST.json pins"
+    },
+    {
+      "file": "sources/opinions/129-U-S-114.txt",
+      "sha256": "a30f512b7450ba93b6a50d4759e3f0876dea1f47c4b74ea27ee9f0720d693761",
+      "from": "sources/opinions/129-U-S-114.txt"
+    },
+    {
+      "file": "sources/opinions/136-U-S-479.txt",
+      "sha256": "ae648b9b76ed49989cbb5912007331adddab66f49f7abd94ccb363a57a2102ef",
+      "from": "sources/opinions/136-U-S-479.txt"
+    },
+    {
+      "file": "sources/opinions/144-U-S-263.txt",
+      "sha256": "bc5c46537339669f77ccc53ef62c9a7dad94fd413eaf155b62e831b12bd27737",
+      "from": "sources/opinions/144-U-S-263.txt"
+    },
+    {
+      "file": "sources/opinions/228-U-S-61.txt",
+      "sha256": "4a86f8e7906731516e74a88ca74030288a210a77832976c30312b439ba99654d",
+      "from": "sources/opinions/228-U-S-61.txt"
+    },
+    {
+      "file": "sources/opinions/250-U-S-273.txt",
+      "sha256": "38bc812af8429a8d4519023bc21492d409e9572dd405724821c1305ff5504d89",
+      "from": "sources/opinions/250-U-S-273.txt"
+    },
+    {
+      "file": "sources/opinions/256-U-S-531.txt",
+      "sha256": "0a49e70f7c4766074fda80e9f1d3f53684f0a708b27f44ac2002d05971166c80",
+      "from": "sources/opinions/256-U-S-531.txt"
+    },
+    {
+      "file": "sources/opinions/270-U-S-295.txt",
+      "sha256": "ca45e11826801eeba17c95cb0835ce4f1538517bfffedefcc617eb1dcb2724dd",
+      "from": "sources/opinions/270-U-S-295.txt"
+    },
+    {
+      "file": "sources/opinions/279-U-S-597.txt",
+      "sha256": "f32b5b85b7df8c0e325cb6dd73bb8b2de2d14ceeb3291c7067d0e5320a3c88e7",
+      "from": "sources/opinions/279-U-S-597.txt"
+    },
+    {
+      "file": "sources/opinions/280-U-S-363.txt",
+      "sha256": "6bbe03a91568625d0d876bc62ffc02d302b7a1c1a25753e5a773181e434053c8",
+      "from": "sources/opinions/280-U-S-363.txt"
+    },
+    {
+      "file": "sources/opinions/308-U-S-371.txt",
+      "sha256": "a48524d7e70f082b2a843a1ebf13d56604d8352f77e848bddde8e7312c686cd6",
+      "from": "sources/opinions/308-U-S-371.txt"
+    },
+    {
+      "file": "sources/opinions/309-U-S-83.txt",
+      "sha256": "7aeee5730550abce22e29c553185a7ed04b6fad94324c69b602aa5237f93ea49",
+      "from": "sources/opinions/309-U-S-83.txt"
+    },
+    {
+      "file": "sources/opinions/324-U-S-786.txt",
+      "sha256": "084ee52225aec2e6a441b58186093f4e5017ff2ae142231187e731951aae736c",
+      "from": "sources/opinions/324-U-S-786.txt"
+    },
+    {
+      "file": "sources/opinions/329-U-S-90.txt",
+      "sha256": "ff30ca5553668f0e4e77831cf3d0c7d6390f187706c38c620603c2749717b360",
+      "from": "sources/opinions/329-U-S-90.txt"
+    },
+    {
+      "file": "sources/opinions/335-U-S-188.txt",
+      "sha256": "8e25592f7b8b32424f235a3019b1f7a045404755809f18e70aa35b8a0095c567",
+      "from": "sources/opinions/335-U-S-188.txt"
+    },
+    {
+      "file": "sources/opinions/337-U-S-733.txt",
+      "sha256": "e1d14923959a07b4c744c2676298787519eb5795c64c5d9b09593f9409c6dccd",
+      "from": "sources/opinions/337-U-S-733.txt"
+    },
+    {
+      "file": "sources/opinions/347-U-S-590.txt",
+      "sha256": "e63f1efec3c01d9c62d9e68550ed77bb09b97f8c165c6a39b39e2bc26cd9f8b8",
+      "from": "sources/opinions/347-U-S-590.txt"
+    },
+    {
+      "file": "sources/opinions/354-U-S-457.txt",
+      "sha256": "995f0a9c2c5a9b6d2ac17e3303d7e4c649d3a30c6ea0589fbdd38a8afdd17f05",
+      "from": "sources/opinions/354-U-S-457.txt"
+    },
+    {
+      "file": "sources/opinions/365-U-S-127.txt",
+      "sha256": "a0d502df4ebf355f52b96bd324b507a710c68985db296aa2a72caa21ea9c44b6",
+      "from": "sources/opinions/365-U-S-127.txt"
+    },
+    {
+      "file": "sources/opinions/366-U-S-420.txt",
+      "sha256": "a4fff081c38e2c93b335930b2fffe88ce36c91254558427b8583efa04a1d9cc3",
+      "from": "sources/opinions/366-U-S-420.txt"
+    },
+    {
+      "file": "sources/opinions/374-U-S-321.txt",
+      "sha256": "85c055ac6e6a5836950913c0d1062f2e08b5538916edb7fa808afad1cfb7f346",
+      "from": "sources/opinions/374-U-S-321.txt"
+    },
+    {
+      "file": "sources/opinions/377-U-S-695.txt",
+      "sha256": "bd7c9e7ffbaad23c5aba5df3175196421bcc49b59faab95ed74bbf1e0a4aae2a",
+      "from": "sources/opinions/377-U-S-695.txt"
+    },
+    {
+      "file": "sources/opinions/380-U-S-400.txt",
+      "sha256": "5167854f0dc5f4e9811e502caaa328dee48a30f3e6df454f0ee959289ba59ca3",
+      "from": "sources/opinions/380-U-S-400.txt"
+    },
+    {
+      "file": "sources/opinions/380-U-S-685.txt",
+      "sha256": "0cd62933ee4ca5bbe1ca4fe8d6f14e6831eeabd88f0d1664a7903df0a1e97e29",
+      "from": "sources/opinions/380-U-S-685.txt"
+    },
+    {
+      "file": "sources/opinions/384-U-S-982.txt",
+      "sha256": "85a3057184aca7c076389e172073a1ef0c405fb5e774b3a54ccee260e701d3c7",
+      "from": "sources/opinions/384-U-S-982.txt"
+    },
+    {
+      "file": "sources/opinions/392-U-S-83.txt",
+      "sha256": "f534ea88ad7d078b8075234abb386c6ccc572efd03b9583f2e199d362882b4a3",
+      "from": "sources/opinions/392-U-S-83.txt"
+    },
+    {
+      "file": "sources/opinions/393-U-S-374.txt",
+      "sha256": "552445dc80323917dce765cfaf02682b5b038314d3e08ea34240775b6c0cdd8e",
+      "from": "sources/opinions/393-U-S-374.txt"
+    },
+    {
+      "file": "sources/opinions/395-U-S-653.txt",
+      "sha256": "1308e4e1b668b490d4a57fda4bc7cf5b0b174bb94e9063144ebb6d1885aa7c5e",
+      "from": "sources/opinions/395-U-S-653.txt"
+    },
+    {
+      "file": "sources/opinions/396-U-S-229.txt",
+      "sha256": "97bf119a76b63674cf9b37e7fd4aa81129082d2ac17f2abfc80f0c1c12a8fb20",
+      "from": "sources/opinions/396-U-S-229.txt"
+    },
+    {
+      "file": "sources/opinions/397-U-S-471.txt",
+      "sha256": "5b5614bb383f044481f94e5bf7e57a4506fdf0475fabba6e296c43005be44bd0",
+      "from": "sources/opinions/397-U-S-471.txt"
+    },
+    {
+      "file": "sources/opinions/399-U-S-224.txt",
+      "sha256": "2100096bd59bbc639e6da402dde7d33bb56145b4c9ad8ba367fedf17369203a1",
+      "from": "sources/opinions/399-U-S-224.txt"
+    },
+    {
+      "file": "sources/opinions/402-U-S-62.txt",
+      "sha256": "f3fe4ab1f46bd58546ba0a618ef25702d36ce3bfbd56c6325232a5322a58e584",
+      "from": "sources/opinions/402-U-S-62.txt"
+    },
+    {
+      "file": "sources/opinions/404-U-S-189.txt",
+      "sha256": "9d1064b4b9445bc6b86f9d30b5d378d0f3b60424cc7ee9d8d91ee2a67b06bd52",
+      "from": "sources/opinions/404-U-S-189.txt"
+    },
+    {
+      "file": "sources/opinions/404-U-S-336.txt",
+      "sha256": "cf00b9d2957346d701f4675af2ea33109fefedd44d3bc8b7483eda4210a27b57",
+      "from": "sources/opinions/404-U-S-336.txt"
+    },
+    {
+      "file": "sources/opinions/404-U-S-97.txt",
+      "sha256": "e9bd51f92dd004875fa86c63eeee6771bc9ee17e53af542583eb7ca1b10de705",
+      "from": "sources/opinions/404-U-S-97.txt"
+    },
+    {
+      "file": "sources/opinions/405-U-S-974.txt",
+      "sha256": "638347768f8c50beac69c0243c27292ec9487c42e2d3ac78fb7e8483bc5de623",
+      "from": "sources/opinions/405-U-S-974.txt"
+    },
+    {
+      "file": "sources/opinions/406-U-S-956.txt",
+      "sha256": "eaca20e90a3bb291bc829045f9c6609445cac5c5e3f0da6518cbe94ff52dddef",
+      "from": "sources/opinions/406-U-S-956.txt"
+    },
+    {
+      "file": "sources/opinions/408-U-S-665.txt",
+      "sha256": "7ac2899da45580262e1ecc3e3caccdf74f4830371502c2049d487f8c8e5d0585",
+      "from": "sources/opinions/408-U-S-665.txt"
+    },
+    {
+      "file": "sources/opinions/409-U-S-974.txt",
+      "sha256": "ab11df8d109efbc9060f9d327130f8dfa8552bd5716aeb4eb9ee2e1dada2756e",
+      "from": "sources/opinions/409-U-S-974.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/118-U-S-425.txt",
+      "sha256": "f68fa593ac57dfb80f255d4ff589c1d1f700e6327c19a51722815186418e9654",
+      "from": "sources/opinions-unheaded/118-U-S-425.txt",
+      "note": "the same 39 texts without their header line, read only by the descriptive binding step (results/binding-unheaded.json), copied byte for byte"
+    },
+    {
+      "file": "sources/opinions-unheaded/129-U-S-114.txt",
+      "sha256": "592b02ea6abf3691849264d87142e1a5a37aa91629c15fb8c14ced1394138b2d",
+      "from": "sources/opinions-unheaded/129-U-S-114.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/136-U-S-479.txt",
+      "sha256": "5b35b1abce29426747eff7e49d7cfac921ce7edbf0d66c438ee9081167c08fa5",
+      "from": "sources/opinions-unheaded/136-U-S-479.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/144-U-S-263.txt",
+      "sha256": "6d43cee447a3a69602d68ef8d6894dac72aa456a560afd34979f4c18d3c17c51",
+      "from": "sources/opinions-unheaded/144-U-S-263.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/228-U-S-61.txt",
+      "sha256": "66de8f247f19d6a92ce94ff1e7e0236b8ed1a94e81541a356b79b7ffaf9f44a2",
+      "from": "sources/opinions-unheaded/228-U-S-61.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/250-U-S-273.txt",
+      "sha256": "ee468d12274f57563cde216052974b873695790ea5819226d7f549ac63d0d4ad",
+      "from": "sources/opinions-unheaded/250-U-S-273.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/256-U-S-531.txt",
+      "sha256": "01fb13b63ac626b8db4d00e5a8283e9eb2b5d6d0ec84c543c68e555d6fbd7cf0",
+      "from": "sources/opinions-unheaded/256-U-S-531.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/270-U-S-295.txt",
+      "sha256": "6894ee357a5e03646386c866f01ccea0eebddee6eb17fd2097bffbb5fc3adb65",
+      "from": "sources/opinions-unheaded/270-U-S-295.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/279-U-S-597.txt",
+      "sha256": "7d6905017c30a3707306aa677d34d42a399a082eeef134819ef5e747d0d02b6d",
+      "from": "sources/opinions-unheaded/279-U-S-597.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/280-U-S-363.txt",
+      "sha256": "7d1cf4fcc259e4a26983d442f831454cbebb3ea918f0a346a477e6201a2e3b08",
+      "from": "sources/opinions-unheaded/280-U-S-363.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/308-U-S-371.txt",
+      "sha256": "fe3a9d161417739199cd555349c8feed00d7d79c16a57c5384655ab6838ec76a",
+      "from": "sources/opinions-unheaded/308-U-S-371.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/309-U-S-83.txt",
+      "sha256": "64396700543a9e9c52aea639a36b5cab745cbd6a38e1a0c1c8a84f92ef2de3f0",
+      "from": "sources/opinions-unheaded/309-U-S-83.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/324-U-S-786.txt",
+      "sha256": "73fef62f2812fbd338d9af2a5b4d038fee73690dbe671b89d3c0fe98fa070572",
+      "from": "sources/opinions-unheaded/324-U-S-786.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/329-U-S-90.txt",
+      "sha256": "34a735a71d2be8e00534cd341ba6844734a0d2dd0269d415b2396f054f089df1",
+      "from": "sources/opinions-unheaded/329-U-S-90.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/335-U-S-188.txt",
+      "sha256": "222c5fb43984266969c78e240132bb49aae918b14d44e26a1ba8caf1f3e2fa0a",
+      "from": "sources/opinions-unheaded/335-U-S-188.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/337-U-S-733.txt",
+      "sha256": "b12f4b95070802c524b8ced3d0528cb2e0577d3f2218053d069ab80e406592d8",
+      "from": "sources/opinions-unheaded/337-U-S-733.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/347-U-S-590.txt",
+      "sha256": "749528e3c04fe2bbdca4bd99d4ea5fb1895fd1d68c52b37ee24a560158595bbe",
+      "from": "sources/opinions-unheaded/347-U-S-590.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/354-U-S-457.txt",
+      "sha256": "8a62606c355b4cf0b49254ad7b9939ff60cf5baff0ebedb4c0d3be46404161a0",
+      "from": "sources/opinions-unheaded/354-U-S-457.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/365-U-S-127.txt",
+      "sha256": "a85e1c589d97456c43acd86cbd4b0166768ca6993b75615663378d0567dcc60d",
+      "from": "sources/opinions-unheaded/365-U-S-127.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/366-U-S-420.txt",
+      "sha256": "e53460b42a75722fffcffcc6e69c40c4e442b6ea456f76c861a360285d185e85",
+      "from": "sources/opinions-unheaded/366-U-S-420.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/374-U-S-321.txt",
+      "sha256": "7b2ea64c836650452aa9e33475543f12da764a10257e20cd16a91ea0c41955d7",
+      "from": "sources/opinions-unheaded/374-U-S-321.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/377-U-S-695.txt",
+      "sha256": "711b382dfb90f086efde89076107109ba30d26a510d301c9d9441057bb512fc7",
+      "from": "sources/opinions-unheaded/377-U-S-695.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/380-U-S-400.txt",
+      "sha256": "cde949a2cb81d6fd0d5efb01561df765f06ca8127bc0ab7ed05cab5e408f68f9",
+      "from": "sources/opinions-unheaded/380-U-S-400.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/380-U-S-685.txt",
+      "sha256": "d77fde05098ad901183a71e5275c9f62f8201396b08c90d5a73bd9d4d8a4db4f",
+      "from": "sources/opinions-unheaded/380-U-S-685.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/384-U-S-982.txt",
+      "sha256": "6bb40e8f7ec22473609a2b025858af7f34d7e5c8f18e0461553996e271fbab85",
+      "from": "sources/opinions-unheaded/384-U-S-982.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/392-U-S-83.txt",
+      "sha256": "8d2a4a674f9960c6bda5b1e5d79c6ada45f5a3a996740a64577da775aa1f16d3",
+      "from": "sources/opinions-unheaded/392-U-S-83.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/393-U-S-374.txt",
+      "sha256": "5025cd14451eb7b1d5f62329b88066bcaa935d4d69f9229347478984aa72785f",
+      "from": "sources/opinions-unheaded/393-U-S-374.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/395-U-S-653.txt",
+      "sha256": "75596183db707bbcd563bb8e734e9e18138b83f3bb25846fdb1a74d6c0fec263",
+      "from": "sources/opinions-unheaded/395-U-S-653.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/396-U-S-229.txt",
+      "sha256": "c99c3651e33212f1fbc48d44eb9fd32ed700c3e00a1b45c1e6f09d24de4c04f7",
+      "from": "sources/opinions-unheaded/396-U-S-229.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/397-U-S-471.txt",
+      "sha256": "0e4cc1741c91b57e054b666e3831af66ab21bc131b4aed3ed27972f1e9ad3a3d",
+      "from": "sources/opinions-unheaded/397-U-S-471.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/399-U-S-224.txt",
+      "sha256": "45bbebd0545cda61c0f14ba54a73e7a4c377503bf24b278fe13f1edda3e03e67",
+      "from": "sources/opinions-unheaded/399-U-S-224.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/402-U-S-62.txt",
+      "sha256": "33934c6371d7d53b34fb4727399e3d3f49fb69cfd28d38b692df0fbf0f50c663",
+      "from": "sources/opinions-unheaded/402-U-S-62.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/404-U-S-189.txt",
+      "sha256": "4cb43e68d9e791b052307f7b42bb342a7529676caacad6af01ef3f044c0f4f0c",
+      "from": "sources/opinions-unheaded/404-U-S-189.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/404-U-S-336.txt",
+      "sha256": "b9e511ac9224030dfb75c984e5b486d4a9aa950b72466b9807b681b72b4695b2",
+      "from": "sources/opinions-unheaded/404-U-S-336.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/404-U-S-97.txt",
+      "sha256": "a18c7a67a7f1a9438927ce97546f472ee8b18cbdd53486f672f45dc29f4b85b2",
+      "from": "sources/opinions-unheaded/404-U-S-97.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/405-U-S-974.txt",
+      "sha256": "844833e0b2e5e7aa3e7b39b44e2e627e17d7be1a1e4e0bba3e36eb62402536ed",
+      "from": "sources/opinions-unheaded/405-U-S-974.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/406-U-S-956.txt",
+      "sha256": "d07f623aee9a29dd90604636f3b91c32cd17c10436b7570fb6c757574c2744ca",
+      "from": "sources/opinions-unheaded/406-U-S-956.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/408-U-S-665.txt",
+      "sha256": "389e23e4a02ec2f80f250ce62dd659b922d9387713499d432cbc0efd87e53af6",
+      "from": "sources/opinions-unheaded/408-U-S-665.txt"
+    },
+    {
+      "file": "sources/opinions-unheaded/409-U-S-974.txt",
+      "sha256": "907e7cd61d23a34460ad5a9050177f11d64c769347cc28e6d8c019e5ff8fbbb3",
+      "from": "sources/opinions-unheaded/409-U-S-974.txt"
+    },
+    {
+      "file": "rerun.mjs",
+      "sha256": "84138616c138c8339f719457d6e33ebd388bb37771c13caa6a620b4745042ed4",
+      "from": "written 2026-10-06 in this folder: reruns the set from the shipped texts with the package's engine and compares outcomes with the shipped results"
+    },
+    {
+      "file": "score.mjs",
+      "sha256": "92774d29e82fab6217f1d3247b8ad14ff8c522bde9e78a1871efd1204a2b368e",
+      "from": "written 2026-10-05 in this folder: re-tallies every count from the per-case results with no engine"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "8367d8ef9689402370bb5ff072b78dff923c6c622689f26acdcadb0438c907c0",
+      "from": "written 2026-10-05 in this folder: maps the per-case results to the table's rows and lists the misses from the run's audit"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "e8a8b0ee3415f919330d4a8d5c53b7e0dfd9c70071bfd7df75ed32becf7022db",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (18:07Z), after the run"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "dbab9f35142b372e511ba1d78a078d601e1797bf3941be003512edb53cc2a17a",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ]
+}

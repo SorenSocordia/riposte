@@ -1,0 +1,105 @@
+{
+  "format": "bench-run/1",
+  "id": "x2-legal-blind",
+  "prereg": "PREREG.md",
+  "results": "results/run-blind.json",
+  "spec": "spec.json",
+  "amendment_text": [
+    {
+      "sha256": "4dbc3039e6f0279a7533153c955b2eb0299a5ed7ac832f1e3bb5b5434945e2af",
+      "from": "PREREG.md:133-138"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "not_shipped": [
+    {
+      "file": "items/MANIFEST.json",
+      "sha256": "4aa34a1d40f6906d9e932d37b34bae20637111e6ec41374762466f4d60a19160",
+      "reason": "the first hash set's version, superseded before any engine call by the re-hash the prereg records; those bytes were not kept. The run's version ships."
+    },
+    {
+      "file": "harness/build_manifest.py",
+      "sha256": "689419186555b66541bcb885f747dd8ce38ce80dffa94ce5d6ab25c5b02e0e10",
+      "reason": "the first hash set's version, superseded before any engine call by the re-hash the prereg records; those bytes were not kept. The run's version ships."
+    },
+    {
+      "file": "harness: the script that fetched the opinion texts",
+      "sha256": "3cc07eb0186bdb06596196fbb8e2c9f146b6f107a705d89abeaff826f7aba719",
+      "reason": "the public export's word filter blocks this script's file name, so neither the file nor its name ships here. The texts it fetched are named in items/MANIFEST.json."
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The harness ships byte for byte, but the 57 opinion texts and 58 decision files it reads are named by path and sha256 in items/MANIFEST.json and are not in this tree, and it looks for the engine build at the authors' layout. The script that fetched the texts does not ship."
+  },
+  "blind_basis": "PREREG.sha256 records two hash sets, at 2026-10-03T10:49:49Z and 10:50:31Z, each before any engine call, and the prereg's protocol puts the hashing before the first run; the items and opinion texts were gathered by the authors before the first set. The list and the prereg were written by the authors",
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "4dbc3039e6f0279a7533153c955b2eb0299a5ed7ac832f1e3bb5b5434945e2af",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "ddddf24bf28efc9fe834af0dba947d9b97affe3737ce507f7c314befc112fe5c",
+      "from": "PREREG.sha256"
+    },
+    {
+      "file": "results/run-blind.json",
+      "sha256": "8f373dc10af03ef256cb057056394c1b1e8d75c5fe603ed642ed7d8e5a4c206f",
+      "from": "results/run-blind.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "2ef879c3e63b00ed4fc2739fdf70c78aa9a963569dcc19d121b69c3c609f0c73",
+      "from": "the run spec written when the tables were first emitted",
+      "from_sha256": "042b5bd8473d0b971a9100785a37cf28c760dc26787612695c54c3d70d1d7515",
+      "note": "audit statement added from the run's files; on 2026-10-05 a row note says \"audited by the run's author, an AI agent\" where it said \"hand-audited\"; on 2026-10-05 a hash_list_note explains PREREG.sha256 where the reader meets it"
+    },
+    {
+      "file": "items/MANIFEST.json",
+      "sha256": "f23c549714d166e05a6cd14c62b4a180aaf992d75142aaf62719da7d61492938",
+      "from": "items/MANIFEST.json"
+    },
+    {
+      "file": "harness/run.mjs",
+      "sha256": "28d40673a2369ae2764defde69f11b1575f554bc1e19bba01eabb4a01d8a1c20",
+      "from": "harness/run.mjs"
+    },
+    {
+      "file": "harness/build_manifest.py",
+      "sha256": "7bd012f9f2ecab4142df502153b6786aafa2575de0195994d8d2ce27f95c0a1d",
+      "from": "harness/build_manifest.py"
+    },
+    {
+      "file": "harness/controls_extract.py",
+      "sha256": "73832a19e5b258b587265d184b5d8dd4f1531e0d176094f52a2faa904800d90b",
+      "from": "harness/controls_extract.py"
+    },
+    {
+      "file": "harness/timing-probe.mjs",
+      "sha256": "3e9f76b82395da8cd9cbdeb1b7a7ba1f28379da1615328364d401024c5c3ac43",
+      "from": "harness/timing-probe.mjs"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "afe4cf39deaedf3be9f0371539142fdf4ef3c53d2f55f5ed178e13ea9b3e8b2e",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "5d6e41f9f3fbe9243056c15199cbf3e937fa1117f1de57010abca2ccafdf8df3",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    },
+    {
+      "file": "PREREG.sha256.NOTE.md",
+      "sha256": "b51a8bcd70041cb186339abd9af40e28f0fc8b89aca0da063aaf8d0619691a40",
+      "from": "written 2026-10-05 in this folder: the same explanation of the hash list as the table prints"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"invoice_number":"INV-1001","line_items":[{"description":"Consulting","quantity":10,"unit_price":150,"amount":"1600.00"},{"description":"Travel","quantity":1,"unit_price":250.5,"amount":250.5}],"totals":{"subtotal":1750.5,"tax_rate":0.0825,"tax":144.42,"total":1894.92}}

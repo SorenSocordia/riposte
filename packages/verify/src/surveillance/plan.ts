@@ -1,5 +1,5 @@
 /**
- * Running the draws — what to commit, what to review, by when (2026-09-28, evidence-integrity lane).
+ * Running the draws — what to commit, what to review, by when (2026-09-28).
  *
  * The selection itself is fixed by the chain (ledger/sampling.ts); these helpers only say which closed periods still lack a
  * committed SAMPLE at the policy's rates (dueSamples / commitDueSamples: the scheduled step a deployment runs, e.g. daily),

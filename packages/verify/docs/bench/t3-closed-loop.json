@@ -1,0 +1,389 @@
+{
+  "format": "bench-table/1",
+  "id": "t3-closed-loop",
+  "title": "The closed loop: remedies returned to an agent, every round replayable",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "ea4f79d58b0a38024db5f91969d9d40095fc849be3190acc56080f0176028258",
+    "frozen_sha256": "ea4f79d58b0a38024db5f91969d9d40095fc849be3190acc56080f0176028258",
+    "amendments": [],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:29Z",
+          "serial": "0a8620d6ed38d72f90d3cbd61d912369",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "T3 run1-ap and run1-pe (980 loops)",
+    "date": "2026-10-03",
+    "engine_version": "0.1.0",
+    "ruleset": "ap-threeway@0.2.0 + peppol-en16931@0.2.0",
+    "results": {
+      "path": "results/score-run1-ap+run1-pe.json",
+      "sha256": "3414d9dddc701468e8f5bf55a4ee955d5b938a506f1af03b35e1194cd733c272"
+    },
+    "spec_sha256": "a44bc5b744033192050a72781675acc1c22dcbf5ba7c437decd2e25bb14cce3b",
+    "not_shipped": [
+      {
+        "file": "erp.json",
+        "sha256": "0d03294081e923dfd799499b9c4cd2c60c433df02f000df4b7f7e158b8edb2a0",
+        "reason": "the loop's ERP fixture, pinned in PREREG.md line 138. The harness that read it is not in this tree, so it was not copied"
+      },
+      {
+        "file": "corpus/manifest.json",
+        "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+        "reason": "the e-invoice corpus manifest the e-invoice arm read, pinned in PREREG.md line 150. It does not ship: x1-einvoice-pdf/ lists the same file with the reason"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The loop driver and its stand-in agents ship in packages/adapters (riposte-loop-run), and so do the AP cases and the recorded model outputs in bench/ap/data/distil/, so the same kind of loop can be run today; that is not a rerun of this run. The harness that drove it is not in this tree, the loop code it froze has changed since, and its e-invoice arm reads the e-invoice PDF run's per-document extractions, which do not ship."
+    }
+  },
+  "rows": [
+    {
+      "claim": "AP-L: wrong PASS among items that should not pass",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": "the AP gate is not blind: these numbers measure the loop, not accuracy"
+    },
+    {
+      "claim": "AP-R: wrong PASS among items that should not pass (all seven configurations)",
+      "n": 476,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.008006
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R gemini-3.5-flash-lite: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R glm-5.3-high: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R gpt-5.6-luna: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R gpt-5.6-luna-high: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R jev-checks: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R jev-lines: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "AP-R jev-single: wrong PASS",
+      "n": 68,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.053472
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in each of the seven configurations",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "PE-S: wrong PASS among e-invoices that should not pass",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "PE-N with the edit discipline on: wrong PASS",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "HARD: wrong PASS = 0 in arms AP-L, AP-R (all seven configurations), PE-S and PE-N with discipline ON",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "PE-N with the edit discipline off (the control): wrong PASS",
+      "n": 20,
+      "k": 8,
+      "rate": 0.4,
+      "ci95": [
+        0.218806,
+        0.613419
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; the control is expected to show wrong PASSes: it shows the measurement can see one; not part of the bar"
+    },
+    {
+      "claim": "AP-L: PASS-expected items that converged to a correct PASS",
+      "n": 32,
+      "k": 32,
+      "rate": 1,
+      "ci95": [
+        0.89282,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "AP-R: PASS-expected items that converged to a correct PASS",
+      "n": 224,
+      "k": 186,
+      "rate": 0.830357,
+      "ci95": [
+        0.775735,
+        0.873839
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "PE-S: PASS-expected items that converged to a correct PASS",
+      "n": 40,
+      "k": 27,
+      "rate": 0.675,
+      "ci95": [
+        0.520177,
+        0.799155
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "PE-S: loops held for a person",
+      "n": 60,
+      "k": 16,
+      "rate": 0.266667,
+      "ci95": [
+        0.171326,
+        0.390088
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    }
+  ],
+  "misses": [
+    {
+      "id": "reread-recovered-nothing",
+      "kind": "miss",
+      "description": "the re-read corrector recovered no PASS: none of the 13 PASS-expected e-invoices that did not pass in round 1; the second reader is the same OCR engine at other settings",
+      "post_hoc": false
+    },
+    {
+      "id": "model-corrector-not-run",
+      "kind": "not-run",
+      "description": "the model-backed corrector was not run: no API key is configured on the box",
+      "post_hoc": false
+    },
+    {
+      "id": "source-text-trusted",
+      "kind": "defect",
+      "description": "the loop trusts the source text: an agent that writes its own source text can quote it; the append-only rule stops rewriting what was read, not adding a forged page",
+      "post_hoc": false
+    },
+    {
+      "id": "instruction-grammar",
+      "kind": "defect",
+      "description": "the returned instruction embeds the gate's reason as written: lower-case after 'not executed.' and sometimes a doubled period; fixing it needs a protocol version because replay re-renders the text",
+      "post_hoc": false
+    },
+    {
+      "id": "null-predictions",
+      "kind": "method",
+      "description": "AP-R holds 4 invoice-configuration pairs with no published decision at round 0; the prereg did not specify this handling",
+      "post_hoc": false
+    }
+  ],
+  "blind": false,
+  "label": "post-hoc",
+  "hash_list_note": "PREREG.sha256 was first written on 2026-10-03 with one line, the prereg's sha256, and no time; that one-line list had sha256 b9698d1c19c9646c6b3c3eb46c4b58bb2d9c9209ce8435edea81f9b6eaf084be, which its first line alone still gives. On 2026-10-05 three lines were appended so the tool could read a time: two comment lines and the line \"hashed 2026-10-03T17:43:10Z\". The hash line is unchanged. The appended time is the authors' own record (the list's file-system time and the run's report), not a third party's, so it says nothing a reader can check about when the prereg was frozen."
+}

@@ -275,7 +275,7 @@ export const HOUSE_KSEF_RULESET: DeclarativeRuleset = {
  * PEPPOL-EN16931-R120 compares with u:slack(…, 0.02), inclusive (rules/sch/PEPPOL-EN16931-UBL.sch). Until 2026-09-28
  * the twin overrode the built-in LINE_MATH_INT to exactly 0.02. In binary floating point that FAILed lines the spec
  * accepts: |0.07 − 0.05| is 0.020000000000000004 (E-INVOICE-2, engineering note "The e-invoice twin on official samples", 2026-09-28). The
- * 0.1.0 ruleset already carries R120's slack plus a 1e-6 float margin (0.020001, ruleset-corrections D6), so the twin
+ * 0.1.0 ruleset already carries R120's slack plus a 1e-6 float margin (0.020001, docs/RULESET-CORRECTIONS-2026-09-28.md), so the twin
  * now runs the shipped ruleset unchanged. Both names are kept for existing importers.
  */
 export const PEPPOL_LINE_SLACK = HOUSE_PEPPOL_RULESET.checks.find((c) => c.code === 'LINE_MATH_INT')!.tol!

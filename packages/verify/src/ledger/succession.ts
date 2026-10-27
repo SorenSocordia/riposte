@@ -26,7 +26,7 @@ import { RULESET_VERSIONS } from '../rulesets/index.js'
 import type { Ruleset } from '../rulesets/types.js'
 import { verifyReplay } from '../protocol/replay.js'
 import type { TolerancePolicy } from '../tolerance.js'
-import { ENGINE_VERSION } from '../version.js'
+import { engineFor, isRetainedEngine } from '../version.js'
 import { grantUnderPolicy, type PromotionPolicy, type VoiceLevel } from '../verdict/voice.js'
 import { GENESIS, type ChainSnapshot } from './chain.js'
 import { recordWorkflow } from './sampling.js'
@@ -48,6 +48,11 @@ export interface SuccessionReplayOptions {
   tolerance?: TolerancePolicy
   /** Replay only events 0 … through − 1 (checkSuccessionReplay: the span a signed replay names). Default: the whole book. */
   through?: number
+  /**
+   * The engine version to re-perform under (2026-10-03, version.ts engineFor): this build's when absent. checkSuccessionReplay
+   * passes the version a signed replay names, so a replay signed under engine 0.0.1 is re-performed as 0.0.1 read it.
+   */
+  engine?: string
 }
 
 export interface SuccessionReplayResult {
@@ -83,21 +88,21 @@ function targetOf(to: { ruleset: string; version: string }, given: Ruleset | Dec
 }
 
 /** Re-perform one verdict's inputs under the new ruleset, or why it cannot be. */
-function reperformUnder(target: Target, inputs: Record<string, unknown>, tol: TolerancePolicy | undefined): Verdict | string {
+function reperformUnder(target: Target, inputs: Record<string, unknown>, tol: TolerancePolicy | undefined, engine: string): Verdict | string {
   const tolerance = tol ?? (isObj(inputs.tolerance) ? (inputs.tolerance as unknown as TolerancePolicy) : undefined)
   let x: Record<string, unknown>
   try { x = structuredClone(inputs) } catch { x = inputs } // the engines never see the caller's objects
   if ('builtin' in target && has(x, 'extraction', 'references', 'source')) {
     const refs = isObj(x.references) ? x.references : {}
     return verify(x.extraction as Record<string, unknown>, {
-      now: FIXED, ruleset: target.builtin,
+      now: FIXED, ruleset: target.builtin, engine,
       references: { ...(refs.contract !== null && refs.contract !== undefined ? { contract: refs.contract as Record<string, unknown> } : {}), evidence: refs.evidence as Record<string, unknown>[], history: refs.history as Record<string, unknown>[] },
       ...(x.source !== null && x.source !== undefined ? { source: x.source as { text: string } } : {}),
       ...(tolerance ? { tolerance } : {}),
     })
   }
   if ('declarative' in target && has(x, 'extraction', 'ruleset') && isDeclarativeRuleset(x.ruleset)) {
-    return verifyDeclarative(x.extraction as Record<string, unknown>, target.declarative, { now: FIXED, ...(tolerance ? { tolerance } : {}) })
+    return verifyDeclarative(x.extraction as Record<string, unknown>, target.declarative, { now: FIXED, engine, ...(tolerance ? { tolerance } : {}) })
   }
   return `no engine re-performs inputs shaped { ${Object.keys(x).sort().join(', ')} } under ${'builtin' in target ? 'a built-in' : 'a declarative'} ruleset`
 }
@@ -114,6 +119,7 @@ export function successionReplay(book: Ledger | ChainSnapshot, from: string, to:
   const through = opts.through ?? events.length
   if (!Number.isInteger(through) || through < 0 || through > events.length) throw new DecisionRefused(`through ${through} is not a position on this book (0 to ${events.length})`)
   const target = targetOf(next, opts.ruleset)
+  const engine_version = engineFor(opts.engine)
   const seen = new Set<string>()
   const changed: SuccessionChange[] = []
   const not: { verdict_id: string; reason: string }[] = []
@@ -131,7 +137,7 @@ export function successionReplay(book: Ledger | ChainSnapshot, from: string, to:
     const bind = verifyReplay(v, inputs, opts.tolerance ? { tolerance: opts.tolerance } : {})
     if (!bind.id_ok || bind.input_ok !== true) { skip('the inputs supplied are not the ones it was issued on (they do not hash to its input_hash)'); continue }
     let again: Verdict | string
-    try { again = reperformUnder(target, inputs, opts.tolerance) } catch (e) { again = `the engine could not run on its inputs (${(e as Error).message})` }
+    try { again = reperformUnder(target, inputs, opts.tolerance, engine_version) } catch (e) { again = `the engine could not run on its inputs (${(e as Error).message})` }
     if (typeof again === 'string') { skip(again); continue }
     if (again.ruleset.id !== next.ruleset || again.ruleset.version !== next.version) { skip(`the engine ran ${again.ruleset.id}@${again.ruleset.version}, not ${next.ruleset}@${next.version}`); continue }
     reperformed++
@@ -142,7 +148,7 @@ export function successionReplay(book: Ledger | ChainSnapshot, from: string, to:
     replay: {
       replay_version: 'succession-replay-v0',
       through, head: through === 0 ? GENESIS : events[through - 1]!.entry_hash,
-      engine_version: ENGINE_VERSION, recorded: seen.size, reperformed, changed: changed.sort(byId),
+      engine_version, recorded: seen.size, reperformed, changed: changed.sort(byId),
     },
     not_reperformed: not.sort(byId),
   }
@@ -155,7 +161,10 @@ export function successionReplay(book: Ledger | ChainSnapshot, from: string, to:
 export function checkSuccessionReplay(book: Ledger | ChainSnapshot, grant: DecisionEntry<GrantDecision>, opts: Omit<SuccessionReplayOptions, 'through'>): { ok: boolean; replay: SuccessionReplay; differences: string[] } {
   const s = grant.signed.decision.succeeds
   if (!s) throw new DecisionRefused(`GRANT ${grant.decision_id} carries no succession`)
-  const again = successionReplay(book, s.from, grant.signed.decision.workflow_id, { ...opts, through: s.replay.through }).replay
+  // 2026-10-03: under the engine the signed replay names, when this build carries it; else this build's (which then
+  // differs on engine_version, and says so).
+  const signedEngine = s.replay.engine_version
+  const again = successionReplay(book, s.from, grant.signed.decision.workflow_id, { ...opts, through: s.replay.through, ...(isRetainedEngine(signedEngine) ? { engine: signedEngine } : {}) }).replay
   const signed = s.replay
   const differences: string[] = []
   for (const k of ['through', 'head', 'engine_version', 'recorded', 'reperformed'] as const) {

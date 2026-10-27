@@ -1,0 +1,102 @@
+{
+  "format": "bench-table/1",
+  "id": "sec-misses",
+  "title": "SEC studies: the misses they published",
+  "prereg": {
+    "path": "SCOPE.md",
+    "sha256": "d8031380f42cf17240e146b7dd5bc54ad8f03053ab608c8f079d3913295793a7",
+    "frozen_sha256": "d8031380f42cf17240e146b7dd5bc54ad8f03053ab608c8f079d3913295793a7",
+    "amendments": [],
+    "stamp": {
+      "status": "stamped after the run",
+      "proofs": [
+        {
+          "proof": "SCOPE.md.tsr",
+          "covers": "SCOPE.md",
+          "gen_time": "2026-10-14T17:54:00Z",
+          "serial": "36ac8d2f972a06743eb61f9f264d7926",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "misses of the three SEC studies (2026-09-24), transcribed on 2026-10-05 from their results files in bench/sec/",
+    "date": "2026-10-05",
+    "engine_version": null,
+    "ruleset": null,
+    "report": {
+      "name": "FINDINGS.md",
+      "sha256": "53fcf24e41a06a1d9f35f7d823c91cc66612cbc265513b242ca7bcf9be3b577d"
+    },
+    "spec_sha256": "0b55319c4a6843aa5d3d730232f99543c3d6e310712d49e37b48642d558577b0",
+    "not_shipped": [
+      {
+        "file": "bench/sec/RESULTS.md",
+        "sha256": "1d3ab06393ff25f91589756c03db575e598e268e87c4cb8323b430e397e0941b",
+        "reason": "ships at the repository root in bench/sec/, not copied into this folder; compare its sha256 there. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "bench/sec/RESULTS-V02.md",
+        "sha256": "182e935261319025fccc765687cf9c2ad32bda6007fe349b712c21ce8b4726d8",
+        "reason": "ships at the repository root in bench/sec/, not copied into this folder; compare its sha256 there. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "bench/sec/RESULTS-MINE.md",
+        "sha256": "eef374ca03c67425f6ea5ac1eb0e23eabcecc7e6b8f449116097bc1b7d720be6",
+        "reason": "ships at the repository root in bench/sec/, not copied into this folder; compare its sha256 there. The rows were transcribed from it into FINDINGS.md"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "This table has no run: its rows are transcribed from the SEC studies' results pages, which ship in bench/sec/. Those studies sit outside the bench rule; their scripts in bench/sec/ rebuild the per-filing outputs from the SEC's public quarterly data sets, which are not in this tree (bench/sec/README.md says how)."
+    }
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "check-v01-precision",
+      "kind": "field-miss",
+      "description": "SEC-CHECK v0.1, blind, 2026q1: eleven footing identities run on every 10-K flagged 4,284 FAILs; of 86 audited, 1 was a correct flag (a filer tagging error) and none a genuine inconsistency, a precision of 1% to 17% with the 14 unresolved counted both ways. On filed statements the identities are a low-precision tagging-error detector (bench/sec/RESULTS.md)",
+      "post_hoc": false,
+      "date": "2026-09-24"
+    },
+    {
+      "id": "check-v01-prediction",
+      "kind": "prediction",
+      "description": "SEC-CHECK v0.1: the preregistered expectation that BS_LIAB_AND_EQUITY_TOTAL would fail mostly as filer tagging errors was wrong: its single FAIL of 4,118 decided was presentation rounding, and the balance sheet balances in every filing (bench/sec/RESULTS.md)",
+      "post_hoc": false,
+      "date": "2026-09-24"
+    },
+    {
+      "id": "check-v01-taxonomy",
+      "kind": "method",
+      "description": "SEC-CHECK v0.1: presentation rounding was not in the preregistered audit taxonomy; the audit counted it as a structural exception, a false alarm, which is the conservative direction (bench/sec/RESULTS.md)",
+      "post_hoc": false,
+      "date": "2026-09-24"
+    },
+    {
+      "id": "check-v02-precision",
+      "kind": "hypothesis not met",
+      "description": "SEC-CHECK v0.2, held-out 2025q1: precision 12.5% to 18.8% on 80 audited of 419 FAILs, against the preregistered bar of at least 50%: FAIL. The coverage bar was met. v0.2 was designed from the v0.1 audit (bench/sec/RESULTS-V02.md)",
+      "post_hoc": false,
+      "date": "2026-09-24"
+    },
+    {
+      "id": "mine-enter",
+      "kind": "hypothesis not met",
+      "description": "SEC-MINE, ENTER cohort (1,599 filers): the learned public-float cut was $874.7M against the statute's $700M: FAIL. 37 filers above $700M are not labelled large accelerated filers, 2.4% of the approvals, more than the preregistered 2% tolerance allowed (bench/sec/RESULTS-MINE.md)",
+      "post_hoc": false,
+      "date": "2026-09-24"
+    },
+    {
+      "id": "mine-stay",
+      "kind": "hypothesis not met",
+      "description": "SEC-MINE, STAY cohort (1,403 filers): the learned cut was $556.5M against the statute's $560M: MISSES, 0.6% off. The preregistered test asked whether the gap between two adjacent observations contains the statutory value, and one filer still labelled large accelerated at $557.0M moved that gap off $560M (bench/sec/RESULTS-MINE.md)",
+      "post_hoc": false,
+      "date": "2026-09-24"
+    }
+  ],
+  "blind": false,
+  "label": "transcribed"
+}

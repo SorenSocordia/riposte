@@ -1,0 +1,1448 @@
+{
+  "built_utc": "2026-10-05T14:06:32Z",
+  "prereg": "PREREG.md",
+  "clarifications": "PREREG-CLARIFICATIONS.md",
+  "n": 40,
+  "items": [
+    {
+      "id": "L2-01",
+      "k": 1,
+      "block": 1,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-01",
+        "cite": "408 U.S. 665",
+        "case_name": "Branzburg v. Hayes",
+        "quote": "[c'jitizens generally are not constitutionally immune from grand jury subpoenas . . . .",
+        "source_key": "408 U.S. 665"
+      },
+      "genuine_quote": "[c'jitizens generally are not constitutionally immune from grand jury subpoenas . . . .",
+      "quoted_by": {
+        "case_name": "United States v. Dionisio",
+        "cite": "410 U.S. 1",
+        "url": "https://static.case.law/us/410/cases/0001-01.json",
+        "raw_sha256": "32a15f9a7656236640c5c097ccc8e82b48daccdd994bd85af155ef3e555a8880"
+      },
+      "citation_context": " Branzburg v. Hayes, 408 U. S. 665",
+      "source": {
+        "file": "sources/opinions/408-U-S-665.txt",
+        "sha256": "7ac2899da45580262e1ecc3e3caccdf74f4830371502c2049d487f8c8e5d0585",
+        "chars": 178831,
+        "header": "Branzburg v. Hayes, 408 U.S. 665 (1972)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/408/cases/0665-01.json",
+          "raw_sha256": "d963c9242456329ad0f770c50c3a0a58e7b80a93c4f847c9a5bc0ff35c8514c0"
+        },
+        "unheaded_file": "sources/opinions-unheaded/408-U-S-665.txt",
+        "unheaded_sha256": "389e23e4a02ec2f80f250ce62dd659b922d9387713499d432cbc0efd87e53af6"
+      }
+    },
+    {
+      "id": "L2-02",
+      "k": 2,
+      "block": 1,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "altered",
+      "citation": {
+        "id": "L2-02",
+        "cite": "250 U.S. 273",
+        "case_name": "Blair v. United States",
+        "quote": "The personal sacrifice involved is a part of the reasonable contribution of the individual to the welfare of the public.",
+        "source_key": "250 U.S. 273"
+      },
+      "genuine_quote": "The personal sacrifice involved is a part of the necessary contribution of the individual to the welfare of the public.",
+      "quoted_by": {
+        "case_name": "United States v. Dionisio",
+        "cite": "410 U.S. 1",
+        "url": "https://static.case.law/us/410/cases/0001-01.json",
+        "raw_sha256": "32a15f9a7656236640c5c097ccc8e82b48daccdd994bd85af155ef3e555a8880"
+      },
+      "citation_context": " Blair v. United States, 250 U. S. 273",
+      "source": {
+        "file": "sources/opinions/250-U-S-273.txt",
+        "sha256": "38bc812af8429a8d4519023bc21492d409e9572dd405724821c1305ff5504d89",
+        "chars": 18901,
+        "header": "Blair v. United States, 250 U.S. 273 (1919)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/250/cases/0273-01.json",
+          "raw_sha256": "0e485a58d842dfe380cbfa82dc4ba51c5db5c99abdecba357cc3c01337dceac4"
+        },
+        "unheaded_file": "sources/opinions-unheaded/250-U-S-273.txt",
+        "unheaded_sha256": "ee468d12274f57563cde216052974b873695790ea5819226d7f549ac63d0d4ad"
+      }
+    },
+    {
+      "id": "L2-03",
+      "k": 3,
+      "block": 1,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-03",
+        "cite": "406 U.S. 956",
+        "case_name": "Norvell v. Apodaca",
+        "quote": "that the grand jury investigation was properly authorized, for a purpose Congress can order, that the information sought is relevant to the inquiry, and that . . . the grand jury process is not being abused. . . . [T]he Government’s affidavit must also show why satisfactory handwriting and printing exemplars cannot be obtained from other sources without grand jury compulsion.",
+        "source_key": "406 U.S. 956"
+      },
+      "genuine_quote": "that the grand jury investigation was properly authorized, for a purpose Congress can order, that the information sought is relevant to the inquiry, and that . . . the grand jury process is not being abused. . . . [T]he Government’s affidavit must also show why satisfactory handwriting and printing exemplars cannot be obtained from other sources without grand jury compulsion.",
+      "quoted_by": {
+        "case_name": "United States v. Mara",
+        "cite": "410 U.S. 19",
+        "url": "https://static.case.law/us/410/cases/0019-01.json",
+        "raw_sha256": "8a76cbe425de0697043898762e4660419adb9a78f545a1655ed28e52f08a06db"
+      },
+      "citation_context": " 454 F. 2d, at 584^585.\nWe granted certiorari, 406 U. S. 956",
+      "source": {
+        "file": "sources/opinions/406-U-S-956.txt",
+        "sha256": "eaca20e90a3bb291bc829045f9c6609445cac5c5e3f0da6518cbe94ff52dddef",
+        "chars": 256,
+        "header": "Norvell v. Apodaca, 406 U.S. 956 (1972)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/406/cases/0956-01.json",
+          "raw_sha256": "d324a49745a0ef54f6aebdcf616030fd365f815a7256d26b7af526d7fb6ff410"
+        },
+        "unheaded_file": "sources/opinions-unheaded/406-U-S-956.txt",
+        "unheaded_sha256": "d07f623aee9a29dd90604636f3b91c32cd17c10436b7570fb6c757574c2744ca"
+      }
+    },
+    {
+      "id": "L2-04",
+      "k": 4,
+      "block": 1,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "elided",
+      "citation": {
+        "id": "L2-04",
+        "cite": "395 U.S. 653",
+        "case_name": "Lear, Inc. v. Adkins",
+        "quote": "It is as important to the public that competition should . . ., as that the patentee of a really valuable invention should be protected in his monopoly . . .,",
+        "source_key": "395 U.S. 653"
+      },
+      "genuine_quote": "It is as important to the public that competition should not be repressed by worthless patents, as that the patentee of a really valuable invention should be protected in his monopoly . . . ,",
+      "quoted_by": {
+        "case_name": "United States v. Glaxo Group Ltd.",
+        "cite": "410 U.S. 52",
+        "url": "https://static.case.law/us/410/cases/0052-01.json",
+        "raw_sha256": "55cc83b9c6d45d61f1b6a4402b79c7bb3beaece8319c56ed581af6430facc5a6"
+      },
+      "citation_context": " a view most recently echoed in Lear, Inc. v. Adkins, 395 U. S. 653",
+      "source": {
+        "file": "sources/opinions/395-U-S-653.txt",
+        "sha256": "1308e4e1b668b490d4a57fda4bc7cf5b0b174bb94e9063144ebb6d1885aa7c5e",
+        "chars": 54723,
+        "header": "Lear, Inc. v. Adkins, 395 U.S. 653 (1969)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/395/cases/0653-01.json",
+          "raw_sha256": "df243a4192e34a689cf8e5720a084ce38cf1d54379685ac966a95fc4a67a4d63"
+        },
+        "unheaded_file": "sources/opinions-unheaded/395-U-S-653.txt",
+        "unheaded_sha256": "75596183db707bbcd563bb8e734e9e18138b83f3bb25846fdb1a74d6c0fec263"
+      }
+    },
+    {
+      "id": "L2-05",
+      "k": 5,
+      "block": 2,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-05",
+        "cite": "405 U.S. 974",
+        "case_name": "Environmental Protection Agency v. Mink",
+        "quote": "without impinging on the policymaking decisional processes intended to be protected by this exemption.",
+        "source_key": "405 U.S. 974"
+      },
+      "genuine_quote": "without impinging on the policymaking decisional processes intended to be protected by this exemption.",
+      "quoted_by": {
+        "case_name": "Environmental Protection Agency v. Mink",
+        "cite": "410 U.S. 73",
+        "url": "https://static.case.law/us/410/cases/0073-01.json",
+        "raw_sha256": "45de920bb9030f769e9b4b0af7b02d307b7978e900f0696bb43257f5b382c37c"
+      },
+      "citation_context": " We granted certiorari, 405 U. S. 974",
+      "source": {
+        "file": "sources/opinions/405-U-S-974.txt",
+        "sha256": "638347768f8c50beac69c0243c27292ec9487c42e2d3ac78fb7e8483bc5de623",
+        "chars": 164,
+        "header": "Environmental Protection Agency v. Mink, 405 U.S. 974 (1972)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/405/cases/0974-01.json",
+          "raw_sha256": "e58c42c4df2b0d4ba80a134911411a4acdbb3183057f1de069390dd7a377ecaa"
+        },
+        "unheaded_file": "sources/opinions-unheaded/405-U-S-974.txt",
+        "unheaded_sha256": "844833e0b2e5e7aa3e7b39b44e2e627e17d7be1a1e4e0bba3e36eb62402536ed"
+      }
+    },
+    {
+      "id": "L2-06",
+      "k": 6,
+      "block": 2,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "fabricated",
+      "citation": {
+        "id": "L2-06",
+        "cite": "392 U.S. 83",
+        "case_name": "Flast v. Cohen",
+        "quote": "is more definite than the District of Columbia statute upheld in [United States v.] Vuitch",
+        "source_key": "392 U.S. 83"
+      },
+      "genuine_quote": "the dispute sought to be adjudicated will be presented in an adversary context and in a form historically viewed as capable of judicial resolution,",
+      "quoted_by": {
+        "case_name": "Roe v. Wade",
+        "cite": "410 U.S. 113",
+        "url": "https://static.case.law/us/410/cases/0113-01.json",
+        "raw_sha256": "07320e29d33a564ca5c383a7ca5374e6b004a0836c556cf13b258985e47f0ef3"
+      },
+      "citation_context": " Flast v. Cohen, 392 U. S. 83",
+      "source": {
+        "file": "sources/opinions/392-U-S-83.txt",
+        "sha256": "f534ea88ad7d078b8075234abb386c6ccc572efd03b9583f2e199d362882b4a3",
+        "chars": 99099,
+        "header": "Flast v. Cohen, 392 U.S. 83 (1968)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/392/cases/0083-01.json",
+          "raw_sha256": "25e3d5d0524045773db259880946787041d3fc7e343d248bfad99d93e8f1c02c"
+        },
+        "unheaded_file": "sources/opinions-unheaded/392-U-S-83.txt",
+        "unheaded_sha256": "8d2a4a674f9960c6bda5b1e5d79c6ada45f5a3a996740a64577da775aa1f16d3"
+      }
+    },
+    {
+      "id": "L2-07",
+      "k": 7,
+      "block": 2,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-07",
+        "cite": "402 U.S. 62",
+        "case_name": "United States v. Vuitch",
+        "quote": "is more definite than the District of Columbia statute upheld in [United States v.] Vuitch",
+        "source_key": "402 U.S. 62"
+      },
+      "genuine_quote": "is more definite than the District of Columbia statute upheld in [United States v.] Vuitch",
+      "quoted_by": {
+        "case_name": "Roe v. Wade",
+        "cite": "410 U.S. 113",
+        "url": "https://static.case.law/us/410/cases/0113-01.json",
+        "raw_sha256": "07320e29d33a564ca5c383a7ca5374e6b004a0836c556cf13b258985e47f0ef3"
+      },
+      "citation_context": " (402 U. S. 62",
+      "source": {
+        "file": "sources/opinions/402-U-S-62.txt",
+        "sha256": "f3fe4ab1f46bd58546ba0a618ef25702d36ce3bfbd56c6325232a5322a58e584",
+        "chars": 69620,
+        "header": "United States v. Vuitch, 402 U.S. 62 (1971)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/402/cases/0062-01.json",
+          "raw_sha256": "e01d624cd24f24fb7ee35cb50873467f189eefc28e4372ddbc2fee06e3301da5"
+        },
+        "unheaded_file": "sources/opinions-unheaded/402-U-S-62.txt",
+        "unheaded_sha256": "33934c6371d7d53b34fb4727399e3d3f49fb69cfd28d38b692df0fbf0f50c663"
+      }
+    },
+    {
+      "id": "L2-08",
+      "k": 8,
+      "block": 2,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "bracket-changed",
+      "citation": {
+        "id": "L2-08",
+        "cite": "354 U.S. 457",
+        "case_name": "Morey v. Doud",
+        "quote": "based on differences that are reasonably related to the [reasonable] of the Act in which it is found.",
+        "source_key": "354 U.S. 457"
+      },
+      "genuine_quote": "based on differences that are reasonably related to the purposes of the Act in which it is found.",
+      "quoted_by": {
+        "case_name": "Doe v. Bolton",
+        "cite": "410 U.S. 179",
+        "url": "https://static.case.law/us/410/cases/0179-01.json",
+        "raw_sha256": "506fa5d00ea58c886e79d3492c74e7e356404be2c36e6a71f5467506e1df22fb"
+      },
+      "citation_context": " Morey v. Doud, 354 U. S. 457",
+      "source": {
+        "file": "sources/opinions/354-U-S-457.txt",
+        "sha256": "995f0a9c2c5a9b6d2ac17e3303d7e4c649d3a30c6ea0589fbdd38a8afdd17f05",
+        "chars": 34445,
+        "header": "Morey v. Doud, 354 U.S. 457 (1957)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/354/cases/0457-01.json",
+          "raw_sha256": "5b9ceb1350fe5b6c038ce9318adfc164f16b961217241bd9b9c5a5b618179f99"
+        },
+        "unheaded_file": "sources/opinions-unheaded/354-U-S-457.txt",
+        "unheaded_sha256": "8a62606c355b4cf0b49254ad7b9939ff60cf5baff0ebedb4c0d3be46404161a0"
+      }
+    },
+    {
+      "id": "L2-09",
+      "k": 9,
+      "block": 3,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-09",
+        "cite": "129 U.S. 114",
+        "case_name": "Dent v. West Virginia",
+        "quote": "[r]eliance must be placed upon the assurance given by his license, issued by an authority competent to judge in that respect, that he [the physician] possesses the requisite qualifications.",
+        "source_key": "129 U.S. 114"
+      },
+      "genuine_quote": "[r]eliance must be placed upon the assurance given by his license, issued by an authority competent to judge in that respect, that he [the physician] possesses the requisite qualifications.",
+      "quoted_by": {
+        "case_name": "Doe v. Bolton",
+        "cite": "410 U.S. 179",
+        "url": "https://static.case.law/us/410/cases/0179-01.json",
+        "raw_sha256": "506fa5d00ea58c886e79d3492c74e7e356404be2c36e6a71f5467506e1df22fb"
+      },
+      "citation_context": " Dent v. West Virginia, 129 U. S. 114",
+      "source": {
+        "file": "sources/opinions/129-U-S-114.txt",
+        "sha256": "a30f512b7450ba93b6a50d4759e3f0876dea1f47c4b74ea27ee9f0720d693761",
+        "chars": 32655,
+        "header": "Dent v. West Virginia, 129 U.S. 114 (1889)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/129/cases/0114-01.json",
+          "raw_sha256": "1c3cac61a771e46a6337e45c670f5d2ddf9edb64a85a5dd026dfd4727673a76c"
+        },
+        "unheaded_file": "sources/opinions-unheaded/129-U-S-114.txt",
+        "unheaded_sha256": "592b02ea6abf3691849264d87142e1a5a37aa91629c15fb8c14ced1394138b2d"
+      }
+    },
+    {
+      "id": "L2-10",
+      "k": 10,
+      "block": 3,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "altered",
+      "citation": {
+        "id": "L2-10",
+        "cite": "228 U.S. 61",
+        "case_name": "Metropolis Theatre Co. v. City of Chicago",
+        "quote": "[t]he problems of government are practical ones and may reasonable, if they do not require, rough accommodations — illogical, it may be, and unscientific.",
+        "source_key": "228 U.S. 61"
+      },
+      "genuine_quote": "[t]he problems of government are practical ones and may justify, if they do not require, rough accommodations — illogical, it may be, and unscientific.",
+      "quoted_by": {
+        "case_name": "McGinnis v. Royster",
+        "cite": "410 U.S. 263",
+        "url": "https://static.case.law/us/410/cases/0263-01.json",
+        "raw_sha256": "515003bd095eb61e13cd346cae9be59377a983a9dffa8ef402897fce640cd149"
+      },
+      "citation_context": " Metropolis Theatre Co. v. City of Chicago, 228 U. S. 61",
+      "source": {
+        "file": "sources/opinions/228-U-S-61.txt",
+        "sha256": "4a86f8e7906731516e74a88ca74030288a210a77832976c30312b439ba99654d",
+        "chars": 18106,
+        "header": "Metropolis Theatre Co. v. City of Chicago, 228 U.S. 61 (1913)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/228/cases/0061-01.json",
+          "raw_sha256": "575671749ec9fee90379204fd60d3f5f118695acdbed08d4b123dbf93081eb66"
+        },
+        "unheaded_file": "sources/opinions-unheaded/228-U-S-61.txt",
+        "unheaded_sha256": "66de8f247f19d6a92ce94ff1e7e0236b8ed1a94e81541a356b79b7ffaf9f44a2"
+      }
+    },
+    {
+      "id": "L2-11",
+      "k": 11,
+      "block": 3,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-11",
+        "cite": "380 U.S. 400",
+        "case_name": "Pointer v. Texas",
+        "quote": "an essential and fundamental requirement for the kind of fair trial which is this country’s constitutional goal.",
+        "source_key": "380 U.S. 400"
+      },
+      "genuine_quote": "an essential and fundamental requirement for the kind of fair trial which is this country’s constitutional goal.",
+      "quoted_by": {
+        "case_name": "Chambers v. Mississippi",
+        "cite": "410 U.S. 284",
+        "url": "https://static.case.law/us/410/cases/0284-01.json",
+        "raw_sha256": "98784b395b6c8d6a3b4e050bcccced4349dec2591177f4eb4d240182c4008b02"
+      },
+      "citation_context": " Pointer v. Texas, 380 U. S. 400",
+      "source": {
+        "file": "sources/opinions/380-U-S-400.txt",
+        "sha256": "5167854f0dc5f4e9811e502caaa328dee48a30f3e6df454f0ee959289ba59ca3",
+        "chars": 27387,
+        "header": "Pointer v. Texas, 380 U.S. 400 (1965)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/380/cases/0400-01.json",
+          "raw_sha256": "a4670c59b27192bfa1bf5e25a5994c76fba3e8a1623dfd6799a4a55875e3a42f"
+        },
+        "unheaded_file": "sources/opinions-unheaded/380-U-S-400.txt",
+        "unheaded_sha256": "cde949a2cb81d6fd0d5efb01561df765f06ca8127bc0ab7ed05cab5e408f68f9"
+      }
+    },
+    {
+      "id": "L2-12",
+      "k": 12,
+      "block": 3,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "elided",
+      "citation": {
+        "id": "L2-12",
+        "cite": "377 U.S. 695",
+        "case_name": "Roman v. Sincock",
+        "quote": "such minor deviations . . .",
+        "source_key": "377 U.S. 695"
+      },
+      "genuine_quote": "such minor deviations only as may occur in recognizing certain factors that are free from any taint of arbitrariness or discrimination.",
+      "quoted_by": {
+        "case_name": "Mahan v. Howell",
+        "cite": "410 U.S. 315",
+        "url": "https://static.case.law/us/410/cases/0315-01.json",
+        "raw_sha256": "b52761aaebb4490e00763b382dcf346d464bc07656d52c60b37ed98d2afa479d"
+      },
+      "citation_context": " Roman v. Sincock, 377 U. S. 695",
+      "source": {
+        "file": "sources/opinions/377-U-S-695.txt",
+        "sha256": "bd7c9e7ffbaad23c5aba5df3175196421bcc49b59faab95ed74bbf1e0a4aae2a",
+        "chars": 31801,
+        "header": "Roman v. Sincock, 377 U.S. 695 (1964)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/377/cases/0827-01.json",
+          "raw_sha256": "c115c2654d7ff268c0db16affa77d13e8cd9780c619260caa9d104307b465b02"
+        },
+        "unheaded_file": "sources/opinions-unheaded/377-U-S-695.txt",
+        "unheaded_sha256": "711b382dfb90f086efde89076107109ba30d26a510d301c9d9441057bb512fc7"
+      }
+    },
+    {
+      "id": "L2-13",
+      "k": 13,
+      "block": 4,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-13",
+        "cite": "374 U.S. 321",
+        "case_name": "United States v. Philadelphia National Bank",
+        "quote": "Repeals of the antitrust laws by implication from a regulatory statute are strongly disfavored, and have only been found in cases of plain repugnancy between the antitrust and regulatory provisions.",
+        "source_key": "374 U.S. 321"
+      },
+      "genuine_quote": "Repeals of the antitrust laws by implication from a regulatory statute are strongly disfavored, and have only been found in cases of plain repugnancy between the antitrust and regulatory provisions.",
+      "quoted_by": {
+        "case_name": "Otter Tail Power Co. v. United States",
+        "cite": "410 U.S. 366",
+        "url": "https://static.case.law/us/410/cases/0366-01.json",
+        "raw_sha256": "6300328117cd802dc0f8726df26440b7e10ea37eef132abf6bc0028c35ba9602"
+      },
+      "citation_context": " United States v. Philadelphia National Bank, 374 U. S. 321",
+      "source": {
+        "file": "sources/opinions/374-U-S-321.txt",
+        "sha256": "85c055ac6e6a5836950913c0d1062f2e08b5538916edb7fa808afad1cfb7f346",
+        "chars": 155527,
+        "header": "United States v. Philadelphia National Bank, 374 U.S. 321 (1963)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/374/cases/0321-01.json",
+          "raw_sha256": "d9c19bf066dbef4ffc40aa1b9fac25904b31283cba93c176c422218b7a44a7a6"
+        },
+        "unheaded_file": "sources/opinions-unheaded/374-U-S-321.txt",
+        "unheaded_sha256": "7b2ea64c836650452aa9e33475543f12da764a10257e20cd16a91ea0c41955d7"
+      }
+    },
+    {
+      "id": "L2-14",
+      "k": 14,
+      "block": 4,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "fabricated",
+      "citation": {
+        "id": "L2-14",
+        "cite": "365 U.S. 127",
+        "case_name": "Eastern Railroad Presidents Conference v. Noerr Motor Freight, Inc.",
+        "quote": "[U]nless Congress conveys its purpose clearly, it will not be deemed to have significantly changed the federal-state balance. Congress has traditionally been reluctant to define as a federal crime conduct readily denounced as criminal by the States. . . . [W]e will not be quick to assume that Congress has meant to effect a significant change in the sensitive relation between federal and state criminal jurisdiction.",
+        "source_key": "365 U.S. 127"
+      },
+      "genuine_quote": "with the expectation that this would preserve its predominant position in the sale and transmission of electric power in the area.",
+      "quoted_by": {
+        "case_name": "Otter Tail Power Co. v. United States",
+        "cite": "410 U.S. 366",
+        "url": "https://static.case.law/us/410/cases/0366-01.json",
+        "raw_sha256": "6300328117cd802dc0f8726df26440b7e10ea37eef132abf6bc0028c35ba9602"
+      },
+      "citation_context": " 331 F. Supp., at 62. The District Court in discussing Eastern Railroad Conference v. Noerr Motor Freight, 365 U. S. 127",
+      "source": {
+        "file": "sources/opinions/365-U-S-127.txt",
+        "sha256": "a0d502df4ebf355f52b96bd324b507a710c68985db296aa2a72caa21ea9c44b6",
+        "chars": 35730,
+        "header": "Eastern Railroad Presidents Conference v. Noerr Motor Freight, Inc., 365 U.S. 127 (1961)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/365/cases/0127-01.json",
+          "raw_sha256": "54eee937ece5df9484a2aa3a36e27a59cdabf1f4f4aa63287c2267ca8bc9960c"
+        },
+        "unheaded_file": "sources/opinions-unheaded/365-U-S-127.txt",
+        "unheaded_sha256": "a85e1c589d97456c43acd86cbd4b0166768ca6993b75615663378d0567dcc60d"
+      }
+    },
+    {
+      "id": "L2-15",
+      "k": 15,
+      "block": 4,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-15",
+        "cite": "404 U.S. 336",
+        "case_name": "United States v. Bass",
+        "quote": "[U]nless Congress conveys its purpose clearly, it will not be deemed to have significantly changed the federal-state balance. Congress has traditionally been reluctant to define as a federal crime conduct readily denounced as criminal by the States. . . . [W]e will not be quick to assume that Congress has meant to effect a significant change in the sensitive relation between federal and state criminal jurisdiction.",
+        "source_key": "404 U.S. 336"
+      },
+      "genuine_quote": "[U]nless Congress conveys its purpose clearly, it will not be deemed to have significantly changed the federal-state balance. Congress has traditionally been reluctant to define as a federal crime conduct readily denounced as criminal by the States. . . . [W]e will not be quick to assume that Congress has meant to effect a significant change in the sensitive relation between federal and state criminal jurisdiction.",
+      "quoted_by": {
+        "case_name": "United States v. Enmons",
+        "cite": "410 U.S. 396",
+        "url": "https://static.case.law/us/410/cases/0396-01.json",
+        "raw_sha256": "2b09805cb95ab5f2fd8e2853db64f9f2197eb84decc677c95ba61d5bc103bc8f"
+      },
+      "citation_context": " United States v. Bass, 404 U. S. 336",
+      "source": {
+        "file": "sources/opinions/404-U-S-336.txt",
+        "sha256": "cf00b9d2957346d701f4675af2ea33109fefedd44d3bc8b7483eda4210a27b57",
+        "chars": 38282,
+        "header": "United States v. Bass, 404 U.S. 336 (1971)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/404/cases/0336-01.json",
+          "raw_sha256": "771763a665754d176d371e0384374fbea553bf60d5873817eaf3eaa7218b1c4d"
+        },
+        "unheaded_file": "sources/opinions-unheaded/404-U-S-336.txt",
+        "unheaded_sha256": "b9e511ac9224030dfb75c984e5b486d4a9aa950b72466b9807b681b72b4695b2"
+      }
+    },
+    {
+      "id": "L2-16",
+      "k": 16,
+      "block": 4,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "bracket-changed",
+      "citation": {
+        "id": "L2-16",
+        "cite": "396 U.S. 229",
+        "case_name": "Sullivan v. Little Hunting Park, Inc.",
+        "quote": "The provisions of this subchapter [may] not apply to a private club or other establishment not in fact open to the public, except to the extent that the facilities of such establishment are made available to the customers or patrons of an establishment within the scope of subsection (b) of this section.",
+        "source_key": "396 U.S. 229"
+      },
+      "genuine_quote": "The provisions of this subchapter shall not apply to a private club or other establishment not in fact open to the public, except to the extent that the facilities of such establishment are made available to the customers or patrons of an establishment within the scope of subsection (b) of this section.",
+      "quoted_by": {
+        "case_name": "Tillman v. Wheaton-Haven Recreation Ass'n",
+        "cite": "410 U.S. 431",
+        "url": "https://static.case.law/us/410/cases/0431-01.json",
+        "raw_sha256": "1818f820f746face412b1d93a295bee9dca6efac06ebb7c9eda8d6d81698da8a"
+      },
+      "citation_context": " 42 U. S. C. § 2000a (e).\nApparently one applicant was formally rejected during the preceding 12 years of Little Hunting Park’s operation. App. 127 and Brief for Petitioner 7, Sullivan v. Little Hunting Park, 396 U. S. 229",
+      "source": {
+        "file": "sources/opinions/396-U-S-229.txt",
+        "sha256": "97bf119a76b63674cf9b37e7fd4aa81129082d2ac17f2abfc80f0c1c12a8fb20",
+        "chars": 51903,
+        "header": "Sullivan v. Little Hunting Park, Inc., 396 U.S. 229 (1969)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/396/cases/0229-01.json",
+          "raw_sha256": "50445255160b08b7317cad3ec6db08a144cd548e4f9aa2b2b73c462b518357f1"
+        },
+        "unheaded_file": "sources/opinions-unheaded/396-U-S-229.txt",
+        "unheaded_sha256": "c99c3651e33212f1fbc48d44eb9fd32ed700c3e00a1b45c1e6f09d24de4c04f7"
+      }
+    },
+    {
+      "id": "L2-17",
+      "k": 17,
+      "block": 5,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-17",
+        "cite": "337 U.S. 733",
+        "case_name": "Commissioner v. Culbertson",
+        "quote": "the-first principle of income taxation: that income must be taxed to him who earns it.",
+        "source_key": "337 U.S. 733"
+      },
+      "genuine_quote": "the-first principle of income taxation: that income must be taxed to him who earns it.",
+      "quoted_by": {
+        "case_name": "United States v. Basye",
+        "cite": "410 U.S. 441",
+        "url": "https://static.case.law/us/410/cases/0441-01.json",
+        "raw_sha256": "62fb633fa08faa4b246cd3b06a92b7e8595c1ef482503bd88db59654a33b430b"
+      },
+      "citation_context": " Commissioner v. Culbertson, 337 U. S. 733",
+      "source": {
+        "file": "sources/opinions/337-U-S-733.txt",
+        "sha256": "e1d14923959a07b4c744c2676298787519eb5795c64c5d9b09593f9409c6dccd",
+        "chars": 39096,
+        "header": "Commissioner v. Culbertson, 337 U.S. 733 (1949)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/337/cases/0733-01.json",
+          "raw_sha256": "6f68843a1864e42d158158f7b4208fb56b307a90de30ce084f57aae467258961"
+        },
+        "unheaded_file": "sources/opinions-unheaded/337-U-S-733.txt",
+        "unheaded_sha256": "b12f4b95070802c524b8ced3d0528cb2e0577d3f2218053d069ab80e406592d8"
+      }
+    },
+    {
+      "id": "L2-18",
+      "k": 18,
+      "block": 5,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "altered",
+      "citation": {
+        "id": "L2-18",
+        "cite": "144 U.S. 263",
+        "case_name": "Logan v. United States",
+        "quote": "the public’s interest in fair reasonable designed to end in just judgments,",
+        "source_key": "144 U.S. 263"
+      },
+      "genuine_quote": "the public’s interest in fair trials designed to end in just judgments,",
+      "quoted_by": {
+        "case_name": "Illinois v. Somerville",
+        "cite": "410 U.S. 458",
+        "url": "https://static.case.law/us/410/cases/0458-01.json",
+        "raw_sha256": "7200a2c9493ac8e78e2ddc082fb62da11828a0c65b4c49ad594a1f8f01c0943f"
+      },
+      "citation_context": " Wade v. Hunter, supra, at 689, has not been disregarded by this Court.\nIn United States v. Perez, supra, and Logan v. United States, 144 U. S. 263",
+      "source": {
+        "file": "sources/opinions/144-U-S-263.txt",
+        "sha256": "bc5c46537339669f77ccc53ef62c9a7dad94fd413eaf155b62e831b12bd27737",
+        "chars": 104959,
+        "header": "Logan v. United States, 144 U.S. 263 (1892)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/144/cases/0263-01.json",
+          "raw_sha256": "70708c393e06a8a175da79600774d0405e9f09122e79bba7288f31adbe35f912"
+        },
+        "unheaded_file": "sources/opinions-unheaded/144-U-S-263.txt",
+        "unheaded_sha256": "6d43cee447a3a69602d68ef8d6894dac72aa456a560afd34979f4c18d3c17c51"
+      }
+    },
+    {
+      "id": "L2-19",
+      "k": 19,
+      "block": 5,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-19",
+        "cite": "399 U.S. 224",
+        "case_name": "Nelson v. George",
+        "quote": "present effect being given the [Kentucky] detainer by the [Alabama] authorities . . . .",
+        "source_key": "399 U.S. 224"
+      },
+      "genuine_quote": "present effect being given the [Kentucky] detainer by the [Alabama] authorities . . . .",
+      "quoted_by": {
+        "case_name": "Braden v. 30th Judicial Circuit Court of Kentucky",
+        "cite": "410 U.S. 484",
+        "url": "https://static.case.law/us/410/cases/0484-01.json",
+        "raw_sha256": "3d03c24ca90948e6310e5fe940baea360c710d85b064a2845944eac7840b642e"
+      },
+      "citation_context": " Nelson v. George, 399 U. S. 224",
+      "source": {
+        "file": "sources/opinions/399-U-S-224.txt",
+        "sha256": "2100096bd59bbc639e6da402dde7d33bb56145b4c9ad8ba367fedf17369203a1",
+        "chars": 18485,
+        "header": "Nelson v. George, 399 U.S. 224 (1970)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/399/cases/0224-01.json",
+          "raw_sha256": "2325a306623519d7a7a9d1e1dca9687914f1bf79e7781a57806cabe8dde8d6f5"
+        },
+        "unheaded_file": "sources/opinions-unheaded/399-U-S-224.txt",
+        "unheaded_sha256": "45bbebd0545cda61c0f14ba54a73e7a4c377503bf24b278fe13f1edda3e03e67"
+      }
+    },
+    {
+      "id": "L2-20",
+      "k": 20,
+      "block": 5,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "elided",
+      "citation": {
+        "id": "L2-20",
+        "cite": "393 U.S. 374",
+        "case_name": "Smith v. Hooey",
+        "quote": "petitioner in the case at bar may challenge the legality of . . .",
+        "source_key": "393 U.S. 374"
+      },
+      "genuine_quote": "petitioner in the case at bar may challenge the legality of any of the adverse effects of any Kentucky detainer against him in Alabama by habeas corpus in the Alabama Federal District Court.",
+      "quoted_by": {
+        "case_name": "Braden v. 30th Judicial Circuit Court of Kentucky",
+        "cite": "410 U.S. 484",
+        "url": "https://static.case.law/us/410/cases/0484-01.json",
+        "raw_sha256": "3d03c24ca90948e6310e5fe940baea360c710d85b064a2845944eac7840b642e"
+      },
+      "citation_context": " App. 6-7. The District Court held, citing Smith v. Hooey, 393 U. S. 374",
+      "source": {
+        "file": "sources/opinions/393-U-S-374.txt",
+        "sha256": "552445dc80323917dce765cfaf02682b5b038314d3e08ea34240775b6c0cdd8e",
+        "chars": 20427,
+        "header": "Smith v. Hooey, 393 U.S. 374 (1969)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/393/cases/0374-01.json",
+          "raw_sha256": "4b61c250b81a0b9bace7df1a0cefb0f7fdab04f73c6d4e95f9543933f3a13b93"
+        },
+        "unheaded_file": "sources/opinions-unheaded/393-U-S-374.txt",
+        "unheaded_sha256": "5025cd14451eb7b1d5f62329b88066bcaa935d4d69f9229347478984aa72785f"
+      }
+    },
+    {
+      "id": "L2-21",
+      "k": 21,
+      "block": 6,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-21",
+        "cite": "335 U.S. 188",
+        "case_name": "Ahrens v. Clark",
+        "quote": "[w]rits of habeas corpus may be granted by the Supreme Court, any justice thereof, the district courts and any circuit judge within their respective jurisdictions.",
+        "source_key": "335 U.S. 188"
+      },
+      "genuine_quote": "[w]rits of habeas corpus may be granted by the Supreme Court, any justice thereof, the district courts and any circuit judge within their respective jurisdictions.",
+      "quoted_by": {
+        "case_name": "Braden v. 30th Judicial Circuit Court of Kentucky",
+        "cite": "410 U.S. 484",
+        "url": "https://static.case.law/us/410/cases/0484-01.json",
+        "raw_sha256": "3d03c24ca90948e6310e5fe940baea360c710d85b064a2845944eac7840b642e"
+      },
+      "citation_context": " 28 U. S. C. § 2241 (a) (emphasis supplied). Relying on our decision in Ahrens v. Clark, 335 U. S. 188",
+      "source": {
+        "file": "sources/opinions/335-U-S-188.txt",
+        "sha256": "8e25592f7b8b32424f235a3019b1f7a045404755809f18e70aa35b8a0095c567",
+        "chars": 45283,
+        "header": "Ahrens v. Clark, 335 U.S. 188 (1948)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/335/cases/0188-01.json",
+          "raw_sha256": "ae32a1740dd2fd2011b66a0386d695eccfb41b5968db6c528d476fc898c1fc05"
+        },
+        "unheaded_file": "sources/opinions-unheaded/335-U-S-188.txt",
+        "unheaded_sha256": "222c5fb43984266969c78e240132bb49aae918b14d44e26a1ba8caf1f3e2fa0a"
+      }
+    },
+    {
+      "id": "L2-22",
+      "k": 22,
+      "block": 6,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "fabricated",
+      "citation": {
+        "id": "L2-22",
+        "cite": "250 U.S. 273",
+        "case_name": "Blair v. United States",
+        "quote": "that a more just and humane system could not be devised.",
+        "source_key": "250 U.S. 273"
+      },
+      "genuine_quote": "[I]t is clearly recognized that the giving of testimony and the attendance upon court or grand jury in order to testify are public duties which every person within the jurisdiction of the Government is bound to perform upon being properly summoned, and for performance of which he is entitled to no further compensation than that which the statutes provide. The personal sacrifice involved is a part of the necessary contribution of the individual to the welfare of the public.",
+      "quoted_by": {
+        "case_name": "Hurtado v. United States",
+        "cite": "410 U.S. 578",
+        "url": "https://static.case.law/us/410/cases/0578-01.json",
+        "raw_sha256": "2e5e725b0f8b1d46e0e208f8a421fddd48720f1aa855413230de0978d9eb63ba"
+      },
+      "citation_context": " Blair v. United States, 250 U. S. 273",
+      "source": {
+        "file": "sources/opinions/250-U-S-273.txt",
+        "sha256": "38bc812af8429a8d4519023bc21492d409e9572dd405724821c1305ff5504d89",
+        "chars": 18901,
+        "header": "Blair v. United States, 250 U.S. 273 (1919)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/250/cases/0273-01.json",
+          "raw_sha256": "0e485a58d842dfe380cbfa82dc4ba51c5db5c99abdecba357cc3c01337dceac4"
+        },
+        "unheaded_file": "sources/opinions-unheaded/250-U-S-273.txt",
+        "unheaded_sha256": "ee468d12274f57563cde216052974b873695790ea5819226d7f549ac63d0d4ad"
+      }
+    },
+    {
+      "id": "L2-23",
+      "k": 23,
+      "block": 6,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-23",
+        "cite": "397 U.S. 471",
+        "case_name": "Dandridge v. Williams",
+        "quote": "that a more just and humane system could not be devised.",
+        "source_key": "397 U.S. 471"
+      },
+      "genuine_quote": "that a more just and humane system could not be devised.",
+      "quoted_by": {
+        "case_name": "Hurtado v. United States",
+        "cite": "410 U.S. 578",
+        "url": "https://static.case.law/us/410/cases/0578-01.json",
+        "raw_sha256": "2e5e725b0f8b1d46e0e208f8a421fddd48720f1aa855413230de0978d9eb63ba"
+      },
+      "citation_context": " Dandridge v. Williams, 397 U. S. 471",
+      "source": {
+        "file": "sources/opinions/397-U-S-471.txt",
+        "sha256": "5b5614bb383f044481f94e5bf7e57a4506fdf0475fabba6e296c43005be44bd0",
+        "chars": 109847,
+        "header": "Dandridge v. Williams, 397 U.S. 471 (1970)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/397/cases/0471-01.json",
+          "raw_sha256": "3cd293c6e582a103e6f9ed949043fbb3bb539e57672b2776aa48d2b6818e762d"
+        },
+        "unheaded_file": "sources/opinions-unheaded/397-U-S-471.txt",
+        "unheaded_sha256": "0e4cc1741c91b57e054b666e3831af66ab21bc131b4aed3ed27972f1e9ad3a3d"
+      }
+    },
+    {
+      "id": "L2-24",
+      "k": 24,
+      "block": 6,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "bracket-changed",
+      "citation": {
+        "id": "L2-24",
+        "cite": "279 U.S. 597",
+        "case_name": "Barry v. United States ex rel. Cunningham",
+        "quote": "The duty to disclose knowledge of crime ... is so vital that one known to be innocent [must] be detained, in the absence of bail, as a material witness",
+        "source_key": "279 U.S. 597"
+      },
+      "genuine_quote": "The duty to disclose knowledge of crime ... is so vital that one known to be innocent may be detained, in the absence of bail, as a material witness",
+      "quoted_by": {
+        "case_name": "Hurtado v. United States",
+        "cite": "410 U.S. 578",
+        "url": "https://static.case.law/us/410/cases/0578-01.json",
+        "raw_sha256": "2e5e725b0f8b1d46e0e208f8a421fddd48720f1aa855413230de0978d9eb63ba"
+      },
+      "citation_context": "); Barry v. United States ex rel. Cunningham, 279 U. S. 597",
+      "source": {
+        "file": "sources/opinions/279-U-S-597.txt",
+        "sha256": "f32b5b85b7df8c0e325cb6dd73bb8b2de2d14ceeb3291c7067d0e5320a3c88e7",
+        "chars": 22675,
+        "header": "Barry v. United States ex rel. Cunningham, 279 U.S. 597 (1929)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/279/cases/0597-01.json",
+          "raw_sha256": "8743fac5f1d39335e909f7a39332823b1a5218bd06f8907d0b39c01b53bde0a2"
+        },
+        "unheaded_file": "sources/opinions-unheaded/279-U-S-597.txt",
+        "unheaded_sha256": "7d6905017c30a3707306aa677d34d42a399a082eeef134819ef5e747d0d02b6d"
+      }
+    },
+    {
+      "id": "L2-25",
+      "k": 25,
+      "block": 7,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-25",
+        "cite": "347 U.S. 590",
+        "case_name": "Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment",
+        "quote": "required to pay a nondiscriminatory share of the tax burden.",
+        "source_key": "347 U.S. 590"
+      },
+      "genuine_quote": "required to pay a nondiscriminatory share of the tax burden.",
+      "quoted_by": {
+        "case_name": "United Air Lines, Inc. v. Mahin",
+        "cite": "410 U.S. 623",
+        "url": "https://static.case.law/us/410/cases/0623-01.json",
+        "raw_sha256": "9ad22ce0425465f64a11ff7ed789cb1cc31b5b0b2f543e669874bc039a13761e"
+      },
+      "citation_context": " Braniff Airways v. Nebraska State Board of Equalization, 347 U. S. 590",
+      "source": {
+        "file": "sources/opinions/347-U-S-590.txt",
+        "sha256": "e63f1efec3c01d9c62d9e68550ed77bb09b97f8c165c6a39b39e2bc26cd9f8b8",
+        "chars": 35705,
+        "header": "Braniff Airways, Inc. v. Nebraska State Board of Equalization & Assessment, 347 U.S. 590 (1954)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/347/cases/0590-01.json",
+          "raw_sha256": "df10976a6a31b4b4b4f2b29ed6177a89a40049bcf4af42b5d80568969d522a2d"
+        },
+        "unheaded_file": "sources/opinions-unheaded/347-U-S-590.txt",
+        "unheaded_sha256": "749528e3c04fe2bbdca4bd99d4ea5fb1895fd1d68c52b37ee24a560158595bbe"
+      }
+    },
+    {
+      "id": "L2-26",
+      "k": 26,
+      "block": 7,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "altered",
+      "citation": {
+        "id": "L2-26",
+        "cite": "384 U.S. 982",
+        "case_name": "Zizzo v. United States",
+        "quote": "does now and has always claimed . . . that the reasonable between it and Kentucky is the 1792 northerly low water mark.",
+        "source_key": "384 U.S. 982"
+      },
+      "genuine_quote": "does now and has always claimed . . . that the boundary between it and Kentucky is the 1792 northerly low water mark.",
+      "quoted_by": {
+        "case_name": "Ohio v. Kentucky",
+        "cite": "410 U.S. 641",
+        "url": "https://static.case.law/us/410/cases/0641-01.json",
+        "raw_sha256": "905376f7c47b264de09275c662362cee997f4aa5d1290bbba0770ea37658890c"
+      },
+      "citation_context": "\nLeave to file the bill of complaint was granted. 384 U. S. 982",
+      "source": {
+        "file": "sources/opinions/384-U-S-982.txt",
+        "sha256": "85a3057184aca7c076389e172073a1ef0c405fb5e774b3a54ccee260e701d3c7",
+        "chars": 278,
+        "header": "Zizzo v. United States, 384 U.S. 982 (1966)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/384/cases/0982-01.json",
+          "raw_sha256": "791934ee437fa3858f1e23040bb24f704112f3d945190aed3ccc7ae1b4ffd997"
+        },
+        "unheaded_file": "sources/opinions-unheaded/384-U-S-982.txt",
+        "unheaded_sha256": "6bb40e8f7ec22473609a2b025858af7f34d7e5c8f18e0461553996e271fbab85"
+      }
+    },
+    {
+      "id": "L2-27",
+      "k": 27,
+      "block": 7,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-27",
+        "cite": "409 U.S. 974",
+        "case_name": "Cook v. Calhoun",
+        "quote": "that the proposed amendment, in any view of its factual allegations, fails as a matter of law to state a cause of action.",
+        "source_key": "409 U.S. 974"
+      },
+      "genuine_quote": "that the proposed amendment, in any view of its factual allegations, fails as a matter of law to state a cause of action.",
+      "quoted_by": {
+        "case_name": "Ohio v. Kentucky",
+        "cite": "410 U.S. 641",
+        "url": "https://static.case.law/us/410/cases/0641-01.json",
+        "raw_sha256": "905376f7c47b264de09275c662362cee997f4aa5d1290bbba0770ea37658890c"
+      },
+      "citation_context": " Report 16. Upon the filing of Ohio’s exceptions and Kentucky’s reply, we set the matter for argument. 409 U. S. 974",
+      "source": {
+        "file": "sources/opinions/409-U-S-974.txt",
+        "sha256": "ab11df8d109efbc9060f9d327130f8dfa8552bd5716aeb4eb9ee2e1dada2756e",
+        "chars": 277,
+        "header": "Cook v. Calhoun, 409 U.S. 974 (1972)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/409/cases/0974-01.json",
+          "raw_sha256": "7ce9c1ae6df469267e98cb3d510624297089dc87f736552f9c055a8b0e111f91"
+        },
+        "unheaded_file": "sources/opinions-unheaded/409-U-S-974.txt",
+        "unheaded_sha256": "907e7cd61d23a34460ad5a9050177f11d64c769347cc28e6d8c019e5ff8fbbb3"
+      }
+    },
+    {
+      "id": "L2-28",
+      "k": 28,
+      "block": 7,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "elided",
+      "citation": {
+        "id": "L2-28",
+        "cite": "136 U.S. 479",
+        "case_name": "Indiana v. Kentucky",
+        "quote": "When a great river is the boundary between two nations or states, . . ., and there be no convention respecting it, each holds to the middle of the stream. But when, as in this case, one State is the original proprietor, and grants the territory on one side only, it retains the river within its own domain, and the newly-created State extends to the river only. The river, however, is its boundary.",
+        "source_key": "136 U.S. 479"
+      },
+      "genuine_quote": "When a great river is the boundary between two nations or states, if the original property is in neither, and there be no convention respecting it, each holds to the middle of the stream. But when, as in this case, one State is the original proprietor, and grants the territory on one side only, it retains the river within its own domain, and the newly-created State extends to the river only. The river, however, is its boundary.",
+      "quoted_by": {
+        "case_name": "Ohio v. Kentucky",
+        "cite": "410 U.S. 641",
+        "url": "https://static.case.law/us/410/cases/0641-01.json",
+        "raw_sha256": "905376f7c47b264de09275c662362cee997f4aa5d1290bbba0770ea37658890c"
+      },
+      "citation_context": " 5 Wheat., at 379.\nThe rule of the Handly case, as well as its specific application to the Kentucky-Indiana border, has been consistently adhered .to in subsequent decisions of this Court. Indiana v. Kentucky, 136 U. S. 479",
+      "source": {
+        "file": "sources/opinions/136-U-S-479.txt",
+        "sha256": "ae648b9b76ed49989cbb5912007331adddab66f49f7abd94ccb363a57a2102ef",
+        "chars": 88316,
+        "header": "Indiana v. Kentucky, 136 U.S. 479 (1890)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/136/cases/0479-01.json",
+          "raw_sha256": "7c9f5e87274ca62a229f6a4429d0eba45935c594784d8ca039db5029342a2765"
+        },
+        "unheaded_file": "sources/opinions-unheaded/136-U-S-479.txt",
+        "unheaded_sha256": "5b35b1abce29426747eff7e49d7cfac921ce7edbf0d66c438ee9081167c08fa5"
+      }
+    },
+    {
+      "id": "L2-29",
+      "k": 29,
+      "block": 8,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-29",
+        "cite": "270 U.S. 295",
+        "case_name": "Michigan v. Wisconsin",
+        "quote": "The rule, long-settled and never doubted by this court, is that long acquiescence by one state in the possession of territory by another and in the exercise of sovereignty and dominion over it is conclusive of the latter’s title and rightful authority.",
+        "source_key": "270 U.S. 295"
+      },
+      "genuine_quote": "The rule, long-settled and never doubted by this court, is that long acquiescence by one state in the possession of territory by another and in the exercise of sovereignty and dominion over it is conclusive of the latter’s title and rightful authority.",
+      "quoted_by": {
+        "case_name": "Ohio v. Kentucky",
+        "cite": "410 U.S. 641",
+        "url": "https://static.case.law/us/410/cases/0641-01.json",
+        "raw_sha256": "905376f7c47b264de09275c662362cee997f4aa5d1290bbba0770ea37658890c"
+      },
+      "citation_context": " Michigan v. Wisconsin, 270 U. S. 295",
+      "source": {
+        "file": "sources/opinions/270-U-S-295.txt",
+        "sha256": "ca45e11826801eeba17c95cb0835ce4f1538517bfffedefcc617eb1dcb2724dd",
+        "chars": 48595,
+        "header": "Michigan v. Wisconsin, 270 U.S. 295 (1926)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/270/cases/0295-01.json",
+          "raw_sha256": "c93f61836345146b634c3331791623f5635598e223df4a0de55785e29b185927"
+        },
+        "unheaded_file": "sources/opinions-unheaded/270-U-S-295.txt",
+        "unheaded_sha256": "6894ee357a5e03646386c866f01ccea0eebddee6eb17fd2097bffbb5fc3adb65"
+      }
+    },
+    {
+      "id": "L2-30",
+      "k": 30,
+      "block": 8,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "fabricated",
+      "citation": {
+        "id": "L2-30",
+        "cite": "366 U.S. 420",
+        "case_name": "McGowan v. Maryland",
+        "quote": "The broad discretion as to classification possessed by a legislature in the field of taxation has long been recognized. . . . [T]he passage of time has only served to underscore the wisdom of that recognition of the large area of discretion which is needed by a legislature in formulating sound tax policies. ... It has . . . been pointed out that in taxation, even more than in other fields, legislatures possess the greatest freedom in classification. Since the members of a legislature necessarily enjoy a familiarity with local conditions which this Court cannot have, the presumption of constitutionality can be overcome only by the most explicit demonstration that a classification is a hostile and oppressive discrimination against particular persons and classes. . . .",
+        "source_key": "366 U.S. 420"
+      },
+      "genuine_quote": "if any state of facts reasonably may be conceived to justify",
+      "quoted_by": {
+        "case_name": "Salyer Land Co. v. Tulare Lake Basin Water Storage District",
+        "cite": "410 U.S. 719",
+        "url": "https://static.case.law/us/410/cases/0719-01.json",
+        "raw_sha256": "58f9806f79c515105fa30b35a9b9f299ea752b09a259bb3c204b722a6c0d7aac"
+      },
+      "citation_context": " California’s decision to deny the franchise to lessees while granting it to landowners. McGowan v. Maryland, 366 U. S. 420",
+      "source": {
+        "file": "sources/opinions/366-U-S-420.txt",
+        "sha256": "a4fff081c38e2c93b335930b2fffe88ce36c91254558427b8583efa04a1d9cc3",
+        "chars": 307675,
+        "header": "McGowan v. Maryland, 366 U.S. 420 (1961)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/366/cases/0420-01.json",
+          "raw_sha256": "cb53220c39761c911ae0d25d8b2208192b8fa840acf3c6e316d65da2a60aeed4"
+        },
+        "unheaded_file": "sources/opinions-unheaded/366-U-S-420.txt",
+        "unheaded_sha256": "e53460b42a75722fffcffcc6e69c40c4e442b6ea456f76c861a360285d185e85"
+      }
+    },
+    {
+      "id": "L2-31",
+      "k": 31,
+      "block": 8,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-31",
+        "cite": "309 U.S. 83",
+        "case_name": "Madden v. Kentucky ex rel. Commissioner",
+        "quote": "The broad discretion as to classification possessed by a legislature in the field of taxation has long been recognized. . . . [T]he passage of time has only served to underscore the wisdom of that recognition of the large area of discretion which is needed by a legislature in formulating sound tax policies. ... It has . . . been pointed out that in taxation, even more than in other fields, legislatures possess the greatest freedom in classification. Since the members of a legislature necessarily enjoy a familiarity with local conditions which this Court cannot have, the presumption of constitutionality can be overcome only by the most explicit demonstration that a classification is a hostile and oppressive discrimination against particular persons and classes. . . .",
+        "source_key": "309 U.S. 83"
+      },
+      "genuine_quote": "The broad discretion as to classification possessed by a legislature in the field of taxation has long been recognized. . . . [T]he passage of time has only served to underscore the wisdom of that recognition of the large area of discretion which is needed by a legislature in formulating sound tax policies. ... It has . . . been pointed out that in taxation, even more than in other fields, legislatures possess the greatest freedom in classification. Since the members of a legislature necessarily enjoy a familiarity with local conditions which this Court cannot have, the presumption of constitutionality can be overcome only by the most explicit demonstration that a classification is a hostile and oppressive discrimination against particular persons and classes. . . .",
+      "quoted_by": {
+        "case_name": "San Antonio Independent School District v. Rodriguez",
+        "cite": "411 U.S. 1",
+        "url": "https://static.case.law/us/411/cases/0001-01.json",
+        "raw_sha256": "301d1e952c84bd62e42137a1846abfc3306a5e0735426e4970000bd3771b538c"
+      },
+      "citation_context": " Madden v. Kentucky, 309 U. S. 83",
+      "source": {
+        "file": "sources/opinions/309-U-S-83.txt",
+        "sha256": "7aeee5730550abce22e29c553185a7ed04b6fad94324c69b602aa5237f93ea49",
+        "chars": 17051,
+        "header": "Madden v. Kentucky ex rel. Commissioner, 309 U.S. 83 (1940)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/309/cases/0083-01.json",
+          "raw_sha256": "4c755f8623d91d32feb14fa01a20a16afb43702ccf15010ad12d61a2fd4bf8d0"
+        },
+        "unheaded_file": "sources/opinions-unheaded/309-U-S-83.txt",
+        "unheaded_sha256": "64396700543a9e9c52aea639a36b5cab745cbd6a38e1a0c1c8a84f92ef2de3f0"
+      }
+    },
+    {
+      "id": "L2-32",
+      "k": 32,
+      "block": 8,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "bracket-changed",
+      "citation": {
+        "id": "L2-32",
+        "cite": "404 U.S. 189",
+        "case_name": "Mayer v. City of Chicago",
+        "quote": "all . . . children throughout [Reasonable] who live in school districts with low property valuations.",
+        "source_key": "404 U.S. 189"
+      },
+      "genuine_quote": "all . . . children throughout Texas who live in school districts with low property valuations.",
+      "quoted_by": {
+        "case_name": "San Antonio Independent School District v. Rodriguez",
+        "cite": "411 U.S. 1",
+        "url": "https://static.case.law/us/411/cases/0001-01.json",
+        "raw_sha256": "301d1e952c84bd62e42137a1846abfc3306a5e0735426e4970000bd3771b538c"
+      },
+      "citation_context": " 337 F. Supp., at 281.\nMayer v. City of Chicago, 404 U. S. 189",
+      "source": {
+        "file": "sources/opinions/404-U-S-189.txt",
+        "sha256": "9d1064b4b9445bc6b86f9d30b5d378d0f3b60424cc7ee9d8d91ee2a67b06bd52",
+        "chars": 23891,
+        "header": "Mayer v. City of Chicago, 404 U.S. 189 (1971)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/404/cases/0189-01.json",
+          "raw_sha256": "50d34c6dc7a8b19c4e9ccc114009c7e44bba45d4aa856b863fcacf6baf135264"
+        },
+        "unheaded_file": "sources/opinions-unheaded/404-U-S-189.txt",
+        "unheaded_sha256": "4cb43e68d9e791b052307f7b42bb342a7529676caacad6af01ef3f044c0f4f0c"
+      }
+    },
+    {
+      "id": "L2-33",
+      "k": 33,
+      "block": 9,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-33",
+        "cite": "256 U.S. 531",
+        "case_name": "Choctaw, Oklahoma & Gulf Railroad v. Mackey",
+        "quote": "mere fact that property is used, among others, by the United States as an instrument for effecting its purpose does not relieve it from state taxation.",
+        "source_key": "256 U.S. 531"
+      },
+      "genuine_quote": "mere fact that property is used, among others, by the United States as an instrument for effecting its purpose does not relieve it from state taxation.",
+      "quoted_by": {
+        "case_name": "Mescalero Apache Tribe v. Jones",
+        "cite": "411 U.S. 145",
+        "url": "https://static.case.law/us/411/cases/0145-01.json",
+        "raw_sha256": "463fe3104da5447b81d5ffbc1aa685dec616927fdb9987d30f6a1569127e64ca"
+      },
+      "citation_context": " Choctaw, Oklahoma & Gulf R. Co. v. Mackey, 256 U. S. 531",
+      "source": {
+        "file": "sources/opinions/256-U-S-531.txt",
+        "sha256": "0a49e70f7c4766074fda80e9f1d3f53684f0a708b27f44ac2002d05971166c80",
+        "chars": 17129,
+        "header": "Choctaw, Oklahoma & Gulf Railroad v. Mackey, 256 U.S. 531 (1921)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/256/cases/0531-01.json",
+          "raw_sha256": "04b824f9f86c601ea154b85ec2244e1e19ab79c2058a25e97d26687d366958d7"
+        },
+        "unheaded_file": "sources/opinions-unheaded/256-U-S-531.txt",
+        "unheaded_sha256": "01fb13b63ac626b8db4d00e5a8283e9eb2b5d6d0ec84c543c68e555d6fbd7cf0"
+      }
+    },
+    {
+      "id": "L2-34",
+      "k": 34,
+      "block": 9,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "altered",
+      "citation": {
+        "id": "L2-34",
+        "cite": "324 U.S. 786",
+        "case_name": "Rice v. Olson",
+        "quote": "[t]he policy of leaving Indians free from state reasonable and control is deeply rooted in the Nation’s history.",
+        "source_key": "324 U.S. 786"
+      },
+      "genuine_quote": "[t]he policy of leaving Indians free from state jurisdiction and control is deeply rooted in the Nation’s history.",
+      "quoted_by": {
+        "case_name": "McClanahan v. Arizona State Tax Commission",
+        "cite": "411 U.S. 164",
+        "url": "https://static.case.law/us/411/cases/0164-01.json",
+        "raw_sha256": "8a73e6a39270c903a8cf00f7f9bd2358625941666282207c6eafdb3cf94f2439"
+      },
+      "citation_context": " Rice v. Olson, 324 U. S. 786",
+      "source": {
+        "file": "sources/opinions/324-U-S-786.txt",
+        "sha256": "084ee52225aec2e6a441b58186093f4e5017ff2ae142231187e731951aae736c",
+        "chars": 12986,
+        "header": "Rice v. Olson, 324 U.S. 786 (1945)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/324/cases/0786-01.json",
+          "raw_sha256": "136aaf2ac47f5f67329333aeee2cf107058fbaf3d5565351de4fbbeefaede4d8"
+        },
+        "unheaded_file": "sources/opinions-unheaded/324-U-S-786.txt",
+        "unheaded_sha256": "73fef62f2812fbd338d9af2a5b4d038fee73690dbe671b89d3c0fe98fa070572"
+      }
+    },
+    {
+      "id": "L2-35",
+      "k": 35,
+      "block": 9,
+      "half": "A",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-35",
+        "cite": "280 U.S. 363",
+        "case_name": "Carpenter v. Shaw",
+        "quote": "[djoubtful expressions are to be resolved in favor of the weak and defenseless people who are the wards of the nation, dependent upon its protection and good faith.",
+        "source_key": "280 U.S. 363"
+      },
+      "genuine_quote": "[djoubtful expressions are to be resolved in favor of the weak and defenseless people who are the wards of the nation, dependent upon its protection and good faith.",
+      "quoted_by": {
+        "case_name": "McClanahan v. Arizona State Tax Commission",
+        "cite": "411 U.S. 164",
+        "url": "https://static.case.law/us/411/cases/0164-01.json",
+        "raw_sha256": "8a73e6a39270c903a8cf00f7f9bd2358625941666282207c6eafdb3cf94f2439"
+      },
+      "citation_context": " Carpenter v. Shaw, 280 U. S. 363",
+      "source": {
+        "file": "sources/opinions/280-U-S-363.txt",
+        "sha256": "6bbe03a91568625d0d876bc62ffc02d302b7a1c1a25753e5a773181e434053c8",
+        "chars": 9398,
+        "header": "Carpenter v. Shaw, 280 U.S. 363 (1930)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/280/cases/0363-01.json",
+          "raw_sha256": "b235a0d569f07ca59b000e7203d8964ff6fd6c16d1fefd7754ead34a1eeeb95e"
+        },
+        "unheaded_file": "sources/opinions-unheaded/280-U-S-363.txt",
+        "unheaded_sha256": "7d1cf4fcc259e4a26983d442f831454cbebb3ea918f0a346a477e6201a2e3b08"
+      }
+    },
+    {
+      "id": "L2-36",
+      "k": 36,
+      "block": 9,
+      "half": "A",
+      "label": "known-bad",
+      "operator": "elided",
+      "citation": {
+        "id": "L2-36",
+        "cite": "380 U.S. 685",
+        "case_name": "Warren Trading Post Co. v. Arizona Tax Commission",
+        "quote": "Congress has, since the creation of the Navajo Reservation nearly a century ago, left the Indians on it largely free to run the reservation and its affairs . . ., a policy which has automatically relieved Arizona of all burdens for carrying on those same responsibilities.",
+        "source_key": "380 U.S. 685"
+      },
+      "genuine_quote": "Congress has, since the creation of the Navajo Reservation nearly a century ago, left the Indians on it largely free to run the reservation and its affairs without state control, a policy which has automatically relieved Arizona of all burdens for carrying on those same responsibilities.",
+      "quoted_by": {
+        "case_name": "McClanahan v. Arizona State Tax Commission",
+        "cite": "411 U.S. 164",
+        "url": "https://static.case.law/us/411/cases/0164-01.json",
+        "raw_sha256": "8a73e6a39270c903a8cf00f7f9bd2358625941666282207c6eafdb3cf94f2439"
+      },
+      "citation_context": " Warren Trading Post Co. v. Arizona Tax Comm’n, 380 U. S. 685",
+      "source": {
+        "file": "sources/opinions/380-U-S-685.txt",
+        "sha256": "0cd62933ee4ca5bbe1ca4fe8d6f14e6831eeabd88f0d1664a7903df0a1e97e29",
+        "chars": 14319,
+        "header": "Warren Trading Post Co. v. Arizona Tax Commission, 380 U.S. 685 (1965)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/380/cases/0685-01.json",
+          "raw_sha256": "ab0f0327c7ddae8cd27dd529a272d76ae33ac89465b4f837c709f791acffbd2d"
+        },
+        "unheaded_file": "sources/opinions-unheaded/380-U-S-685.txt",
+        "unheaded_sha256": "d77fde05098ad901183a71e5275c9f62f8201396b08c90d5a73bd9d4d8a4db4f"
+      }
+    },
+    {
+      "id": "L2-37",
+      "k": 37,
+      "block": 10,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-37",
+        "cite": "329 U.S. 90",
+        "case_name": "American Power & Light Co. v. Securities & Exchange Commission",
+        "quote": "fundamental principle . . . that where Congress has entrusted an administrative agency with the responsibility of selecting the means of achieving the statutory policy 'the relation of remedy to policy is peculiarly a matter for administrative competence.’ ",
+        "source_key": "329 U.S. 90"
+      },
+      "genuine_quote": "fundamental principle . . . that where Congress has entrusted an administrative agency with the responsibility of selecting the means of achieving the statutory policy 'the relation of remedy to policy is peculiarly a matter for administrative competence.’ ",
+      "quoted_by": {
+        "case_name": "Butz v. Glover Livestock Commission Co.",
+        "cite": "411 U.S. 182",
+        "url": "https://static.case.law/us/411/cases/0182-01.json",
+        "raw_sha256": "2a48c1211aa8577b7387575b7d474aa466822ce591a03866f7a94d41978b2784"
+      },
+      "citation_context": " American Power Co. v. SEC, 329 U. S. 90",
+      "source": {
+        "file": "sources/opinions/329-U-S-90.txt",
+        "sha256": "ff30ca5553668f0e4e77831cf3d0c7d6390f187706c38c620603c2749717b360",
+        "chars": 67784,
+        "header": "American Power & Light Co. v. Securities & Exchange Commission, 329 U.S. 90 (1946)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/329/cases/0090-01.json",
+          "raw_sha256": "6e81d5ccd9219bd70aa57424a6933840cb03012f5e64c94d3b6477078eba63f2"
+        },
+        "unheaded_file": "sources/opinions-unheaded/329-U-S-90.txt",
+        "unheaded_sha256": "34a735a71d2be8e00534cd341ba6844734a0d2dd0269d415b2396f054f089df1"
+      }
+    },
+    {
+      "id": "L2-38",
+      "k": 38,
+      "block": 10,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "fabricated",
+      "citation": {
+        "id": "L2-38",
+        "cite": "404 U.S. 97",
+        "case_name": "Chevron Oil Co. v. Huson",
+        "quote": "confers no rights; it imposes no duties; it affords no protection; it creates no office; it is, in legal contemplation, as inoperative as though it had never been passed.",
+        "source_key": "404 U.S. 97"
+      },
+      "genuine_quote": "in the last few decades, we have recognized the doctrine of nonretroactivity outside the criminal area many times, in both constitutional and nonconstitutional cases.",
+      "quoted_by": {
+        "case_name": "Lemon v. Kurtzman",
+        "cite": "411 U.S. 192",
+        "url": "https://static.case.law/us/411/cases/0192-01.json",
+        "raw_sha256": "55a28c7a19ac11c027505ced495ff2f0570ea9429c3fb1c1d4635602d1fc74ba"
+      },
+      "citation_context": " Chevron Oil Co. v. Huson, 404 U. S. 97",
+      "source": {
+        "file": "sources/opinions/404-U-S-97.txt",
+        "sha256": "e9bd51f92dd004875fa86c63eeee6771bc9ee17e53af542583eb7ca1b10de705",
+        "chars": 34330,
+        "header": "Chevron Oil Co. v. Huson, 404 U.S. 97 (1971)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/404/cases/0097-01.json",
+          "raw_sha256": "e3f60f1d997636578f0bfdb8124dd5a6a362763d5c15aa7308904dd95e87732d"
+        },
+        "unheaded_file": "sources/opinions-unheaded/404-U-S-97.txt",
+        "unheaded_sha256": "a18c7a67a7f1a9438927ce97546f472ee8b18cbdd53486f672f45dc29f4b85b2"
+      }
+    },
+    {
+      "id": "L2-39",
+      "k": 39,
+      "block": 10,
+      "half": "B",
+      "label": "control",
+      "operator": null,
+      "citation": {
+        "id": "L2-39",
+        "cite": "118 U.S. 425",
+        "case_name": "Norton v. Shelby County",
+        "quote": "confers no rights; it imposes no duties; it affords no protection; it creates no office; it is, in legal contemplation, as inoperative as though it had never been passed.",
+        "source_key": "118 U.S. 425"
+      },
+      "genuine_quote": "confers no rights; it imposes no duties; it affords no protection; it creates no office; it is, in legal contemplation, as inoperative as though it had never been passed.",
+      "quoted_by": {
+        "case_name": "Lemon v. Kurtzman",
+        "cite": "411 U.S. 192",
+        "url": "https://static.case.law/us/411/cases/0192-01.json",
+        "raw_sha256": "55a28c7a19ac11c027505ced495ff2f0570ea9429c3fb1c1d4635602d1fc74ba"
+      },
+      "citation_context": " Norton v. Shelby County, 118 U. S. 425",
+      "source": {
+        "file": "sources/opinions/118-U-S-425.txt",
+        "sha256": "6d7c3cb1b58638cfa92feaeb1d560a18699c392399a37272d2072865bcc5a4b1",
+        "chars": 64237,
+        "header": "Norton v. Shelby County, 118 U.S. 425 (1886)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/118/cases/0425-01.json",
+          "raw_sha256": "349d899325425862d67b40308c1b52b36ae8101db63e148ab41721699d557569"
+        },
+        "unheaded_file": "sources/opinions-unheaded/118-U-S-425.txt",
+        "unheaded_sha256": "f68fa593ac57dfb80f255d4ff589c1d1f700e6327c19a51722815186418e9654"
+      }
+    },
+    {
+      "id": "L2-40",
+      "k": 40,
+      "block": 10,
+      "half": "B",
+      "label": "known-bad",
+      "operator": "bracket-changed",
+      "citation": {
+        "id": "L2-40",
+        "cite": "308 U.S. 371",
+        "case_name": "Chicot County Drainage District v. Baxter State Bank",
+        "quote": "among the most difficult of those which have engaged the [reasonable] of courts, state and federal . . . .",
+        "source_key": "308 U.S. 371"
+      },
+      "genuine_quote": "among the most difficult of those which have engaged the attention of courts, state and federal . . . .",
+      "quoted_by": {
+        "case_name": "Lemon v. Kurtzman",
+        "cite": "411 U.S. 192",
+        "url": "https://static.case.law/us/411/cases/0192-01.json",
+        "raw_sha256": "55a28c7a19ac11c027505ced495ff2f0570ea9429c3fb1c1d4635602d1fc74ba"
+      },
+      "citation_context": " Chicot County Drainage Dist. v. Baxter State Bank, 308 U. S. 371",
+      "source": {
+        "file": "sources/opinions/308-U-S-371.txt",
+        "sha256": "a48524d7e70f082b2a843a1ebf13d56604d8352f77e848bddde8e7312c686cd6",
+        "chars": 12355,
+        "header": "Chicot County Drainage District v. Baxter State Bank, 308 U.S. 371 (1940)",
+        "provenance": {
+          "via": "cap-static",
+          "url": "https://static.case.law/us/308/cases/0371-01.json",
+          "raw_sha256": "5c539ea1b189e595b108ed6659f626ad4df7768c173feb3fb0f7201eb4b23586"
+        },
+        "unheaded_file": "sources/opinions-unheaded/308-U-S-371.txt",
+        "unheaded_sha256": "fe3a9d161417739199cd555349c8feed00d7d79c16a57c5384655ab6838ec76a"
+      }
+    }
+  ]
+}

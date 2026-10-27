@@ -1,7 +1,7 @@
 /**
- * F3 (KERNEL-PERF, 2026-09-28): the per-document hoist in src/binding/ontological-bridge.ts is a PURE hoist.
+ * 2026-09-28: the per-document hoist in src/binding/ontological-bridge.ts is a PURE hoist.
  *
- * The frozen pre-F3 bridge (test/fixtures/frozen-bridge/, sha256 a738fe32…) and the live bridge run side by side on a
+ * The frozen bridge from before the hoist (test/fixtures/frozen-bridge/, sha256 a738fe32…) and the live bridge run side by side on a
  * seeded corpus (test/fixtures/bridge-hoist-corpus.ts). Two levels:
  *   1. the bridge itself: every line's BindingContext and the document context, serialized with key order, `undefined`,
  *      Dates and object ALIASING kept (so a value shared across lines where the old code made one per line would show),
@@ -113,7 +113,16 @@ function runBridge(b: AnyBridge, setLogger: (l?: (m: string) => void) => void, d
 
 const corpus = buildHoistCorpus(CORPUS_SIZE)
 
-describe('F3 hoist: the bridge is observationally identical to the frozen pre-F3 bridge', () => {
+/**
+ * 2026-10-03 changed the bridge on purpose at ONE place: evidence read at a line of a multi-line invoice (the evidence
+ * line is matched by description; a document-level evidence total or quantity is not bound to a line). Its guard is exactly
+ * this predicate, so every other case must still match the frozen bridge byte for byte; the cases it covers are checked by
+ * the evidence-at-a-line block at the end (the difference is confined to the evidence roles and what derives from them).
+ */
+const evidenceAtALine = (c: HoistCase): boolean => Array.isArray(c.extraction.line_items) && (c.extraction.line_items as unknown[]).length > 1 && bridgeArgs(c).evidence.length > 0
+const EVIDENCE_ROLES = ['EVIDENCE_DESCRIPTION', 'ACTUAL_QUANTITY', 'VERIFIED_AMOUNT', 'EXPECTED_TOTAL']
+
+describe('the hoist: the bridge is observationally identical to the frozen bridge from before it', () => {
   it('the corpus is the one described: size, rulesets, line counts 1–300, references present and absent', () => {
     expect(corpus.length).toBe(CORPUS_SIZE)
     const lines = corpus.map(c => {
@@ -133,7 +142,7 @@ describe('F3 hoist: the bridge is observationally identical to the frozen pre-F3
     const r = rng(7)
     const mismatches: string[] = []
     let throws = 0
-    for (const c of corpus.filter((_, i) => FULL || i % 3 === 0)) {
+    for (const c of corpus.filter((x, i) => (FULL || i % 3 === 0) && !evidenceAtALine(x))) {
       const domains = c.ruleset === 'pay-app' ? ['pay-app', 'custom-f3'] : ['invoice', 'custom-f3']
       for (const domain of domains) {
         const map = r.chance(0.2) ? (randomCorrelationMap(r, 40) as LLMCorrelationMap) : undefined
@@ -152,7 +161,7 @@ describe('F3 hoist: the bridge is observationally identical to the frozen pre-F3
     const r = rng(11)
     const mismatches: string[] = []
     let total = 0
-    for (const c of corpus.filter((_, i) => i % (FULL ? 5 : 10) === 0)) {
+    for (const c of corpus.filter((x, i) => i % (FULL ? 5 : 10) === 0 && !evidenceAtALine(x))) {
       const domain = c.ruleset
       const map = r.chance(0.3) ? (randomCorrelationMap(r, 40) as LLMCorrelationMap) : undefined
       const la: string[] = []
@@ -163,19 +172,19 @@ describe('F3 hoist: the bridge is observationally identical to the frozen pre-F3
       if (a !== b || la.join('\n') !== lb.join('\n')) mismatches.push(c.id)
     }
     expect(mismatches).toEqual([])
-    expect(total).toBeGreaterThan(5_000)
+    expect(total).toBeGreaterThan(3_000)
   }, LONG)
 
   it('one bridge instance reused across the whole corpus (as the verify() singleton is) still matches', () => {
     const oldB = fresh(OldBridge)
     const newB = fresh(NewBridge)
-    const mismatches = corpus.filter((c, i) => i % (FULL ? 3 : 10) === 0).filter(c =>
+    const mismatches = corpus.filter((c, i) => i % (FULL ? 3 : 10) === 0 && !evidenceAtALine(c)).filter(c =>
       runBridge(oldB, FROZEN.setBridgeLogger, c.ruleset, c, undefined, null) !== runBridge(newB, setBridgeLogger, c.ruleset, c, undefined, null))
     expect(mismatches.map(c => c.id)).toEqual([])
   }, LONG)
 })
 
-describe('F3 hoist: verify() verdict bytes equal the pre-F3 engine\'s', () => {
+describe('the hoist: verify() verdict bytes equal the engine\'s from before it', () => {
   let OLD: typeof NEW
   let frozenLoaded = false
   beforeAll(async () => {
@@ -194,13 +203,51 @@ describe('F3 hoist: verify() verdict bytes equal the pre-F3 engine\'s', () => {
     expect(OLD.verify).not.toBe(NEW.verify)
   })
 
+  it('on the cases the evidence-at-a-line fix covers, every claim that changed reads an evidence role (or what derives from one)', () => {
+    const tally = new Map<string, number>()
+    let affected = 0, changedVerdicts = 0
+    // a claim "reads an evidence role" when an operand or a missing role is one, or when it cites a field of an evidence document
+    const touches = (c: { computation?: { operands?: Record<string, unknown> }; insufficiency?: { missing?: string[] }; evidence?: { locator: { kind: string; source?: string } }[] } | undefined): boolean =>
+      !!c && (Object.keys(c.computation?.operands ?? {}).some(k => EVIDENCE_ROLES.includes(k)) || (c.insufficiency?.missing ?? []).some(m => EVIDENCE_ROLES.includes(m))
+        || (c.evidence ?? []).some(e => e.locator.kind === 'field' && e.locator.source === 'evidence'))
+    for (const c of corpus.filter(evidenceAtALine)) {
+      affected++
+      const opts = { ruleset: c.ruleset, now: NOW, ...(c.references ? { references: c.references as never } : {}) }
+      let a: ReturnType<typeof NEW.verify>, b: ReturnType<typeof NEW.verify>
+      try { a = OLD.verify(c.extraction, opts); b = NEW.verify(c.extraction, opts) } catch { continue }
+      expect(b.verdict_id).toBe(a.verdict_id)
+      let changed = false
+      a.claims.forEach((x, i) => {
+        const y = b.claims[i]!
+        expect(y.claim_id).toBe(x.claim_id)
+        if (JSON.stringify(x) === JSON.stringify(y)) return
+        changed = true
+        expect([c.id, x.claim_id, touches(x) || touches(y)]).toEqual([c.id, x.claim_id, true])
+        const k = `${x.rule_id} ${x.outcome} -> ${y.outcome}`
+        tally.set(k, (tally.get(k) ?? 0) + 1)
+      })
+      if (changed) changedVerdicts++
+    }
+    expect(affected).toBeGreaterThan(CORPUS_SIZE / 10)
+    // the transitions, for the record (printed, not pinned: the corpus is seeded, the counts are stable). 2026-10-06: printed
+    // with what they mean, so a reader of the log does not take "FAIL -> PASS: 1026" inside a passing test for a regression.
+    console.log([
+      `evidence at a line: ${affected} cases of this seeded corpus carry delivery evidence on an invoice of several lines, and ${changedVerdicts} of their verdicts changed, on purpose,`,
+      'when the bridge stopped binding one document-level evidence figure (a total, a quantity) to every line (2026-10-03). Every changed check reads an evidence role or',
+      'what derives from one (asserted above). Each transition below is a check that now reads its own line\'s figures: "MATH_INT FAIL -> PASS" is a line once compared',
+      'with the whole document\'s evidence total, and failed, that now compares its amount with its own price times quantity; a "-> INSUFFICIENT_DATA" is a line whose own',
+      'evidence is absent, now said instead of borrowed. Before -> after, counted by check:',
+      `  ${[...tally].sort().map(([k, n]) => `${k}: ${n}`).join(' · ')}`,
+    ].join('\n'))
+  }, LONG)
+
   const CHUNK = 750
   for (let from = 0; from < CORPUS_SIZE; from += CHUNK) {
     const to = Math.min(CORPUS_SIZE, from + CHUNK)
     it(`cases ${from}–${to - 1}: JSON.stringify(verdict) and canonicalize(verdict) are byte-identical`, () => {
       const mismatches: string[] = []
       let fails = 0
-      for (const c of corpus.slice(from, to)) {
+      for (const c of corpus.slice(from, to).filter(x => !evidenceAtALine(x))) {
         const opts = { ruleset: c.ruleset, now: NOW, ...(c.references ? { references: c.references as never } : {}) }
         const run = (m: typeof NEW) => {
           try {
@@ -219,7 +266,7 @@ describe('F3 hoist: verify() verdict bytes equal the pre-F3 engine\'s', () => {
   }
 })
 
-describe('F3 hoist: what stays per line, and the scope\'s lifetime', () => {
+describe('the hoist: what stays per line, and the scope\'s lifetime', () => {
   it('a document-level role CAN differ per line: with no document id, each line binds its own `reference` (kept, as before)', () => {
     const inv = { line_items: [{ description: 'A', quantity: 1, unit_price: 2, amount: 2, reference: 'R-A' }, { description: 'B', quantity: 1, unit_price: 3, amount: 3, reference: 'R-B' }] }
     for (const B of [OldBridge, NewBridge]) {
@@ -244,7 +291,7 @@ describe('F3 hoist: what stays per line, and the scope\'s lifetime', () => {
     const old = fresh(OldBridge)
     expect(outcome(() => b.createLineItemBindings('invoice', bad, {}, []))).toBe(outcome(() => old.createLineItemBindings('invoice', bad, {}, [])))
     expect(outcome(() => b.createLineItemBindings('invoice', bad, {}, []))).toMatch(/^throw TypeError/)
-    const good = corpus.find(c => c.ruleset === 'invoice' && Array.isArray(c.extraction.line_items) && (c.extraction.line_items as unknown[]).length > 20)!
+    const good = corpus.find(c => c.ruleset === 'invoice' && Array.isArray(c.extraction.line_items) && (c.extraction.line_items as unknown[]).length > 20 && !evidenceAtALine(c))!
     expect(runBridge(b, setBridgeLogger, 'invoice', good, undefined, null)).toBe(runBridge(old, FROZEN.setBridgeLogger, 'invoice', good, undefined, null))
   })
 
@@ -265,4 +312,27 @@ describe('F3 hoist: what stays per line, and the scope\'s lifetime', () => {
     expect(withLog[1]).toBe(withLog[0])
     expect(withLog[0]).toMatch(/^throw TypeError/)
   })
+})
+
+describe('evidence at a line (2026-10-03): the only difference from the frozen bridge', () => {
+  it('on every case the fix covers, only the evidence roles and what derives from them differ, line by line', () => {
+    const keys = new Set<string>()
+    let affected = 0
+    for (const c of corpus.filter((x, i) => evidenceAtALine(x) && (FULL || i % 3 === 0))) {
+      const { contract, evidence } = bridgeArgs(c)
+      let a: Array<{ bindings: Record<string, unknown> }>, b: Array<{ bindings: Record<string, unknown> }>
+      try {
+        a = fresh(OldBridge).createLineItemBindings(c.ruleset, c.extraction, contract, evidence) as typeof a
+        b = fresh(NewBridge).createLineItemBindings(c.ruleset, c.extraction, contract, evidence) as typeof b
+      } catch { continue }
+      affected++
+      a.forEach((ctx, i) => {
+        const nb = b[i]!
+        expect(snap({ ...ctx, bindings: null })).toBe(snap({ ...nb, bindings: null }))
+        for (const k of new Set([...Object.keys(ctx.bindings), ...Object.keys(nb.bindings)])) if (snap(ctx.bindings[k]) !== snap(nb.bindings[k])) keys.add(k)
+      })
+    }
+    expect(affected).toBeGreaterThan(CORPUS_SIZE / 30)
+    expect([...keys].every(k => EVIDENCE_ROLES.includes(k))).toBe(true)
+  }, LONG)
 })

@@ -1,0 +1,443 @@
+{
+  "spec": "bench-spec/1",
+  "id": "t1-extraction-contract",
+  "title": "The extraction contract: two independent readings or UNREADABLE",
+  "adapter": "items",
+  "label": "post-hoc",
+  "blind": false,
+  "files": {
+    "x1": "out/c1/results.json",
+    "x1b0": "out/b0/results.json",
+    "x2": "results/x2-c1/run.json",
+    "x2b0": "results/x2-b0/run.json"
+  },
+  "run": {
+    "id": "T1 frozen run c1 (X1's 60 PDFs and X2's 58 items), baseline B0 beside it",
+    "date": "2026-10-03",
+    "engine_version": {
+      "$from": "x2:engine_version"
+    },
+    "ruleset": "peppol-en16931@0.2.0 + legal@0.0.1"
+  },
+  "rows": [
+    {
+      "claim": "H1 (hard): X1 planted defects certified PASS under c1",
+      "items": "x1:docs",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H1 (hard): X1 planted: wrong PASS = 0/20 under c1",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": "preregistered, not blind: X1's and X2's results were read before the prereg",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "H2 (hard): X2 known-bad citations certified PASS under c1",
+      "items": "x2:rows",
+      "where": {
+        "set": "known-bad"
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H2 (hard): X2 known-bad: PASS = 0/20 under c1",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "H3 (target): X1's 8 noisy abstentions that became correct decisions under c1",
+      "items": "x1:docs",
+      "where": {
+        "id": [
+          "X1-N02",
+          "X1-N03",
+          "X1-N06",
+          "X1-N07",
+          "X1-N10",
+          "X1-N11",
+          "X1-N14",
+          "X1-N18"
+        ]
+      },
+      "hit": {
+        "class_shipped": [
+          "correct_pass",
+          "fail_oracle_agrees"
+        ]
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H3 (target): of X1's 8 noisy abstentions (N02, N03, N06, N07, N10, N11, N14, N18), at least 4 are correct decisions under c1",
+        "test": {
+          "k": {
+            "ge": 4
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 8
+      }
+    },
+    {
+      "claim": "H4 (target, first half): X1 noisy scans correctly PASS under c1",
+      "items": "x1:docs",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "correct_pass"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H4 (target): correct PASS under c1 > B0 (B0 counted 10 of 20, the next row)",
+        "test": {
+          "k": {
+            "gt": 10
+          }
+        }
+      },
+      "reported": {
+        "k": 9,
+        "n": 20
+      }
+    },
+    {
+      "claim": "B0 baseline: X1 noisy scans correctly PASS",
+      "items": "x1b0:docs",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 10,
+        "n": 20
+      }
+    },
+    {
+      "claim": "H4 (target, second half): X1 noisy scans abstained under c1",
+      "items": "x1:docs",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "abstain"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H4 (target): abstentions under c1 < B0 (B0 counted 8 of 20, the next row)",
+        "test": {
+          "k": {
+            "lt": 8
+          }
+        }
+      },
+      "reported": {
+        "k": 7,
+        "n": 20
+      }
+    },
+    {
+      "claim": "B0 baseline: X1 noisy scans abstained",
+      "items": "x1b0:docs",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 8,
+        "n": 20
+      }
+    },
+    {
+      "claim": "H5 (target): X1 noisy scans false FAIL under c1",
+      "items": "x1:docs",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "class_shipped": "false_fail"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H5 (target): false FAIL does not rise: X1 noise c1 <= B0 (B0 counted 2 of 20)",
+        "test": {
+          "k": {
+            "le": 2
+          }
+        }
+      },
+      "reported": {
+        "k": 4,
+        "n": 20
+      }
+    },
+    {
+      "claim": "H5 (target): X1 clean invoices false FAIL under c1",
+      "items": "x1:docs",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "class_shipped": "false_fail"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H5 (target): false FAIL does not rise: X1 clean c1 <= B0 (B0 counted 0 of 20)",
+        "test": {
+          "k": {
+            "le": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "H5 (target): X2 genuine quotations FAILed under c1 (X2's audit classes: CT08, CT12, CT19 set apart)",
+      "items": "x2:rows",
+      "where": {
+        "set": "control",
+        "id": {
+          "$nin": [
+            "CT08",
+            "CT12",
+            "CT19"
+          ]
+        }
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H5 (target): X2 controls FAIL on genuine quotations c1 <= B0 (B0 counted 11, the next row)",
+        "test": {
+          "k": {
+            "le": 11
+          }
+        }
+      },
+      "reported": {
+        "k": 7,
+        "n": 17
+      }
+    },
+    {
+      "claim": "B0 baseline: X2 genuine quotations FAILed",
+      "items": "x2b0:rows",
+      "where": {
+        "set": "control",
+        "id": {
+          "$nin": [
+            "CT08",
+            "CT12",
+            "CT19"
+          ]
+        }
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 11,
+        "n": 17
+      }
+    },
+    {
+      "claim": "H8 (target): X2 fabricated cases and propositions abstained under c1",
+      "items": "x2:rows",
+      "where": {
+        "subset": [
+          "fabricated-case",
+          "proposition"
+        ]
+      },
+      "hit": {
+        "outcome": "ABSTAIN"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "H8 (target): X2 fabricated 5/5 and propositions 2/2 abstain",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "reported": {
+        "k": 7,
+        "n": 7
+      }
+    },
+    {
+      "claim": "X2 controls PASS under c1",
+      "items": "x2:rows",
+      "where": {
+        "set": "control"
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "note": "the cost is decisions: B0 passed 6",
+      "reported": {
+        "k": 3,
+        "n": 20
+      }
+    },
+    {
+      "claim": "c1: X1 planted defects caught (FAIL)",
+      "items": "x1:docs",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "caught"
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it"
+    },
+    {
+      "claim": "B0 baseline: X1 planted defects caught (FAIL)",
+      "items": "x1b0:docs",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "caught"
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it"
+    },
+    {
+      "claim": "c1: X1 planted defects abstained",
+      "items": "x1:docs",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "abstain"
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it"
+    },
+    {
+      "claim": "B0 baseline: X1 planted defects abstained",
+      "items": "x1b0:docs",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "class_shipped": "abstain"
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it"
+    },
+    {
+      "claim": "c1: X1 clean invoices correctly PASS",
+      "items": "x1:docs",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "class_shipped": "correct_pass"
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it; three rest on a template placeholder passing a presence check"
+    },
+    {
+      "claim": "B0 baseline: X1 clean invoices correctly PASS",
+      "items": "x1b0:docs",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "class_shipped": "correct_pass"
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it"
+    },
+    {
+      "claim": "c1: X2 quotations withheld as unreadable (the two readings disagreed)",
+      "items": "x2:rows",
+      "where": {},
+      "hit": {
+        "contract.withheld": true
+      },
+      "method": "wilson",
+      "note": "descriptive, not a preregistered row; added 2026-10-05 from the same results files, as EXTRACTION-CONTRACT.md prints it"
+    }
+  ],
+  "misses": [
+    {
+      "id": "correlated-readers",
+      "kind": "defect",
+      "description": "two OCR settings over one colour-dropped image are not independent readers: on stamped scans both read the same wrong digits (X1-N10 amount due 1,656.25 as 7,656.25; X1-N18 VAT total 1,225.00 as 7,225.00; X1-N06 VAT total 0.00 as 0.90), turning abstentions into false FAILs",
+      "post_hoc": false
+    },
+    {
+      "id": "KB01-window-truncated",
+      "kind": "defect",
+      "description": "the legal window dropped two pointer words in KB01 and handed the check a shorter passage; a shorter passage is easier to find verbatim",
+      "post_hoc": false
+    },
+    {
+      "id": "X1-N17-two-column",
+      "kind": "defect",
+      "description": "X1-N17 (two-column page): OCR read 'Per:' as 'Peer:', so the line rows disagreed with the text layer and a born-digital page lost its decision",
+      "post_hoc": false
+    },
+    {
+      "id": "CT15-CT17-reading-order",
+      "kind": "defect",
+      "description": "CT15 and CT17: the text layer could not locate the quotation because pdfjs rows interleave the opinion's columns",
+      "post_hoc": false
+    },
+    {
+      "id": "CT13-stray-bar",
+      "kind": "defect",
+      "description": "CT13: OCR inserted a stray '|' into the quotation, so a correct PASS was lost",
+      "post_hoc": false
+    },
+    {
+      "id": "presence-on-garbage",
+      "kind": "scope",
+      "description": "presence checks pass on agreed garbage: X1-N03's issue date read as 'AN 7-11-13', and the template placeholder '#issue_date#' passes BR-03 (C16, C17, C19 moved to PASS on it)",
+      "post_hoc": false
+    }
+  ],
+  "audit": "no new audit: X1's planted defects (known by construction) and X2's audit classes (an AI agent's, Claude Opus 5.5 (claude-opus-5-5))"
+}

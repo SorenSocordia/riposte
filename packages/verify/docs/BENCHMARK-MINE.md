@@ -30,26 +30,48 @@ The miner is never shown these checks.
 4. **Compiles ratified rules** into the engine's declarative ruleset format, so `verify` enforces them with the same
    proof objects as any hand-written rule.
 
-The method and its pass bar were **pre-registered before the miner was written** (frozen 2026-09-24, sha256
-`09d94446355a50f28791fe44c0063cccfb0019516a8197113b0c95e3e72937ed`, available on request). The pass bar was at least 3 of
-the 4 true rules and at most 2 false rules.
+The method and its pass bar were written down first, in a preregistration with sha256
+`09d94446355a50f28791fe44c0063cccfb0019516a8197113b0c95e3e72937ed`. The pass bar was at least 3 of the 4 true rules and at
+most 2 false rules. What a reader can and cannot check:
+- **The prereg is not in this repository.** Its text names internal tools, and an edited copy would not match its sha256,
+  so it is not published. A reader therefore cannot check the hash, only that this note quotes one.
+- **Its timing rests on the authors' own files.** By their file-system times, the prereg was saved at
+  2026-09-24T12:00:25Z, 74 seconds before the prototype miner's source file and 76 seconds before its results. No third
+  party saw it before the run. Since 2026-10-05 the bench rule is that every preregistration is stamped by a timestamp
+  authority before its run ([BENCH.md](BENCH.md); the record is in
+  [NUMERIC-HONESTY-2026-09-28.md](NUMERIC-HONESTY-2026-09-28.md)). Each bench table's Stamp line says whether its stamp came
+  before its run.
+
+## What the miner was given
+The miner was never shown the four checks, but the people who wrote its inputs knew the policy:
+- **The field schema was typed by hand.** It declares, for example, `freight_allowed` as a yes/no field from the PO and
+  `freight` as an extra amount on the invoice. That is what makes "total = lines + freight if allowed" expressible.
+- **The grammar's forms were fixed in the prereg**, and they include the exact form of each true rule. The total family
+  lists `T = S + F·[A]` among its eight candidates.
+- **The tolerance grid was fixed in the prereg, and it contains the answer.** The grid is {0, 0.5%, 1%, 2%, 3%, 5%, 10%}; the
+  miner picks the smallest value that no approved invoice violates. The prereg counted any learned t in [0.02, 0.03) as
+  finding the price rule, and predicted t = 0.02. Only one grid point, 0.02, falls in that window.
+
+So the result below shows the miner can select the policy's rules and tolerance from candidates a person wrote. It does not
+show it can invent the vocabulary those candidates are written in.
 
 ## Result
 | true rule | found as | held invoices it explains | p |
 |---|---|---|---|
 | PO number matches | `inv_po_numbers cites exactly one id = po_number` | 14 | 2.8e-3 |
 | billed ≤ received | `inv_qty <= rcv_qty` | 21 | 9.2e-5 |
-| price ≤ PO + 2% | `inv_price <= po_price*(1+t)`, **t = 0.02 learned** | 22 | 5.5e-5 |
+| price ≤ PO + 2% | `inv_price <= po_price*(1+t)`, **t = 0.02 chosen from the preregistered grid** | 22 | 5.5e-5 |
 | total adds up (freight if allowed) | `total = sum(inv_amount) + freight*[freight_allowed]` | 19 | 2.5e-4 |
 
 - **All 4 rules were recovered, with 0 false rules. All 68 of 68 held invoices are explained.**
-- **The tolerance was learned from the labels.** The data puts it anywhere in [1.90%, 2.20%): between the largest approved
-  overcharge and the smallest held one. The miner reports that interval rather than pretending to more precision.
+- **The tolerance was chosen from the labels, on a grid that contains it.** The data puts it anywhere in [1.90%, 2.20%):
+  between the largest approved overcharge and the smallest held one. The miner reports that interval rather than pretending
+  to more precision; the grid point it lands on, 0.02, is the only one inside it.
 - **26 candidates died with recorded causes.** Two examples:
   - "freight billed when not allowed" alone was too thin (6 cases, p = 0.09), because it is really part of the total rule;
   - "total = lines + freight" was redundant, because the conditional rule already covers it.
 - **Enforcing the mined rules:** `verify` running the compiled ruleset agrees with the gold decision on **100 of 100
-  invoices**, with no abstentions.
+  invoices**, with no abstentions. That is in-sample: the rules were mined from the same 100 invoices they are enforced on.
 - **Under a strict family-wise correction** (0.05/78), the PO-number rule (p = 2.8e-3) would not pass. With 68% of invoices
   held, 100 cases can't make a 14-case rule significant at that level. The pre-registration predicted this, and it is why
   the miner proposes rules rather than enacting them.

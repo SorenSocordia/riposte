@@ -15,6 +15,7 @@
 import { generateKeyPairSync, sign as edSign, verify as edVerify, createPublicKey, createPrivateKey } from 'node:crypto'
 import { canonicalize } from '../verdict/canonical.js'
 import { verifyReplay, type ReplayCheck } from './replay.js'
+import { parseJsonStrict } from './hash-input.js'
 import type { Verdict } from '../verdict/schema.js'
 
 export interface SignedVerdict {
@@ -50,6 +51,19 @@ export interface EnvelopeCheck {
   /** Present when inputs were supplied: the input-binding replay check (see ./replay.ts). */
   replay?: ReplayCheck
   reason?: string
+}
+
+/**
+ * Verify an envelope from its JSON TEXT, as it was received (2026-10-05). The signature covers the canonical form
+ * of the PARSED verdict, and JSON.parse keeps the last of two equal keys, so a file with `"outcome":"FAIL"` inserted before the
+ * real `"outcome":"PASS"` verified as signed while a reader that keeps the first key saw FAIL. This reads the text under the hash
+ * contract first (hash-input.ts parseJsonStrict: a repeated key, a byte-order mark or a number past the double range is refused
+ * with HashInputRefused, naming where), then checks it exactly as verifyEnvelope does. Prefer it whenever you hold the bytes.
+ */
+export function verifyEnvelopeText(text: string, inputs?: unknown, name = 'the envelope'): EnvelopeCheck {
+  const env = parseJsonStrict(text, name)
+  if (env === null || typeof env !== 'object' || Array.isArray(env)) return { ok: false, signature_ok: false, reason: `${name} is not an envelope { verdict, alg, public_key, signature }` }
+  return verifyEnvelope(env as SignedVerdict, inputs)
 }
 
 export function verifyEnvelope(env: SignedVerdict, inputs?: unknown): EnvelopeCheck {

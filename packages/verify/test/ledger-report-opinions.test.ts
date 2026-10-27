@@ -4,7 +4,7 @@
  *  - the open proposals, urgent demotions first, each with the one-line ruling of ITS courtroom opinion (the same
  *    opinion `verify opinion` renders) and the path to read and dispute it; an UNEVIDENCED demotion (granted above the
  *    record, nothing gone wrong) is a standing notice, listed apart from the asks (D-UNEVIDENCED, SURFACES-2);
- *  - the FAIL / ABSTAIN notices by rung: surfaced at record and advise, HELD at gate and autonomy, each disputable;
+ *  - the FAIL / INSUFFICIENT_DATA notices by rung: surfaced at record and advise, HELD at gate and autonomy, each disputable;
  *  - deterministic, tenant-scoped, period-bounded, and honest when empty (no book, no policy, a book that fails).
  */
 import { describe, it, expect } from 'vitest'
@@ -29,7 +29,7 @@ const DECLS: WorkflowDeclaration[] = [
 /**
  * acme: 130 PASS + 60 FAIL reviewed (2 overturned) and one unreviewed FAIL → earns autonomy at gate (a promotion).
  * beta: 10 PASS + 5 FAIL reviewed (1 overturned) at gate → an urgent demotion.
- * gamma: nothing declared (record); one unreviewed ABSTAIN and one unreviewed FAIL, surfaced.
+ * gamma: nothing declared (record); one unreviewed INSUFFICIENT_DATA and one unreviewed FAIL, surfaced.
  * acme/new: declared advise with no verdicts yet → an unevidenced demotion: a standing notice, not an ask.
  */
 function book(): { ledger: Ledger; openFail: string; gammaFail: string; gammaAbstain: string } {
@@ -106,7 +106,7 @@ describe('what Riposte is asking for: the open proposals', () => {
   })
 })
 
-describe('FAIL / ABSTAIN notices by rung', () => {
+describe('FAIL / INSUFFICIENT_DATA notices by rung', () => {
   it('surfaced at record, HELD at gate; unreviewed ones listed with their dispute path; reviewed ones counted as resolved', () => {
     const { ledger, openFail, gammaFail, gammaAbstain } = book()
     const o = tenantOpinions(ledger, OPTS)
@@ -115,7 +115,8 @@ describe('FAIL / ABSTAIN notices by rung', () => {
     expect(rec!.workflows.map(w => w.workflow_id)).toEqual(['gamma/invoice@0.0.1'])
     expect(rec!.workflows[0]!.open.map(n => [n.verdict_id, n.outcome, n.action])).toEqual([[gammaAbstain, 'INSUFFICIENT_DATA', 'SURFACE'], [gammaFail, 'FAIL', 'SURFACE']])
     const acme = gate!.workflows.find(w => w.workflow_id === 'acme/invoice@0.0.1')!
-    expect(acme).toMatchObject({ fail: 61, abstain: 0, resolved: 60 })
+    expect(acme).toMatchObject({ fail: 61, insufficient_data: 0, resolved: 60 })
+    expect('abstain' in acme!).toBe(false)
     expect(acme.open.map(n => [n.verdict_id, n.action])).toEqual([[openFail, 'HOLD']])
     expect(acme.open[0]!.dispute).toBe(`verify opinion --ledger <chain.jsonl> --dispute ${openFail}`)
     expect(gate!.workflows.find(w => w.workflow_id === 'beta/invoice@0.0.1')).toMatchObject({ fail: 5, resolved: 5, open: [] })
@@ -131,13 +132,15 @@ describe('FAIL / ABSTAIN notices by rung', () => {
     expect(o.notices).toEqual([])
     expect(o.asking).toHaveLength(2)
     expect(o.standing).toHaveLength(1)
-    expect(renderTenantReport(ledger, { ...OPTS, period: { since: '2026-10-01T00:00:00.000Z', label: '2026-10' } })).toContain('No FAIL or ABSTAIN on record in the period.')
+    expect(renderTenantReport(ledger, { ...OPTS, period: { since: '2026-10-01T00:00:00.000Z', label: '2026-10' } })).toContain('No FAIL or INSUFFICIENT_DATA on record in the period.')
   })
 
   it('caps each list and says how many more', () => {
     const { ledger } = buildLedger({ passes: 1, fails: 4, reviewedFails: 0 })
     const md = renderTenantReport(ledger, { period: SEPT, max_notices: 2 })
-    expect(md).toContain('4 FAIL · 0 ABSTAIN; 4 awaiting a person, 0 resolved.')
+    expect(md).toContain('4 FAIL · 0 INSUFFICIENT_DATA; 4 awaiting a person, 0 resolved.')
+    expect(md).toContain('### FAIL / INSUFFICIENT_DATA notices, by rung')
+    expect(md).not.toContain('ABSTAIN')
     expect(md).toContain('  - … 2 more awaiting a person')
   })
 })
@@ -168,12 +171,12 @@ describe('deterministic, tenant-scoped, honest when empty', () => {
     ])
     expect(o.notices).toEqual([])
     const md = renderOpinionsSection(o)
-    expect(md).toContain('No FAIL or ABSTAIN on record in the period.')
+    expect(md).toContain('No FAIL or INSUFFICIENT_DATA on record in the period.')
     expect(md).toContain('Riposte is asking for nothing: nothing has gone wrong under what a person granted, and no workflow\'s record supports a promotion. 3 workflows run above what the record yet supports: a standing notice (below), not an ask.')
     expect(md).toContain('### Granted above the evidence (3)')
   })
 
-  it('no policy: proposes nothing, says why, and still lists every FAIL / ABSTAIN (all at record)', () => {
+  it('no policy: proposes nothing, says why, and still lists every FAIL / INSUFFICIENT_DATA (all at record)', () => {
     const { ledger } = book()
     const o = tenantOpinions(ledger, { period: SEPT })
     expect(o.asking).toEqual([])

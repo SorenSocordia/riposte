@@ -1,0 +1,19 @@
+{ "citations": [
+ {"id":"t1","cite":"912 F.3d 455","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"naming the courts of Polk County"},
+ {"id":"t2","cite":"912 F.3d 455","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"Language of that kind is narrow, and it does not extend to disputes that merely relate to the parties’ broader dealings."},
+ {"id":"t3","cite":"912 F.3d 445","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"The district court did not err in denying the motion to compel."},
+ {"id":"t4","cite":"912 F.3d 455","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"“[A]rbitration is a matter of contract and a party cannot be required to submit to arbitration any dispute which he has not agreed so to submit.” (quoting United Steelworkers v. Warrior & Gulf Navigation Co., 363 U.S. 574, 582 (1960))"},
+ {"id":"t5","cite":"912 F.3d 455","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"Arbitration is a matter of contract and a party cannot be required to submit to arbitration any dispute which he has not agreed so to submit. (citation omitted)"},
+ {"id":"t6","cite":"912 F.3d 455","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"The presumption applies only where the clause is ambiguous as to scope."},
+ {"id":"t7","cite":"912 F.3d 455","case_name":"Harborline Logistics, LLC v. Calloway Grain Co.","quote":"The rate addendum was negotiated separately and contains its own forum-selection clause"},
+ {"id":"t8","cite":"967 F.3d 812","case_name":"Delacroix Fabrication, Inc. v. Northgate Mut. Ins. Co.","quote":"Delay is evidence that a jury may weigh, but it is not, standing alone, enough to carry the insured’s burden at summary judgment."},
+ {"id":"t9","cite":"967 F.3d 812","case_name":"Delacroix Fabrication, Inc. v. Northgate Mut. Ins. Co.","quote":"At that stage a court must accept the well-pleaded factual allegations as true, but that rule does not extend to legal conclusions couched as facts."},
+ {"id":"t10","cite":"967 F.3d 812","case_name":"Delacroix Fabrication, Inc. v. Northgate Mut. Ins. Co.","quote":"A complaint survives if it states a claim that is plausible on its face."},
+ {"id":"t11","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"Those defects go to admissibility, not merely to weight."},
+ {"id":"t12","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"The motion to exclude the lost-profits opinion is GRANTED."},
+ {"id":"t13","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"The motion to exclude the lost profits opinion is granted."},
+ {"id":"t14","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"a plaintiff is required to audit a counterparty's books to preserve a claim"},
+ {"id":"t15","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"tolling lasts only until the plaintiff is on actual notice"},
+ {"id":"t16","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"the three-year limitations period begins to run then, whether or not the plaintiff knows of the breach"},
+ {"id":"t17","cite":"341 F. Supp. 3d 220","case_name":"Okonkwo Data Sys., Inc. v. Brightwater Capital Partners, L.P.","quote":"Under Delaware law a claim for breach of contract accrues at the moment of breach . . . whether or not the plaintiff knows of the breach."}
+]}

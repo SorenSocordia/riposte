@@ -83,23 +83,26 @@ export function matchQuote(prepared: PreparedSource, quote: string): QuoteResult
 
   // Not verbatim. Is the citation nonetheless pointing at real text? Find the LONGEST run of consecutive quoted words
   // that appears as a contiguous phrase in the source (robust to a substitution anywhere in the quote, not just the ends).
+  //
+  // 2026-10-03: a sliding window. The run from word i is the longest phrase qWords[i..j] found in the source, and a
+  // phrase that is found stays found with its first word dropped, so the run from i+1 reaches at least j: the search
+  // resumes there instead of restarting at i+1. At most 2 × (quote words) substring searches instead of up to its square
+  // (a 2,000-word near-miss quote against a 119 KB source went from about 0.5 s to a few ms). Each run's length, the
+  // winning run (the first longest) and its position (the first occurrence) are exactly what the restarting loop found.
   const qWords = words(qn)
   let bestLen = 0
   let bestPos = -1
   let bestChars = 0
+  const phraseOf = (i: number, j: number): string => qWords.slice(i, j + 1).join(' ')
+  let j = -1 // qWords[i..j] is known to appear in the source (empty when j < i)
   for (let i = 0; i < qWords.length; i++) {
-    let phrase = qWords[i] as string
-    let pos = src.text.indexOf(phrase)
-    if (pos < 0) continue
-    let j = i
-    while (j + 1 < qWords.length) {
-      const trial = `${phrase} ${qWords[j + 1]}`
-      const tpos = src.text.indexOf(trial)
-      if (tpos < 0) break
-      phrase = trial; pos = tpos; j++
+    if (j < i) {
+      if (src.text.indexOf(qWords[i] as string) < 0) continue
+      j = i
     }
+    while (j + 1 < qWords.length && src.text.indexOf(phraseOf(i, j + 1)) >= 0) j++
     const len = j - i + 1
-    if (len > bestLen) { bestLen = len; bestPos = pos; bestChars = phrase.length }
+    if (len > bestLen) { const phrase = phraseOf(i, j); bestLen = len; bestPos = src.text.indexOf(phrase); bestChars = phrase.length }
   }
 
   if (bestLen >= MIN_ANCHOR_WORDS && bestPos >= 0) {

@@ -1,0 +1,14 @@
+DAUBERT et ux., individually and as guardians ad litem for DAUBERT, et al. v. MERRELL DOW PHARMACEUTICALS, INC.
+509 U.S. 579 (1993)
+CERTIORARI TO THE UNITED STATES COURT OF APPEALS FOR THE NINTH CIRCUIT
+No. 92-102. Argued March 30, 1993. Decided June 28, 1993.
+
+JUSTICE BLACKMUN delivered the opinion of the Court.
+In this case we are called upon to determine the standard for admitting expert scientific testimony in a federal trial.
+The inquiry envisioned by Rule 702 is, we emphasize, a flexible one. Its overarching subject is the scientific validity and thus the evidentiary relevance and reliability of the principles that underlie a proposed submission.
+Scientific methodology today is based on generating hypotheses and testing them to see if they can be falsified; indeed, this methodology is what distinguishes science from other fields of human inquiry. The criterion of the scientific status of a theory is its falsifiability, or refutability, or testability.
+Vigorous cross-examination, presentation of contrary evidence, and careful instruction on the burden of proof are the traditional and appropriate means of attacking shaky but admissible evidence.
+To summarize: "General acceptance" is not a necessary precondition to the admissibility of scientific evidence under the Federal Rules of Evidence, but the Rules of Evidence, especially Rule 702, do assign to the trial judge the task of ensuring that an expert's testimony both rests on a reliable foundation and is relevant to the task at hand.
+
+CHIEF JUSTICE REHNQUIST, with whom JUSTICE STEVENS joins, concurring in part and dissenting in part.
+I defer to no one in my confidence in federal judges; but I am at a loss to know what is meant when it is said that the scientific status of a theory depends on its falsifiability, and I suspect some of them will be, too.

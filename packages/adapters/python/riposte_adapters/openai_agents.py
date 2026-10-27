@@ -24,16 +24,19 @@ Two ways to deliver a hold (use ONE per tool; see enforce=False to combine):
   annotate only), or a person's approval would be overridden.
 
 surface → allow, with the notice in ``output_info`` and ``on_notice(check)`` (this API cannot message the model on allow).
-record, proceed, pass-through → allow. A failed check → allow (fail open) and ``on_error``.
+record, proceed, pass-through → allow. A failed check (or tool arguments that are not a JSON object) → the safest rung
+(core.safe_check): a consequential call gets a degraded hold, delivered like any hold; any other call is allowed. With
+``needs_approval``, a degraded hold pauses for a person (that API can only pause). ``on_error`` is called either way.
 """
 from __future__ import annotations
 
 import asyncio
 import importlib
 import json
+import os
 from typing import Any, Callable, Optional
 
-from .core import Check, Checker, HoldMemory, _warn, default_on_notice, hold_message, safe_check
+from .core import Check, Checker, HoldMemory, _warn, classify_call, default_on_notice, degraded_check, hold_message, safe_check
 
 
 def _agents() -> Any:
@@ -69,8 +72,12 @@ def riposte_tool_input_guardrail(
                 raise ValueError("tool arguments are not a JSON object")
         except ValueError as e:
             on_error(e)
-            return out.allow(output_info={"riposte": "error", "error": str(e)})
-        check = safe_check(checker, tool, args, on_error)
+            cls, why = classify_call(tool, getattr(checker, "policy", None))
+            if cls != "consequential" or os.environ.get("RIPOSTE_ACTION_ON_ERROR", "").strip().lower() == "open":
+                return out.allow(output_info={"riposte": "error", "error": str(e)})
+            check = degraded_check(tool, e, why)
+        else:
+            check = safe_check(checker, tool, args, on_error)
         if check is None:
             return out.allow(output_info={"riposte": "error"})
         info = check.info()

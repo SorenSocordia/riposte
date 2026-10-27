@@ -148,7 +148,7 @@ function ksefRozliczenie(root: XmlElement): { json: Json; bindings: EinvoiceBind
 }
 
 /** Run the built-in footing over the invoice's own elements. Empty when the profile has no footing. */
-export function checkEinvoiceConsistency(map: EinvoiceMap, root: XmlElement, xmlSha: string): EinvoiceConsistency[] {
+export function checkEinvoiceConsistency(map: EinvoiceMap, root: XmlElement, xmlSha: string, engine?: string): EinvoiceConsistency[] {
   const ubl = map.profile !== 'ksef-fa3'
   const ruleset = footingRulesetFor(map.profile)
   const footing = `${ruleset.id}@${ruleset.version}${ubl ? ', strict (rel 0)' : ''}`
@@ -196,7 +196,8 @@ export function checkEinvoiceConsistency(map: EinvoiceMap, root: XmlElement, xml
   // UBL: STRICT (no relative band). The CEN schematron asserts BR-CO-10/13/15/16 exactly to the cent
   // (round(x * 10 * 10) div 100), and the 0.1.0 UBL rulesets say so themselves (rel 0); the option is kept explicit.
   // KSeF keeps its own ruleset policy (band capped at 0.02).
-  const verdict = verifyDeclarative(extraction, ruleset, { now: () => new Date(0), ...(ubl ? { tolerance: { rel: 0, absCap: 0 } } : {}) })
+  // 2026-10-03: the footing reads by the engine version the twin verdict is made under (declarativeReading).
+  const verdict = verifyDeclarative(extraction, ruleset, { now: () => new Date(0), ...(ubl ? { tolerance: { rel: 0, absCap: 0 } } : {}), ...(engine !== undefined ? { engine } : {}) })
   const out: EinvoiceConsistency[] = []
   for (const hc of verdict.claims) {
     const m = /^(document|line\[(\d+)\])\.(.+)$/.exec(hc.claim_id)

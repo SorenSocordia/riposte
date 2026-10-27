@@ -1,0 +1,267 @@
+{
+  "format": "bench-table/1",
+  "id": "sci-r2-argo",
+  "title": "Ocean float quality flags and one published table replayed (Argo mixed layers)",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "a18ddc52d356065570ea1450e38ce04d9033aecadf6d4e633e599d5218102123",
+    "frozen_sha256": "09ccd4ebb318e290d326f49db5e26d219c00d3502ef27613c16980d0512c8b3c",
+    "amendments": [
+      {
+        "sha256": "3e5b40cd4daeb6a903898ea1bc96015a27e8b01c1aee57aff8030d6c13314b79",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-04T04:05Z",
+        "note": "(after amendment A1)",
+        "text": "### A1, 2026-10-04T04:05Z, after the frozen run. Diagnostics only; no decisive rule changes.\n\nDecisive results as frozen, recorded before any diagnostic below was run:\nC0 FAIL (N_valid 1,385,119), C1 INSUFFICIENT and C2 INSUFFICIENT (F = WMO 19019; P-QC admits\n0 levels on all 269 profiles because every adjusted flag is '2', TNPD). These stand.\n\nSeen after freeze, motivating the diagnostics: the database declares `dt_mld` in \"meters\" and its\nsmallest `tt_mld` is 0.99333, the depth of 1 dbar, so its MLDs are depths, not pressures. The\nfrozen comparison (dbar against the database number) is kept as the decisive form. The 2009 code\nreplica (P-PUB) agrees with the database on 100 of 259 MLDs and 0 of 100 MLTs. Its MLDs are\nshallower in steps of 0.5 dbar, and its MLTs are always warmer, by 0.05 to 0.23 degC.\n\nPost-hoc diagnostic variants, labelled as such wherever reported, never verdicts:\n- D-depth: my MLD converted to depth (EOS-80 `dpth`, or TEOS-10 `z_from_p`, whichever\n  reproduces the database's own pressure-to-depth conversion on rows where it can be inferred).\n- D-TEOS: TEOS-10 via vendored pure-Python `gsw` 3.0.6 (PyPI sdist sha256\n  ffe8496c61bb3cf488316f6444234a69f7cd6884fb04ff7b4889a773fbed4f44, workspace source only, nothing\n  installed): sigma0 from (SA, CT) in place of EOS-80 pden, and MLT as the mean Conservative\n  Temperature. Tested to see whether the database is replayable at all, and with what.\n- If a variant reproduces the database, the same variant may be run on a second float chosen by\n  rule S plus one added criterion written here before its files are downloaded: S3(c) at least\n  20 profiles with >= 5 levels whose three adjusted flags are all '1'. Candidates continue in\n  ascending WMO order after 19019. Its result is labelled post-hoc and does not replace C1/C2.\n",
+        "text_from": "PREREG.md:149-172"
+      },
+      {
+        "sha256": "b4a7b76da5ee5bd00ad129f816dbb5e99ac23feba5d33f205f85dcff88340860",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-04T04:00Z",
+        "note": "(after A2)",
+        "text": "### A2, written before any second-float file is downloaded. Post-hoc; not a verdict.\n\nA1's diagnostics found that no density definition tried reproduces the database's `dt_mld` (at most\n1 of 259 exact). The temperature-threshold column `tt_mld` replays exactly (256 of 259) as the 2009\nalgorithm on Conservative Temperature, 0.2 degC, with TEOS-10 depth `-z_from_p`. The means `dt_mlt`,\n`dt_mls`, `dt_mlpd` replay (about 190 of 259 to 1e-4) as the means of CT, Absolute Salinity and\nTEOS-10 sigma0 above the database's own MLD.\n\nSo the second-float demonstration under A1 uses the column that replays:\n- F2 = the first float after 19019 in the S2 list (ascending WMO) meeting S3(a), S3(b) and\n  S3(c) (at least 20 profiles with >= 5 levels whose three adjusted flags are all '1').\n- Each pipeline (P-PUB, P-QC, P-QC12, P-ADJ, P-RAW, level rules as frozen) computes the CT\n  0.2 degC threshold MLD, converted with -z_from_p. Each is compared to `tt_mld` with the C1 form:\n  agree if |d| <= max(2 m, 2%). \"Replays\" means at least 90% of at least 20 matched profiles agree.\n  These are labels, not verdicts.\n- The control is reported as frozen: how many profiles move beyond tolerance from P-QC to\n  P-RAW, with the median and maximum |d|.\n",
+        "text_from": "PREREG.md:173-190"
+      },
+      {
+        "sha256": "a18ddc52d356065570ea1450e38ce04d9033aecadf6d4e633e599d5218102123",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-04T04:00Z",
+        "note": "(after A2 + erratum)",
+        "text": "Erratum (appended at A2 time): A1's header time \"04:05Z\" was typed ahead of the clock. A1 was\nwritten after the frozen run and before A2 (04:00Z by `date -u`); its hash line in `PREREG.sha256`\ncarries the same mistyped time. No content of A1 is changed.",
+        "text_from": "PREREG.md:191-193"
+      }
+    ],
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:25Z",
+          "serial": "6d0b9c808c7bf85234fbc549b1d9c6d6",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "SCI-R2 frozen recompute (float 19019) and the A2 demonstration (float 19021)",
+    "date": "2026-10-04",
+    "engine_version": null,
+    "ruleset": null,
+    "results": {
+      "path": "results",
+      "sha256": "ba684a326c2f4a31cb7ad52a9d31767f0f9f8617a3ba3e3147ae88c76a5aee03"
+    },
+    "spec_sha256": "4d2a62043b6f9b975a289ad166e63a7336db39a4b413d7a5062d68fe0a79605d",
+    "not_shipped": [
+      {
+        "file": "vendor/seawater-wheel",
+        "sha256": "765aa6b6a82db3d4e9232313420e4d665218d8863a383f5bc4dd49d5f1f0c1d1",
+        "reason": "the seawater Python package as the run used it, pinned in PREREG.md line 101. A third party's package, not redistributed here; the prereg names its version"
+      },
+      {
+        "file": "vendor/gsw-sdist",
+        "sha256": "ffe8496c61bb3cf488316f6444234a69f7cd6884fb04ff7b4889a773fbed4f44",
+        "reason": "the gsw Python package source as the run used it, pinned in PREREG.md line 165. A third party's package, not redistributed here; the prereg names its version"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The run's scripts are not in this tree, nor the copies of the seawater and gsw Python packages it used. Its inputs are public Argo files from data-argo.ifremer.fr and mixedlayer.ucsd.edu, named in PREREG.md; their sha256s were recorded in a manifest in the run's folder, which does not ship."
+    },
+    "blind_basis": "PREREG.sha256 records the prereg's sha256 at 2026-10-04T03:45:19Z, and the prereg says the data folder was empty when it was written; the manifest of the downloads, with their times, stayed in the run's folder and does not ship. It is blind to the values only: the method was known. The list and the prereg were written by the authors"
+  },
+  "rows": [
+    {
+      "claim": "C0 (decisive): the database row count sits in the abstract's band",
+      "n": 1,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.793451
+      ],
+      "method": "wilson",
+      "verdict": "FAIL",
+      "bar": {
+        "text": "C0: PASS if N_valid is in [1,187,500, 1,250,000] (the abstract's 'nearly 1,250,000')",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": "blind to the values, not to the method: the prereg froze while the data folder was empty"
+    },
+    {
+      "claim": "C1 (decisive): per-profile density-threshold MLD from QC-honoring data agrees with the database",
+      "n": 0,
+      "k": 0,
+      "rate": null,
+      "ci95": [
+        0,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": {
+        "text": "C1: PASS if |M| >= 20 and at least 90% of M agree; FAIL if |M| >= 20 and fewer; INSUFFICIENT if |M| < 20",
+        "test": {
+          "rate": {
+            "ge": 0.9
+          }
+        },
+        "min_n": 20
+      },
+      "note": "n = 0: nothing to decide; the frozen float is flagged 2 on every level, so QC-honoring data admits no level"
+    },
+    {
+      "claim": "C2 (decisive): per-profile mixed-layer mean temperature agrees with the database",
+      "n": 0,
+      "k": 0,
+      "rate": null,
+      "ci95": [
+        0,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": {
+        "text": "C2: PASS if the restricted set has >= 20 profiles and at least 90% agree; INSUFFICIENT if fewer than 20",
+        "test": {
+          "rate": {
+            "ge": 0.9
+          }
+        },
+        "min_n": 20
+      },
+      "note": "n = 0: nothing to decide"
+    },
+    {
+      "claim": "control, QC ignored: MLDs agreeing with the database",
+      "n": 264,
+      "k": 100,
+      "rate": 0.378788,
+      "ci95": [
+        0.322406,
+        0.438646
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; control verdicts are descriptive; they do not replace C1/C2"
+    },
+    {
+      "claim": "the published 2009 code replica: MLDs agreeing with the database",
+      "n": 259,
+      "k": 100,
+      "rate": 0.3861,
+      "ci95": [
+        0.328884,
+        0.446646
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "formal checks over the float profile files with no failure",
+      "n": 15,
+      "k": 15,
+      "rate": 1,
+      "ci95": [
+        0.796116,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "formal checks passed by the derived database file",
+      "n": 12,
+      "k": 2,
+      "rate": 0.166667,
+      "ci95": [
+        0.046965,
+        0.448031
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    },
+    {
+      "claim": "A2, QC honored: temperature-threshold MLDs agreeing with the database (float 19021)",
+      "n": 219,
+      "k": 219,
+      "rate": 1,
+      "ci95": [
+        0.982761,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; post-hoc demonstration (Amendment A2), not a verdict"
+    },
+    {
+      "claim": "A2, QC ignored: temperature-threshold MLDs agreeing with the database (float 19021)",
+      "n": 219,
+      "k": 217,
+      "rate": 0.990868,
+      "ci95": [
+        0.967319,
+        0.997492
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; post-hoc demonstration (Amendment A2), not a verdict"
+    }
+  ],
+  "misses": [
+    {
+      "id": "selection-rule",
+      "kind": "method",
+      "description": "the float-selection rule did not anticipate a float flagged 2 on every level, so the decisive test had nothing to compute; a second float was chosen post hoc (A2)",
+      "post_hoc": false
+    },
+    {
+      "id": "units-assumed",
+      "kind": "data-defect",
+      "description": "the prereg assumed the database's MLD in dbar and its temperature in situ; the file holds TEOS-10 depths and Conservative Temperature, and its attributes never say so",
+      "post_hoc": false
+    },
+    {
+      "id": "row-count",
+      "kind": "data-defect",
+      "description": "the database holds 1,385,119 valid rows against the abstract's 'nearly 1,250,000' (possibly a later file than the paper's own processing)",
+      "post_hoc": false
+    },
+    {
+      "id": "density-rule-unknown",
+      "kind": "unexplained",
+      "description": "the 2017 database's density-threshold rule is not identified: five density definitions give at most 1 of 259 exact, and the rule is unpublished",
+      "post_hoc": true
+    },
+    {
+      "id": "database-format",
+      "kind": "data-defect",
+      "description": "the derived database file fails 10 of 12 format checks (no Conventions attribute, non-CF standard names, typed range mismatches, status meaning in units, a MATLAB datenum date, TEOS-10 quantities under EOS-80-era units)",
+      "post_hoc": false
+    },
+    {
+      "id": "missing-rows",
+      "kind": "data-defect",
+      "description": "cycles 227 and 228 of float 19019 compute normally but have no database row, for no visible reason",
+      "post_hoc": false
+    }
+  ],
+  "blind": true,
+  "label": "blind"
+}

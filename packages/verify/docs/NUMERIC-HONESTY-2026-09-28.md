@@ -12,7 +12,7 @@ it does not, and "could not compare" is never either one. Five defects broke tha
 - one was found by the property test written for this correction.
 
 Every change below was pre-registered before it was measured, and the misses of that pre-registration are published
-here too.
+here too. The order of prereg and measurement rests on our own files; see "Preregistration timestamps" at the end.
 
 Who was affected: anyone who ran the built-in invoice ruleset (`verify <doc>`, `verify()` with no ruleset or
 `'invoice'`), anyone who passed a tolerance override to `verify()` or `verifyDeclarative()`, and (for defect 3) the pay-app
@@ -153,3 +153,101 @@ first run, and that is what the cash step was added for.
     golden pins their current bytes.
 - An unparseable unit price makes MATH_INT abstain with a reason that names the missing evidence reference, not the
   unparseable price.
+
+## Preregistration timestamps (added 2026-10-05; binding for every prereg frozen from that day)
+
+A recorded sha256 proves which text a prereg held. It does not prove when that text existed. Until now the order
+"prereg, then run" rested on our own file-system times and logs, which a reader has to take on trust. One of our
+preregs even corrects its own header times from those file times.
+
+**From 2026-10-05, every new prereg is stamped by a third party before its run, and the proof ships beside it.** The rule
+came one run too late: the second legal blind set was preregistered and run on 2026-10-05, under engine 0.6.0, with no
+stamp before its run. Its prereg was stamped at 18:07:30Z that day, after the run, and its table says "stamped after the
+run". The post-hoc note for legal@0.3.0 on the same set, hashed at 17:50Z, was stamped at 19:12:24Z, after its run, and its table
+says the same.
+- The stamp is an RFC 3161 timestamp. A timestamp authority (TSA) signs the prereg's sha256 together with the time it saw
+  it.
+- The proof, `PREREG.md.tsr`, sits in the table's folder under `docs/bench/<id>/`, beside the prereg. The folder's
+  `run.json` lists it under `stamps`. The authority's root certificates sit once, in `docs/bench/_tsa/`.
+- `verify bench check docs/bench` verifies each stamp a table lists. Its imprint must be the stamped file's sha256, and its
+  signature and chain must hold under the roots in `docs/bench/_tsa/`. A table whose stamp fails is not printed as matching.
+- Each table records what its stamps show, on its **Stamp** line. "Stamped before the run" needs a proof signed before the
+  run began; a run dated by day alone begins at 00:00 UTC that day, so a same-day stamp never counts. A run before
+  2026-10-05 with no such proof reads "unstamped (frozen before 2026-10-05)". A later run with no proof reads NEEDS STAMP.
+  A stamp made after its run is shown as that, never as a stamp before it.
+- Runs before 2026-10-05 carry no stamp made before their run. `docs/BENCH.md` labels them "unstamped (frozen before
+  2026-10-05)". The stamps made on 2026-10-05 (see "Status") postdate every one of those runs, so they prove the texts
+  from that day on, not before.
+
+**What a stamp proves, and what it does not.** It proves the authority saw that hash by its signed time. It does not prove
+who wrote the prereg, or that no other draft existed. It also rests on trusting the authority's key.
+
+**How to stamp a prereg.** `verify bench stamp` contacts nothing unless it is given an authority's address:
+```bash
+verify bench stamp docs/bench/<id>/PREREG.md
+#   writes PREREG.md.tsq (the query for the file's sha256) and prints the command that sends it
+curl -sS --fail -H "Content-Type: application/timestamp-query" --data-binary @PREREG.md.tsq -o PREREG.md.tsr <TSA URL>
+verify bench stamp-verify PREREG.md PREREG.md.tsr --ca docs/bench/_tsa/digicert-roots.pem --query PREREG.md.tsq
+```
+`verify bench stamp <file> --tsa <url>` does the same in one step, sending the query with curl.
+
+**`--ca` wants the authority's ROOT certificate(s), not its responder or intermediate certificate.** The stamp carries the
+rest of its chain itself, and `stamp-verify` passes those embedded certificates to OpenSSL as untrusted intermediates.
+Only the roots you give are trusted.
+- For DigiCert's authority, the roots are DigiCert Assured ID Root CA and DigiCert Trusted Root G4. Give both: the chain
+  ends at Trusted Root G4, which the stamp also carries cross-signed by Assured ID Root CA. `docs/bench/_tsa/digicert-roots.pem`
+  holds both in one file, so one `--ca` does it.
+- DigiCert publishes the two roots at <https://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt.pem> and
+  <https://cacerts.digicert.com/DigiCertTrustedRootG4.crt.pem>. Copies ship in `docs/bench/_tsa/`, with their SHA-256
+  fingerprints in its README, so a reader can verify without fetching anything.
+- Without the embedded certificates, OpenSSL stops with "unable to get local issuer certificate". That is what the first
+  live check reported, before `stamp-verify` passed them.
+
+The same, with OpenSSL alone:
+```bash
+openssl ts -query -data PREREG.md -sha256 -cert -out PREREG.md.tsq
+curl -sS --fail -H "Content-Type: application/timestamp-query" --data-binary @PREREG.md.tsq -o PREREG.md.tsr <TSA URL>
+openssl ts -reply -in PREREG.md.tsr -token_out -out token.der        # the token inside the reply
+openssl pkcs7 -inform DER -in token.der -print_certs -out carried.pem  # the certificates the token carries
+cat <root 1> <root 2> > roots.pem
+openssl ts -verify -data PREREG.md -in PREREG.md.tsr -CAfile roots.pem -untrusted carried.pem
+```
+
+**Why RFC 3161 and not OpenTimestamps.** We tried the OpenTimestamps JavaScript client first, on 2026-10-05. Its last
+release is from 2022. It installed with four deprecated dependencies and eleven npm audit findings, two of them critical.
+RFC 3161 needs nothing beyond OpenSSL, which also performs the independent check. The stamp tool's tests run against a
+local mock authority that OpenSSL builds and answers offline; no test contacts a real authority.
+
+**Status.** On 2026-10-05 the maintainer stamped by hand the 14 prereg files that then shipped in `docs/bench/<id>/`, with
+DigiCert's timestamp authority, and two more later that day: the second legal blind set's prereg and the legal@0.3.0
+post-hoc note. No automated run stamps anything. The 14 were signed from 16:07:16 to 16:07:33 UTC, the fifteenth at
+18:07:30 UTC and the sixteenth at 19:12:24 UTC. All 16 verify with `verify bench stamp-verify` against the roots in
+`docs/bench/_tsa/`.
+- **What these stamps show:** each text existed, byte for byte, by that afternoon.
+- **What they do not show:** that any text came before its run. Every one of those runs is older than its stamp.
+- **Listed as what they are.** Each table's `run.json` lists its stamps. The 14 earlier tables' **Stamp** lines read
+  "unstamped (frozen before 2026-10-05)" with the later stamp's signed time beside it; the second legal blind set's and the
+  legal@0.3.0 post-hoc table's read "stamped after the run". None is counted as a stamp before its run. `verify bench check` refuses a proof that sits in a
+  table's folder without being listed, so a new stamp is never left unread.
+- **From here,** each new prereg is stamped before its run.
+
+The 16 stamps, all signed on 2026-10-05 (UTC), each `<file>.tsr` beside the file it covers in `docs/bench/<id>/`:
+
+| table | file stamped | signed |
+|---|---|---|
+| `r4-peppol-posthoc` | `PREREG.md` | 16:07:16Z |
+| `s4-bpi2019` | `PREREG.md` | 16:07:17Z |
+| `s4-bpi2019` | `PREREG-final.frozen.md` | 16:07:21Z |
+| `s4-bpi2019` | `PREREG-v0.frozen.md` | 16:07:22Z |
+| `sci-r0-rotation-curve` | `PREREG.md` | 16:07:23Z |
+| `sci-r1-sparc` | `PREREG.md` | 16:07:24Z |
+| `sci-r2-argo` | `PREREG.md` | 16:07:25Z |
+| `sci-r3-inversions` | `PREREG.frozen.md` | 16:07:26Z |
+| `sci-r3-inversions` | `PREREG.md` | 16:07:27Z |
+| `t1-extraction-contract` | `PREREG.md` | 16:07:28Z |
+| `t3-closed-loop` | `PREREG.md` | 16:07:29Z |
+| `x1-einvoice-pdf` | `PREREG.md` | 16:07:30Z |
+| `x2b-legal-fix` | `PREREG.md` | 16:07:31Z |
+| `x2-legal-blind` | `PREREG.md` | 16:07:33Z |
+| `legal-blind-2` | `PREREG.md` | 18:07:30Z (after its run, 14:26Z) |
+| `legal-blind-2-030` | `ADDENDUM-legal-0.3.0.md` | 19:12:24Z (after its run, 17:50Z) |

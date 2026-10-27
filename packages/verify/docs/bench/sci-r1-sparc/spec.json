@@ -1,0 +1,49 @@
+{
+  "spec": "bench-spec/1",
+  "id": "sci-r1-sparc",
+  "title": "A published galaxy relation replayed across a whole catalogue (SPARC, 175 galaxies)",
+  "adapter": "items",
+  "label": "post-hoc",
+  "blind": false,
+  "files": { "summary": "out/summary.json", "claims": "out/claims.tsv" },
+  "run": { "id": "SCI-R1 run 4 (final; frozen results identical to run 3)", "date": "2026-10-04", "engine_version": null, "ruleset": null },
+  "rows": [
+    {
+      "claim": "A (decisive): the fitted acceleration scale within 0.10 of the published 1.20 (1e-10 m s^-2)",
+      "items": "summary:rar", "where": {}, "hit": { "verdicts.A": "PASS" }, "method": "wilson",
+      "bar": { "text": "A: |g_dagger - 1.20| <= 0.10 under the preregistered weights", "test": { "k": { "eq": "$n" } } },
+      "note": "not blind: the published values were known when the tolerances were set; fitted 1.0989, off by 0.1012; five reasonable weightings span 0.97 to 1.16",
+      "reported": { "k": 0, "n": 1 }
+    },
+    {
+      "claim": "S-v (decisive): vertical rms scatter within 0.02 dex of the published 0.13",
+      "items": "summary:rar", "where": {}, "hit": { "verdicts.S_v": "PASS" }, "method": "wilson",
+      "bar": { "text": "S-v: |rms_vertical - 0.13| <= 0.02 dex", "test": { "k": { "eq": "$n" } } },
+      "reported": { "k": 1, "n": 1 }
+    },
+    {
+      "claim": "S-o: orthogonal rms scatter within 0.02 dex of the published 0.13",
+      "items": "summary:rar", "where": {}, "hit": { "verdicts.S_o": "PASS" }, "method": "wilson",
+      "bar": { "text": "S-o: |rms_orthogonal - 0.13| <= 0.02 dex", "test": { "k": { "eq": "$n" } } },
+      "reported": { "k": 1, "n": 1 }
+    },
+    {
+      "claim": "headline: A and S-v together",
+      "items": "summary:rar", "where": {}, "hit": { "verdicts.headline": "PASS" }, "method": "wilson",
+      "bar": { "text": "headline: PASS only if A and S-v both PASS", "test": { "k": { "eq": "$n" } } },
+      "reported": { "k": 0, "n": 1 }
+    },
+    { "claim": "C3: published V_flat replays from the rows, or both agree no flat part exists (all galaxies)", "items": "claims:", "where": {}, "hit": { "C3": ["PASS", "PASS-absent"] }, "method": "wilson", "note": "a per-galaxy verdict rule, not an aggregate bar", "reported": { "k": 175, "n": 175 } },
+    { "claim": "C1: flat beyond R_flat, among galaxies decided (all galaxies)", "items": "claims:", "where": { "C1": { "$ne": "INSUFFICIENT" } }, "hit": { "C1": "PASS" }, "method": "wilson", "reported": { "k": 76, "n": 97 } },
+    { "claim": "C2: baryonic excess at least 2 errV at every outer row, among galaxies decided (all galaxies)", "items": "claims:", "where": { "C2": { "$ne": "INSUFFICIENT" } }, "hit": { "C2": "PASS" }, "method": "wilson", "reported": { "k": 89, "n": 97 } },
+    { "claim": "C1, science sample, among galaxies decided", "items": "claims:", "where": { "science_sample": "True", "C1": { "$ne": "INSUFFICIENT" } }, "hit": { "C1": "PASS" }, "method": "wilson", "reported": { "k": 68, "n": 88 } }
+  ],
+  "misses": [
+    { "id": "table1-layout", "kind": "data-defect", "description": "SPARC Table1 layout defect re-confirmed: the declared byte read fails on all 175 rows; read by whitespace", "post_hoc": false },
+    { "id": "odr-weights-broken", "kind": "tool-defect", "description": "scipy.odr per-point weights are broken in this install (scipy 1.14.1): any per-point sy returns the start value with info 21, so run 1 measured nothing; replaced by a direct solver behind a validation gate (Amendment 1, with the brute-force value disclosed)", "post_hoc": false },
+    { "id": "island-bound", "kind": "defect", "description": "the islands solver bound was too narrow in run 2 (random-island fits touched b = 3); widened in Amendment 2, primary fit unchanged to 1e-8", "post_hoc": false },
+    { "id": "islands-design-gap", "kind": "method", "description": "the frozen islands control removed the shared 1/R along with the galaxy coupling; a shared-radius variant was added post hoc (Amendment 3)", "post_hoc": true },
+    { "id": "row-count-drift", "kind": "unexplained", "description": "sample rows do not reproduce exactly: 3168 before the precision cut against the paper's 3149, and 2700 after it against 2693; the 153 galaxies match; unexplained", "post_hoc": false },
+    { "id": "weights-unspecified", "kind": "spec-gap", "description": "the acceleration scale replay is weighting-sensitive at the 10% level and the letter does not state its fit weights, so a byte-exact replay of the parameter is not possible from the paper alone", "post_hoc": false }
+  ]
+}

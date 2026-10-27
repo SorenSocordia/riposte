@@ -92,7 +92,9 @@ fewer than the 59 the gate bar needs, and 264 PASSes are fewer than 299. The dem
 
 The twin is the **statement-anchored** map v0.2, the one the benchmark pre-registered and passed. The library's default
 map is v0.1, and v0.2.1 is not used: its held-out pre-registration failed. The test pins the fixture's sha256 and the
-final book's sha256, `d227a3bb…`. If an intended change moves either, read the narrative again before you re-pin.
+final book's sha256, `10d15faa…`. If an intended change moves either, read the narrative again before you re-pin. (It was
+`d227a3bb…` until typed remedies were added on 2026-10-02: the book records verdicts, and a non-PASS verdict now carries its
+remedies. A test switches remedies off and gets `d227a3bb…` back, byte for byte.)
 
 ## What it does not show
 

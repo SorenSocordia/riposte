@@ -1,0 +1,391 @@
+{
+  "format": "bench-table/1",
+  "id": "x2-legal-blind",
+  "title": "Verbatim legal quotation check, blind",
+  "prereg": {
+    "path": "PREREG.md",
+    "sha256": "4dbc3039e6f0279a7533153c955b2eb0299a5ed7ac832f1e3bb5b5434945e2af",
+    "frozen_sha256": "7d3b9d47cba536ef876deed6ef7aaf4199f7c47484d45cdde9072ca06274419a",
+    "amendments": [
+      {
+        "sha256": "4dbc3039e6f0279a7533153c955b2eb0299a5ed7ac832f1e3bb5b5434945e2af",
+        "recorded_in": "PREREG.sha256",
+        "at": "2026-10-03T10:50:31Z",
+        "note": "second hash (the run's)",
+        "text": "## Re-hash note (before any engine call)\n\nThe first hash was taken at 2026-10-03T10:49:49Z. The run's own integrity check then stopped at KB01, before the engine\nwas called. Python had written the CAP texts with CRLF line endings but hashed them as LF. The CAP texts were rewritten\nbyte-exactly from the cached CAP JSON, with CAP's own `\\n`, and the manifest now hashes raw bytes. No item, quotation,\nsource choice, rule or bar changed. `PREREG.sha256` holds both hash sets.",
+        "text_from": "PREREG.md:133-138"
+      }
+    ],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:33Z",
+          "serial": "0096faf2c0bbde4690842fc61f5a7503aa",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "X2 blind run (58 items)",
+    "date": "2026-10-03",
+    "engine_version": "0.0.1",
+    "ruleset": "legal@0.0.1",
+    "dist_sha256": "670a34e2b228ea268baef5cffb2a493c4a09dd6f3593f8561dea107da6503d3e",
+    "results": {
+      "path": "results/run-blind.json",
+      "sha256": "8f373dc10af03ef256cb057056394c1b1e8d75c5fe603ed642ed7d8e5a4c206f"
+    },
+    "spec_sha256": "2ef879c3e63b00ed4fc2739fdf70c78aa9a963569dcc19d121b69c3c609f0c73",
+    "not_shipped": [
+      {
+        "file": "items/MANIFEST.json",
+        "sha256": "4aa34a1d40f6906d9e932d37b34bae20637111e6ec41374762466f4d60a19160",
+        "reason": "the first hash set's version, superseded before any engine call by the re-hash the prereg records; those bytes were not kept. The run's version ships."
+      },
+      {
+        "file": "harness/build_manifest.py",
+        "sha256": "689419186555b66541bcb885f747dd8ce38ce80dffa94ce5d6ab25c5b02e0e10",
+        "reason": "the first hash set's version, superseded before any engine call by the re-hash the prereg records; those bytes were not kept. The run's version ships."
+      },
+      {
+        "file": "harness: the script that fetched the opinion texts",
+        "sha256": "3cc07eb0186bdb06596196fbb8e2c9f146b6f107a705d89abeaff826f7aba719",
+        "reason": "the public export's word filter blocks this script's file name, so neither the file nor its name ships here. The texts it fetched are named in items/MANIFEST.json."
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The harness ships byte for byte, but the 57 opinion texts and 58 decision files it reads are named by path and sha256 in items/MANIFEST.json and are not in this tree, and it looks for the engine build at the authors' layout. The script that fetched the texts does not ship."
+    },
+    "blind_basis": "PREREG.sha256 records two hash sets, at 2026-10-03T10:49:49Z and 10:50:31Z, each before any engine call, and the prereg's protocol puts the hashing before the first run; the items and opinion texts were gathered by the authors before the first set. The list and the prereg were written by the authors"
+  },
+  "rows": [
+    {
+      "claim": "known-bad citations certified PASS",
+      "n": 20,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.161126
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "Primary bar: 0 PASS on the 20 known-bad items",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "supplementary false quotations certified PASS",
+      "n": 18,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.17588
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "the primary rule, reported the same way for the 18 supplementary items",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "fabricated cases not abstained (FAIL or PASS)",
+      "n": 5,
+      "k": 0,
+      "rate": 0,
+      "ci95": [
+        0,
+        0.434483
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "Secondary, fabricated-case subset (5): must ABSTAIN; the bar is 0 FAIL and 0 PASS",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "propositions abstained OUT_OF_RULESET_SCOPE",
+      "n": 2,
+      "k": 2,
+      "rate": 1,
+      "ci95": [
+        0.34238,
+        1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "bar": {
+        "text": "Secondary, proposition subset (2): ABSTAIN OUT_OF_RULESET_SCOPE",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": ""
+    },
+    {
+      "claim": "false quotations of real cases FAILed (against ABSTAIN)",
+      "n": 13,
+      "k": 6,
+      "rate": 0.461538,
+      "ci95": [
+        0.23206,
+        0.708563
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; no bar: FAIL and ABSTAIN are both correct non-PASS answers"
+    },
+    {
+      "claim": "controls (genuine quotations) PASS",
+      "n": 20,
+      "k": 6,
+      "rate": 0.3,
+      "ci95": [
+        0.145477,
+        0.518973
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; controls: rates reported, no bar"
+    },
+    {
+      "claim": "controls (genuine quotations) FAIL",
+      "n": 20,
+      "k": 14,
+      "rate": 0.7,
+      "ci95": [
+        0.481027,
+        0.854523
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar; every non-PASS audited by the run's author, an AI agent; 11 are false FAILs (see misses)"
+    },
+    {
+      "claim": "supplementary false quotations FAILed",
+      "n": 18,
+      "k": 8,
+      "rate": 0.444444,
+      "ci95": [
+        0.245595,
+        0.662836
+      ],
+      "method": "wilson",
+      "verdict": "INSUFFICIENT",
+      "bar": null,
+      "note": "descriptive: no preregistered bar"
+    }
+  ],
+  "misses": [
+    {
+      "id": "CT01",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT01: FAIL on a genuine quotation: a period inside the closing quote where the opinion continues with a comma",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT02",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT02: FAIL on a genuine quotation: nested quotation marks changed",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT03",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT03: FAIL on a genuine quotation: bracketed substitutions",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT05",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT05: FAIL on a genuine quotation: the opinion's own '[.]' was dropped",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT06",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT06: FAIL on a genuine quotation: the quoting opinion omitted the cited opinion's internal ellipsis",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT09",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT09: FAIL on a genuine quotation: a bracketed letter ('serv[e]')",
+      "post_hoc": false
+    },
+    {
+      "id": "CT10",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT10: FAIL on a genuine quotation: nested quotation marks changed",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT11",
+      "kind": "false-fail (convention and text artifact)",
+      "description": "CT11: FAIL on a genuine quotation: an ellipsis and nested marks, plus a soft hyphen in the PDF text layer",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT14",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT14: FAIL on a genuine quotation: a bracketed capital ('[I]t')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT16",
+      "kind": "false-fail (quotation convention)",
+      "description": "CT16: FAIL on a genuine quotation: the '(cleaned up)' parenthetical",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0"
+    },
+    {
+      "id": "CT18",
+      "kind": "false-fail (convention and text artifact)",
+      "description": "CT18: FAIL on a genuine quotation: brackets and changed marks, plus an OCR source reading 'plaintiffs' for 'plaintiff's'",
+      "post_hoc": false
+    },
+    {
+      "id": "CT08",
+      "kind": "undetermined",
+      "description": "CT08: FAIL on a quotation with brackets and an ellipsis plus a comma the OCR source lacks; undetermined without a second copy of the opinion",
+      "post_hoc": false
+    },
+    {
+      "id": "CT12",
+      "kind": "label-error",
+      "description": "CT12: a control labelled genuine, but the quoting opinion dropped 'a' from 'entitled to a judgment' (Celotex); the engine's FAIL was correct",
+      "post_hoc": false
+    },
+    {
+      "id": "CT19",
+      "kind": "label-error",
+      "description": "CT19: a control labelled genuine, but the quoting opinion dropped 'the' from 'favorable to the plaintiff' (Keys v. Humana); the engine's FAIL was correct",
+      "post_hoc": false
+    },
+    {
+      "id": "anchor-not-word-bounded",
+      "kind": "defect",
+      "description": "the anchor search was not word-bounded: SP07's anchor matched inside \"attorney's\"",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (pieces sit on word boundaries)"
+    },
+    {
+      "id": "prediction-3",
+      "kind": "prediction",
+      "description": "prediction 3 (KB16 would FAIL on a short anchor) was wrong: KB16 abstained",
+      "post_hoc": false
+    },
+    {
+      "id": "KB01-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "KB01: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "KB03-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "KB03: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "KB04-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "KB04: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "KB05-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "KB05: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "KB09-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "KB09: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "SP01-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "SP01: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "SP03-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "SP03: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "SP07-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "SP07: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "SP13-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "SP13: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    },
+    {
+      "id": "SP18-short-anchor",
+      "kind": "misleading-remedy",
+      "description": "SP18: FAIL on a bad quotation whose cited passage is a coincidence of 3 to 5 words, so the remedy pointed at an unrelated sentence ('conform the quotation to it')",
+      "post_hoc": false,
+      "fixed_by": "X2b / legal@0.1.0 (whole-word anchors of 4 or more words; the item abstains)"
+    }
+  ],
+  "blind": true,
+  "label": "blind",
+  "audit": "the run's author, an AI agent (Claude Opus 5.5 (claude-opus-5-5)), audited every PASS and every non-PASS control against the opinion text (prereg, Outcomes and bars); no person labelled",
+  "hash_list_note": "PREREG.sha256 holds two hash sets, 42 seconds apart (2026-10-03T10:49:49Z and 10:50:31Z). The first was superseded before any engine call, when the run's own integrity check stopped on CRLF line endings in the opinion texts. Three lines changed between the sets and one was added: PREREG.md (its re-hash note added), items/MANIFEST.json (the per-text hashes, after the texts were rewritten with LF line endings and the manifest made to hash raw bytes), harness/build_manifest.py (the script that builds that manifest), and a new line for the script that fetched the texts. The first manifest's bytes were not kept, so this tree cannot show that no item changed between the two sets; that rests on the authors' re-hash note in PREREG.md. The run is held to the second set."
+}

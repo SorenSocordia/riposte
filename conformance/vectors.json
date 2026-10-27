@@ -1,0 +1,327 @@
+{
+  "about": "The conformance vectors for docs/INTERCHANGE.md. Each file is replayed as `node packages/verify/dist/cli.js replay <file>`, followed by the vector's args when it has any; each entry of also is a further run of the same file with its own args. engine_exit and engine_says are what that command must give (exit code; a phrase in its first stderr line). binding is what a binding-only verifier must answer: holds (exit 2), fails (exit 1) or refused (exit 3). computed_* are recomputed from the bundle's own inputs and identity parts; recorded_* are what the verdict carries. sha256 is the hash of the vector file's bytes: a checkout that changes them (line endings, a byte-order mark) no longer tests what it says. The pack is listed in conformance/SPEC.md.",
+  "engine_version_when_written": "0.6.0",
+  "vectors": [
+    {
+      "id": "01",
+      "file": "01-valid-invoice-0.6.0.json",
+      "sha256": "3d4b5cd56841a626d637d896968f68ab3cbcf1244b252569386853d170326ceb",
+      "category": "valid",
+      "what": "The engine 0.6.0 verdict on the engineers' door example (docs/doors/examples/invoice.json), with its inputs.",
+      "expect": {
+        "engine_exit": 0,
+        "engine_says": "outcome VERIFIED",
+        "binding": "holds",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "02",
+      "file": "02-equivalent-reordered-crlf.json",
+      "sha256": "389aed8f116940c1e5a3c63a4a07cd55d75b9d60f0f92cc1923d3dea6cfa58d5",
+      "category": "equivalent",
+      "what": "Vector 01 with the keys of every object in reverse order, indented by one space, with CRLF line endings between tokens.",
+      "expect": {
+        "engine_exit": 0,
+        "engine_says": "outcome VERIFIED",
+        "binding": "holds",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "03",
+      "file": "03-equivalent-number-spellings.json",
+      "sha256": "1e3da5c46e48028ec0772cd8bbf718adf394aba3d8eed8b9d8816f2d738a27bc",
+      "category": "equivalent",
+      "what": "Vector 01 with three numbers in the inputs written another way: 150 as 1.5e2, 1500 as 1500.0, 144.42 as 14442e-2.",
+      "expect": {
+        "engine_exit": 0,
+        "engine_says": "outcome VERIFIED",
+        "binding": "holds",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "04",
+      "file": "04-tampered-outcome.json",
+      "sha256": "af4b6416d05d283e7fa9a17cbdaa6dfd1e08295d3e23eed3e38380e23e0cdd75",
+      "category": "tampered",
+      "what": "Vector 01 with outcome and gate_status changed to FAIL; verdict_id and input_hash untouched, so the binding still holds and only re-performance catches it.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "differs from the presented one at `outcome`",
+        "binding": "holds",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "05",
+      "file": "05-tampered-input-figure.json",
+      "sha256": "eccbcbd4582a2915f5884ddc77b45d48b55c200eba84d0f43ef105a88ec9e206",
+      "category": "tampered",
+      "what": "Vector 01 with the invoice total in the inputs changed from 1894.92 to 1894.93.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "input_hash does not match the supplied inputs",
+        "binding": "fails",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "3c59e1aa790c4afec0e8c455c5e872ff477ab267f53c0f963e7f99744352f44c",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "06",
+      "file": "06-tampered-string-for-number.json",
+      "sha256": "527a961507c352d63cdb478b33d42eb2133a91dda20835bc48a97f05252d4476",
+      "category": "tampered",
+      "what": "Vector 01 with the first line amount in the inputs written as the string \"1500.00\" instead of the number 1500.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "input_hash does not match the supplied inputs",
+        "binding": "fails",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "2264a8df206b930f0a65f866dd2b9360a6243de8dad5ff192ef3548729019ce9",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "07",
+      "file": "07-tampered-verdict-id.json",
+      "sha256": "8bc1a6ee35f8f158de371c0b5d6d1080c7377cc5dda2172f72c5c785c5cb065c",
+      "category": "tampered",
+      "what": "Vector 01 with the last hex digit of verdict_id changed.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "verdict_id does not derive from",
+        "binding": "fails",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d20",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "08",
+      "file": "08-refused-duplicate-key.json",
+      "sha256": "11b5addbf020869d455a8ddc8ff896986d098d5a17af4379f16924bac2f05122",
+      "category": "refused",
+      "what": "Vector 01 with the key \"outcome\" written twice in the verdict object, \"FAIL\" first and the real value last.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "the key \"outcome\" appears twice in one object (at $.verdict.outcome)",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "09",
+      "file": "09-refused-bom.json",
+      "sha256": "63bcab740167350ef166543b623b71b5dd6ef661d1094526c2f5651cd1d8d47a",
+      "category": "refused",
+      "what": "Vector 01 with a UTF-8 byte-order mark (EF BB BF) before the first brace.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "file starts with a UTF-8 byte-order mark",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "10",
+      "file": "10-refused-inexact-number.json",
+      "sha256": "65d86d5119b6b4ea006ea1908e4b8efd261bc9abaeb30c9360f92ce87a674abb",
+      "category": "refused",
+      "what": "Vector 01 with a line quantity in the inputs written as 9007199254740993, which no double holds.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "cannot be represented exactly",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "11",
+      "file": "11-deleted-remedies-0.0.1.json",
+      "sha256": "7f9b1b7c94491b49e54ab0c627aa0619d67f0142735ccbf516131409caa13c5c",
+      "category": "tampered",
+      "what": "An engine 0.0.1 verdict that FAILs (invoice total 1900 against 1894.92), with its remedies list deleted. Engine 0.0.1 does not bind its remedy table, so the binding holds; the replay refuses the deletion by default and, with --lenient-remedies, compares the core and reports the re-derived remedies.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "the verdict carries no remedies",
+        "binding": "holds",
+        "also": [
+          {
+            "args": [
+              "--lenient-remedies"
+            ],
+            "engine_exit": 0,
+            "engine_says": "outcome VERIFIED"
+          }
+        ],
+        "recorded_input_hash": "edfc8248d603c268b47798a5b2f4d74529886c2ee3fdd129fdd2ed053e0ab2cf",
+        "computed_input_hash": "edfc8248d603c268b47798a5b2f4d74529886c2ee3fdd129fdd2ed053e0ab2cf",
+        "recorded_verdict_id": "4197075853aafe0505917bc3c0861891",
+        "computed_verdict_id": "4197075853aafe0505917bc3c0861891"
+      }
+    },
+    {
+      "id": "12",
+      "file": "12-refused-invalid-utf8.json",
+      "sha256": "f9ed25947f81c82ca6a4f3a0a1b088e622ba2052a00c9ad0368540046df99c6f",
+      "category": "refused",
+      "what": "The pack bundle peppol-0.2.0-blind-with-source with one byte 0xFF written raw at the start of the page text string: the file is not valid UTF-8.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "not a UTF-8 character",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "13",
+      "file": "13-refused-non-finite.json",
+      "sha256": "0ee19ddb95656005f1a5e6a6761f849873cafffd87db987ec9f4f3852216f05a",
+      "category": "refused",
+      "what": "Vector 01 with the invoice total in the inputs written as 1e999, past the double range.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "is not finite",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "14",
+      "file": "14-refused-too-deep.json",
+      "sha256": "0887afa0ffb5e38d5c090f528b4b9bf1e4ae9813ededeeb298e6a59dcfa19280",
+      "category": "refused",
+      "what": "Vector 01 with a field in the extraction nested 300 arrays deep, past the limit of 256.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "nesting too deep, limit 256",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "15",
+      "file": "15-refused-malformed-issued-at.json",
+      "sha256": "37f27fd435ecffa5fcf8a6b359c1240352c2a64d058fd535051f4f4497edafe7",
+      "category": "refused",
+      "what": "Vector 01 with issued_at set to 2026-02-30T10:00:00Z, which names no calendar day.",
+      "expect": {
+        "engine_exit": 3,
+        "engine_says": "issued_at is not an ISO-8601 timestamp",
+        "binding": "refused"
+      }
+    },
+    {
+      "id": "16",
+      "file": "16-missing-issued-at.json",
+      "sha256": "11693fa22d03f39154231d27072ea322f3f599352fbb4095130f6a908e6d2733",
+      "category": "valid",
+      "what": "Vector 01 with issued_at deleted: it replays, and says the verdict carries none; --strict fails it.",
+      "expect": {
+        "engine_exit": 0,
+        "engine_says": "the verdict carries no issued_at",
+        "binding": "holds",
+        "also": [
+          {
+            "args": [
+              "--strict"
+            ],
+            "engine_exit": 1,
+            "engine_says": "the verdict carries no issued_at"
+          }
+        ],
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "17",
+      "file": "17-annotation-channel.json",
+      "sha256": "ea4b27b7534167bcc3cd57c2eeae272b5000a7836f62d958bf0d3b5744972524",
+      "category": "valid",
+      "what": "Vector 01 with the annotation \"channel\": \"VERDICT\" added after the engine: it is not re-performed, so --strict fails the match; without --strict it replays and names the field.",
+      "expect": {
+        "args": [
+          "--strict"
+        ],
+        "engine_exit": 1,
+        "engine_says": "Not re-performed (not the engine's output): channel",
+        "binding": "holds",
+        "also": [
+          {
+            "args": [],
+            "engine_exit": 0,
+            "engine_says": "outcome VERIFIED"
+          }
+        ],
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "18",
+      "file": "18-tampered-gate-status.json",
+      "sha256": "e02f55065b482cb0d56e3f71058b603b1c64dba10287dbfbbdbee5998937b286",
+      "category": "tampered",
+      "what": "Vector 01 with gate_status changed from PASS_WITH_OPEN to PASS, outcome untouched: the binding holds, and the re-derived gate_status differs.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "differs from the presented one at `gate_status`",
+        "binding": "holds",
+        "recorded_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "computed_input_hash": "0342a9147b3a9f95980f6397ff20fe33cd174ab514f1b764f24533f43b41e8b0",
+        "recorded_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e",
+        "computed_verdict_id": "cce800d0bbe37b80371bc7b478fd7d2e"
+      }
+    },
+    {
+      "id": "19",
+      "file": "19-tampered-page-text-newline.json",
+      "sha256": "5e9c7de772cf7cf3e4f0099e5c2cc267a791f8676f8d52c9a3fc2e9c88e493bb",
+      "category": "tampered",
+      "what": "The pack bundle peppol-0.2.0-blind-with-source with a newline appended to the page text: a different input.",
+      "expect": {
+        "engine_exit": 1,
+        "engine_says": "input_hash does not match the supplied inputs",
+        "binding": "fails",
+        "recorded_input_hash": "7e07a9e8bd611e6e8f8eae793ed83bfec13151ab49d7e04075dc46707c876dae",
+        "computed_input_hash": "f2223065ba46db4de5f57f625651471ad17fabed78d87aff5282299fe1d78948",
+        "recorded_verdict_id": "f134ab6bf004a25d47f3ed3f4518c795",
+        "computed_verdict_id": "f134ab6bf004a25d47f3ed3f4518c795"
+      }
+    },
+    {
+      "id": "20",
+      "file": "20-key-order-array-index.json",
+      "sha256": "baca83feefd46d4efc23e142daffc065310e57b22cbf3789be713ee2040bce8f",
+      "category": "equivalent",
+      "what": "An engine 0.6.0 verdict on the door example with an extra extraction field \"notes\": {\"b\": 1, \"10\": 2, \"9\": 3}, written in that order. Canonical JSON writes {\"9\":3,\"10\":2,\"b\":1}; a plain sorted-keys writer gets another hash (sorted_keys_input_hash).",
+      "expect": {
+        "engine_exit": 0,
+        "engine_says": "outcome VERIFIED",
+        "binding": "holds",
+        "recorded_input_hash": "9f44a3cd88c83a3276d9a5a0cc6d7815a9758f93726ddf8cb6543f12fe150867",
+        "computed_input_hash": "9f44a3cd88c83a3276d9a5a0cc6d7815a9758f93726ddf8cb6543f12fe150867",
+        "recorded_verdict_id": "132057945858c9dda736930746fd939c",
+        "computed_verdict_id": "132057945858c9dda736930746fd939c",
+        "sorted_keys_input_hash": "76a3f8799895627dbb9a1c20c202415895596fd516746231b46cfd46ae9008af"
+      }
+    }
+  ]
+}

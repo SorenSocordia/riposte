@@ -1,0 +1,1 @@
+The prereg names `RESULTS.md` among its outputs (`PREREG.md`, section 8); no such file was written: the results live in `results/` and in this table's section of [`BENCH.md`](../../BENCH.md#verbatim-legal-quotation-check-second-blind-set-40-quotations-from-1973-opinions).

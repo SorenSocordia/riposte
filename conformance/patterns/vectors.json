@@ -1,0 +1,4159 @@
+{
+ "schema": "riposte.pattern-vectors/0.1.0",
+ "dialect": "riposte.pattern/0.1.0",
+ "about": "Conformance cases for riposte.pattern/0.1.0 (SPEC.md in this folder). constructs: each probe's answer (match, no match, can't tell) and, on a match, the first match's span in UTF-16 code units, through the translator; `oracle` names where the expected answers came from (js: JavaScript's RegExp on the pattern and its flags; js-u: the same with the u flag), and a probe with `why` states its answer by the dialect's own rule. refusals: the pattern is refused with expect.refused as the code, at expect.at (an index into the pattern; null for the flags or the call). rewrites: `to` is `from` written into the dialect by the catalogued rule; each probe's expected answer is the original JavaScript literal's, and `to` must answer the same through the translator. table: the pinned class table's file, sha256 and Unicode version, and cases run with the doctored table given here instead of the pinned one. folds: fold(text, map) over the table's map. worked: the 33 readings of the opening step of a payment redirection. check.mjs and check.py run each part the implementation offers.",
+ "table": {
+  "file": "unicode-classes.json",
+  "sha256": "0553459c51329162b04133c7d4e5aecf890263a537df2dad3856d267e57d746b",
+  "unicode": "16.0"
+ },
+ "constructs": [
+  {
+   "name": "literal letters",
+   "pattern": "wire",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "wire",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "Wire",
+     "expect": "no match"
+    },
+    {
+     "text": "rewired",
+     "expect": "match",
+     "span": [
+      2,
+      6
+     ]
+    },
+    {
+     "text": "",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "syntax characters escaped",
+   "pattern": "\\$\\.\\*\\+\\?\\(\\)\\[\\]\\{\\}\\|\\\\\\/\\-\\^",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "$.*+?()[]{}|\\/-^",
+     "expect": "match",
+     "span": [
+      0,
+      16
+     ]
+    },
+    {
+     "text": "$.*+?()[]{}|\\/-",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "tab, line feed and carriage return escapes",
+   "pattern": "a\\tb\\nc\\rd",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "a\tb\nc\rd",
+     "expect": "match",
+     "span": [
+      0,
+      7
+     ]
+    },
+    {
+     "text": "a b\nc\rd",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a code point by \\uXXXX",
+   "pattern": "\\u00e9t\\u00e9",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "été",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "ete",
+     "expect": "no match"
+    },
+    {
+     "text": "xété",
+     "expect": "match",
+     "span": [
+      1,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a code point outside the BMP by \\u{...}",
+   "pattern": "x\\u{1F600}y",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "x😀y",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "x\ud83dy",
+     "expect": "no match"
+    },
+    {
+     "text": "ax😀y",
+     "expect": "match",
+     "span": [
+      1,
+      5
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a character outside ASCII written as itself",
+   "pattern": "’s",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "it’s",
+     "expect": "match",
+     "span": [
+      2,
+      4
+     ]
+    },
+    {
+     "text": "it's",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "the dot: any character but the four line terminators",
+   "pattern": "a.c",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "abc",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "a\nc",
+     "expect": "no match"
+    },
+    {
+     "text": "a\rc",
+     "expect": "no match"
+    },
+    {
+     "text": "a c",
+     "expect": "no match"
+    },
+    {
+     "text": "a c",
+     "expect": "no match"
+    },
+    {
+     "text": "ac",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "a\u000bc",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "a c",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "a😀c",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ],
+     "why": "a character outside the BMP is one character (JavaScript without the u flag reads two)"
+    }
+   ]
+  },
+  {
+   "name": "the dot over a character outside the BMP",
+   "pattern": "^.$",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "😀",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ],
+     "why": "one code point; the span counts UTF-16 code units"
+    },
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "ab",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a class range",
+   "pattern": "[a-c]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "b",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "d",
+     "expect": "no match"
+    },
+    {
+     "text": "xxc",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a negated class",
+   "pattern": "[^a-c]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "d",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    },
+    {
+     "text": "abcé",
+     "expect": "match",
+     "span": [
+      3,
+      4
+     ]
+    },
+    {
+     "text": "😀",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ],
+     "why": "a negated class takes one code point"
+    }
+   ]
+  },
+  {
+   "name": "a hyphen at the end of a class",
+   "pattern": "[a-]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "-",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a hyphen at the start of a class",
+   "pattern": "[-a]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "-",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a hyphen after a range",
+   "pattern": "[a-z-0]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "-",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "0",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "5",
+     "expect": "no match"
+    },
+    {
+     "text": "q",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "escapes inside a class",
+   "pattern": "[\\d.\\-\\]\\\\]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "7",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": ".",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "-",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "]",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\\",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "an opening bracket inside a class",
+   "pattern": "[[(]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "[",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "(",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "]",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "table classes inside a class",
+   "pattern": "[\\p{L}\\p{N}]",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "٣",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "_",
+     "expect": "no match"
+    },
+    {
+     "text": "Ⅻ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a negated class of table classes",
+   "pattern": "[^\\p{L}\\p{N}]+",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "a-b",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    },
+    {
+     "text": "ab",
+     "expect": "no match"
+    },
+    {
+     "text": "a -- b",
+     "expect": "match",
+     "span": [
+      1,
+      5
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\d: ASCII digits only",
+   "pattern": "\\d",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "7",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "٣",
+     "expect": "no match"
+    },
+    {
+     "text": "७",
+     "expect": "no match"
+    },
+    {
+     "text": "①",
+     "expect": "no match"
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\D",
+   "pattern": "\\D",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "a",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "7",
+     "expect": "no match"
+    },
+    {
+     "text": "٣",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\w: ASCII letters, digits and underscore",
+   "pattern": "\\w",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "_",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "é",
+     "expect": "no match"
+    },
+    {
+     "text": "ſ",
+     "expect": "no match"
+    },
+    {
+     "text": "K",
+     "expect": "no match"
+    },
+    {
+     "text": "٣",
+     "expect": "no match"
+    },
+    {
+     "text": "Z",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\W",
+   "pattern": "\\W",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\s: the 25 code points of ECMAScript white space and line terminators",
+   "pattern": "\\s",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "\t",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\n",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\u000b",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\f",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\r",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "　",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "﻿",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\u001c",
+     "expect": "no match"
+    },
+    {
+     "text": "\u001d",
+     "expect": "no match"
+    },
+    {
+     "text": "\u001e",
+     "expect": "no match"
+    },
+    {
+     "text": "\u001f",
+     "expect": "no match"
+    },
+    {
+     "text": "",
+     "expect": "no match"
+    },
+    {
+     "text": "᠎",
+     "expect": "no match"
+    },
+    {
+     "text": "​",
+     "expect": "no match"
+    },
+    {
+     "text": "⁠",
+     "expect": "no match"
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\S",
+   "pattern": "\\S",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "a",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " ",
+     "expect": "no match"
+    },
+    {
+     "text": "\u001c",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "﻿",
+     "expect": "no match"
+    },
+    {
+     "text": "",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\s inside a class",
+   "pattern": "[\\s,]",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": ",",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "　",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "\u001c",
+     "expect": "no match"
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\b: ASCII word boundaries",
+   "pattern": "\\bconfirm\\b",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "confirm",
+     "expect": "match",
+     "span": [
+      0,
+      7
+     ]
+    },
+    {
+     "text": "confirmé",
+     "expect": "match",
+     "span": [
+      0,
+      7
+     ]
+    },
+    {
+     "text": "reconfirm",
+     "expect": "no match"
+    },
+    {
+     "text": "confirm_",
+     "expect": "no match"
+    },
+    {
+     "text": "please confirm.",
+     "expect": "match",
+     "span": [
+      7,
+      14
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\b before a letter outside ASCII",
+   "pattern": "\\bé",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "é",
+     "expect": "no match"
+    },
+    {
+     "text": " é",
+     "expect": "no match"
+    },
+    {
+     "text": "xé",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\B",
+   "pattern": "\\B",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    },
+    {
+     "text": "ab",
+     "expect": "match",
+     "span": [
+      1,
+      1
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    },
+    {
+     "text": "  ",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    },
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "$: the very end of the text, never before a final line feed",
+   "pattern": "abc$",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "abc",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "abc\n",
+     "expect": "no match"
+    },
+    {
+     "text": "xabc",
+     "expect": "match",
+     "span": [
+      1,
+      4
+     ]
+    },
+    {
+     "text": "abc\r",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "^: the start of the text only",
+   "pattern": "^abc",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "abc",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "x\nabc",
+     "expect": "no match"
+    },
+    {
+     "text": " abc",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "an empty text",
+   "pattern": "^$",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    },
+    {
+     "text": "\n",
+     "expect": "no match"
+    },
+    {
+     "text": " ",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "the empty pattern",
+   "pattern": "",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    },
+    {
+     "text": "abc",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "star, greedy",
+   "pattern": "a*",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aaa",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "baaa",
+     "expect": "match",
+     "span": [
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "name": "star, lazy",
+   "pattern": "a*?b",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aaab",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "plus, lazy",
+   "pattern": "a+?",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aaa",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a count",
+   "pattern": "a{2}",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aaa",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a count with no upper bound",
+   "pattern": "a{2,}",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aaaa",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a bounded count",
+   "pattern": "a{1,2}",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aaa",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a count of zero",
+   "pattern": "ba{0}",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "ba",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a bounded lazy count over a negated class",
+   "pattern": "before[^.;!?]{0,12}?pay",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "Before you pay",
+     "expect": "match",
+     "span": [
+      0,
+      14
+     ]
+    },
+    {
+     "text": "before. pay",
+     "expect": "no match"
+    },
+    {
+     "text": "before releasing the payment",
+     "expect": "no match"
+    },
+    {
+     "text": "BEFORE we PAY",
+     "expect": "match",
+     "span": [
+      0,
+      13
+     ]
+    }
+   ]
+  },
+  {
+   "name": "greedy and lazy over the dot",
+   "pattern": "<.+>",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "<a><b>",
+     "expect": "match",
+     "span": [
+      0,
+      6
+     ]
+    },
+    {
+     "text": "<>",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "lazy over the dot",
+   "pattern": "<.+?>",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "<a><b>",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a quantified group that can match nothing",
+   "pattern": "(?:a|)*b",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aab",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "xb",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    },
+    {
+     "text": "aa",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "an optional group inside a loop",
+   "pattern": "(?:a?)+?c",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "aac",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "c",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "ab",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "alternation tries the left branch first",
+   "pattern": "a|ab",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "ab",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "b",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "alternation, longer branch first",
+   "pattern": "ab|a",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "ab",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a capturing group, repeated",
+   "pattern": "(ab)+",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "ababx",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "ba",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a non-capturing group, repeated",
+   "pattern": "(?:ab)+",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "ababx",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "ba",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a negative lookahead",
+   "pattern": "bank(?!\\s+holiday)",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "bank holiday",
+     "expect": "no match"
+    },
+    {
+     "text": "bank account",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "Bank holiday",
+     "expect": "no match"
+    },
+    {
+     "text": "bank",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a lookahead",
+   "pattern": "\\d(?=%)",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "5%",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "5 %",
+     "expect": "no match"
+    },
+    {
+     "text": "x50%",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a lookbehind",
+   "pattern": "(?<=\\$)\\d+",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "$45",
+     "expect": "match",
+     "span": [
+      1,
+      3
+     ]
+    },
+    {
+     "text": "45",
+     "expect": "no match"
+    },
+    {
+     "text": "USD $7",
+     "expect": "match",
+     "span": [
+      5,
+      6
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a negative lookbehind",
+   "pattern": "(?<!\\d)\\d{3}",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "1234",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "x123",
+     "expect": "match",
+     "span": [
+      1,
+      4
+     ]
+    },
+    {
+     "text": "12",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a lookbehind with alternatives of one width",
+   "pattern": "(?<=ab|cd)x",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "cdx",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    },
+    {
+     "text": "abx",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    },
+    {
+     "text": "bx",
+     "expect": "no match"
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a lookbehind at the start of the text",
+   "pattern": "(?<!^)x",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "x",
+     "expect": "no match"
+    },
+    {
+     "text": "ax",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a lookbehind of table classes",
+   "pattern": "(?<![\\p{L}\\p{N}])\\p{L}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "ab",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "1a",
+     "expect": "no match"
+    },
+    {
+     "text": " é",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    },
+    {
+     "text": "-x",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "name": "i: ASCII letters match either case",
+   "pattern": "wire",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "WIRE",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "WiRe",
+     "expect": "match",
+     "span": [
+      0,
+      4
+     ]
+    },
+    {
+     "text": "wıre",
+     "expect": "no match"
+    },
+    {
+     "text": "wİre",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "i: the long s is not an s",
+   "pattern": "s",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "ſ",
+     "expect": "no match"
+    },
+    {
+     "text": "S",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "s",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "i: the Kelvin sign is not a k",
+   "pattern": "k",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "K",
+     "expect": "no match"
+    },
+    {
+     "text": "K",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "k",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "i: a class range",
+   "pattern": "[a-z]+",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "QZ",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "é",
+     "expect": "no match"
+    },
+    {
+     "text": "9",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "i: a negated class",
+   "pattern": "[^a-z]",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "Q",
+     "expect": "no match"
+    },
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "ſ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "i: \\W",
+   "pattern": "\\W",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "S",
+     "expect": "no match"
+    },
+    {
+     "text": "ſ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "K",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "i: a character outside ASCII with no case",
+   "pattern": "’",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "’",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "'",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "i: word boundaries",
+   "pattern": "\\bok\\b",
+   "flags": "i",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "OK",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "oK.",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "book",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "i: a table class",
+   "pattern": "^\\p{L}+$",
+   "flags": "i",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "École",
+     "expect": "match",
+     "span": [
+      0,
+      5
+     ]
+    },
+    {
+     "text": "abc1",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\p{L}: letters of the pinned table",
+   "pattern": "^\\p{L}+$",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "école",
+     "expect": "match",
+     "span": [
+      0,
+      5
+     ]
+    },
+    {
+     "text": "ǅ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "Ᲊ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "ࡰ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "𞊐",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "a1",
+     "expect": "no match"
+    },
+    {
+     "text": "͸",
+     "expect": "can't tell",
+     "why": "U+0378 is unassigned in Unicode 16.0: outside the repertoire"
+    },
+    {
+     "text": "ab\ud800",
+     "expect": "can't tell",
+     "why": "a lone surrogate is outside the repertoire"
+    },
+    {
+     "text": "abc͸",
+     "expect": "can't tell",
+     "why": "one code point outside the repertoire is enough"
+    }
+   ]
+  },
+  {
+   "name": "\\p{Lu}",
+   "pattern": "\\p{Lu}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "A",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    },
+    {
+     "text": "Ᲊ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "ǅ",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\p{Ll}",
+   "pattern": "\\p{Ll}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "a",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "A",
+     "expect": "no match"
+    },
+    {
+     "text": "𐐨",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "ǅ",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\p{N}",
+   "pattern": "\\p{N}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "٣",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "Ⅻ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "²",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "\\p{Mn}",
+   "pattern": "\\p{Mn}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    },
+    {
+     "text": "e",
+     "expect": "no match"
+    },
+    {
+     "text": "ͅ",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "\\P{L}",
+   "pattern": "\\P{L}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "1",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    },
+    {
+     "text": "a͸",
+     "expect": "can't tell",
+     "why": "outside the repertoire"
+    }
+   ]
+  },
+  {
+   "name": "a pattern with no table class answers outside the repertoire",
+   "pattern": "[^a]",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "͸",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "a͸",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    },
+    {
+     "text": "a",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "an unassigned code point written in the pattern",
+   "pattern": "\\u0378",
+   "flags": "",
+   "oracle": "js",
+   "probes": [
+    {
+     "text": "͸",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "x",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "a span after a character outside the BMP",
+   "pattern": "b",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "😀b",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    },
+    {
+     "text": "😀😀ab",
+     "expect": "match",
+     "span": [
+      5,
+      6
+     ]
+    }
+   ]
+  },
+  {
+   "name": "a table-class span after a character outside the BMP",
+   "pattern": "\\p{L}",
+   "flags": "",
+   "oracle": "js-u",
+   "probes": [
+    {
+     "text": "😀é",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    },
+    {
+     "text": "1😀2x",
+     "expect": "match",
+     "span": [
+      4,
+      5
+     ]
+    }
+   ]
+  }
+ ],
+ "refusals": [
+  {
+   "name": "a pattern that is not a string",
+   "pattern": null,
+   "flags": "",
+   "expect": {
+    "refused": "usage",
+    "at": null
+   }
+  },
+  {
+   "name": "the g flag",
+   "pattern": "a",
+   "flags": "g",
+   "expect": {
+    "refused": "flag",
+    "at": null
+   }
+  },
+  {
+   "name": "the u flag",
+   "pattern": "a",
+   "flags": "u",
+   "expect": {
+    "refused": "flag",
+    "at": null
+   }
+  },
+  {
+   "name": "the m flag",
+   "pattern": "^a",
+   "flags": "m",
+   "expect": {
+    "refused": "flag",
+    "at": null
+   }
+  },
+  {
+   "name": "two flags",
+   "pattern": "a",
+   "flags": "iu",
+   "expect": {
+    "refused": "flag",
+    "at": null
+   }
+  },
+  {
+   "name": "a character outside the BMP written as itself",
+   "pattern": "x😀",
+   "flags": "",
+   "expect": {
+    "refused": "outside-plane",
+    "at": 1
+   }
+  },
+  {
+   "name": "a surrogate by \\uXXXX",
+   "pattern": "\\uD83D",
+   "flags": "",
+   "expect": {
+    "refused": "outside-plane",
+    "at": 0
+   }
+  },
+  {
+   "name": "a character outside the BMP inside a class",
+   "pattern": "[a😀]",
+   "flags": "",
+   "expect": {
+    "refused": "outside-plane",
+    "at": 2
+   }
+  },
+  {
+   "name": "a numbered backreference",
+   "pattern": "(a)\\1",
+   "flags": "",
+   "expect": {
+    "refused": "backreference",
+    "at": 3
+   }
+  },
+  {
+   "name": "a named backreference",
+   "pattern": "\\k<n>",
+   "flags": "",
+   "expect": {
+    "refused": "backreference",
+    "at": 0
+   }
+  },
+  {
+   "name": "a named group",
+   "pattern": "(?<n>a)",
+   "flags": "",
+   "expect": {
+    "refused": "named-group",
+    "at": 0
+   }
+  },
+  {
+   "name": "an inline flag",
+   "pattern": "(?i)a",
+   "flags": "",
+   "expect": {
+    "refused": "group-syntax",
+    "at": 0
+   }
+  },
+  {
+   "name": "a Python named group",
+   "pattern": "(?P<n>a)",
+   "flags": "",
+   "expect": {
+    "refused": "group-syntax",
+    "at": 0
+   }
+  },
+  {
+   "name": "a comment group",
+   "pattern": "(?#c)a",
+   "flags": "",
+   "expect": {
+    "refused": "group-syntax",
+    "at": 0
+   }
+  },
+  {
+   "name": "a scoped modifier",
+   "pattern": "(?i:a)",
+   "flags": "",
+   "expect": {
+    "refused": "group-syntax",
+    "at": 0
+   }
+  },
+  {
+   "name": "a property outside the table",
+   "pattern": "\\p{Lt}",
+   "flags": "",
+   "expect": {
+    "refused": "property",
+    "at": 0
+   }
+  },
+  {
+   "name": "a script property",
+   "pattern": "\\p{Script=Latin}",
+   "flags": "",
+   "expect": {
+    "refused": "property",
+    "at": 0
+   }
+  },
+  {
+   "name": "an unclosed property",
+   "pattern": "\\p{L",
+   "flags": "",
+   "expect": {
+    "refused": "property",
+    "at": 0
+   }
+  },
+  {
+   "name": "a property outside the table inside a class",
+   "pattern": "[\\p{Greek}]",
+   "flags": "",
+   "expect": {
+    "refused": "property",
+    "at": 1
+   }
+  },
+  {
+   "name": "\\x",
+   "pattern": "\\x41",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\c",
+   "pattern": "\\cJ",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\0",
+   "pattern": "\\0",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\f",
+   "pattern": "\\f",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\v",
+   "pattern": "\\v",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\A (Python: the start; JavaScript: the letter A)",
+   "pattern": "\\A",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\Z",
+   "pattern": "a\\Z",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 1
+   }
+  },
+  {
+   "name": "\\z",
+   "pattern": "a\\z",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 1
+   }
+  },
+  {
+   "name": "an escaped quote",
+   "pattern": "\\'",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "an escaped letter",
+   "pattern": "\\e",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\b inside a class (backspace)",
+   "pattern": "[\\b]",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 1
+   }
+  },
+  {
+   "name": "\\u with three digits",
+   "pattern": "\\u12x",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\u{...} past U+10FFFF",
+   "pattern": "\\u{110000}",
+   "flags": "",
+   "expect": {
+    "refused": "escape",
+    "at": 0
+   }
+  },
+  {
+   "name": "a lookbehind of two widths",
+   "pattern": "(?<=a|bc)x",
+   "flags": "",
+   "expect": {
+    "refused": "lookbehind-width",
+    "at": 0
+   }
+  },
+  {
+   "name": "a lookbehind with a plus",
+   "pattern": "x(?<!\\d+)y",
+   "flags": "",
+   "expect": {
+    "refused": "lookbehind-width",
+    "at": 1
+   }
+  },
+  {
+   "name": "a lookbehind with an optional part",
+   "pattern": "(?<=a?)x",
+   "flags": "",
+   "expect": {
+    "refused": "lookbehind-width",
+    "at": 0
+   }
+  },
+  {
+   "name": "a quantified start anchor",
+   "pattern": "^*",
+   "flags": "",
+   "expect": {
+    "refused": "quantified-assertion",
+    "at": 1
+   }
+  },
+  {
+   "name": "a quantified word boundary",
+   "pattern": "\\b+",
+   "flags": "",
+   "expect": {
+    "refused": "quantified-assertion",
+    "at": 2
+   }
+  },
+  {
+   "name": "a quantified lookahead",
+   "pattern": "(?=a)?",
+   "flags": "",
+   "expect": {
+    "refused": "quantified-assertion",
+    "at": 5
+   }
+  },
+  {
+   "name": "a counted end anchor",
+   "pattern": "a${2}",
+   "flags": "",
+   "expect": {
+    "refused": "quantified-assertion",
+    "at": 2
+   }
+  },
+  {
+   "name": "a star with nothing before it",
+   "pattern": "*a",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 0
+   }
+  },
+  {
+   "name": "two stars",
+   "pattern": "a**",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 2
+   }
+  },
+  {
+   "name": "a plus after a bar",
+   "pattern": "a|+",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 2
+   }
+  },
+  {
+   "name": "a plus at the start of a group",
+   "pattern": "(+)",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 1
+   }
+  },
+  {
+   "name": "a count after a count",
+   "pattern": "a{2}{3}",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 4
+   }
+  },
+  {
+   "name": "a question mark after a lazy question mark",
+   "pattern": "a???",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 3
+   }
+  },
+  {
+   "name": "a count with nothing before it",
+   "pattern": "{2}",
+   "flags": "",
+   "expect": {
+    "refused": "nothing-to-repeat",
+    "at": 0
+   }
+  },
+  {
+   "name": "a count past 1000",
+   "pattern": "a{1001}",
+   "flags": "",
+   "expect": {
+    "refused": "count",
+    "at": 1
+   }
+  },
+  {
+   "name": "a count whose bounds are reversed",
+   "pattern": "a{3,2}",
+   "flags": "",
+   "expect": {
+    "refused": "count",
+    "at": 1
+   }
+  },
+  {
+   "name": "an upper bound past 1000",
+   "pattern": "a{0,1001}",
+   "flags": "",
+   "expect": {
+    "refused": "count",
+    "at": 1
+   }
+  },
+  {
+   "name": "a lone opening brace",
+   "pattern": "a{",
+   "flags": "",
+   "expect": {
+    "refused": "brace",
+    "at": 1
+   }
+  },
+  {
+   "name": "a count with no lower bound",
+   "pattern": "a{,3}",
+   "flags": "",
+   "expect": {
+    "refused": "brace",
+    "at": 1
+   }
+  },
+  {
+   "name": "a lone closing brace",
+   "pattern": "a}",
+   "flags": "",
+   "expect": {
+    "refused": "brace",
+    "at": 1
+   }
+  },
+  {
+   "name": "a lone closing bracket",
+   "pattern": "a]",
+   "flags": "",
+   "expect": {
+    "refused": "brace",
+    "at": 1
+   }
+  },
+  {
+   "name": "a brace holding a letter",
+   "pattern": "a{x}",
+   "flags": "",
+   "expect": {
+    "refused": "brace",
+    "at": 1
+   }
+  },
+  {
+   "name": "an unclosed count",
+   "pattern": "x{1,2",
+   "flags": "",
+   "expect": {
+    "refused": "brace",
+    "at": 1
+   }
+  },
+  {
+   "name": "a reversed class range",
+   "pattern": "[z-a]",
+   "flags": "",
+   "expect": {
+    "refused": "class-range",
+    "at": 1
+   }
+  },
+  {
+   "name": "a class range from \\w",
+   "pattern": "[\\w-z]",
+   "flags": "",
+   "expect": {
+    "refused": "class-range",
+    "at": 1
+   }
+  },
+  {
+   "name": "a class range to \\d",
+   "pattern": "[a-\\d]",
+   "flags": "",
+   "expect": {
+    "refused": "class-range",
+    "at": 1
+   }
+  },
+  {
+   "name": "an empty class",
+   "pattern": "a[]",
+   "flags": "",
+   "expect": {
+    "refused": "empty-class",
+    "at": 1
+   }
+  },
+  {
+   "name": "an empty negated class",
+   "pattern": "[^]",
+   "flags": "",
+   "expect": {
+    "refused": "empty-class",
+    "at": 0
+   }
+  },
+  {
+   "name": "an unclosed group",
+   "pattern": "(a",
+   "flags": "",
+   "expect": {
+    "refused": "unclosed",
+    "at": 0
+   }
+  },
+  {
+   "name": "a closing parenthesis with no group",
+   "pattern": "a)",
+   "flags": "",
+   "expect": {
+    "refused": "unclosed",
+    "at": 1
+   }
+  },
+  {
+   "name": "an unclosed class",
+   "pattern": "[a",
+   "flags": "",
+   "expect": {
+    "refused": "unclosed",
+    "at": 0
+   }
+  },
+  {
+   "name": "an unclosed non-capturing group",
+   "pattern": "x(?:a",
+   "flags": "",
+   "expect": {
+    "refused": "unclosed",
+    "at": 1
+   }
+  },
+  {
+   "name": "an unclosed lookahead",
+   "pattern": "(?=a",
+   "flags": "",
+   "expect": {
+    "refused": "unclosed",
+    "at": 0
+   }
+  },
+  {
+   "name": "an unclosed class after an escape",
+   "pattern": "[\\d",
+   "flags": "",
+   "expect": {
+    "refused": "unclosed",
+    "at": 0
+   }
+  },
+  {
+   "name": "a trailing backslash",
+   "pattern": "a\\",
+   "flags": "",
+   "expect": {
+    "refused": "trailing-backslash",
+    "at": 1
+   }
+  },
+  {
+   "name": "a trailing backslash inside a class",
+   "pattern": "[a\\",
+   "flags": "",
+   "expect": {
+    "refused": "trailing-backslash",
+    "at": 2
+   }
+  },
+  {
+   "name": "a letter outside ASCII under i",
+   "pattern": "é",
+   "flags": "i",
+   "expect": {
+    "refused": "case-fold",
+    "at": 0
+   }
+  },
+  {
+   "name": "a range of cased letters outside ASCII under i",
+   "pattern": "x[à-ÿ]",
+   "flags": "i",
+   "expect": {
+    "refused": "case-fold",
+    "at": 2
+   }
+  },
+  {
+   "name": "a cased letter by \\uXXXX under i",
+   "pattern": "\\u00e9",
+   "flags": "i",
+   "expect": {
+    "refused": "case-fold",
+    "at": 0
+   }
+  },
+  {
+   "name": "the long s under i",
+   "pattern": "ſ",
+   "flags": "i",
+   "expect": {
+    "refused": "case-fold",
+    "at": 0
+   }
+  },
+  {
+   "name": "the Kelvin sign under i",
+   "pattern": "K",
+   "flags": "i",
+   "expect": {
+    "refused": "case-fold",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\p{Lu} under i",
+   "pattern": "\\p{Lu}",
+   "flags": "i",
+   "expect": {
+    "refused": "cased-class-fold",
+    "at": 0
+   }
+  },
+  {
+   "name": "\\p{Ll} under i inside a class",
+   "pattern": "[\\p{Ll}]",
+   "flags": "i",
+   "expect": {
+    "refused": "cased-class-fold",
+    "at": 1
+   }
+  }
+ ],
+ "rewrites": [
+  {
+   "name": "R-LB-SPLIT: a negative lookbehind of currency marks and up to two spaces (AP, parse.ts:84)",
+   "rule": "R-LB-SPLIT",
+   "from": {
+    "source": "(?<!(?:USD|EUR|GBP|CAD|\\$)\\s{0,2})\\b\\d{1,3}\\s{1,2}\\d{3}(?:\\.\\d{2})\\b",
+    "flags": "i"
+   },
+   "to": {
+    "source": "(?<!\\$)(?<!\\$\\s)(?<!USD|EUR|GBP|CAD|\\$\\s\\s)(?<!USD\\s|EUR\\s|GBP\\s|CAD\\s)(?<!USD\\s\\s|EUR\\s\\s|GBP\\s\\s|CAD\\s\\s)\\b\\d{1,3}\\s{1,2}\\d{3}(?:\\.\\d{2})\\b",
+    "flags": "i"
+   },
+   "applied": [
+    "R-LB-SPLIT"
+   ],
+   "probes": [
+    {
+     "text": "Total 1 234.00",
+     "expect": "match",
+     "span": [
+      6,
+      14
+     ]
+    },
+    {
+     "text": "USD 1 234.00",
+     "expect": "no match"
+    },
+    {
+     "text": "usd  1 234.00",
+     "expect": "no match"
+    },
+    {
+     "text": "EUR   12 345.67",
+     "expect": "match",
+     "span": [
+      6,
+      15
+     ]
+    },
+    {
+     "text": "$ 12 345.67",
+     "expect": "no match"
+    },
+    {
+     "text": "$12 345.67",
+     "expect": "no match"
+    },
+    {
+     "text": "Paid 12 345.67 today",
+     "expect": "match",
+     "span": [
+      5,
+      14
+     ]
+    },
+    {
+     "text": "GBP12 345.67",
+     "expect": "no match"
+    },
+    {
+     "text": "cad 999 999.99",
+     "expect": "no match"
+    },
+    {
+     "text": "Amount: 7  500.00",
+     "expect": "match",
+     "span": [
+      8,
+      17
+     ]
+    }
+   ]
+  },
+  {
+   "name": "R-LB-SPLIT: a positive lookbehind of two widths",
+   "rule": "R-LB-SPLIT",
+   "from": {
+    "source": "(?<=ab|c)d",
+    "flags": ""
+   },
+   "to": {
+    "source": "(?:(?<=c)|(?<=ab))d",
+    "flags": ""
+   },
+   "applied": [
+    "R-LB-SPLIT"
+   ],
+   "probes": [
+    {
+     "text": "abd",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    },
+    {
+     "text": "cd",
+     "expect": "match",
+     "span": [
+      1,
+      2
+     ]
+    },
+    {
+     "text": "bd",
+     "expect": "no match"
+    },
+    {
+     "text": "d",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "R-LB-SPLIT: a negative lookbehind with an optional part",
+   "rule": "R-LB-SPLIT",
+   "from": {
+    "source": "(?<!\\d\\s?)x",
+    "flags": ""
+   },
+   "to": {
+    "source": "(?<!\\d)(?<!\\d\\s)x",
+    "flags": ""
+   },
+   "applied": [
+    "R-LB-SPLIT"
+   ],
+   "probes": [
+    {
+     "text": "1x",
+     "expect": "no match"
+    },
+    {
+     "text": "1 x",
+     "expect": "no match"
+    },
+    {
+     "text": "a x",
+     "expect": "match",
+     "span": [
+      2,
+      3
+     ]
+    },
+    {
+     "text": "1  x",
+     "expect": "match",
+     "span": [
+      3,
+      4
+     ]
+    },
+    {
+     "text": "x",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "name": "R-UFOLD: a word under u and i",
+   "rule": "R-UFOLD",
+   "from": {
+    "source": "\\bsee\\b",
+    "flags": "iu"
+   },
+   "to": {
+    "source": "(?:(?<=[0-9A-Z\\u005Fa-z\\u017F\\u212A])(?![0-9A-Z\\u005Fa-z\\u017F\\u212A])|(?<![0-9A-Z\\u005Fa-z\\u017F\\u212A])(?=[0-9A-Z\\u005Fa-z\\u017F\\u212A]))[Ss\\u017F][Ee][Ee](?:(?<=[0-9A-Z\\u005Fa-z\\u017F\\u212A])(?![0-9A-Z\\u005Fa-z\\u017F\\u212A])|(?<![0-9A-Z\\u005Fa-z\\u017F\\u212A])(?=[0-9A-Z\\u005Fa-z\\u017F\\u212A]))",
+    "flags": ""
+   },
+   "applied": [
+    "R-UFOLD"
+   ],
+   "probes": [
+    {
+     "text": "See",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "ſee",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "SEE",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "seen",
+     "expect": "no match"
+    },
+    {
+     "text": "ſEE ok",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "name": "R-UFOLD: a negated class under u and i",
+   "rule": "R-UFOLD",
+   "from": {
+    "source": "[^a-z]",
+    "flags": "iu"
+   },
+   "to": {
+    "source": "[^A-Za-z\\u017F\\u212A]",
+    "flags": ""
+   },
+   "applied": [
+    "R-UFOLD"
+   ],
+   "probes": [
+    {
+     "text": "ſ",
+     "expect": "no match"
+    },
+    {
+     "text": "K",
+     "expect": "no match"
+    },
+    {
+     "text": "é",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "Q",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "R-UFOLD: \\w under u and i",
+   "rule": "R-UFOLD",
+   "from": {
+    "source": "^\\w+$",
+    "flags": "iu"
+   },
+   "to": {
+    "source": "^[0-9A-Z\\u005Fa-z\\u017F\\u212A]+$",
+    "flags": ""
+   },
+   "applied": [
+    "R-UFOLD"
+   ],
+   "probes": [
+    {
+     "text": "ſK",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "abc",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "é",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "R-UFOLD: a table class under u and i",
+   "rule": "R-UFOLD",
+   "from": {
+    "source": "^\\p{L}+$",
+    "flags": "iu"
+   },
+   "to": {
+    "source": "^(?:[\\p{L}]|[\\u0345])+$",
+    "flags": ""
+   },
+   "applied": [
+    "R-UFOLD"
+   ],
+   "probes": [
+    {
+     "text": "aͅ",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "abc",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "a1",
+     "expect": "no match"
+    }
+   ]
+  },
+  {
+   "name": "R-UFOLD: \\p{Lu} under u and i reads either case (legal, quotation.ts:2059)",
+   "rule": "R-UFOLD",
+   "from": {
+    "source": "^\\s*(?:the|a|an|its|his|her|their|that|this|such|\\p{Lu})",
+    "flags": "iu"
+   },
+   "to": {
+    "source": "^[\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]*(?:[Tt][Hh][Ee]|[Aa]|[Aa][Nn]|[Ii][Tt][Ss\\u017F]|[Hh][Ii][Ss\\u017F]|[Hh][Ee][Rr]|[Tt][Hh][Ee][Ii][Rr]|[Tt][Hh][Aa][Tt]|[Tt][Hh][Ii][Ss\\u017F]|[Ss\\u017F][Uu][Cc][Hh]|(?:(?![\\u0131\\u0138\\u0149\\u018D\\u01AA-\\u01AB\\u01BA\\u01BE\\u01F0\\u0221\\u0234-\\u0239\\u0255\\u0258\\u025A\\u025D-\\u025F\\u0262\\u0267\\u026D-\\u026E\\u0270\\u0273-\\u0274\\u0276-\\u027C\\u027E-\\u027F\\u0281\\u0284-\\u0286\\u028D-\\u0291\\u0293\\u0295-\\u029C\\u029F-\\u02AF\\u0390\\u03B0\\u03FC\\u0560\\u0587-\\u0588\\u1D00-\\u1D2B\\u1D6B-\\u1D77\\u1D7A-\\u1D7C\\u1D7E-\\u1D8D\\u1D8F-\\u1D9A\\u1E96-\\u1E9A\\u1E9C-\\u1E9D\\u1E9F\\u1F50\\u1F52\\u1F54\\u1F56\\u1F80-\\u1F87\\u1F90-\\u1F97\\u1FA0-\\u1FA7\\u1FB2-\\u1FB4\\u1FB6-\\u1FB7\\u1FC2-\\u1FC4\\u1FC6-\\u1FC7\\u1FD2-\\u1FD3\\u1FD6-\\u1FD7\\u1FE2-\\u1FE4\\u1FE6-\\u1FE7\\u1FF2-\\u1FF4\\u1FF6-\\u1FF7\\u210A\\u210E-\\u210F\\u2113\\u212F\\u2134\\u2139\\u213C-\\u213D\\u2146-\\u2149\\u2C71\\u2C74\\u2C77-\\u2C7B\\u2CE4\\uA730-\\uA731\\uA771-\\uA778\\uA78E\\uA795\\uA7AF\\uA7D3\\uA7D5\\uA7FA\\uAB30-\\uAB52\\uAB54-\\uAB5A\\uAB60-\\uAB68\\uFB00-\\uFB06\\uFB13-\\uFB17\\u{1D41A}-\\u{1D433}\\u{1D44E}-\\u{1D454}\\u{1D456}-\\u{1D467}\\u{1D482}-\\u{1D49B}\\u{1D4B6}-\\u{1D4B9}\\u{1D4BB}\\u{1D4BD}-\\u{1D4C3}\\u{1D4C5}-\\u{1D4CF}\\u{1D4EA}-\\u{1D503}\\u{1D51E}-\\u{1D537}\\u{1D552}-\\u{1D56B}\\u{1D586}-\\u{1D59F}\\u{1D5BA}-\\u{1D5D3}\\u{1D5EE}-\\u{1D607}\\u{1D622}-\\u{1D63B}\\u{1D656}-\\u{1D66F}\\u{1D68A}-\\u{1D6A5}\\u{1D6C2}-\\u{1D6DA}\\u{1D6DC}-\\u{1D6E1}\\u{1D6FC}-\\u{1D714}\\u{1D716}-\\u{1D71B}\\u{1D736}-\\u{1D74E}\\u{1D750}-\\u{1D755}\\u{1D770}-\\u{1D788}\\u{1D78A}-\\u{1D78F}\\u{1D7AA}-\\u{1D7C2}\\u{1D7C4}-\\u{1D7C9}\\u{1D7CB}\\u{1DF00}-\\u{1DF09}\\u{1DF0B}-\\u{1DF1E}\\u{1DF25}-\\u{1DF2A}])[\\p{Lu}\\p{Ll}]|[\\u01C5\\u01C8\\u01CB\\u01F2\\u0345]))",
+    "flags": ""
+   },
+   "applied": [
+    "R-UFOLD"
+   ],
+   "probes": [
+    {
+     "text": "enforceable",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "Enforceable",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": " 1990",
+     "expect": "no match"
+    },
+    {
+     "text": "the agreement",
+     "expect": "match",
+     "span": [
+      0,
+      3
+     ]
+    },
+    {
+     "text": "ß",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "ĸ",
+     "expect": "no match"
+    },
+    {
+     "text": "𐐨x",
+     "expect": "match",
+     "span": [
+      0,
+      2
+     ]
+    },
+    {
+     "text": "  Their",
+     "expect": "match",
+     "span": [
+      0,
+      5
+     ]
+    }
+   ]
+  },
+  {
+   "name": "R-UFOLD: the speaker pattern of the court (legal, quotation.ts:1314)",
+   "rule": "R-UFOLD",
+   "from": {
+    "source": "(?<![\\p{L}])the\\s+(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|d\\.\\s?c\\.|federal)\\s+circuit(?![\\p{L}])|(?<![\\p{L}])the\\s+(?:\\p{L}+\\s+)?panel(?![\\p{L}])|(?<![\\p{L}])the\\s+(?:administrative\\s+law\\s+judge|alj|immigration\\s+judge|hearing\\s+(?:officer|examiner)|arbitrator|special\\s+master|magistrate(?:\\s+judge)?|jury|board|commission|tribunal)(?![\\p{L}])|(?<![\\p{L}])\\p{Lu}\\p{L}+\\s+(?:Supreme\\s+Court|Court\\s+of\\s+Appeals)(?![\\p{L}])",
+    "flags": "iu"
+   },
+   "to": {
+    "source": "(?<!(?:[\\p{L}]|[\\u0345]))[Tt][Hh][Ee][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+(?:[Ff][Ii][Rr][Ss\\u017F][Tt]|[Ss\\u017F][Ee][Cc][Oo][Nn][Dd]|[Tt][Hh][Ii][Rr][Dd]|[Ff][Oo][Uu][Rr][Tt][Hh]|[Ff][Ii][Ff][Tt][Hh]|[Ss\\u017F][Ii][Xx][Tt][Hh]|[Ss\\u017F][Ee][Vv][Ee][Nn][Tt][Hh]|[Ee][Ii][Gg][Hh][Tt][Hh]|[Nn][Ii][Nn][Tt][Hh]|[Tt][Ee][Nn][Tt][Hh]|[Ee][Ll][Ee][Vv][Ee][Nn][Tt][Hh]|[Dd]\\.[\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]?[Cc]\\.|[Ff][Ee][Dd][Ee][Rr][Aa][Ll])[\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Cc][Ii][Rr][Cc][Uu][Ii][Tt](?!(?:[\\p{L}]|[\\u0345]))|(?<!(?:[\\p{L}]|[\\u0345]))[Tt][Hh][Ee][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+(?:(?:[\\p{L}]|[\\u0345])+[\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+)?[Pp][Aa][Nn][Ee][Ll](?!(?:[\\p{L}]|[\\u0345]))|(?<!(?:[\\p{L}]|[\\u0345]))[Tt][Hh][Ee][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+(?:[Aa][Dd][Mm][Ii][Nn][Ii][Ss\\u017F][Tt][Rr][Aa][Tt][Ii][Vv][Ee][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Ll][Aa][Ww][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Jj][Uu][Dd][Gg][Ee]|[Aa][Ll][Jj]|[Ii][Mm][Mm][Ii][Gg][Rr][Aa][Tt][Ii][Oo][Nn][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Jj][Uu][Dd][Gg][Ee]|[Hh][Ee][Aa][Rr][Ii][Nn][Gg][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+(?:[Oo][Ff][Ff][Ii][Cc][Ee][Rr]|[Ee][Xx][Aa][Mm][Ii][Nn][Ee][Rr])|[Aa][Rr][Bb][Ii][Tt][Rr][Aa][Tt][Oo][Rr]|[Ss\\u017F][Pp][Ee][Cc][Ii][Aa][Ll][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Mm][Aa][Ss\\u017F][Tt][Ee][Rr]|[Mm][Aa][Gg][Ii][Ss\\u017F][Tt][Rr][Aa][Tt][Ee](?:[\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Jj][Uu][Dd][Gg][Ee])?|[Jj][Uu][Rr][Yy]|[Bb][Oo][Aa][Rr][Dd]|[Cc][Oo][Mm][Mm][Ii][Ss\\u017F][Ss\\u017F][Ii][Oo][Nn]|[Tt][Rr][Ii][Bb][Uu][Nn][Aa][Ll])(?!(?:[\\p{L}]|[\\u0345]))|(?<!(?:[\\p{L}]|[\\u0345]))(?:(?![\\u0131\\u0138\\u0149\\u018D\\u01AA-\\u01AB\\u01BA\\u01BE\\u01F0\\u0221\\u0234-\\u0239\\u0255\\u0258\\u025A\\u025D-\\u025F\\u0262\\u0267\\u026D-\\u026E\\u0270\\u0273-\\u0274\\u0276-\\u027C\\u027E-\\u027F\\u0281\\u0284-\\u0286\\u028D-\\u0291\\u0293\\u0295-\\u029C\\u029F-\\u02AF\\u0390\\u03B0\\u03FC\\u0560\\u0587-\\u0588\\u1D00-\\u1D2B\\u1D6B-\\u1D77\\u1D7A-\\u1D7C\\u1D7E-\\u1D8D\\u1D8F-\\u1D9A\\u1E96-\\u1E9A\\u1E9C-\\u1E9D\\u1E9F\\u1F50\\u1F52\\u1F54\\u1F56\\u1F80-\\u1F87\\u1F90-\\u1F97\\u1FA0-\\u1FA7\\u1FB2-\\u1FB4\\u1FB6-\\u1FB7\\u1FC2-\\u1FC4\\u1FC6-\\u1FC7\\u1FD2-\\u1FD3\\u1FD6-\\u1FD7\\u1FE2-\\u1FE4\\u1FE6-\\u1FE7\\u1FF2-\\u1FF4\\u1FF6-\\u1FF7\\u210A\\u210E-\\u210F\\u2113\\u212F\\u2134\\u2139\\u213C-\\u213D\\u2146-\\u2149\\u2C71\\u2C74\\u2C77-\\u2C7B\\u2CE4\\uA730-\\uA731\\uA771-\\uA778\\uA78E\\uA795\\uA7AF\\uA7D3\\uA7D5\\uA7FA\\uAB30-\\uAB52\\uAB54-\\uAB5A\\uAB60-\\uAB68\\uFB00-\\uFB06\\uFB13-\\uFB17\\u{1D41A}-\\u{1D433}\\u{1D44E}-\\u{1D454}\\u{1D456}-\\u{1D467}\\u{1D482}-\\u{1D49B}\\u{1D4B6}-\\u{1D4B9}\\u{1D4BB}\\u{1D4BD}-\\u{1D4C3}\\u{1D4C5}-\\u{1D4CF}\\u{1D4EA}-\\u{1D503}\\u{1D51E}-\\u{1D537}\\u{1D552}-\\u{1D56B}\\u{1D586}-\\u{1D59F}\\u{1D5BA}-\\u{1D5D3}\\u{1D5EE}-\\u{1D607}\\u{1D622}-\\u{1D63B}\\u{1D656}-\\u{1D66F}\\u{1D68A}-\\u{1D6A5}\\u{1D6C2}-\\u{1D6DA}\\u{1D6DC}-\\u{1D6E1}\\u{1D6FC}-\\u{1D714}\\u{1D716}-\\u{1D71B}\\u{1D736}-\\u{1D74E}\\u{1D750}-\\u{1D755}\\u{1D770}-\\u{1D788}\\u{1D78A}-\\u{1D78F}\\u{1D7AA}-\\u{1D7C2}\\u{1D7C4}-\\u{1D7C9}\\u{1D7CB}\\u{1DF00}-\\u{1DF09}\\u{1DF0B}-\\u{1DF1E}\\u{1DF25}-\\u{1DF2A}])[\\p{Lu}\\p{Ll}]|[\\u01C5\\u01C8\\u01CB\\u01F2\\u0345])(?:[\\p{L}]|[\\u0345])+[\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+(?:[Ss\\u017F][Uu][Pp][Rr][Ee][Mm][Ee][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Cc][Oo][Uu][Rr][Tt]|[Cc][Oo][Uu][Rr][Tt][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Oo][Ff][\\u0009-\\u000D\\u0020\\u00A0\\u1680\\u2000-\\u200A\\u2028-\\u2029\\u202F\\u205F\\u3000\\uFEFF]+[Aa][Pp][Pp][Ee][Aa][Ll][Ss\\u017F])(?!(?:[\\p{L}]|[\\u0345]))",
+    "flags": ""
+   },
+   "applied": [
+    "R-UFOLD"
+   ],
+   "probes": [
+    {
+     "text": "the Texas Supreme Court held",
+     "expect": "match",
+     "span": [
+      4,
+      23
+     ]
+    },
+    {
+     "text": "the texas supreme court",
+     "expect": "match",
+     "span": [
+      4,
+      23
+     ]
+    },
+    {
+     "text": "The Fifth Circuit",
+     "expect": "match",
+     "span": [
+      0,
+      17
+     ]
+    },
+    {
+     "text": "the panel",
+     "expect": "match",
+     "span": [
+      0,
+      9
+     ]
+    },
+    {
+     "text": "the en banc panel",
+     "expect": "no match"
+    },
+    {
+     "text": "the ALJ found",
+     "expect": "match",
+     "span": [
+      0,
+      7
+     ]
+    },
+    {
+     "text": "the Court of Appeals",
+     "expect": "match",
+     "span": [
+      0,
+      20
+     ]
+    },
+    {
+     "text": "Ninth Circuit",
+     "expect": "no match"
+    },
+    {
+     "text": "ſtate Supreme Court",
+     "expect": "match",
+     "span": [
+      0,
+      19
+     ]
+    }
+   ]
+  }
+ ],
+ "doctored_table": {
+  "unicode": "doctored",
+  "classes": {
+   "L": [
+    [
+     98,
+     122
+    ]
+   ],
+   "Lu": [],
+   "Ll": [
+    [
+     98,
+     122
+    ]
+   ],
+   "N": [
+    [
+     48,
+     57
+    ]
+   ],
+   "Mn": []
+  },
+  "repertoire": [
+   [
+    0,
+    127
+   ]
+  ],
+  "cased": [],
+  "maps": {}
+ },
+ "table_cases": [
+  {
+   "name": "with a table whose letters start at b, \\p{L} does not match a",
+   "pattern": "\\p{L}",
+   "flags": "",
+   "probes": [
+    {
+     "text": "a",
+     "expect": "no match"
+    },
+    {
+     "text": "xa",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "é",
+     "expect": "can't tell"
+    }
+   ]
+  },
+  {
+   "name": "with that table, \\P{L} matches a",
+   "pattern": "^\\P{L}$",
+   "flags": "",
+   "probes": [
+    {
+     "text": "a",
+     "expect": "match",
+     "span": [
+      0,
+      1
+     ]
+    },
+    {
+     "text": "q",
+     "expect": "no match"
+    }
+   ]
+  }
+ ],
+ "folds": [
+  {
+   "name": "LOOKALIKE over \"раураl\"",
+   "map": "LOOKALIKE",
+   "text": "раураl",
+   "expect": "paypal"
+  },
+  {
+   "name": "LOOKALIKE over \"Аpple\"",
+   "map": "LOOKALIKE",
+   "text": "Аpple",
+   "expect": "Apple"
+  },
+  {
+   "name": "LOOKALIKE over \"ΒΑΝΚ\"",
+   "map": "LOOKALIKE",
+   "text": "ΒΑΝΚ",
+   "expect": "BANK"
+  },
+  {
+   "name": "LOOKALIKE over \"bank\"",
+   "map": "LOOKALIKE",
+   "text": "bank",
+   "expect": "bank"
+  },
+  {
+   "name": "LOOKALIKE over \"ö\"",
+   "map": "LOOKALIKE",
+   "text": "ö",
+   "expect": "ö"
+  },
+  {
+   "name": "LOOKALIKE over \"ѕһеll\"",
+   "map": "LOOKALIKE",
+   "text": "ѕһеll",
+   "expect": "shell"
+  }
+ ],
+ "worked": {
+  "about": "The opening step of a payment redirection (ap-threeway@0.4.0, readOpening in packages/verify/src/ap/remittance.ts), written as data: its eight patterns, byte for byte the code's own sources, and the reading's formula. For each of 33 probe sentences, `patterns` holds what JavaScript's RegExp answers for each pattern, and `reading` what the shipped readOpening answers. A formula combines answers as all, any and not; were a pattern to answer can't tell, all and any would read it as unknown (Kleene's three values).",
+  "patterns": {
+   "NEGATED": {
+    "re": "\\bunchanged\\b|\\bnot\\s+(?:been\\s+)?changed\\b|\\bno\\s+change\\b|\\bha(?:ve|s)\\s+not\\s+changed\\b|\\bremains?\\s+(?:the\\s+)?same\\b|\\bas\\s+before\\b|\\bsame\\s+as\\s+(?:before|always|usual)\\b",
+    "flags": "i"
+   },
+   "PAYMENT_DETAILS": {
+    "re": "\\b(?:wiring|wire(?:\\s+transfer)?|banking|bank|account|payment|remittance|remit(?:-|\\s)?to|routing|ach|deposit|beneficiary)\\s+(?:(?:transfer|account|payment|bank)\\s+)?(?:information|info|details|instructions|particulars|data|numbers?|coordinates)\\b",
+    "flags": "i"
+   },
+   "CONFIRM": {
+    "re": "\\b(?:confirm(?:s|ed|ing|ation)?|reconfirm\\w*|verif(?:y|ies|ied|ying|ication)|re-?validat\\w*|validat\\w*|updat(?:e|es|ing))\\b",
+    "flags": "i"
+   },
+   "COMMUNICATE": {
+    "re": "\\b(?:repl(?:y|ies|ying)|respond(?:s|ing)?|write\\s+back|get\\s+back\\s+to|e-?mail\\s+(?:us|me|our)|call\\s+(?:us|me|our)|phone\\s+(?:us|me|our)|contact\\s+(?:us|me|our)|reach\\s+out|speak\\s+(?:with|to)|talk\\s+(?:with|to))\\b",
+    "flags": "i"
+   },
+   "BEFORE_PAYMENT": {
+    "re": "\\b(?:before|prior\\s+to|ahead\\s+of|until)\\b[^.;!?]{0,40}?\\b(?:pay|pays|paying|payment|payments|paid|remit\\w*|check|cheque|wire|wired|wiring|funds|ach|transfer)\\b",
+    "flags": "i"
+   },
+   "FINANCIAL_PARTY": {
+    "re": "\\b(?:financial|banking|bank|treasury|payments?|payment[\\s-]processing)\\s+(?:partner|provider|institution|processor|platform|relationship)s?\\b|\\bfinancial\\s+institutions?\\b|\\bbanks?\\b(?!\\s+holiday)|\\bcredit\\s+unions?\\b",
+    "flags": "i"
+   },
+   "MOVE": {
+    "re": "\\b(?:mov(?:e|es|ed|ing)|transition(?:s|ed|ing)?|switch(?:es|ed|ing)?|chang(?:e|es|ed|ing)|migrat(?:e|es|ed|ing)|transferr?(?:s|ed|ing)?|onboard(?:s|ed|ing)?|join(?:s|ed|ing)?)\\b",
+    "flags": "i"
+   },
+   "NEWNESS": {
+    "re": "\\b(?:new|different|another|alternate|alternative|replacement|other)\\b",
+    "flags": "i"
+   }
+  },
+  "when": {
+   "all": [
+    {
+     "not": "NEGATED"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        "CONFIRM",
+        "PAYMENT_DETAILS"
+       ]
+      },
+      {
+       "all": [
+        "COMMUNICATE",
+        {
+         "any": [
+          "PAYMENT_DETAILS",
+          "BEFORE_PAYMENT"
+         ]
+        }
+       ]
+      },
+      {
+       "all": [
+        "FINANCIAL_PARTY",
+        "NEWNESS",
+        "MOVE"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "probes": [
+   {
+    "text": "Please reply to confirm the current wiring information before releasing payment.",
+    "why": "fixture r9-v01.txt line 16",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": true,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "We are moving to a new financial partner this week.",
+    "why": "fixture r9-v02.txt line 16",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Our accounting department is transitioning to a different financial partner this week.",
+    "why": "fixture r9-t02 line 16, first sentence",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Before releasing payment on this invoice, please reply to this email so our controller can confirm the current wiring information with you.",
+    "why": "fixture r9-t02 line 16, second sentence",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": true,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Please call us before you send the wire.",
+    "why": "AP-INPUT.md 0.4.0 example",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": true,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Kindly verify the banking details on file.",
+    "why": "confirm + payment details",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Please update your payment instructions.",
+    "why": "updat(e) + payment instructions",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "We are switching to a new bank.",
+    "why": "move + newness + bank",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Contact us to validate the account numbers.",
+    "why": "validate + account numbers",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Join our new credit union program.",
+    "why": "credit union + new + join: a positive the reading's words allow",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Please reply if you have any questions.",
+    "why": "remittance.ts comment: not an opening step",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Please confirm receipt of this invoice.",
+    "why": "remittance.ts comment: not an opening step",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "We are moving to a new warehouse.",
+    "why": "remittance.ts comment: not an opening step",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Remittance details unchanged.",
+    "why": "NEGATED",
+    "reading": false,
+    "patterns": {
+     "NEGATED": true,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Our bank details have not changed; please confirm the banking details.",
+    "why": "NEGATED wins over a confirmation",
+    "reading": false,
+    "patterns": {
+     "NEGATED": true,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Payment is due net 30.",
+    "why": "a mention, not an opening step",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Thank you for your business.",
+    "why": "neutral",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "The bank holiday is Monday; we are moving to a new office.",
+    "why": "bank holiday excluded by the lookahead",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "WE ARE MOVING TO A NEW BANK.",
+    "why": "ASCII case fold",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Please reply to this email before releasing payment",
+    "why": "U+00A0 after the reply word; BEFORE_PAYMENT carries it",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": true,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Please reply to confirm the current wiring information before releasing payment.",
+    "why": "U+00A0 inside PAYMENT_DETAILS; COMMUNICATE+BEFORE_PAYMENT also hold",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": true,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Kindly verify the wiring information.",
+    "why": "U+00A0 is the only space PAYMENT_DETAILS can use: JS \\s matches it, Python ASCII \\s does not",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Before payment, contact us.",
+    "why": "U+00A0 inside COMMUNICATE",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": true,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Kindly verify the wiring﻿information.",
+    "why": "U+FEFF: JS \\s matches it; Python's Unicode \\s does not",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Kindly verify the wiring\u001cinformation.",
+    "why": "U+001C: Python's Unicode \\s matches it; JS \\s does not",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Kindly verify the wiring information.",
+    "why": "U+2028: JS \\s and Python Unicode \\s both match; Python ASCII does not",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "We are moving to a new financial　partner.",
+    "why": "U+3000 ideographic space inside FINANCIAL_PARTY; bank-less",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Please confirmé the banking details.",
+    "why": "\\b after confirm before a non-ASCII letter: JS reads a boundary, Python Unicode \\b does not",
+    "reading": true,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "We are ſwitching to a new bank.",
+    "why": "U+017F long s in the MOVE word, case-insensitive",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": false,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "We are moving to a new Kredit union.",
+    "why": "U+212A Kelvin sign for K, case-insensitive",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": true,
+     "NEWNESS": true
+    }
+   },
+   {
+    "text": "Please confİrm the banking details.",
+    "why": "U+0130 dotted capital I inside CONFIRM",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": false,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Please reply to confirm the current ｗｉｒｉｎｇ information.",
+    "why": "full-width letters: no reading folds them here (the spelled reading does, elsewhere)",
+    "reading": false,
+    "patterns": {
+     "NEGATED": false,
+     "PAYMENT_DETAILS": false,
+     "CONFIRM": true,
+     "COMMUNICATE": true,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": false,
+     "MOVE": false,
+     "NEWNESS": false
+    }
+   },
+   {
+    "text": "Our bank details have not changed, please verify the banking details.",
+    "why": "NEGATED reachable only through U+00A0",
+    "reading": false,
+    "patterns": {
+     "NEGATED": true,
+     "PAYMENT_DETAILS": true,
+     "CONFIRM": true,
+     "COMMUNICATE": false,
+     "BEFORE_PAYMENT": false,
+     "FINANCIAL_PARTY": true,
+     "MOVE": true,
+     "NEWNESS": false
+    }
+   }
+  ]
+ }
+}

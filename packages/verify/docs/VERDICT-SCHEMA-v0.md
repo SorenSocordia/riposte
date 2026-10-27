@@ -44,6 +44,7 @@ Verdict {
   document { extraction_hash, producer?, line_items } · references { contract: bool, evidence: n }
   outcome · aggregation ('ANY_FAIL_FAILS' | 'ANY_FAIL_FAILS_CONSISTENCY_ALONE_NEVER_PASSES') · claims: ClaimVerdict[]
   coverage { claims_total, claims_checked, claims_pass, claims_fail, claims_insufficient }
+  remedies? (2026-10-02, additive: present iff a claim or the verdict is not PASS; outside the hashed core; docs/REMEDIES.md)
   declared_accuracy? · ledger? (Stage 2) · action_context? (Stage 3) · channel? ('VERDICT'; v0.1, additive)
 }
 ClaimVerdict {
@@ -53,7 +54,205 @@ ClaimVerdict {
   evidence: Evidence[] · insufficiency? · variance? · locked · explanation
 }
 Evidence { locator {kind:'field', source, path} | {kind:'span',…} · value · original? · normalizations? · confidence · role }
+Remedy { kind (missing-operand | transform | authority | recompute-with | none) · operand? {source, role?, path?}
+  transform? (a registered name) · authority? (a role) · detail · clears: rule ids · claims: claim ids }
 ```
+
+### Typed remedies (2026-10-02)
+
+Every non-PASS claim is answered by typed remedies: what lawfully clears it (`docs/REMEDIES.md`, `src/verdict/remedy.ts`).
+They sit in one top-level `remedies` list, after `coverage`, and they are **outside the hashed core**:
+
+- `verdict_id` derives from `input_hash`, the ruleset and the engine exactly as before. A remedy never enters it, and a
+  declarative ruleset's `remedy` declarations are removed from its input identity (`rulesetIdentity`). Every verdict id
+  issued before remedies existed is unchanged, and so is every other byte of every verdict (pinned by the goldens, which
+  hash the core).
+- A remedy is the engine's output, so a replay re-derives it and compares it byte for byte. A verdict issued before
+  remedies existed carries none: it replays on its core, and the replay reports the remedies it derives
+  (`remedies_not_carried`).
+- A signed envelope covers the remedies like every other field.
+
+### The gate reading, and checks that do not apply (R3, 2026-10-03)
+
+- **PASS-WITH-OPEN.** The verdict keeps its three outcomes. A gate reads four (`gateStatus`, `src/verdict/aggregation.ts`):
+  PASS (every deterministic claim ran and held), PASS-WITH-OPEN (the verdict PASSes but a deterministic claim could not run),
+  FAIL, INSUFFICIENT_DATA. Under ANY_FAIL_FAILS a can't-tell never blocks PASS; a gate that acts on money must not read
+  that as PASS. The AP gate (library, MCP `ap_gate`, hosted `POST /v1/ap/gate`) never pays on PASS-WITH-OPEN and answers
+  `status`; the CLI exits 2 on it by default from 2026-10-05 (fails closed; `--allow-open` exits 0 when each
+  open check waits on a reference or a missing field, and says so) and `--gate`
+  names the open checks. It is a reading, not a new aggregation rule, because a
+  stricter recorded outcome would stop every already-issued verdict with an open claim from replaying byte for byte. The
+  typed-decision gate (receipts `gate()`) holds on it only with `holdOnOpen`: the built-in invoice ruleset abstains on every
+  reference the caller did not send, so a strict reading there would hold nearly every invoice. From engine 0.6.0 the verdict
+  also records this reading as `gate_status` (below), so a reader of one field no longer sees a bare PASS.
+- **`not_applicable`** (additive): a declarative check or required passage that `applies_if` ruled out makes no claim and
+  is listed here with the condition that did not hold. Present only when one was ruled out.
+
+### Span offsets, the inputs a verdict binds, and a packed verdict (R3, 2026-10-03)
+
+- **Span offsets are UTF-16 code units** of the source text as the caller gave it (JavaScript string indices): `start`
+  inclusive, `end` exclusive, so `text.slice(start, end)` is the matched passage. They are not byte offsets and not code
+  points: after `☕` or `😀` the three differ. `source_hash` is the sha256 of the text's UTF-8 bytes. A SARIF or editor
+  location built from a span converts from UTF-16 code units (SARIF's default `columnKind` is `utf16CodeUnits`).
+- **The inputs a verdict's input_hash binds** come from one exported builder, `verifyInputs(extraction, options)` (and
+  `verifyInputHash`), which verify() and the declarative evaluator use themselves. A replay bundle is
+  `{ verdict, inputs: verifyInputs(extraction, options) }`.
+- **A packed verdict** (`packVerdict` / `unpackVerdict`, format `riposte.verdict-pack/1`) is the same verdict with each
+  object's key list and each repeated string stored once. It is lossless: unpacking gives the verdict byte for byte, so its
+  id, hash and replay are untouched (unpack before verifying). A 1,500-line invoice's 4.1 MB verdict packs to 1.8 MB, and to
+  about 105 KB with gzip on top. verify's HTTP `/v1/verify` and `/v1/verify/declared` answer packed with `"pack": true`.
+  Per-line provenance is not capped or summarised inside the verdict: that would change the bytes of verdicts already issued.
+
+### Engine 0.3.0: struck fields, evidence tiers, the scope line (V1b, 2026-10-03; `docs/EVIDENCE.md`)
+
+Every addition is additive, and none is emitted for a verdict that names an earlier engine, so those verdicts keep their
+bytes. The three outcomes are unchanged.
+
+```
+Verdict (engine 0.3.0, declarative) {
+  …
+  computed      { pass: claim_id[], fail: claim_id[] }           the checks that ran, by outcome
+  struck        StruckField[]                                     every struck field some claim waits on
+  would_unlock  { field, claims: claim_id[] }[]                   per struck field, the claims waiting on it
+  counts        { checks_computed, checks_pass, checks_fail, checks_struck, fields_struck,
+                  unreadable, suspect, withdrawn, unsupported_assertion, conflict, findings }
+  evidence_floor  'E0' | 'E1' | 'E2' | 'E3' | 'E4' | 'unstated' | 'none'
+  findings?     { kind: 'tier-conflict' | 'tier-claim-capped', field, path, detail, kept?, against? }[]
+  support?      { field, path, value, tier, supported_at, sources: { source_id, tier, value, agrees, move_id? }[] }[]
+  case?         { case_id, prior_verdict_id, move_id }           an annotation (set aside by replay, like `channel`)
+  scope         { ruleset, engine_version, evidence_floor, statements }   every engine; always the last key
+}
+StruckField { field ("PAYABLE", "LINE_EXT@line[0]", "VBD_TAX[2]"), role, path?, reason ('unreadable' | 'suspect' | 'withdrawn' |
+  'unsupported-assertion' | 'conflict'), provenance { raw?, at?, page?, line?, reader?, readings?, tier?, move_id? }, detail,
+  candidates? { checked, failing, passing, shown: { read_as, value, fails: claim_id[] }[] } }
+```
+
+- **`ClaimVerdict.suspect` is retired from 0.3.0.** A 0.3.0 verdict states suspect on the struck field. A 0.2.0 verdict keeps
+  the claim-level field and its gate reading (FAIL / HELD-SUSPECT).
+- **The gate.** `gateStatusOpen(v)` adds OPEN to the four readings: a verdict that is not FAIL, with a struck field a claim waits
+  on. `gateStatus` is unchanged in type, and an OPEN verdict reads PASS-WITH-OPEN (or INSUFFICIENT_DATA) there.
+- **Inputs.** A declarative re-verdict made with an arbitration evidence overlay binds it: its inputs are
+  `{ extraction, ruleset, source?, tolerance?, evidence }`, and `verifyInputs` builds them.
+- **Provenance** in the extraction contract gains an optional `tier` (E1, E2, E3).
+
+### Engine 0.4.0: claims over tables (SCI-R4, 2026-10-04; `docs/RULESETS.md`, `docs/EVIDENCE.md`)
+
+Two blocks are added, each only when it has something to say, and only by engine 0.4.0. A verdict that names an earlier engine
+carries neither and keeps its bytes. The outcomes, the claims and the id derivation are unchanged.
+
+```
+Verdict (engine 0.4.0, declarative) {
+  …
+  archives?    { url, member?, container_sha256?, retrieved_at, sha256, archive_checksum? { algorithm, value, published_at? },
+                 tier: 'E1', content_verified, checksum_verified, fields, detail }[]   one per archive file values were read from
+  algorithms?  { ref, id, version, implementation_sha256, source { doi, url, pdf_sha256, text_sha256, quote_sha256 } }[]
+               (or { ref, carried: false })                                       the pinned algorithms the ruleset names
+  scope        …                                                                  still the last key
+}
+```
+
+- **`algorithms` and the id.** The ruleset's input identity (`rulesetIdentity`) carries the same pins, so the input_hash, and so
+  the verdict_id, binds the implementation and the quoted source of every algorithm the ruleset names. `deriveVerdictId` is
+  unchanged. A third party recomputing the input_hash of such a verdict needs the registry's pins: they are on the verdict.
+- **Replay** checks every pin against the build's registry before anything else, and FAILS ("replay refuses: …") when one
+  differs or is not carried.
+- **`archives`.** `checksum_verified` is true only when the engine hashed the bytes itself (the source text), they are the file
+  the provenance names, and they match a checksum the archive publishes. The tier is always E1, never E0.
+- **The abstention for a missing neighbour** (`prev()` on the first row, `next()` on the last) uses the existing reason
+  `OUT_OF_RULESET_SCOPE`, with a detail that starts `no_neighbour:`. No reason code was added.
+
+### Engine 0.5.0: the choice ledger (CEN-A, 2026-10-04; `docs/CHOICES.md`, `docs/RULESETS.md`)
+
+Every addition is additive and emitted only by engine 0.5.0, so a verdict that names an earlier engine keeps its bytes. The
+outcomes, the claims, the reason codes and the id derivation are unchanged.
+
+```
+Verdict (engine 0.5.0, declarative) {
+  …
+  counts      { …, choices_load_bearing, choices_stated, stated_rate (number to 4 decimals | null), qc_held, qc_struck, beyond_data }
+  advisories? [{ …, beyond_data?: true, support?: { field, value, max_of, last } }]   a model check past its measured support
+  archives?   [{ …, matched? }]                                                      which supplied bytes were this file
+  choices     ChoiceEntry[]                                     every slot the ruleset declares, in its order ([] when none)
+  qc?         { choice, read, computed, held, struck, absent, not_read, values: QcValue[] }   when a value carries `qc`
+  scope       …                                                                       still the last key
+}
+ChoiceEntry { id, kind ('weights' | 'flags' | 'ratio' | 'units' | 'model_form' | 'algorithm' | 'tolerance' | 'selection'),
+  status ('stated' | 'supplied' | 'unstated' | 'not_applicable'), value (number | string | object | null),
+  source ({ span: { page?, section?, quote }, registry?: { ref, quote_sha256, verbatim } } | { default, by: 'ruleset' | 'judge' }
+          | { not_applicable } | null), load_bearing, detail? }
+QcValue { field, path, scheme, flag, meaning (the scheme's), action ('held' | 'struck' | 'absent') }
+StruckField.reason   adds 'qc_held' and 'qc_struck'
+AlgorithmPin.source  adds reference_sha256 when the registry entry names a reference implementation (rar.fit@1)
+```
+
+- **`stated_rate`** is stated / load-bearing. It is null, never 0, when no slot is load-bearing: nothing to state is not the same as
+  nothing stated.
+- **Identity.** The document's fills are in the extraction, the ruleset's defaults in the ruleset, the judge's values in the inputs
+  (`supplied_choices`), so all three are bound by the input_hash: another supplied value is another verdict.
+- **Inputs.** A declarative verdict made with the judge's values or with archive bytes binds them: its inputs are
+  `{ extraction, ruleset, source?, tolerance?, evidence?, supplied_choices?, archive_files? }`, and `verifyInputs` builds them.
+- **The gate's abstention** for a check that depends on a slot with no value uses the existing reason `FIELD_MISSING`, with a
+  detail that starts `choice_unstated:` and `missing` naming the slots. No reason code was added.
+- **A beyond-data check makes no claim**, so it is in neither `claims` nor `coverage`: it is counsel, and the gate never reads it.
+- The built-in engines declare no slots and carry no ledger.
+
+### Engine 0.6.0: gate_status, and the hash contract (2026-10-05; `docs/REPLAY.md`)
+
+Additive. A verdict that names engine 0.0.1 to 0.5.0 carries no `gate_status` and keeps its bytes. The outcomes, the claims, the
+reason codes and the id derivation are unchanged.
+
+```
+Verdict (engine 0.6.0, every engine) {
+  …
+  outcome      'PASS' | 'FAIL' | 'INSUFFICIENT_DATA'          unchanged: the named aggregation over the claims
+  gate_status  'PASS' | 'PASS_WITH_OPEN' | 'FAIL' | 'INSUFFICIENT_DATA'     the key right after outcome
+  …
+}
+```
+
+- **What it records.** `gate_status` is what a gate reads (`recordedGateStatus`, `src/verdict/aggregation.ts`):
+  - `PASS`: the verdict PASSes, every deterministic claim ran and held, and no load-bearing field is struck.
+  - `PASS_WITH_OPEN`: every check that ran held, but at least one could not run. That covers an open deterministic claim and a
+    struck load-bearing field (what `verify --gate` and a person read as OPEN).
+  - `FAIL`: the verdict FAILs.
+  - `INSUFFICIENT_DATA`: no claim could run.
+  A judgement-tier (REASONED) abstention never opens a verdict. The record spells the open state with an underscore, like
+  INSUFFICIENT_DATA; a person reads `PASS-WITH-OPEN`.
+- **Why beside `outcome`, not instead of it.** `outcome` keeps its meaning, so nothing that reads it changes, and every verdict
+  already issued replays byte for byte. A consumer that reads one field (a SIEM, a script, a spreadsheet) should read
+  `gate_status`. For a verdict of an earlier engine, recompute it from the claims (`gateStatus`); the CLI does.
+- **Replay.** It is a pure function of the verdict, so a replay re-derives it and compares it like any engine output: a doctored
+  `gate_status` diverges at `gate_status`.
+- **The CLI headline.** `verify <doc>`, `verify ap` and `verify replay` print it on stderr with the count behind it:
+  `PASS: 13 of 13 checks ran and held`, `PASS-WITH-OPEN: 3 of 13 checks could not run`, `FAIL: 2 of 13 checks failed`,
+  `INSUFFICIENT_DATA: none of the 13 checks could run`.
+- **Acting on it: fail closed (from 2026-10-05; `src/verdict/exit.ts`).** Every entry point reads the gate the same way, and
+  only a clean PASS reads as passed. Nothing in the verdict changes; this is how a caller is told to act on it.
+
+  | gate | CLI exit (`check`, `ap`) | HTTP `x-verify-exit` | MCP gate line |
+  |---|---|---|---|
+  | PASS (an AP approve with `payable` true) | 0 | 0 | `exit 0` |
+  | FAIL, HELD-SUSPECT, an AP hold | 1 | 1 | `exit 1` |
+  | PASS-WITH-OPEN, OPEN, INSUFFICIENT_DATA, an AP abstain | 2 | 2 | `exit 2` |
+
+  A caller who wants an open verdict whose checks that ran all held to read as 0 states it: `--allow-open` on the command line,
+  `"allow_open": true` in the HTTP body or the MCP arguments.
+  From 2026-10-19 that reading applies only when every open check's reason is REFERENCE_NOT_PROVIDED or FIELD_MISSING and no
+  load-bearing field is struck (verdict/exit.ts ALLOW_OPEN_REASONS); any other open check keeps exit 2 and is named with its
+  reason, and the reading carries no `x-verify-allow-open` header. The answer then says it was the caller's stated choice (stderr; the
+  `x-verify-allow-open: stated` header; the gate line). Before 2026-10-05 the CLI's exit code read `outcome`, so PASS-WITH-OPEN
+  exited 0 unless `--gate` was given. `--gate` is still accepted; it prints the gate's own message and exits the same way. The HTTP
+  status stays 200 for every verdict (a FAIL always was), with `x-verify-gate` and `x-verify-exit` on every verdict route; an MCP
+  verdict tool's text leads with the gate line, the JSON follows as the second text item, and the structured content is the
+  verdict as before (`isError` stays false: the verification ran). For `verify ap`, allow-open reaches one case only: a bill the AP
+  gate abstained on because no payment history was given, every other check passed (`abstainsOnlyForMissingHistory`); the decision
+  object keeps `decision: "abstain"` and, on the command line, gains `"exit"` and `"allow_open"`.
+- **The hash contract** (`docs/REPLAY.md`): input_hash is sha256 over the canonical JSON of the inputs as parsed. Canonical JSON
+  writes array-index keys first in ascending numeric order, then every other key in UTF-16 code-unit order. Text that is not valid
+  UTF-8, a JSON number past the double range (`1e999`), a key repeated in one JSON object and a JSON byte-order mark are refused
+  before hashing, never collapsed to U+FFFD, to null or to the last value written. From 2026-10-05 `verify()` refuses a non-finite
+  number anywhere input_hash covers, under every engine, and a malformed tolerance override (`InputRefused`); HTTP and MCP read
+  their bodies under the same contract.
 
 ## What v1 will add (so v0 doesn't paint us into a corner)
 

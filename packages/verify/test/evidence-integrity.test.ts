@@ -1,5 +1,5 @@
 /**
- * Evidence integrity, the book side (2026-09-28, wave 3): so the evidence behind a grant cannot quietly rot or be gamed.
+ * Evidence integrity, the book side (2026-09-28): so the evidence behind a grant cannot quietly rot or be gamed.
  *   - VERIFIABLE RANDOM SELECTION: a period's review queue is drawn with a seed fixed by the chain head when the period closed;
  *     anyone re-derives it; a committed SAMPLE that does not re-derive breaks the book.
  *   - SURVEILLANCE: under an autonomy grant a declared fraction of PASSes still goes to a person, and a new miss (or an

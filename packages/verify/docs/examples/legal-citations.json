@@ -1,0 +1,34 @@
+{
+  "citations": [
+    {
+      "id": "p1",
+      "cite": "201 F.3d 110",
+      "case_name": "Makarova v. United States",
+      "quote": "The FTCA waives the government’s sovereign immunity only for"
+    },
+    {
+      "id": "p2",
+      "cite": "201 F.3d 110",
+      "case_name": "Makarova v. United States",
+      "quote": "The FTCA waives the government’s sovereign immunity for"
+    },
+    {
+      "id": "p3",
+      "cite": "201 F.3d 110",
+      "case_name": "Makarova v. United States",
+      "quote": "the Kennedy Center owes no duty of care to any performer under any law"
+    },
+    {
+      "id": "p4",
+      "cite": "598 U.S. 175",
+      "case_name": "Axon Enterprise, Inc. v. FTC",
+      "quote": "The FTCA waives the government’s sovereign immunity only for"
+    },
+    {
+      "id": "p5",
+      "cite": "201 F.3d 110",
+      "case_name": "Makarova v. United States",
+      "proposition": "The FTCA waiver reaches only the acts of government employees."
+    }
+  ]
+}

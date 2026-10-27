@@ -1,0 +1,11 @@
+import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } from 'node:child_process'
+const D = import.meta.dirname; const CLI = path.resolve(D, '../../repo/packages/receipts/dist/ledger-cli.js')
+const lines = fs.readFileSync(path.join(D, 'receipts.jsonl'), 'utf8').trim().split('\n')
+const dir = path.join(D, 'case-dupkey-conflict'); fs.mkdirSync(dir, { recursive: true }); const f = path.join(dir, 'receipts.jsonl')
+lines[2] = lines[2].replace('"decision":"HOLD"', '"decision":"EXECUTE","decision":"HOLD"')
+console.log('entry 2 line now:', lines[2].slice(0, 120))
+fs.writeFileSync(f, lines.join('\n') + '\n'); fs.copyFileSync(path.join(D, 'receipts.jsonl.head.json'), f + '.head.json')
+const r = spawnSync('node', [CLI, 'verify', f, '--key', path.join(D, 'pub.pem')], { encoding: 'utf8' })
+console.log('verify exit', r.status, r.stderr.split('\n')[0].slice(0, 200))
+const s = spawnSync('node', [CLI, 'summary', f], { encoding: 'utf8' }); console.log('summary exit', s.status, (s.stdout + s.stderr).slice(0, 400))
+console.log('grep EXECUTE count in file:', (fs.readFileSync(f, 'utf8').match(/"decision":"EXECUTE"/g) || []).length, 'of 5 entries (4 genuine)')

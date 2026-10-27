@@ -1,5 +1,5 @@
 /**
- * Two different inputs must never share a hash. A "__proto__" key is data (PERF lane finding, fixed 2026-09-28): before
+ * Two different inputs must never share a hash. A "__proto__" key is data (fixed 2026-09-28): before
  * the fix, canonicalize(JSON.parse('{"__proto__":{"x":1}}')) === canonicalize({}) and the two shared an input_hash.
  */
 import { describe, it, expect } from 'vitest'

@@ -1,0 +1,56 @@
+Quillon Fabrication, Inc. v. Marbeck Steel Corp.
+Court of Appeals of Westmark, Second District
+August 12, 2026, Decided
+No. 2D25-0917
+
+Reporter
+498 A.3d 1101 *; 2026 Wmk. App. LEXIS 6612 **
+
+QUILLON FABRICATION, INC., Appellant, v. MARBECK STEEL CORPORATION, Appellee.
+
+Prior History: Appeal from the Superior Court of Ferris County.
+
+Disposition: Reversed and remanded.
+
+Core Terms
+notice, breach, seller, reasonable time, buyer, remedy, exclusive, essential purpose
+
+Case Summary
+
+Overview
+The buyer's notice of breach, given eleven weeks after delivery, was not untimely as a matter of law, and an exclusive repair-or-replace remedy that the seller failed to honor did not bar a claim for damages.
+
+Outcome
+Reversed and remanded.
+
+LexisNexis® Headnotes
+Commercial Law (UCC) > Sales (Article 2) > Remedies > Notice of Breach
+HN1[ ] A buyer must notify the seller of breach within a reasonable time after discovering it or be barred from any remedy.
+
+Counsel: Lydia Penhaligon, for appellant. Arturo Velloso, for appellee.
+
+Judges: DRAYCOTT, P.J., with whom ASHGROVE and NWOSU, JJ., concur. NWOSU, J., concurring.
+
+Opinion by: DRAYCOTT
+
+Opinion
+
+[*1103] DRAYCOTT, P.J. Quillon Fabrication, Inc. bought structural steel from Marbeck Steel Corporation under a written contract that limited Quillon's remedy to repair or replacement. The steel arrived with weld defects. Quillon notified Marbeck eleven weeks after delivery.
+
+HN1[ ] A buyer who has accepted goods must, within a reasonable time after he discovers or should have discovered any breach, notify the seller of breach or be barred from any remedy. What is a reasonable time depends on the nature, purpose and circumstances of the action. The notice need not be in any particular form; it suffices if it informs the seller that the transaction is troublesome and must be watched.
+
+On Marbeck's telling, the eleven-week delay was unreasonable as a matter of law. The statute sets no fixed period, and the jury could find the delay reasonable given the latent character of the defects.
+
+Marbeck contends that an exclusive repair-or-replace remedy forecloses any claim for damages. That reading is foreclosed by the statute. Where an exclusive or limited remedy fails of its essential purpose, the buyer may resort to the remedies the code otherwise provides. [**4] A limited remedy fails of its essential purpose when the seller is unable or unwilling to repair the defect within a reasonable time.n1
+
+Accordingly, the trial court erred in granting judgment to Marbeck on the damages claim. We reverse and remand for further proceedings.
+
+Concur by: NWOSU
+
+Concur
+
+NWOSU, J., concurring. I join the court's opinion in full. I write separately to note that a course of dealing between merchants may supply the meaning of a term the writing leaves open, but it may never contradict an express term.
+
+Footnotes
+
+n1 We express no view on whether consequential damages remain excluded.

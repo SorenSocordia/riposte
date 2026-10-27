@@ -1,5 +1,5 @@
 /**
- * Canaries — measuring reviewer attention without telling the reviewer (2026-09-28, evidence-integrity lane).
+ * Canaries — measuring reviewer attention without telling the reviewer (2026-09-28).
  *
  * A canary is a verdict recorded on the book that a person who actually looks would OVERTURN (a known-bad item: e.g. a PASS
  * over an input seeded with an error the check cannot see). The operator (a `policy_author`: the control function, never a

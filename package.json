@@ -2,8 +2,8 @@
   "name": "riposte",
   "version": "0.0.1",
   "private": true,
-  "description": "Independent, deterministic verification for AI agent decisions and actions. PASS | FAIL | ABSTAIN, with replayable proofs and a signed receipt ledger.",
-  "author": "Tucker Anderson",
+  "description": "Deterministic re-checks of figures and quotations already read from business documents, and of AI agents' decisions: PASS, FAIL or can't tell, each with a proof you can replay offline. Verdicts are unsigned by default; the hash-chained receipt ledger is signed when you give it a key.",
+  "author": "E. Tucker Anderson",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SorenSocordia/riposte.git"
@@ -18,7 +18,7 @@
   "scripts": {
     "build": "npm run build -w riposte-verify && npm run build -w riposte-ai && npm run build -w riposte-adapters",
     "typecheck": "npm run typecheck -w riposte-verify && npm run typecheck -w riposte-ai && npm run typecheck -w riposte-adapters",
-    "test": "npm test -w riposte-verify && npm test -w riposte-ai && npm test -w riposte-adapters",
+    "test": "node scripts/test-all.mjs",
     "test:py": "npm run test:py -w riposte-adapters",
     "bench:ap": "tsx bench/ap/bench.ts --run 1",
     "bench:ap:audit": "tsx bench/ap/audit.ts",
@@ -31,7 +31,7 @@
     "tsx": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17",
-    "esbuild": "^0.27.2"
+    "esbuild": "0.27.2"
   },
   "engines": {
     "node": ">=20"

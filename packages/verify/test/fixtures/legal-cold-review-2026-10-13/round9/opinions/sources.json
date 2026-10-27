@@ -1,0 +1,6 @@
+{
+  "88 F.4th 412": { "file": "harlan-westlaw.txt", "source": "mock Westlaw PDF layout typed by reviewer", "retrieved_at": "2026-10-14" },
+  "61 F.4th 233": { "file": "kessler-lexis.txt", "source": "mock Lexis layout typed by reviewer", "retrieved_at": "2026-10-14" },
+  "604 U.S. 318": { "file": "dorsett-plurality.txt", "source": "mock slip-opinion layout typed by reviewer", "retrieved_at": "2026-10-14" },
+  "2025 WL 1188234": { "file": "calloway-dct.txt", "source": "mock district order typed by reviewer", "retrieved_at": "2026-10-14" }
+}

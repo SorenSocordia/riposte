@@ -1,0 +1,57 @@
+{
+ "invoice_number": "Snippet1",
+ "issue_date": "2017-11-13",
+ "due_date": "2017-12-01",
+ "currency": "EUR",
+ "seller_name": "SupplierOfficialName Ltd",
+ "buyer_name": "Buyer Official Name",
+ "line_extension_amount": 5900,
+ "tax_inclusive_amount": 7125,
+ "prepaid_amount": 1000,
+ "payable_amount": 9007199254740993,
+ "amount_currency": "EUR",
+ "lines": [
+  {
+   "id": "1",
+   "item_name": "item name",
+   "invoiced_quantity": 10,
+   "price_amount": 410,
+   "line_extension_amount": 4000,
+   "base_quantity": 1,
+   "line_allowance_amount": 101,
+   "line_charge_amount": 1
+  },
+  {
+   "id": "2",
+   "item_name": "item name",
+   "invoiced_quantity": 10,
+   "price_amount": 200,
+   "line_extension_amount": 1000,
+   "base_quantity": 2
+  },
+  {
+   "id": "3",
+   "item_name": "item name",
+   "invoiced_quantity": 10,
+   "price_amount": 100,
+   "line_extension_amount": 900,
+   "line_allowance_amount": 101,
+   "line_charge_amount": 1
+  }
+ ],
+ "vat_breakdown": [
+  {
+   "rate": 25,
+   "taxable_amount": 4900,
+   "tax_amount": 1225,
+   "row": 1
+  },
+  {
+   "category": "E",
+   "rate": 0,
+   "taxable_amount": 1000,
+   "tax_amount": 0,
+   "row": 2
+  }
+ ]
+}

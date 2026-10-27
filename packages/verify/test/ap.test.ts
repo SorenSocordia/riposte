@@ -24,6 +24,9 @@ const gr = (r1 = 5, r2 = 10, r3 = 24): string => `GOODS RECEIPT (ERP) for PO-488
 2. Floor marking tape, yellow | received ${r2}
 3. Wire shelving unit 48 in | received ${r3}
 `
+// 2026-10-05: the invoice is signed by its vendor. Under engine 0.6.0 the text path checks that the invoice
+// names the PO's vendor (src/ap/vendor.ts); an invoice that names no one goes to a person, so these fixtures, written to test other
+// checks, now carry the vendor's name on a closing line (no number on it, so no line, total or amount reads differently).
 const invoice = (o: { po?: string; tape?: string; total?: string; extra?: string } = {}): string => `INVOICE MESSAGE
 INVOICE NM-84665   DATE 2026-09-28
 CUST PO: ${o.po ?? 'PO-48825'}
@@ -32,9 +35,14 @@ CUST PO: ${o.po ?? 'PO-48825'}
 3   48 inch wire shelving unit | 24 | 96.50 | 2,316.00
 ${o.extra ?? ''}TOTAL DUE USD | ${o.total ?? '2,695.00'}
 PREVIOUS BALANCE ON YOUR ACCOUNT: USD 1,290.00 (NOT PART OF THIS INVOICE).
+Northfield Material Handling
 `
+// Engine 0.6.0: a bill is approved only against a known book (a bill whose duplicate check did not run goes to a
+// person). These tests check the three-way match, so the fixture states the book known and empty; the no-history behaviour is
+// tested on its own below.
 const docs = (o: Parameters<typeof invoice>[0] = {}, freight?: string, receipt?: [number, number, number]): ApDocuments =>
-  ({ invoice: invoice(o), purchase_order: po(freight), goods_receipt: receipt ? gr(...receipt) : gr() })
+  ({ invoice: invoice(o), purchase_order: po(freight), goods_receipt: receipt ? gr(...receipt) : gr(), history: [] })
+const withoutHistory = (d: ApDocuments): ApDocuments => ({ invoice: d.invoice, purchase_order: d.purchase_order, goods_receipt: d.goods_receipt })
 
 describe('AP three-way match — policy decisions', () => {
   it('approves a clean invoice (abbreviated names, stray previous balance ignored)', () => {
@@ -77,23 +85,28 @@ describe('AP three-way match — policy decisions', () => {
 })
 
 describe('AP three-way match — abstains instead of guessing', () => {
-  it('no readable total -> abstain (payable null), with the reason', () => {
-    const r = verifyInvoiceMatch({ ...docs(), invoice: invoice().replace(/TOTAL DUE USD \| 2,695.00\n/, '') }, { now: NOW })
+  it('no readable total -> abstain (payable false under engine 0.6.0, null under 0.5.0), with the reason', () => {
+    const d = { ...docs(), invoice: invoice().replace(/TOTAL DUE USD \| 2,695.00\n/, '') }
+    const r = verifyInvoiceMatch(d, { now: NOW })
     expect(r.decision).toBe('abstain')
-    expect(r.payable).toBeNull()
+    expect(r.payable).toBe(false)
     expect(r.reasons[0]).toMatch(/no stated total/)
+    expect(verifyInvoiceMatch(d, { now: NOW, engine: '0.5.0' }).payable).toBeNull()
   })
   it('freight billed but the PO is silent on freight -> abstain', () => {
     const r = verifyInvoiceMatch({ ...docs({ extra: 'Freight: USD 35.00\n', total: '2,730.00' }), purchase_order: po().replace(/ \| Freight: not allowed/, '') }, { now: NOW })
     expect(r.decision).toBe('abstain')
   })
-  it('a missing invoice line -> abstain on the line checks (never a guessed match)', () => {
+  it('a line left off the bill is a partial bill: that PO line is not checked, and a total that still counts it is held (never a guessed match)', () => {
+    // engine 0.7.0: a partial bill is ordinary; the stated total, 2,695.00, still counts the tape line the bill does not carry
     const r = verifyInvoiceMatch({ ...docs(), invoice: invoice().replace(/^2 {3}Floor.*\n/m, '') }, { now: NOW })
-    expect(r.decision).toBe('abstain')
-    expect(r.verdict.claims.find((c) => c.claim_id === 'ap.line[2].quantity')!.insufficiency!.reason).toBe('AMBIGUOUS_REFERENCE')
+    expect(r.decision).toBe('hold_total')
+    expect(r.verdict.claims.find((c) => c.claim_id === 'ap.line[2].quantity')).toBeUndefined()
+    expect(r.not_checked).toContain('PO line 2 (Floor marking tape, yellow) is not billed on this bill: nothing to check against it')
   })
   it('a later check FAILs while an earlier one is undecided -> abstain but payable=false', () => {
-    const r = verifyInvoiceMatch({ ...docs({ total: '9,999.00' }), invoice: invoice({ total: '9,999.00' }).replace(/^2 {3}Floor.*\n/m, '') }, { now: NOW })
+    // the bill cites two purchase orders (the PO number check cannot decide), and its total does not add up
+    const r = verifyInvoiceMatch({ ...docs({ total: '9,999.00' }), invoice: invoice({ total: '9,999.00', extra: 'SEE ALSO PO-50000\n' }) }, { now: NOW })
     expect(r.decision).toBe('abstain')
     expect(r.payable).toBe(false)
   })
@@ -135,7 +148,9 @@ describe('AP benchmark regression — Distil Labs public set (Apache-2.0; includ
   it('100/100 decisions and six-field answers, 0 wrong decisions', () => {
     let decided = 0, right = 0, six = 0, wrong = 0
     for (const c of cases) {
-      const d = splitApLayout(c.input)!
+      // the benchmark carries no payment history: its bills are checked against a known, empty book (engine 0.6.0 sends a
+      // bill with no history at all to a person; test/ap-near-match.test.ts checks the 32 approves do exactly that)
+      const d = { ...splitApLayout(c.input)!, history: [] }
       const r = verifyInvoiceMatch(d, { now: NOW })
       if (r.decision !== 'abstain') decided++
       if (r.decision === c.decision) right++
@@ -152,7 +167,7 @@ describe('AP benchmark regression — Distil Labs public set (Apache-2.0; includ
 })
 
 describe('AP surfaces — CLI `verify ap` and MCP `verify_invoice_match`', () => {
-  it('CLI: layout file -> JSON result, exit 1 on a hold, 0 on approve', async () => {
+  it('CLI: layout file -> JSON result, exit 1 on a hold; a clean layout (no payment history on this door) exits 2, a person decides', async () => {
     const { run } = await import('../src/cli')
     const { writeFileSync, mkdtempSync } = await import('node:fs')
     const { tmpdir } = await import('node:os')
@@ -160,15 +175,18 @@ describe('AP surfaces — CLI `verify ap` and MCP `verify_invoice_match`', () =>
     const d = docs({ total: '2,705.00' })
     const f = join(dir, 'layout.txt')
     writeFileSync(f, `${d.invoice}\n${d.purchase_order}\n${d.goods_receipt}`)
-    let out = ''
-    const io = { out: (s: string) => { out += s }, err: () => {} }
+    let out = '', err = ''
+    const io = { out: (s: string) => { out += s }, err: (s: string) => { err += s } }
     expect(run(['ap', f], io)).toBe(1)
     expect(JSON.parse(out).decision).toBe('hold_total')
     const g = join(dir, 'ok.txt')
     const ok = docs()
     writeFileSync(g, `${ok.invoice}\n${ok.purchase_order}\n${ok.goods_receipt}`)
-    out = ''
-    expect(run(['ap', g], io)).toBe(0)
+    out = ''; err = ''
+    // engine 0.6.0: every check that ran passed, but the duplicate check did not run, so a person decides
+    expect(run(['ap', g], io)).toBe(2)
+    expect(JSON.parse(out)).toMatchObject({ decision: 'abstain', payable: false })
+    expect(err).toContain('A PERSON DECIDES. Open first: the duplicate check (ap.duplicate) did not run.')
   })
   it('MCP: tool is listed and callable with the three documents', async () => {
     const { handleRequest } = await import('../src/mcp/server')
@@ -183,10 +201,13 @@ describe('AP surfaces — CLI `verify ap` and MCP `verify_invoice_match`', () =>
 describe('AP duplicate check (payment history)', () => {
   const booked = (o: Partial<{ invoice_number: string; po_number: string; total: number; vendor: string; paid_on: string }> = {}) =>
     ({ invoice_number: 'NM-11111', po_number: 'PO-48825', total: 100, vendor: 'Northfield Material Handling', paid_on: '2026-09-01', ...o })
-  it('without history: runs the four checks and SAYS the duplicate check did not run', () => {
-    const r = verifyInvoiceMatch(docs(), { now: NOW })
-    expect(r.decision).toBe('approve')
+  it('without history: runs the other checks, SAYS the duplicate check did not run, and a person decides (engine 0.6.0)', () => {
+    const r = verifyInvoiceMatch(withoutHistory(docs()), { now: NOW })
+    expect(r.decision).toBe('abstain')
+    expect(r.payable).toBe(false)
+    expect(r.reasons[0]).toMatch(/^cannot decide ap\.duplicate: duplicate check not run/)
     expect(r.not_checked.join(' ')).toMatch(/duplicate check: no payment history/)
+    expect(verifyInvoiceMatch(withoutHistory(docs()), { now: NOW, engine: '0.5.0' }).decision).toBe('approve')
   })
   it('exact repeat of a booked invoice -> hold_duplicate, before any other check', () => {
     const r = verifyInvoiceMatch({ ...docs({ total: '2,705.00' }), history: [booked({ invoice_number: 'NM-84665' })] }, { now: NOW })
@@ -196,8 +217,17 @@ describe('AP duplicate check (payment history)', () => {
     expect(r.reasons[0]).toMatch(/already in the books \(paid 2026-09-01\)/)
   })
   it('same number from a DIFFERENT vendor is not a duplicate', () => {
-    const r = verifyInvoiceMatch({ ...docs(), history: [booked({ invoice_number: 'NM-84665', vendor: 'Some Other Co' })] }, { now: NOW })
+    // Engine 0.6.0 (2026-10-05): the booked row here also shares the PO (booked() defaults to PO-48825), and
+    // the same invoice number on the same PO under another vendor name is a can't-tell for a person, never an approve. Under
+    // engine 0.5.0 it approves exactly as before; under 0.6.0 another vendor with another PO and total still approves.
+    const r = verifyInvoiceMatch({ ...docs(), history: [booked({ invoice_number: 'NM-84665', vendor: 'Some Other Co' })] }, { now: NOW, engine: '0.5.0' })
     expect(r.decision).toBe('approve')
+    const now = verifyInvoiceMatch({ ...docs(), history: [booked({ invoice_number: 'NM-84665', vendor: 'Some Other Co' })] }, { now: NOW })
+    expect(now.decision).toBe('abstain')
+    expect(now.reasons[0]).toContain("already booked under 'Some Other Co'")
+    expect(now.reasons[0]).toContain('with the same PO (PO-48825)')
+    const other = verifyInvoiceMatch({ ...docs(), history: [booked({ invoice_number: 'NM-84665', vendor: 'Some Other Co', po_number: 'PO-1', total: 5 })] }, { now: NOW })
+    expect(other.decision).toBe('approve')
   })
   it('same vendor + PO + total under a new number -> abstain for a person (possible resubmission)', () => {
     const r = verifyInvoiceMatch({ ...docs(), history: [booked({ invoice_number: 'NM-99999', total: 2695 })] }, { now: NOW })
@@ -205,9 +235,13 @@ describe('AP duplicate check (payment history)', () => {
     expect(r.reasons[0]).toMatch(/possible resubmission/)
   })
   it('clean history -> the duplicate claim PASSes and the decision stands', () => {
-    const r = verifyInvoiceMatch({ ...docs(), history: [booked()] }, { now: NOW })
+    // 2026-10-05: the booked row is on another order. booked() books 100 on this bill's own PO, which the
+    // bill bills in full, so under engine 0.6.0 the PO balance check sends it to a person (test/ap-po-balance.test.ts)
+    const r = verifyInvoiceMatch({ ...docs(), history: [booked({ po_number: 'PO-40000' })] }, { now: NOW })
     expect(r.decision).toBe('approve')
     expect(r.verdict.claims.find((c) => c.claim_id === 'ap.duplicate')!.outcome).toBe('PASS')
-    expect(r.not_checked).toEqual([])
+    // 2026-10-06: every approve says what it did not check, and nothing else is open
+    // 2026-10-13: and an emailed-text approve says, last, that it was read from text
+    expect(r.not_checked.map((s) => s.split(':')[0])).toEqual(['vendor identity', 'payment redirection', 'tax', 'This bill was read from text; the structured path is the product and this path is a convenience with the limits listed.'])
   })
 })

@@ -1,5 +1,5 @@
 /**
- * The decision verbs, end to end through run(argv, io) (CLI lane, wave 3, 2026-09-28):
+ * The decision verbs, end to end through run(argv, io) (2026-09-28):
  *   verify keygen | grant | decline | revise-policy | report, and verify voice --from-book | --surface.
  * Wiring only: the logic lives in src/ledger/decisions.ts, src/verdict/voice.ts, src/ledger/report.ts and src/http/surfaces.ts.
  * Every verb runs against real files in a temp dir: a real chain export (ledger.chainJSONL()), real Ed25519 keys, the
@@ -83,7 +83,7 @@ const declineArgs = (b: Book, assessment: string, extra: string[] = []): string[
 ]
 /** The report, anchored with the trusted keys. */
 const reportArgs = (b: Book, extra: string[] = []): string[] => ['report', '--ledger', b.chain, '--policy', b.policy, '--trusted-keys', b.trusted, ...extra]
-/** The version after the example policy's (E13: the example's version moves when its body does, so these tests follow it). */
+/** The version after the example policy's (the example's version moves when its body does, so these tests follow it). */
 const NEXT = ((v: string): string => { const [maj, min] = v.split('.').map(Number); return `${maj}.${(min as number) + 1}.0` })(EXAMPLE_PROMOTION_POLICY.version)
 const esc = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 /** Everything but the book citation and the hash (which covers the citation). */
@@ -620,7 +620,8 @@ describe('nothing throws out of run()', () => {
     expect(parseFlags(['--ledger', 'a.jsonl', '--surface'], spec)).toMatchObject({ v: { ledger: 'a.jsonl' }, problems: [] })
     expect(parseFlags(['--ledger', 'a', '--ledger', 'b'], spec).problems).toEqual(['--ledger is given twice'])
     expect(parseFlags(['--ledger', '--surface'], spec).problems).toEqual(['--ledger needs a value'])
-    expect(parseFlags(['--constructor', 'x', '--__proto__', 'y', 'stray'], spec).problems).toEqual(['unknown option(s) --constructor, x, --__proto__, y, stray'])
+    // 2026-10-05: the value typed after an unknown option is that option's value, not a second problem
+    expect(parseFlags(['--constructor', 'x', '--__proto__', 'y', 'stray'], spec).problems).toEqual(['unknown option(s) --constructor, --__proto__, stray'])
     expect(parseFlags(['-h'], spec).help).toBe(true)
   })
 })

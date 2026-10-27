@@ -1,0 +1,253 @@
+{
+  "spec": "bench-spec/1",
+  "id": "cold-review-buyers-r2",
+  "title": "Cold review, buyers' round 2: defects found by four cold readers (AI agents that had not worked on this tree) reading it as buyers",
+  "adapter": "transcribed",
+  "label": "transcribed",
+  "blind": false,
+  "run": {
+    "id": "buyers' review round 2: four reports written on 2026-10-19; rows written on 2026-10-20 from the reports",
+    "date": "2026-10-19"
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "b2-01",
+      "kind": "docs-defect",
+      "description": "B1 (controller): the preregistration template a buyer freezes says a registered tax rate is checked \"within the price tolerance\" (packages/receipts/src/pilot/prereg.ts:168), while the code checks tax to the cent and says the tolerance rule was dropped (packages/verify/src/ap/tax.ts:24-26): the document a controller would sign misdescribes one rule, in the safe direction",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-02",
+      "kind": "method",
+      "description": "B1 (controller): no construction ERP export has been read (docs/doors/accounts-payable.md:13): Sage 300 CRE, Spectrum and Foundation have no field list, QuickBooks Desktop has no mapping, and Vista's draft is built from the names for unapproved invoices (APUI/APUL) with no paid or held status, so it reads entry views while a closed month lives in posted invoices, and \"every bill is open and the agreement table stays empty\"; one construction ERP export read end to end by a person was asked for",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-03",
+      "kind": "engine",
+      "description": "B1 (controller): --ignore-columns and --ignore-file do not take column names: on a month with Job and Cost Code columns, map ... --ignore-columns \"Job,Cost Code\", --ignore-columns Job, --ignore-file with bare names and shadow ... --ignore-columns Job were each refused, exit 1, still listing the columns as unmapped; only the mapping file's own ignore list, or the exact listed line bills.csv: column \"Job\", works, because ignoreList() (packages/receipts/src/pilot-command.ts:99-104) splits the names and finish() (packages/receipts/src/pilot/mappers.ts:685) matches them against the whole listed string; packages/receipts/PILOT.md:101-102 and the error message give the fix that does not work, and every ERP export has job and cost-code columns",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-04",
+      "kind": "message-defect",
+      "description": "B1 (controller): a bill whose total is written \"$29,259.21\" is listed as \"the bill has no total\", which misleads, and a bill dated 14/09/2026 drops out of the month with no message (327 bills in the month became 326); both cases are documented (packages/receipts/HOW-TO-MAP.md:101-105)",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-05",
+      "kind": "method",
+      "description": "B1 (controller): with no goods receipts, which most subcontractors never post, the gate pays nothing: the same month with an empty item_receipts.csv gave 0 would pay, 4 would hold and 323 to a person, a planted arithmetic error read \"cannot decide ap.line[1].quantity: no goods-receipt line for PO line 1\", and neither registered number of the pilot can be measured; packages/receipts/PILOT.md:129 discloses it in one line; a two-way mode (bill against PO, with the quantity check registered as out of scope the way tax and freight are) was asked for as the missing piece",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-06",
+      "kind": "docs-defect",
+      "description": "B1 (controller): packages/receipts/HOW-TO-MAP.md:111 says pay applications \"are not read from CSV\" and does not point to the intake's payapp-csv adapter, whose template a clerk could fill from the firm's G703 spreadsheet",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-07",
+      "kind": "method",
+      "description": "B1 (controller), B3 (legal-operations director), B4 (research funder): blind-shipping-1, the one preregistered run on unseen documents, could not start on the tree handed out: recomputed by its section 2 rule, the engine (d3409d93… against abdefc87…), the AP pack (70cba0d1… against bf1606f3…), the legal rule (853a9e35… against f483d5f0…) and the pilot tool (3efd2e13… against 6790e0bd…) differed from its pins, and its stop rule says \"If any pin in section 2 differs from the tree that ships, nothing runs\" (PREREG.md:226-227); its AP arm needs a partner's month, and the research funder made a re-pin the condition of its first payment",
+      "post_hoc": false,
+      "fixed_by": "2026-10-19 / Amendment 2 re-pins blind-shipping-1 to engine 0.7.2, ap-threeway@0.3.0 and legal@0.5.4 over the tree that ships after the day's repairs, hashed and stamped before any data, and says a further amendment re-pins any source that moves again before data is touched; packages/verify/docs/bench/blind-shipping-1/PREREG.md, Amendment 2: \"Amendment 2 (2026-10-19, before any data; the pins of the tree that ships after the repairs of 2026-10-19)\""
+    },
+    {
+      "id": "b2-08",
+      "kind": "engine",
+      "description": "B1 (controller), B4 (research funder): bench check printed \"OK blind-shipping-1: preregistered, not run\" and \"signature and chain verified\" without checking the preregistration's pins against the tree, so it reported OK while the run's own stop rule blocked it",
+      "post_hoc": false,
+      "fixed_by": "2026-10-19 / bench check reads a planned run's pins, recomputes each source digest on the tree its tables sit in, and prints STALE PINS with both values of every pin that moved (exit 4, or refused under --strict-pins); packages/verify/CHANGELOG.md, 0.7.2 Bench tooling (2026-10-19): \"`bench check` names a preregistration whose pins moved\""
+    },
+    {
+      "id": "b2-09",
+      "kind": "method",
+      "description": "B1 (controller), B2 (platform engineer): the full test suite failed on a loaded machine: 8 tests in one reader's run (1 in riposte-verify, 7 in riposte-adapters) and 5 in the other's (three 60-second engine tests, and the governance stand-in checker missing its 3-second window, so the hook denied the call), all timeouts and each passing when run alone; none of the five is on the known-failures list (ci/known-failures.json)",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-10",
+      "kind": "docs-defect",
+      "description": "B1 (controller), B2 (platform engineer), B4 (research funder): the brief on the idea and the state of the build, handed out with the copy and not part of this tree, says \"5,948 passing tests across 19 packages\" (state-of-tonight.md:89) and verify \"3,971\" passing (:93), while the folder ships 14 workspaces and ran 5,365 to 5,370 passed; verify's 3,971 is passed plus skipped (3,958 + 13), and six packages the brief lists in its tables (custody, identity, second, liveview, controlroom, selfmap) are not in the folder",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-11",
+      "kind": "docs-defect",
+      "description": "B1 (controller), B2 (platform engineer), B3 (legal-operations director), B4 (research funder): no lockfile shipped: ci/SPEC.md:29-30 says \"The tree ships a lockfile at its root\", while the draft paper handed out with the copy says the tree as published carries none (paper/SBOM.md:8) and leaves publishing one as a marked choice (:61-65); an SBOM resolved on the day takes jsonpath-plus's three dependencies by caret range, and packages/verify/Dockerfile fell back silently to npm install when no lockfile existed, so transitive versions float",
+      "post_hoc": false,
+      "fixed_by": "2026-10-19 / the export writes package-lock.json at the tree's root, generated from the staged manifests, and the image and the GitHub Action install only from it with npm ci, each stopping with words when it is absent instead of falling back to npm install; packages/verify/docs/DEPLOY.md, Run it: \"it installs only from the root's package-lock.json (npm ci)\""
+    },
+    {
+      "id": "b2-12",
+      "kind": "method",
+      "description": "B1 (controller), B2 (platform engineer), B3 (legal-operations director), B4 (research funder): no closed engine label and signed release to pin: README.md:64-66 calls 0.7.2 an open label with no version released, and docs/doors/methods.md:57-59 says there is no signed release and no public CI history; a tagged release signed with the maintainer's published key, the SBOM attached with its sha256, the Docker base pinned by digest, the three frags re-minted under that key, a security-fix SLA, and an offline Windows bundle with an install sheet were asked for, and the preregistration was overtaken the day it was stamped, when engine 0.7.2 changed the AP and legal defaults (packages/verify/CHANGELOG.md:42-48)",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-13",
+      "kind": "method",
+      "description": "B1 (controller), B2 (platform engineer), B3 (legal-operations director), B4 (research funder): no counterparty to sign with: no entity, W-9 or certificate of insurance (technology errors-and-omissions with cyber cover, $1 million or more, was asked for); the draft order form and pilot terms handed out with the copy cannot be signed, with [PRICE], [ENTITY] and about a dozen blanks left for the publisher (paper/PILOT-ORDER-FORM.md:49-52, paper/PILOT-TERMS.md:99-123), and carry no IP indemnity or insurance minimums; the draft security questionnaire leaves the company's answers blank (paper/SECURITY-QUESTIONNAIRE.md:117-127: hosted service, certifications, subprocessors, insurance, incident notice); no paper says who operates the software in a pilot or how many vendor hours a fee includes, and none says what a Team subscription buys over the Apache-2.0 code or what it costs",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-14",
+      "kind": "docs-defect",
+      "description": "B1 (controller): packages/receipts/HOW-TO-MAP.md:4, \"Allow about an hour\", is not timed, and the reader hit a defect (row b2-03) within ten minutes on a header-renamed copy of the tree's own sample",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-15",
+      "kind": "docs-defect",
+      "description": "B1 (controller), B2 (platform engineer), B3 (legal-operations director), B4 (research funder): docs/doors/methods.md:131-132 says \"A blind run of the versions that ship (engine 0.7.1, its AP pack, the default Peppol ruleset 0.3.0 and the default legal rule, legal@0.5.3)\", while the tree builds engine 0.7.2 with ap-threeway@0.3.0 and legal@0.5.4 as defaults, so the preregistration's title, one blind run of the versions that ship, is no longer true of this tree",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-16",
+      "kind": "docs-defect",
+      "description": "B1 (controller), B2 (platform engineer), B3 (legal-operations director), B4 (research funder): the valuation handed out with the copy says \"with eleven working prototypes, a released engine and no signed pilot\" (valuation.md:228), while README.md:66 and packages/verify/CHANGELOG.md:20-21 say no version is released",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-17",
+      "kind": "docs-defect",
+      "description": "B1 (controller): the brief handed out with the copy reports the buyers' round as \"four of four would pilot\" (state-of-tonight.md:211), which reads as demand; it is disclosed as AI agents eleven lines later (:222)",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-18",
+      "kind": "docs-defect",
+      "description": "B2 (platform engineer): the paragraph of assumptions pasted into the buyers' copy of README.md:70, in place of the placeholders, said \"a tagged, signed release of this exact tree exists with public CI on it\", which the folder denies (packages/verify/CHANGELOG.md:20-21, ci/SPEC.md:6-7) and the reader's own instructions did not assume, and \"the lab never hosts your documents\", while the code describes a hosted gate that stores documents on a hosted key's opt-in (packages/receipts/src/ap-receipt.ts:6-7); B1 noted the first sentence and took the assumption as instructed",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-19",
+      "kind": "docs-defect",
+      "description": "B1 (controller), B2 (platform engineer), B3 (legal-operations director): the draft entity steps handed out with the copy point to a section of a checklist that is not in the pack (paper/ENTITY-STEPS.md:68)",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-20",
+      "kind": "docs-defect",
+      "description": "B2 (platform engineer): packages/verify/docs/DEPLOY.md:40 says \"A request with no Host header (HTTP/1.0) is answered\", while a request with no Host header got 400 on HTTP/1.0 and HTTP/1.1, as docs/doors/engineers.md:97 says; the draft security questionnaire's answer 3.1 cites the deploy page",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-21",
+      "kind": "docs-defect",
+      "description": "B2 (platform engineer): the draft security questionnaire handed out with the copy says \"A clean cut at the end of the file is caught by the head record kept beside the ledger\" (paper/SECURITY-QUESTIONNAIRE.md:86-87), true only of accidents: a cut with a head record forged by hand verified ok: true, and the honest half of the sentence, that a cut is caught fully only by a head hash the customer records somewhere it controls, comes second",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-22",
+      "kind": "docs-defect",
+      "description": "B2 (platform engineer), B4 (research funder): the folder did not say who hosts the bill gate over HTTP or what it keeps: docs/doors/agents.md:54 calls POST /v1/ap/gate \"a hosted service\" that is not in this repository, while the code describes a hosted gate that stores documents on a customer key's opt-in (packages/receipts/src/ap-receipt.ts:6-7) and holds it back from the export until its licence is decided (packages/receipts/src/index.ts:68-69), and the folder ships packages/gate-server",
+      "post_hoc": false,
+      "fixed_by": "2026-10-19 / the engineers' door says the bill gate over HTTP is meant to be hosted by the publisher and held back until its licence is decided, that nothing in the repository runs, calls or needs it, and that where it runs a receipt keeps hashes and offsets by default and a customer's key opts in to storing documents; docs/doors/engineers.md, The server, the network and the GitHub Action: \"The hosted bill gate is not in this repository.\""
+    },
+    {
+      "id": "b2-23",
+      "kind": "engine",
+      "description": "B2 (platform engineer): the adapters' governance boundary, when configured, requires custody's CLI as its checker (packages/adapters/src/governance.ts:2-3, :12), from a package, riposte-custody, that is not in the folder",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-24",
+      "kind": "docs-defect",
+      "description": "B2 (platform engineer), B4 (research funder): pages name three different current engines: packages/verify/README.md:17 says \"While engine 0.7.1 is an open label\", the scope line in packages/gate-server/README.md:79 reads \"engine 0.7.1\" while a run printed 0.7.2, docs/GLOSSARY.md:184 says \"0.7.1, the one this tree builds, is open\", and packages/verify/docs/BENCH.md:67-68 says \"engine 0.6.0, the label today's build carries, is still open\", against README.md:64-65",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-25",
+      "kind": "method",
+      "description": "B2 (platform engineer): no self-hostable, authenticated, shared gate service: the gate is a per-host stdio process (packages/gate-server/README.md:8-10), the HTTP server has no authentication (docs/doors/engineers.md:107-109), and the shared version is held back (packages/receipts/src/index.ts:68-69); one gate a whole agent fleet calls, with per-agent identity (OIDC or mTLS), the operator's pinned policy, the signed ledger and its head anchored automatically in the operator's log store, under Apache-2.0 or a decided licence, was asked for",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-26",
+      "kind": "engine",
+      "description": "B3 (legal-operations director): a district court's slip opinion with no \"Opinion\" heading is misread: only a judge's line written \"CORDELL, District Judge:\" with a colon opens the opinion, and with \"JANE M. CORDELL, United States District Judge\" or \"CORDELL, J.\" every quotation answers \"in the counsel listing (line 23), not in the majority opinion\"; with the heading added, 5 of 5 genuine quotations PASS",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-27",
+      "kind": "engine",
+      "description": "B3 (legal-operations director): the court's rejection sentence in the manual's own wording, \"That reading is foreclosed by the text.\", quoted after \"Marbeck contends that ...\", answered can't tell, \"found as someone else's position, not the court's\", while packages/verify/docs/LEGAL.md:261 says such a sentence is the court speaking again",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-28",
+      "kind": "engine",
+      "description": "B3 (legal-operations director): a correctly disclosed quotation that omits a rule, code or Restatement citation under \"(citation omitted)\" FAILs: 9 of 11 common forms (Fed. R. Civ. P., \"See Fed. R. Civ. P.\", Fed. R. Evid., Fed. R. App. P., U.C.C., Restatement, Cal. Civ. Proc. Code, Tex. R. Civ. P., N.Y. C.P.L.R.; only \"28 U.S.C. §\" and \"Id.\" pass), while packages/verify/docs/LEGAL.md:128-129 excuses a citation sentence that opens with a signal and holds a citation: a false-FAIL class every procedural brief will hit, which no ledger row held",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-29",
+      "kind": "engine",
+      "description": "B3 (legal-operations director): an ellipsis that drops \"or should have discovered\" from the time phrase \", within a reasonable time after he discovers or should have discovered any breach,\" PASSed (q03), printing what the ellipsis stands for, so the notice clock runs from actual discovery only, while packages/verify/docs/LEGAL.md:223-226 and :318 say an ellipsis over part of a time phrase, or over part of a condition joined by \"or\", answers can't tell",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-30",
+      "kind": "engine",
+      "description": "B3 (legal-operations director): a standard the opinion quotes from its own earlier case and drops in the next sentence (\"We part ways with that formulation today.\") PASSed twice (o02, o12), naming the source and saying nothing of the rejection; packages/verify/docs/LEGAL.md:309 discloses that a rejection in other words is not read, nothing printed would lead a paralegal to the next sentence, and for production a PASS on words inside the opinion's quotation of another case was asked to print the next two sentences",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-31",
+      "kind": "message-defect",
+      "description": "B3 (legal-operations director): two messages are slightly wrong: on h10, \"an omission ... changes a negation\" for a condition joined by \"and\", and on the Word brief a correct FAIL on \"and\" also says \"the quotation adds \"time.\"\" because of a Lexis footnote call \"n1\" glued to the word",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-32",
+      "kind": "method",
+      "description": "B3 (legal-operations director): no miss rate labelled by a lawyer or a paralegal on the rule that ships, so a PASS cannot remove a single human check; the missing piece is a blind run of the shipping rule, labelled outside the maintainers, on real filed briefs and real Westlaw and Lexis downloads, with at least 200 genuine and about 150 planted quotations, the planted ones including the classes cold readers found (party positions, rejected standards, ellipses over a burden or a time phrase)",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-33",
+      "kind": "docs-defect",
+      "description": "B3 (legal-operations director): docs/doors/legal.md:94 heads a bullet \"The miss rate, measured blind on 10 items each\", while the same bullet says \"the default's row is post-hoc, because the rule was written after the set was seen\" (:96): the heading promises a blind number for the default that the body withdraws",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-34",
+      "kind": "docs-defect",
+      "description": "B3 (legal-operations director): README.md:77, \"Who answers: both addresses are read by a person\", could not be verified, and the assumptions the round gave cover support, not this sentence",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-35",
+      "kind": "method",
+      "description": "B3 (legal-operations director), B4 (research funder): the blind run's bars are loose: 0 of 40 planted quotations passed clears an upper bound of 8.8% (blind-shipping-1/PREREG.md:181), too loose for a firm's risk committee, and the strongest primary claim the run can make is \"at most 10% missed\"; planted sets of at least 75 per arm (0 of 75 bounds the miss rate at 4.8%), and about 150 for the legal arm, were asked for",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-36",
+      "kind": "docs-defect",
+      "description": "B4 (research funder): the draft pilot terms handed out with the copy say \"The Provider does not publish the Customer's name, data or results without the Customer's written consent\" (paper/PILOT-TERMS.md:92), while the preregistration promises per-case publication with tokens (blind-shipping-1/PREREG.md:202-205), so an AP partner must pre-authorise publication in writing, and no paper does",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-37",
+      "kind": "method",
+      "description": "B4 (research funder): \"P1 to P4 are primary: the run passes only if all four pass\" (blind-shipping-1/PREREG.md:189), and P1 and P2 are the AP arm, so without an AP partner the whole run cannot pass, however the e-invoice and legal arms do; arm-level verdicts were asked for in the next amendment",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-38",
+      "kind": "docs-defect",
+      "description": "B4 (research funder): docs/doors/methods.md:133-134 says DigiCert signed blind-shipping-1 \"at 2026-10-14T01:55:28Z\", the stamp of the first filing (9dafea26…), while the current text was stamped at 10:30:34Z, as packages/verify/docs/BENCH.md:47 says",
+      "post_hoc": false
+    },
+    {
+      "id": "b2-39",
+      "kind": "docs-defect",
+      "description": "B4 (research funder): the brief handed out with the copy says each bench's text was hashed and, where stamped, signed by DigiCert's timestamp authority before anything it governs ran (state-of-tonight.md:160), and the valuation repeats that five preregistrations carry an outside timestamp (valuation.md:122-123), while none of the seven is in the folder, and blind-shipping-1, the one stamped-before-data preregistration that is in the folder, is not on the brief's list",
+      "post_hoc": false
+    }
+  ]
+}

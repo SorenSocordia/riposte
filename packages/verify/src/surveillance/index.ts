@@ -1,5 +1,5 @@
 /**
- * Evidence integrity — so the evidence behind a grant cannot quietly rot or be gamed (2026-09-28, wave 3).
+ * Evidence integrity — so the evidence behind a grant cannot quietly rot or be gamed (2026-09-28).
  *
  *   evidence.ts  the audit: which reviews a rung may rest on (random selection, signed reviews, segregation of duties,
  *                canaries), and the surveillance findings that make a demotion PROPOSAL fire under autonomy.

@@ -1,0 +1,34 @@
+{
+  "prereg_version": "riposte.pilot-prereg/0.1.0",
+  "file": "PREREG.md",
+  "sha256": "4696504847e83c617eb1d9181978d0323059e5114e14a2670498bc2d578b1522",
+  "frozen_at": "2026-10-12T22:18:20.420Z",
+  "params": {
+    "prereg_version": "riposte.pilot-prereg/0.1.0",
+    "buyer": "Keystone Mechanical",
+    "month": "2026-09",
+    "source": "generic-csv",
+    "price_tolerance": 0.02,
+    "freight": "person",
+    "tax": "person",
+    "primary": {
+      "metric": "hold_precision",
+      "bar": 0.85,
+      "confidence": 0.95,
+      "sample_size": 5
+    },
+    "co_primary": {
+      "metric": "miss_rate",
+      "bar": 0.05,
+      "confidence": 0.95,
+      "sample_size": 5
+    },
+    "secondary": [
+      "coverage",
+      "agreement"
+    ],
+    "tertiary": [
+      "dollars_held"
+    ]
+  }
+}

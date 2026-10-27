@@ -59,7 +59,9 @@ describe('tools/call verify_document', () => {
     expect(res.structuredContent.outcome).toBe('PASS')
     expect(res.structuredContent.ruleset).toMatchObject({ id: 'invoice' })
     // the text rendering parses back to the same verdict
-    expect((JSON.parse(res.content[0]!.text) as Record<string, unknown>).verdict_id).toBe(res.structuredContent.verdict_id)
+    // 2026-10-05: a verdict tool leads with the gate line; the JSON is the second text item (structuredContent unchanged)
+    expect(res.content[0]!.text).toMatch(/^gate: /)
+    expect((JSON.parse(res.content[1]!.text) as Record<string, unknown>).verdict_id).toBe(res.structuredContent.verdict_id)
   })
 
   it('a broken invoice comes back FAIL', () => {

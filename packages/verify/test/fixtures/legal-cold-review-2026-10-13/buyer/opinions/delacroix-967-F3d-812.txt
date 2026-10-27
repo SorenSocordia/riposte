@@ -1,0 +1,21 @@
+Delacroix Fabrication, Inc. v. Northgate Mut. Ins. Co.
+United States Court of Appeals for the Seventh Circuit
+June 2, 2020, Argued; August 14, 2020, Decided
+No. 19-3302
+Reporter
+967 F.3d 812 * | 2020 U.S. App. LEXIS 25811 **
+DELACROIX FABRICATION, INC., Plaintiff-Appellant, v. NORTHGATE MUTUAL INSURANCE COMPANY, Defendant-Appellee.
+Prior History: Appeal from the United States District Court for the Northern District of Illinois.
+Core Terms
+summary judgment, genuine, nonmoving party, conclusory, affidavit, plausible
+LexisNexis® Headnotes
+HN1[ ] Summary Judgment, Burdens of Proof
+A party opposing summary judgment must come forward with specific facts showing a genuine dispute for trial.
+Opinion
+[*814] MORALES, Circuit Judge. HN1[ ] Summary judgment is appropriate only when there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law. Fed. R. Civ. P. 56(a). We view the record in the light most favorable to the nonmoving party, but we do not draw inferences that rest only on speculation or conjecture.
+Delacroix contends that the district court should have credited its owner's affidavit. HN2[ ] A conclusory affidavit that sets out no specific facts does not create a genuine dispute, and a party may not defeat summary judgment by restating the allegations of its complaint under oath. n3 The affidavit here says only that Northgate "acted in bad faith" and "never intended to pay," without naming a single communication, date or decision.
+[**6] Review of the pleadings is different. At that stage a court must accept the well-pleaded factual allegations as true, but that rule does not extend to legal conclusions couched as facts. A complaint survives if it states a claim that is plausible on its face, not merely conceivable.
+Delacroix asks us to hold that an insurer's delay of more than ninety days is bad faith as a matter of law. We decline. Delay is evidence that a jury may weigh, but it is not, standing alone, enough to carry the insured's burden at summary judgment.
+AFFIRMED.
+Footnotes
+n3 We have said this many times. See, e.g., Halloran v. Pike Cnty., 802 F.3d 40, 44 (7th Cir. 2015).

@@ -1,0 +1,516 @@
+{
+  "format": "bench-table/1",
+  "id": "cold-review-r1",
+  "title": "Cold review, round 1: documentation and message defects found by four cold readers (AI agents that had not worked on this tree)",
+  "prereg": {
+    "path": "SCOPE.md",
+    "sha256": "b358987d047c525a89738974edfcf0b76f3e9b566015c46661ce3d9a58743dc4",
+    "frozen_sha256": "b358987d047c525a89738974edfcf0b76f3e9b566015c46661ce3d9a58743dc4",
+    "amendments": [],
+    "stamp": {
+      "status": "stamped after the run",
+      "proofs": [
+        {
+          "proof": "SCOPE.md.tsr",
+          "covers": "SCOPE.md",
+          "gen_time": "2026-10-14T17:53:56Z",
+          "serial": "00f7a34b6d67f0a978c4e9c08e8265d520",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "review round 1: four reports written on 2026-10-05; rows written the same day from their friction logs",
+    "date": "2026-10-05",
+    "engine_version": null,
+    "ruleset": null,
+    "report": {
+      "name": "FINDINGS.md",
+      "sha256": "a5d5e52428b4962a734d39b2753cbaff8a61ed34cd842729929688298afb430b"
+    },
+    "spec_sha256": "4ebb866755fbe1d4b0605745fb9428928c6a5fe80bb3a99b98410f0ec01c1d26",
+    "not_shipped": [
+      {
+        "file": "reader-report-r1-controller-2026-10-05-0832.md",
+        "sha256": "e1e02d45a54ab67740e78706cafb184660ce0f0797380220c66c46bdeb64d084",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "reader-report-r1-engineer-2026-10-05-0840.md",
+        "sha256": "b738767f6b797c35482b6dbe234751dca817ce6bca72f74332bf2dc5bdc9da9d",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "reader-report-r1-legal-ops-2026-10-05-0829.md",
+        "sha256": "e95c1bc3fada0d7c8520e4b4671ec950919d726548d1c0e39222790e04219225",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      },
+      {
+        "file": "reader-report-r1-reviewer-2026-10-05-0833.md",
+        "sha256": "2a627d065b9e311be51987b7086983fac2bbd250ec0260b5d724d7cb4f96299e",
+        "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+      }
+    ],
+    "rerun": {
+      "from_tree": "no",
+      "detail": "There is no run to repeat: the rows are transcribed from four readers' reports. The reports are hashed, not shipped, because they name working folders on the authors' machine."
+    }
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "J1-01",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:5: the opening sentence is about AI agents and never says which documents it checks; read twice to learn it checks invoices",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page opens by naming the documents it checks: invoices, e-invoices, pay applications, legal quotations"
+    },
+    {
+      "id": "J1-02",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:97-98: the quick start promises a one-line hold message with the lines read; the command prints about 600 lines of JSON with the reason near the bottom",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the AP command prints the hold, its reason and the lines read on stderr; the front page says the JSON is long"
+    },
+    {
+      "id": "J1-03",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:46-62 and 126-134: the SEC section and the related-work section come before anything an AP buyer needs and mean nothing to one",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page leads with one section per reader; the SEC results and related work moved to the end"
+    },
+    {
+      "id": "J1-05",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:68 claims AIA pay-application coverage but docs/examples has no pay-app example, and a wrapped pay app abstains on all 9 checks with \"no schedule-of-values array\" although the array is one level down",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a G702/G703 example ships, and a wrapped pay application is told the extraction looks wrapped"
+    },
+    {
+      "id": "J1-06",
+      "kind": "message-defect",
+      "description": "J1 (controller): pay-app findings read \"Law of Retainage (carried) VIOLATED: 5200 ≠ 6200\" and \"Law of Continuity\" instead of plain sentences about which line and which month disagree",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / pay-application FAIL explanations name the line, the figures and last month's value in plain words"
+    },
+    {
+      "id": "J1-07",
+      "kind": "message-defect",
+      "description": "J1 (controller): CLI --help is 265 lines with the ap command at line 124 among internal feature names; ap --help prints the whole general help",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the general help is 28 lines with the ap command fifth, and ap --help prints only the ap usage"
+    },
+    {
+      "id": "J1-08",
+      "kind": "docs-defect",
+      "description": "J1 (controller): AP-INPUT.md:15 and 208 say `verify ap --input bill.json`; no `verify` command exists on the path after the build (the working form is node packages/verify/dist/cli.js ap --input)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / AP-INPUT.md gives the source-checkout command, node packages/verify/dist/cli.js ap --input"
+    },
+    {
+      "id": "J1-09",
+      "kind": "docs-defect",
+      "description": "J1 (controller): AP-INPUT.md:12 and 219-224 mention a hosted gate and POST /v1/ap/gate with no URL, signup or price; a reader cannot tell whether a hosted option exists",
+      "post_hoc": false
+    },
+    {
+      "id": "J1-10",
+      "kind": "docs-defect",
+      "description": "J1 (controller): AP-INPUT.md:79 says a duplicate is \"same vendor\" without saying vendors match by exact name; a same-number bill under \"..., Inc.\" passed with \"does not appear among 1 booked invoice(s)\", which is false in plain terms",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / vendor names that differ only in case, spacing, punctuation or a company suffix count as one vendor, and the doc says so"
+    },
+    {
+      "id": "J1-11",
+      "kind": "message-defect",
+      "description": "J1 (controller): an ap run with no payment history approves (exit 0) with the duplicate check off, and says so only under not_checked at the end of the JSON",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / with no payment history the bill goes to a person, exit 2, and the headline names the duplicate check first"
+    },
+    {
+      "id": "J1-12",
+      "kind": "docs-defect",
+      "description": "J1 (controller): packages/receipts/PILOT.md, the most useful file for a controller, is never mentioned on the front page; it is linked only from the receipts README",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page links the shadow pilot from the accounts-payable section"
+    },
+    {
+      "id": "J1-13",
+      "kind": "docs-defect",
+      "description": "J1 (controller): PILOT.md:42-46 lists Ramp, Xero, QuickBooks Online and unverified CSV presets and says nothing about construction ERPs (Sage 300 CRE, Viewpoint Vista or Spectrum, Foundation)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / PILOT.md has a construction ERP section: Vista drafted, Sage 300 CRE, Spectrum and Foundation stated as not drafted"
+    },
+    {
+      "id": "J1-14",
+      "kind": "docs-defect",
+      "description": "J1 (controller): PILOT.md:78: the pre-registered number, hold precision, measures false holds and not bad bills the gate would have paid, and the page does not say so",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / PILOT.md says hold precision measures false holds only, and the template adds a miss rate"
+    },
+    {
+      "id": "J1-15",
+      "kind": "docs-defect",
+      "description": "J1 (controller): PILOT.md:91 writes the run's private signing key into the output folder with no guidance on who should hold the key so an auditor can rely on the signatures",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the pilot refuses to run until a key choice is made, and PILOT.md says who should hold the key"
+    },
+    {
+      "id": "J1-16",
+      "kind": "message-defect",
+      "description": "J1 (controller): shadow receipts say \"action\":\"EXECUTE\",\"effect\":\"PAY\" at the top level while \"executed\": false sits nested under body.shadow; a reader skimming the log would misread it",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / shadow receipts read WOULD_EXECUTE and WOULD_PAY where they read EXECUTE and PAY, beside executed: false"
+    },
+    {
+      "id": "J1-17",
+      "kind": "message-defect",
+      "description": "J1 (controller): replay headlines \"PASS with 3 of 13 checks unable to run\" on an invoice whose totals could not be read; the default word is PASS",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the replay headline reads PASS-WITH-OPEN: 3 of 13 checks could not run"
+    },
+    {
+      "id": "J1-18",
+      "kind": "message-defect",
+      "description": "J1 (controller): the input_hash refusal is one sentence of about 600 characters",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the input_hash refusal leads with one short line, then the recorded and computed hashes on lines of their own"
+    },
+    {
+      "id": "J1-19",
+      "kind": "docs-defect",
+      "description": "J1 (controller): the replay instructions give the contact as a literal [ADDRESS] placeholder",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the replay instructions give a contact address in place of the placeholder"
+    },
+    {
+      "id": "J1-20",
+      "kind": "docs-defect",
+      "description": "J1 (controller): README.md:24 reports \"18 handed to a person\" without saying that 13 of them were invoices that should have been paid, which is the delay cost on good bills",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page says 13 of the 18 sent to a person were invoices that should have been paid"
+    },
+    {
+      "id": "J2-01",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): the replay instructions give the contact for kills and questions as a literal [ADDRESS] placeholder, with no disclosure policy",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a contact address replaced the placeholder, and SECURITY.md states what happens to a report"
+    },
+    {
+      "id": "J2-03",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): npm install reports one low-severity advisory (esbuild) and no page mentions it",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the install section names the esbuild advisory and says esbuild is used only at build time"
+    },
+    {
+      "id": "J2-04",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): the replay instructions say issued_at is the one exception to byte-for-byte replay; the replay also exempts channel, ledger, declared_accuracy, action_context and case, carries document.producer, and folder mode discloses none of this",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the replay instructions list every field a replay does not compare, and folder mode names them for each verdict"
+    },
+    {
+      "id": "J2-05",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): replay with no arguments exits 3 and prints the general usage, which starts \"verify a document\", instead of the replay usage",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / replay with no arguments prints what replay needs and the replay usage, exit 3"
+    },
+    {
+      "id": "J2-06",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): an unknown replay option is named correctly but the line is buried under the full usage block",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / an unknown replay option prints two lines: the option named, then where to find the replay help"
+    },
+    {
+      "id": "J2-07",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): replay on a parent folder refuses \"not a replay bundle\" with no pointer to single-file mode or the flags a bare verdict needs",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / folder mode explains each file it refuses and prints the single-file replay command with the flags it needs"
+    },
+    {
+      "id": "J2-08",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): a bundle starting with a UTF-8 byte-order mark reports \"not a replay bundle\" in folder mode and \"Unexpected token\" in single-file mode, instead of naming the byte-order mark",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a bundle that starts with a byte-order mark is refused naming the byte-order mark, in folder and single-file mode"
+    },
+    {
+      "id": "J2-09",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): the replay exit-2 and exit-3 messages show the placeholder --source <text>; the flag takes a file",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the replay messages write the flag as --source <file>"
+    },
+    {
+      "id": "J2-10",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): an e-invoice verdict records outcome PASS while its VAT and net totals are unreadable; a consumer reading only outcome (a SIEM, a script) sees PASS; the gate reading lives only in the docs",
+      "post_hoc": false
+    },
+    {
+      "id": "J2-11",
+      "kind": "message-defect",
+      "description": "J2 (platform engineer): replay JSON reports `answer` while the verdict carries `outcome`; the first parse guessed wrong",
+      "post_hoc": false
+    },
+    {
+      "id": "J2-13",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): .gitattributes says results must cmp-equal a fresh re-run; all six shipped holdout1 stress files differ from a fresh run (\"all four checks passed\" against \"all five\"), with decisions unchanged",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the holdout stress files were re-banked under engine 0.6.0, and a fresh run matches them byte for byte"
+    },
+    {
+      "id": "J2-14",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): README.md:97-98 promises the line \"hold_quantity: ... billed 10, received 7\"; the command prints a JSON blob on stdout and nothing on stderr",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the AP command prints the hold line, billed 10, received 7, on stderr, as the front page says"
+    },
+    {
+      "id": "J2-15",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): README.md:81 says the plugin adds a Stop hook; the plugin also registers a PreToolUse hook on every tool, off by default but still starting node on every call",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page names the PreToolUse hook, off by default, and that it still starts Node on every tool call"
+    },
+    {
+      "id": "J2-18",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): the replay instructions imply a reader can check the source hash with sha256sum; input_hash is a sha256 over canonical JSON of the inputs, not of the file",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the replay pages say the input hash is over canonical JSON of the inputs, so sha256sum on a file will not reproduce it"
+    },
+    {
+      "id": "J2-19",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): the verdict id is truncated to 128 bits and the replay instructions do not say so",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the hash contract page and the glossary say the verdict id is 128 bits of a sha256"
+    },
+    {
+      "id": "J2-20",
+      "kind": "docs-defect",
+      "description": "J2 (platform engineer): the docs lean on internal work-item codes and the 0.5.0 changelog opens with ocean-float and galaxy terms inside an accounts-payable verifier, so the product surface could not be mapped in an hour",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-01",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): the replay instructions give the contact as a literal [ADDRESS] placeholder; there is no named entity, support terms or contact anywhere",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-02",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): README.md:14-31: the headline section is all accounts payable, and legal appears once, as a list item at README.md:68",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page names all four document kinds first and gives legal operations its own section"
+    },
+    {
+      "id": "J3-03",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): README.md:91: npm test has no note on whether it starts a server or how long it runs, so the judge skipped it",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-04",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): README.md:109-114: \"Re-run the benchmark\" covers AP only; there is no command for the legal benchmark",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-05",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): the replay instructions say RULESETS.md lists each rule set's declared accuracy including the misses; for legal it does not, and the legal rates are in BENCH.md",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / RULESETS.md opens by pointing each ruleset's reader to its accuracy page, legal to LEGAL.md"
+    },
+    {
+      "id": "J3-08",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): BENCH.md:286 says a prereg was held after 1 recorded amendment without saying what the amendment changed, and the prereg is not in the tree",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the prereg ships in the table's folder and the bench page prints the amendment's own text"
+    },
+    {
+      "id": "J3-09",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): BENCH.md:313 gives a results path that points outside the repository",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / every results path on the bench page points inside the table's folder in this tree"
+    },
+    {
+      "id": "J3-11",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): the CLI help has no citation verb and QUICKSTART.md:94 lists verify_citations as an MCP tool only; checking a brief meant reading src/legal/index.ts and writing a script",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / a citations command checks a brief from the command line and is listed in the full help"
+    },
+    {
+      "id": "J3-12",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): the KB02 remedy quotes the opinion starting mid-sentence on a stray word (\"appeals. But Cochran ...\")",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-14",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): the legal FAIL explanation says \"X is a real authority, but the quotation is not accurate\"; the engine knows only the opinion text it was given",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-15",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): too many version numbers with no explanation: bundles at engine 0.0.1, fresh verdicts at 0.5.0, three legal and three Peppol rule versions, five engine releases in two days",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the glossary and the changelog's opening explain engine versus ruleset versions and why both move"
+    },
+    {
+      "id": "J3-16",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): internal jargon in reader-facing text: CLI help, RULESETS.md:47 and QUICKSTART.md:99 use internal names for features where plain words were expected",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-17",
+      "kind": "docs-defect",
+      "description": "J3 (legal operations): MISSES.md mixes e-invoice, legal, AP and model-attestation rows in one table with no per-ruleset filter or section",
+      "post_hoc": false
+    },
+    {
+      "id": "J3-18",
+      "kind": "message-defect",
+      "description": "J3 (legal operations): an e-invoice remedy calls \"Document allowances EUR 20\" unreadable; the real reason is that strict reading needs two decimals, and the message could say so",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-01",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): README.md:24 headlines a \"Blind, pre-registered run\" that BENCH.md:337 lists among the runs the tool refused, for having no recorded prereg hash",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page prints the AP run in its own tier, prereg unhashed, not as a preregistered run"
+    },
+    {
+      "id": "J4-02",
+      "kind": "method",
+      "description": "J4 (methods reviewer): bench/ap/PREREG.md says \"frozen ... before any run\" but has no recorded hash anywhere, and line 5 carries an edit instead of an appended amendment",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-03",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCHMARK-MINE.md:33-34 cites the mining prereg by hash as \"available on request\" instead of shipping it in bench/",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-04",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): every BENCH.md table names a prereg and a results path that are not in the tree (0 of 13 preregs, 0 of 13 results files found)",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / each table's prereg and per-case results ship in its folder; every link on the bench page resolves"
+    },
+    {
+      "id": "J4-05",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCH.md:69, 245 and 264 name paths of the private working layout that do not exist in the public tree",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the bench page names only paths inside this tree"
+    },
+    {
+      "id": "J4-06",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCHMARK-AP.md:56 says \"nine of Jev's at 0.99 confidence\"; no script computes it and a recount gives 3 or 4 depending on the definition",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / audit.ts counts the confidence two ways and the write-up prints both counts and corrects the old figure"
+    },
+    {
+      "id": "J4-07",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCHMARK-AP.md:56 and audit.ts:30 say the blind checker caught all 111 wrong decisions; 87 were caught by disagreement and 24 only because the checker abstained, and the split is not printed",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / audit.ts and the write-up print the split: 87 caught by disagreement, 24 only by abstention"
+    },
+    {
+      "id": "J4-09",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): bench/ap/README.md:58 says the parser was hardened against other seeds first, without naming them, showing the diff, or shipping a stress prereg",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-10",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): README.md:5-6 promises ABSTAIN when the engine cannot verify, but the shipped e-invoice bundle is a PASS with 3 of 13 checks unable to run; PASS-WITH-OPEN was explained only in VERDICT-SCHEMA-v0.md",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page explains PASS-WITH-OPEN in its first paragraph, with a glossary link"
+    },
+    {
+      "id": "J4-11",
+      "kind": "message-defect",
+      "description": "J4 (methods reviewer): the tamper refusal labels the hash of the tampered inputs as \"expected\"; it should read recorded X, computed Y",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-12",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): bench/sec/PREREG-SEC-CHECK.md:4 uses unexplained internal shorthand for why lab iterations stay private, and gives no count of them",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-14",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): README.md:71 says \"the hand-labelled audits\" while bench/sec/RESULTS-V02.md:20 says the audit was done by a separate agent; the annotator is not stated",
+      "post_hoc": false
+    },
+    {
+      "id": "J4-15",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): CHANGELOG.md:285 says the build carries engines 0.0.1 and 0.1.0 while src/version.ts carries six; the replay instructions send readers to the changelog for the list",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the changelog's opening says where the carried-engine list lives, and --version prints it"
+    },
+    {
+      "id": "J4-16",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): CHANGELOG.md and MISSES.md use internal governance shorthand and fixed-by codes where plain words were expected",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the changelog and the misses page use plain words for rulings and fixes, not internal codes"
+    },
+    {
+      "id": "J4-17",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): the engine moved five versions in two days and the non-AP bench tables do not say whether they still hold on the current engine",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / each bench table states the engine its numbers hold for and that it was not re-run on a later one"
+    },
+    {
+      "id": "J4-18",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCHMARK-MINE.md:42 says \"t = 0.02 learned\" without disclosing that the tolerance grid contained 0.02 and that the schema was hand-typed by people who knew the policy",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / BENCHMARK-MINE.md discloses that the grid contained 0.02 and that the field schema was typed by hand"
+    },
+    {
+      "id": "J4-19",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): BENCH.md:61 labels the BPI 2019 table blind while its precision row says the audit is by the harness author; the label does not separate blind data from a blind audit",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the blind label says it covers the data only, and each table states who audited the outcomes"
+    },
+    {
+      "id": "J4-20",
+      "kind": "docs-defect",
+      "description": "J4 (methods reviewer): six of the BENCH.md tables are science replays (galaxy rotation curves, ocean floats, gravity inversions) and the README gives no sentence of scope",
+      "post_hoc": false,
+      "fixed_by": "2026-10-05 / the front page and the bench page say the science tables test the method and are not product claims"
+    }
+  ],
+  "blind": false,
+  "label": "transcribed"
+}

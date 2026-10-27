@@ -1,5 +1,5 @@
 /**
- * Precedent → statute, a first stone (opinion lane, 2026-09-28): the customer's own rulebook.
+ * Precedent → statute, a first stone (2026-09-28): the customer's own rulebook.
  *
  *   dispute opinion (UPHOLD / REFER)  →  a person's signed ruling on LAW (STANDS / SET_ASIDE)
  *     →  a case-table row `verify mine` consumes unchanged  →  the miner's candles  →  COUNSEL (GENERATED, judged,

@@ -1,0 +1,2 @@
+# The conformance vectors are byte-exact (line endings and a byte-order mark are what some of them test).
+vectors/** -text

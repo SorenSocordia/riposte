@@ -1,0 +1,28 @@
+Ashcroft v. Iqbal
+Supreme Court of the United States
+December 10, 2008, Argued; May 18, 2009, Decided
+No. 07-1015
+Reporter
+556 U.S. 662 *; 129 S. Ct. 1937 **; 173 L. Ed. 2d 868 ***; 2009 U.S. LEXIS 3472
+JOHN D. ASHCROFT, FORMER ATTORNEY GENERAL, et al., Petitioners v. JAVAID IQBAL et al.
+Prior History: ON WRIT OF CERTIORARI TO THE UNITED STATES COURT OF APPEALS FOR THE SECOND CIRCUIT.
+Disposition: Reversed and remanded.
+Core Terms
+plausible, conclusory, discovery, qualified immunity
+Case Summary
+Overview
+The Court held that a complaint survives whenever its allegations are consistent with liability.
+LexisNexis® Headnotes
+Civil Procedure > Pleading & Practice > Pleadings > Complaints
+HN1[ ] Courts must accept as true every allegation in a complaint, including legal conclusions.
+Judges: Kennedy, J., delivered the opinion of the Court, in which Roberts, C. J., and Scalia, Thomas, and Alito, JJ., joined. Souter, J., filed a dissenting opinion, in which Stevens, Ginsburg, and Breyer, JJ., joined. Breyer, J., filed a dissenting opinion.
+Opinion by: KENNEDY
+Opinion
+[*666] [**1942] JUSTICE KENNEDY delivered the opinion of the Court.
+[*678] HN2[ ] To survive a motion to dismiss, a complaint must contain sufficient factual matter, accepted as true, to "state a claim to relief that is plausible on its face." HN3[ ] A claim has facial plausibility when the plaintiff pleads factual content that allows the court to draw the reasonable inference that the defendant is liable for the misconduct alleged. The plausibility standard is not akin to a "probability requirement," but it asks for more than a sheer possibility that a defendant has acted unlawfully.
+Two working principles underlie our decision in Twombly. First, the tenet that a court must accept as true all of the allegations contained in a complaint is inapplicable to legal conclusions. Threadbare recitals of the elements of a cause of action, supported by mere conclusory statements, do not suffice. Rule 8 marks a notable and generous departure from the hypertechnical, code-pleading regime of a prior era, but it does not unlock the doors of discovery for a plaintiff armed with nothing more than conclusions. [*679] Second, only a complaint that states a plausible claim for relief survives a motion to dismiss. Determining whether a complaint states a plausible claim for relief will, as the Court of Appeals observed, be a context-specific task that requires the reviewing court to draw on its judicial experience and common sense.
+Respondent contends that the Federal Rules expressly allow him to allege a defendant's state of mind generally, and that the allegations are therefore sufficient. It is true that Rule 9(b) requires particularity when pleading fraud or mistake, while allowing malice, intent, knowledge, and other conditions of a person's mind to be alleged generally. But generally is a relative term.
+Dissent by: SOUTER
+Dissent
+JUSTICE SOUTER, with whom JUSTICE STEVENS, JUSTICE GINSBURG, and JUSTICE BREYER join, dissenting.
+Twombly does not require a court at the motion-to-dismiss stage to consider whether the factual allegations are probably true. We made it clear, on the contrary, that a court must take the allegations as true, no matter how skeptical the court may be.

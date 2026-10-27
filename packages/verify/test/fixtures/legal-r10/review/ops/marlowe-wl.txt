@@ -1,0 +1,94 @@
+KeyCite Yellow Flag - Negative Treatment
+Distinguished by Pellham Grain Co. v. Ostrava Rail, LLC, Westmarch, February 17, 2026
+988 F.4th 1201
+United States Court of Appeals, Fourteenth Circuit.
+
+MARLOWE FREIGHT, INC., Plaintiff-Appellant,
+v.
+CASTELLAN MILLS, LLC, Defendant-Appellee.
+
+No. 24-3317
+|
+Argued January 9, 2026
+|
+Decided March 3, 2026
+
+Synopsis
+Background: Carrier brought action against mill for breach of a grain transport contract. The District Court granted summary judgment for mill and excluded carrier's damages expert. Carrier appealed.
+
+Holdings: The Court of Appeals, Halvorsen, Circuit Judge, held that:
+[1] district court did not abuse its discretion in excluding expert; and
+[2] carrier did not waive arbitration by filing suit.
+
+Affirmed in part, reversed in part, and remanded.
+
+Okafor, Circuit Judge, filed opinion dissenting.
+
+West Headnotes (3)
+
+[1] Federal Civil Procedure - Absence of genuine issue of fact
+A court may enter summary judgment whenever the non-moving party offers only its own testimony.
+
+[2] Evidence - Expert testimony
+Expert testimony resting on accepted methods is admissible as a matter of course.
+
+[3] Alternative Dispute Resolution - Waiver
+Filing suit does not by itself waive a contractual right to arbitrate.
+
+Attorneys and Law Firms
+
+Renata Szabo, Kestrel & Vane LLP, for Plaintiff-Appellant.
+
+Tomas Ferreira-Lund, for Defendant-Appellee.
+
+Before HALVORSEN, LINDQVIST, and OKAFOR, Circuit Judges.
+
+Opinion
+
+HALVORSEN, Circuit Judge:
+
+Marlowe Freight, Inc. agreed to carry grain for Castellan Mills, LLC under a written transport agreement. When Castellan refused three deliveries, Marlowe sued for breach. The district court excluded Marlowe's damages expert and granted summary judgment to Castellan. We affirm the exclusion, reverse the grant of summary judgment, and remand.
+
+I.
+
+[1] Summary judgment is appropriate only where the record, taken as a whole, could not lead a rational trier of fact to ﬁnd for the non-moving party. A district court generally may not weigh credibility at *1207 this stage, but it may disregard testimony that is blatantly contradicted by documentary evidence. The non-moving party's own testimony, if based on personal knowledge, can create a genuine dispute. Here, the dispatcher's sworn account of the three refused deliveries was not contradicted by any document in the record.
+
+II.
+
+[2] The district court excluded the testimony of Marlowe's damages expert, Dr. Ilse Varga. Marlowe argues that the court must admit any expert testimony that rests on accepted methods. We disagree. A district court must exclude expert testimony that rests on accepted methods if the expert has not applied those methods
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 2
+Marlowe Freight, Inc. v. Castellan Mills, LLC, 988 F.4th 1201 (2026)
+2026 WL 774512
+reliably to the facts of the case.3 Dr. Varga applied a standard lost-profits model but used freight rates from a different region and season. The exclusion was within the court's discretion. The question is not whether the expert is credible but whether the method was reliably applied.
+
+III.
+
+Castellan contends that Marlowe waived its right to arbitrate by litigating for eleven months. The arbitrator reasoned that waiver requires a showing of prejudice to the opposing party. We decline to hold that a party waives arbitration merely by filing suit. Nothing in the agreement suggests that the parties intended to exclude statutory claims from arbitration. Contractual limitations clauses shorter than one year are rarely enforced against merchants who lacked counsel at signing. The limitations period is ordinarily tolled while the parties negotiate in good faith.
+
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 3
+Marlowe Freight, Inc. v. Castellan Mills, LLC, 988 F.4th 1201 (2026)
+2026 WL 774512
+
+[3] The district court held that a merchant's silence is acceptance as a matter of law. That holding cannot stand. In the district court's words, a carrier that fails to object within ten days forfeits every defense. A party seeking to compel arbitration must show that a valid agreement exists, that the dispute falls within its scope, and that the party has not acted inconsistently with the right to arbitrate. It is enforceable against signatories and their successors.
+
+The judgment is AFFIRMED in part and REVERSED in part, and the case is REMANDED for further proceedings consistent with this opinion.
+
+LINDQVIST, Circuit Judge, concurring dubitante:
+
+I join the court's opinion but write to note my doubts. The waiver doctrine should be abandoned entirely in favor of ordinary contract principles of estoppel.
+
+*1215 OKAFOR, Circuit Judge, dissenting.
+
+The majority's summary judgment holding is sound, but I would hold that a party waives arbitration merely by filing suit. Summary judgment was improper because the record contains no genuine dispute about delivery.
+
+All Citations
+
+988 F.4th 1201, 2026 WL 774512
+
+Footnotes
+
+3
+Marlowe does not challenge the district court's ruling on its second expert.
+
+End of Document
+© 2026 Thomson Reuters. No claim to original U.S. Government Works.

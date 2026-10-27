@@ -304,9 +304,11 @@ describe('lint', () => {
     const r = lintRuleset({ ...base, fields: { ...base.fields, I: { paths: ['i'], kind: 'identifier' }, J: { paths: ['j'], kind: 'identifier' } }, checks: [
       { code: 'D', left: 'A', op: '=', right: 'B', abstain_if_present: ['L'], alternatives: [{ left: 'A', right: 'L' }] },
       { code: 'N', scope: 'line', left: 'L', op: '=', right: '0', abstain_unless_all_present: ['A'] },
-      { code: 'ID', compare: 'identifier', left: 'I', op: '=', right: 'J', rounding: 'infer', alternatives: [{ left: 'I', right: 'J' }] },
+      // 2026-10-03 (T2): an identifier check may carry alternatives (forms of two identifier fields, chosen by presence);
+      // a form that names a numeric field is still refused
+      { code: 'ID', compare: 'identifier', left: 'I', op: '=', right: 'J', rounding: 'infer', alternatives: [{ left: 'A', right: 'J' }] },
     ] })
-    for (const pat of [/cannot name the per-line field "L"/, /wrap it as sum\(L\)/, /can only name line fields \("A" is not one\)/, /"rounding" applies to numeric checks only/, /"alternatives" apply to numeric checks only/]) expect(r.errors.some(e => pat.test(e)), String(pat)).toBe(true)
+    for (const pat of [/cannot name the per-line field "L"/, /wrap it as sum\(L\)/, /can only name line fields \("A" is not one\)/, /"rounding" applies to numeric checks only/, /alternatives\[0\]\."left": an identifier check must name an 'identifier' field \(got "A"\)/]) expect(r.errors.some(e => pat.test(e)), String(pat)).toBe(true)
   })
   it('warns about a form made only of optional terms; guard-only roles count as used', () => {
     const r = lintRuleset({ ...base, checks: [{ code: 'X', left: 'A?', op: '=', right: 'B?', abstain_if_present: ['C'] }, { code: 'Y', left: 'sum(L)', op: '>=', right: '0' }] })

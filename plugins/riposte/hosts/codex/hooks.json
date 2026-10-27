@@ -1,0 +1,27 @@
+{
+  "description": "Riposte with governance: before every tool call, ask the fleet's execution-boundary check, which denies on a refusal and on any error (PreToolUse); at the end of a turn, check its claims against its own tool results (Stop, record-only unless RIPOSTE_HOOK_MODE says otherwise). Without governance, use hooks-no-governance.json.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"RIPOSTE_HOSTS_DIR/codex/riposte-codex.mjs\" --hook",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"RIPOSTE_HOSTS_DIR/codex/riposte-codex.mjs\" --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 /**
- * Evidence integrity, the policy side (2026-09-28, wave 3): sidedness said everywhere, the unreachable-bar check, the fixed
+ * Evidence integrity, the policy side (2026-09-28): sidedness said everywhere, the unreachable-bar check, the fixed
  * example policy, the research-grounded consequence tiers (each row cited, min_n derived, the top tier non-grantable beyond
- * gate), the dollar bar (◇), a grant refused the same way on every surface (N3), and the D-UNEVIDENCED classification of a
+ * gate), the dollar bar (◇), a grant refused the same way on every surface, and the D-UNEVIDENCED classification of a
  * demotion proposal (evidence OF failure vs an absence of evidence). The design rulings stand throughout: only a person
  * moves a rung; settings are fixed at grant; nothing here tunes a policy.
  */
@@ -202,7 +202,7 @@ describe('dollarBar (◇ research §2 (c)): min(5%, tolerable misstatement ÷ $ 
   })
 })
 
-describe('grantUnderPolicy (N3): one refusal for every surface', () => {
+describe('grantUnderPolicy: one refusal for every surface', () => {
   const base = { workflow_id: WF, signer_id: 'controller', signed_at: '2026-09-28T09:00:00Z' }
   it('refuses a policy that does not lint, an undeclared tier, and a rung above the tier\'s max_rung; else a grant naming the policy by hash', () => {
     expect(() => grantUnderPolicy({ ...R, tiers: [] }, { ...base, level: 'advise', consequence_tier: 't1-routine' })).toThrow(DecisionRefused)
@@ -240,7 +240,7 @@ describe('D-UNEVIDENCED: a demotion proposal says whether it is evidence OF fail
     expect(a.proposal).toMatchObject({ kind: 'DEMOTION_PROPOSAL', basis: 'unevidenced' })
   })
 
-  it('PROPERTY: every demotion proposal carries a basis, it is failure exactly when a failing case (or failure blocker) exists, and urgent is exactly basis === failure (E4)', () => {
+  it('PROPERTY: every demotion proposal carries a basis, it is failure exactly when a failing case (or failure blocker) exists, and urgent is exactly basis === failure', () => {
     let failure = 0, unevidenced = 0
     for (const pass of [0, 30, 150, 700]) for (const fail of [0, 30, 120]) for (const passOver of [0, 1, 40]) for (const failOver of [0, 3, 30]) {
       const cal = workflowCalibration(book({ pass, fail, passOver: Math.min(passOver, pass), failOver: Math.min(failOver, fail) }), WF)
@@ -248,7 +248,7 @@ describe('D-UNEVIDENCED: a demotion proposal says whether it is evidence OF fail
         const a = assessVoice(cal, decl(granted), P)
         expect(a.level).toBe(granted)
         if (a.proposal?.kind !== 'DEMOTION_PROPOSAL') continue
-        expect(a.proposal.urgent).toBe(a.proposal.basis === 'failure') // E4 (security fix): was toBe(true) this wave
+        expect(a.proposal.urgent).toBe(a.proposal.basis === 'failure') // security fix (2026-09-28): was toBe(true) before
         expect(a.proposal.basis).toBe(a.proposal.failing_cases.length > 0 ? 'failure' : 'unevidenced')
         expect(levelRank(a.proposal.to)).toBe(levelRank(granted) - 1)
         if (a.proposal.basis === 'failure') failure++; else unevidenced++

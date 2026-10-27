@@ -1,0 +1,1882 @@
+{
+ "run": "x2b-legal-fix",
+ "ruleset": "legal@0.1.0",
+ "engine_version": "0.0.1",
+ "verify_dist_sha256": "12dc60a76781af3d5894fea8d1495c50ca1d74b8d0e3f0b0db73391111fef667",
+ "legal_dist_sha256": "f8c00f1397f1b9677b4a10521b98dfffd62e85be45dd64d27660be3a414db1ef",
+ "matcher_dist_sha256": "7cc071e66e5d606eb11c2377cd184d0bd5d2136ec4b3965472e3daf700386773",
+ "manifest_sha256": "f23c549714d166e05a6cd14c62b4a180aaf992d75142aaf62719da7d61492938",
+ "reps": 5,
+ "node": "v25.2.1",
+ "rows": [
+  {
+   "id": "KB01",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB01",
+   "locked": false,
+   "explanation": "Cogswell v. American Transit Insurance Co.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 282 Conn. 505, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "72e11294096438891fe0ba654c1c390e",
+   "quote_chars": 55,
+   "quote_words": 6,
+   "source_chars": 58697,
+   "ms_median": 0.743,
+   "ms_runs": [
+    27.369,
+    1.089,
+    0.743,
+    0.641,
+    0.681
+   ]
+  },
+  {
+   "id": "KB02",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB02",
+   "locked": false,
+   "explanation": "Axon Enterprise, Inc. v. FTC: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 598 U.S. 175, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "8494129a549d7d54b417fff2671332c3",
+   "quote_chars": 63,
+   "quote_words": 10,
+   "source_chars": 93806,
+   "ms_median": 1.2227,
+   "ms_runs": [
+    35.638,
+    1.223,
+    0.98,
+    0.892,
+    2.573
+   ]
+  },
+  {
+   "id": "KB03",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB03",
+   "locked": false,
+   "explanation": "McCarthy v. Madigan: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 503 U.S. 140, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "147db4aeb37dd3269c6a4d355339a6be",
+   "quote_chars": 42,
+   "quote_words": 6,
+   "source_chars": 33679,
+   "ms_median": 0.4274,
+   "ms_runs": [
+    7.257,
+    0.461,
+    0.303,
+    0.427,
+    0.349
+   ]
+  },
+  {
+   "id": "KB04",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB04",
+   "locked": false,
+   "explanation": "Babac v. Pennsylvania Milk Marketing Board: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 531 Pa. 391, 613 A.2d 551, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "ae05a2ed1e0142849ce1af434adb0939",
+   "quote_chars": 78,
+   "quote_words": 12,
+   "source_chars": 8721,
+   "ms_median": 0.1921,
+   "ms_runs": [
+    2.592,
+    0.349,
+    0.192,
+    0.16,
+    0.188
+   ]
+  },
+  {
+   "id": "KB05",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB05",
+   "locked": false,
+   "explanation": "Reading Eagle Co. v. Council of City of Reading: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 627 A.2d 305, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "38fda3f016fba4da018775a57055f03e",
+   "quote_chars": 136,
+   "quote_words": 24,
+   "source_chars": 10637,
+   "ms_median": 0.8178,
+   "ms_runs": [
+    4.738,
+    0.983,
+    0.753,
+    0.69,
+    0.818
+   ]
+  },
+  {
+   "id": "KB06",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB06",
+   "locked": false,
+   "explanation": "Thakkar v. Wilson Enterprises, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 458 N.E.2d 985, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "7b5e91c348ddc3dd095607d21cd64590",
+   "quote_chars": 92,
+   "quote_words": 15,
+   "source_chars": 14288,
+   "ms_median": 1.5377,
+   "ms_runs": [
+    7.945,
+    1.385,
+    1.653,
+    1.538,
+    1.308
+   ]
+  },
+  {
+   "id": "KB07",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB07",
+   "locked": false,
+   "explanation": "Committee for Idaho's High Desert, Inc. v. Yost: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 92 F.3d 814, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "d3277609ad00eb8961fd298d32ef11ef",
+   "quote_chars": 73,
+   "quote_words": 9,
+   "source_chars": 40348,
+   "ms_median": 0.5681,
+   "ms_runs": [
+    86.045,
+    0.595,
+    0.548,
+    0.483,
+    0.568
+   ]
+  },
+  {
+   "id": "KB08",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB08",
+   "locked": false,
+   "explanation": "Oakland Tribune, Inc. v. Chronicle Publishing Co.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 762 F.2d 1374, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "1ef5d63216644ac23a9d00de0fcd883a",
+   "quote_chars": 62,
+   "quote_words": 10,
+   "source_chars": 9720,
+   "ms_median": 0.1638,
+   "ms_runs": [
+    9.495,
+    0.164,
+    0.156,
+    0.139,
+    0.177
+   ]
+  },
+  {
+   "id": "KB09",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB09",
+   "locked": false,
+   "explanation": "Adohr Milk Farms, Inc. v. Love: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 255 Cal. App. 2d 366, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "11b69162aea9ce110eb9d00c8d0809d1",
+   "quote_chars": 66,
+   "quote_words": 14,
+   "source_chars": 13461,
+   "ms_median": 0.1636,
+   "ms_runs": [
+    3.609,
+    0.215,
+    0.164,
+    0.156,
+    0.152
+   ]
+  },
+  {
+   "id": "KB10",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB10",
+   "locked": false,
+   "explanation": "Gorton v. Rance: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 52 So. 3d 351, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "6f57c7e621b9c28adf6334761d20ed84",
+   "quote_chars": 99,
+   "quote_words": 19,
+   "source_chars": 37416,
+   "ms_median": 0.6837,
+   "ms_runs": [
+    6.062,
+    0.404,
+    0.346,
+    0.684,
+    1.198
+   ]
+  },
+  {
+   "id": "KB11",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB11",
+   "locked": false,
+   "explanation": "Cornwell v. Electra Central Credit Union: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 439 F.3d 1018, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "d0c4843f904df2b13d3c128f59b88c67",
+   "quote_chars": 48,
+   "quote_words": 9,
+   "source_chars": 56765,
+   "ms_median": 0.7823,
+   "ms_runs": [
+    48.837,
+    0.852,
+    0.716,
+    0.67,
+    0.782
+   ]
+  },
+  {
+   "id": "KB12",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB12",
+   "locked": false,
+   "explanation": "Walker v. City of Orem: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 451 F.3d 1139, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "69aa1e3338a133c97542dbbcbda226a7",
+   "quote_chars": 59,
+   "quote_words": 9,
+   "source_chars": 67398,
+   "ms_median": 0.5578,
+   "ms_runs": [
+    14.174,
+    0.627,
+    0.558,
+    0.474,
+    0.414
+   ]
+  },
+  {
+   "id": "KB13",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB13",
+   "locked": false,
+   "explanation": "United States v. Houston: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 792 F.3d 663, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "46937441aa290f28559384bd527f52db",
+   "quote_chars": 64,
+   "quote_words": 8,
+   "source_chars": 21159,
+   "ms_median": 0.1703,
+   "ms_runs": [
+    5.421,
+    0.224,
+    0.17,
+    0.162,
+    0.17
+   ]
+  },
+  {
+   "id": "KB14",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB14",
+   "locked": false,
+   "explanation": "Kaplan v. Tuennerman: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 87 Ohio App.3d 43, 621 N.E.2d 717 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 87 Ohio App.3d 43, 621 N.E.2d 717 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "e99bced5656b387ddf1686d0c7c03c14",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 10089,
+   "ms_median": 0.0928,
+   "ms_runs": [
+    0.418,
+    0.093,
+    0.075,
+    0.071,
+    0.096
+   ]
+  },
+  {
+   "id": "KB15",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB15",
+   "locked": false,
+   "explanation": "Rodriguez-Romero v. Garland: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 60 F.4th 1283, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "68bfaabc53b25411e3905f6ca15c3e4c",
+   "quote_chars": 22,
+   "quote_words": 2,
+   "source_chars": 37739,
+   "ms_median": 0.3653,
+   "ms_runs": [
+    10.553,
+    0.389,
+    0.289,
+    0.365,
+    0.232
+   ]
+  },
+  {
+   "id": "KB16",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB16",
+   "locked": false,
+   "explanation": "United States v. Mateo: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 476 F.3d 179, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "3d329e66de3ae73f6bef06b79ad35d0c",
+   "quote_chars": 97,
+   "quote_words": 14,
+   "source_chars": 7082,
+   "ms_median": 0.1194,
+   "ms_runs": [
+    3.094,
+    0.14,
+    0.119,
+    0.112,
+    0.112
+   ]
+  },
+  {
+   "id": "KB17",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB17",
+   "locked": false,
+   "explanation": "Citizens Nat'l Bank of Paris v. Midwest Agri-Dev. Corp.: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 887 F.2d 1128 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 887 F.2d 1128 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "2ad2f5e99c3395c891779af145006fb5",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 45313,
+   "ms_median": 0.3663,
+   "ms_runs": [
+    0.546,
+    0.366,
+    0.392,
+    0.255,
+    0.218
+   ]
+  },
+  {
+   "id": "KB18",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "REFERENCE_NOT_PROVIDED",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB18",
+   "locked": false,
+   "explanation": "No opinion text for Concepcion v. City of New York; cannot verify.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The text of the opinion cited as 2008 WL 5395720: without it neither existence nor quotation can be checked."
+    }
+   ],
+   "verdict_id": "b958e8193d2b81d0905c71e083e6febd",
+   "quote_chars": 143,
+   "quote_words": 23,
+   "source_chars": 0,
+   "ms_median": 0.0597,
+   "ms_runs": [
+    0.148,
+    0.06,
+    0.053,
+    0.047,
+    0.082
+   ]
+  },
+  {
+   "id": "KB19",
+   "set": "known-bad",
+   "subset": "proposition",
+   "expected": "ABSTAIN (OUT_OF_RULESET_SCOPE)",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB19",
+   "locked": false,
+   "explanation": "Castaneda v. Illinois Human Rights Commission: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 132 Ill. 2d 304, 547 N.E.2d 437 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 132 Ill. 2d 304, 547 N.E.2d 437 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "3430bce427f8fe39907bca10af359c9a",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 45619,
+   "ms_median": 0.2193,
+   "ms_runs": [
+    0.287,
+    0.227,
+    0.219,
+    0.213,
+    0.209
+   ]
+  },
+  {
+   "id": "KB20",
+   "set": "known-bad",
+   "subset": "proposition",
+   "expected": "ABSTAIN (OUT_OF_RULESET_SCOPE)",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB20",
+   "locked": false,
+   "explanation": "James v. Dedeaux: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 217 So. 3d 785 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 217 So. 3d 785 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "3cfb0260d7dc219d5cae3a280eec0413",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 12156,
+   "ms_median": 0.102,
+   "ms_runs": [
+    0.153,
+    0.119,
+    0.102,
+    0.076,
+    0.067
+   ]
+  },
+  {
+   "id": "CT01",
+   "set": "control",
+   "subset": "matched-pair",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT01",
+   "locked": true,
+   "explanation": "The quotation attributed to Committee for Idaho's High Desert, Inc. v. Yost appears in the opinion, read with the quotation conventions it uses: trailing \".\" not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 29171,
+    "end": 29220
+   },
+   "remedies": [],
+   "verdict_id": "9e2ce882a17ff8aa296ebc122d3cda70",
+   "quote_chars": 50,
+   "quote_words": 8,
+   "source_chars": 40348,
+   "ms_median": 0.2665,
+   "ms_runs": [
+    6.815,
+    0.437,
+    0.267,
+    0.246,
+    0.251
+   ]
+  },
+  {
+   "id": "CT02",
+   "set": "control",
+   "subset": "matched-pair",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT02",
+   "locked": true,
+   "explanation": "The quotation attributed to Christianson v. Colt Industries Operating Corp. appears in the opinion, read with the quotation conventions it uses: quotation marks not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 25541,
+    "end": 25831
+   },
+   "remedies": [],
+   "verdict_id": "14184e9ad8c9a1264b277a1b20f09476",
+   "quote_chars": 291,
+   "quote_words": 50,
+   "source_chars": 44157,
+   "ms_median": 0.502,
+   "ms_runs": [
+    5.708,
+    0.492,
+    0.434,
+    0.502,
+    0.54
+   ]
+  },
+  {
+   "id": "CT03",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT03",
+   "locked": true,
+   "explanation": "The quotation attributed to W. World Media, LLC v. Ikamobile Ltd. appears in the opinion, read with the quotation conventions it uses: bracket [Connecticut’s] stands for \"our\"; bracket [the court] stands for \"we\"; bracket [s] is an insertion; bracket [es it] stands for \"we\"; the opinion's own brackets not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 10256,
+    "end": 10523
+   },
+   "remedies": [],
+   "verdict_id": "fe571673f739d1d6b93aac02973d4a06",
+   "quote_chars": 293,
+   "quote_words": 45,
+   "source_chars": 19447,
+   "ms_median": 0.5837,
+   "ms_runs": [
+    3.635,
+    0.702,
+    0.584,
+    0.507,
+    0.554
+   ]
+  },
+  {
+   "id": "CT04",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT04",
+   "locked": true,
+   "explanation": "The quotation attributed to Makarova v. United States appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 4604,
+    "end": 4689
+   },
+   "remedies": [],
+   "verdict_id": "6a52dc7052c25bb767fb81a5dd45462b",
+   "quote_chars": 85,
+   "quote_words": 13,
+   "source_chars": 15405,
+   "ms_median": 0.1533,
+   "ms_runs": [
+    2.577,
+    0.153,
+    0.149,
+    0.158,
+    0.136
+   ]
+  },
+  {
+   "id": "CT05",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT05",
+   "locked": true,
+   "explanation": "The quotation attributed to CVS Pharmacy, Inc. v. City of Philadelphia appears in the opinion, read with the quotation conventions it uses: the opinion's own brackets not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 11795,
+    "end": 11892
+   },
+   "remedies": [],
+   "verdict_id": "2d0f7a9a56c17acce598550462aec367",
+   "quote_chars": 95,
+   "quote_words": 15,
+   "source_chars": 28927,
+   "ms_median": 0.26,
+   "ms_runs": [
+    4.734,
+    0.295,
+    0.26,
+    0.237,
+    0.2
+   ]
+  },
+  {
+   "id": "CT06",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT06",
+   "locked": true,
+   "explanation": "The quotation attributed to Bell Atlantic Corp. v. Twombly appears in the opinion, read with the quotation conventions it uses: trailing \".\" not compared; the opinion's own ellipsis not reproduced.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 4673,
+    "end": 4766
+   },
+   "remedies": [],
+   "verdict_id": "ae95f5a9ed014072f3ba8c285c245581",
+   "quote_chars": 88,
+   "quote_words": 17,
+   "source_chars": 122082,
+   "ms_median": 0.9348,
+   "ms_runs": [
+    26.543,
+    1.047,
+    0.935,
+    0.913,
+    0.912
+   ]
+  },
+  {
+   "id": "CT07",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT07",
+   "locked": true,
+   "explanation": "The quotation attributed to Moss v. Batesville Casket Co. appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 12224,
+    "end": 12290
+   },
+   "remedies": [],
+   "verdict_id": "19124862dba135cbafe51a2777f019cf",
+   "quote_chars": 66,
+   "quote_words": 12,
+   "source_chars": 41973,
+   "ms_median": 0.2593,
+   "ms_runs": [
+    5.553,
+    0.279,
+    0.259,
+    0.252,
+    0.255
+   ]
+  },
+  {
+   "id": "CT08",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT08",
+   "locked": true,
+   "explanation": "The quotation attributed to Thompson v. Housing Authority of City of Los Angeles is not in the opinion as quoted. The corresponding passage reads: \"their dockets. In the exercise of that power they may impose sanctions including, where appropriate, default or dismissal. Link v\".",
+   "opinion_says": "their dockets. In the exercise of that power they may impose sanctions including, where appropriate, default or dismissal. Link v",
+   "evidence_span": {
+    "start": 3740,
+    "end": 3869
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 782 F.2d 829 is not in the opinion as quoted. The corresponding passage reads: \"their dockets. In the exercise of that power they may impose sanctions including, where appropriate, default or dismissal. Link v\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "28c845bb41e0bdd5698eb2fb3f04dc59",
+   "quote_chars": 101,
+   "quote_words": 15,
+   "source_chars": 8583,
+   "ms_median": 0.4563,
+   "ms_runs": [
+    2.976,
+    0.524,
+    0.439,
+    0.384,
+    0.456
+   ]
+  },
+  {
+   "id": "CT09",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "ABSTAIN",
+   "reason": "SELECTIVE_QUOTE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT09",
+   "locked": false,
+   "explanation": "Garrett v. Selby Connor Maddux & Janer: quoted words present but preceded by a negation the quote omits; not certified — possible selective quotation.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 10486,
+    "end": 10572
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "Quote the passage with the negation the quotation leaves out or alters, or quote a passage the cut does not invert."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "The attorney of record reads the passage in context and decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "f52a1397bef66305ead0118646d585f2",
+   "quote_chars": 86,
+   "quote_words": 12,
+   "source_chars": 14897,
+   "ms_median": 0.4054,
+   "ms_runs": [
+    4.269,
+    0.405,
+    0.395,
+    0.474,
+    0.336
+   ]
+  },
+  {
+   "id": "CT10",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT10",
+   "locked": true,
+   "explanation": "The quotation attributed to Cooter & Gell v. Hartmarx Corp. appears in the opinion, read with the quotation conventions it uses: quotation marks not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 10892,
+    "end": 11123
+   },
+   "remedies": [],
+   "verdict_id": "537e07b0d630492a95b01548e258cdd5",
+   "quote_chars": 232,
+   "quote_words": 38,
+   "source_chars": 52457,
+   "ms_median": 0.4412,
+   "ms_runs": [
+    8.246,
+    0.441,
+    0.456,
+    0.413,
+    0.387
+   ]
+  },
+  {
+   "id": "CT11",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT11",
+   "locked": true,
+   "explanation": "The quotation attributed to Ashcroft v. Iqbal appears in the opinion, read with the quotation conventions it uses: an ellipsis stands for \", accepted as true,\"; quotation marks not compared; a soft hyphen in the opinion joined.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 36300,
+    "end": 36430
+   },
+   "remedies": [],
+   "verdict_id": "6b4d607162349e4d5449b24e6cad0813",
+   "quote_chars": 116,
+   "quote_words": 22,
+   "source_chars": 83374,
+   "ms_median": 0.7668,
+   "ms_runs": [
+    16.865,
+    0.96,
+    0.767,
+    0.621,
+    0.562
+   ]
+  },
+  {
+   "id": "CT12",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT12",
+   "locked": true,
+   "explanation": "The quotation attributed to Celotex Corp. v. Catrett is not in the opinion as quoted. The corresponding passage reads: \"is proper “if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to a judgment as a matter of law.” In our\".",
+   "opinion_says": "is proper “if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to a judgment as a matter of law.” In our",
+   "evidence_span": {
+    "start": 5187,
+    "end": 5458
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 477 U.S. 317 is not in the opinion as quoted. The corresponding passage reads: \"is proper “if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to a judgment as a matter of law.” In our\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "d732419dccc5c6ed92e5043ee42424a3",
+   "quote_chars": 250,
+   "quote_words": 43,
+   "source_chars": 45036,
+   "ms_median": 1.0779,
+   "ms_runs": [
+    15.387,
+    1.665,
+    0.927,
+    1.078,
+    1.066
+   ]
+  },
+  {
+   "id": "CT13",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT13",
+   "locked": true,
+   "explanation": "The quotation attributed to American Unites for Kids v. Rousseau appears in the opinion, read with the quotation conventions it uses: quotation marks not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 34971,
+    "end": 35150
+   },
+   "remedies": [],
+   "verdict_id": "97e3d6b9784f54cf8f572e31f98797e3",
+   "quote_chars": 180,
+   "quote_words": 28,
+   "source_chars": 105787,
+   "ms_median": 0.6949,
+   "ms_runs": [
+    22.897,
+    0.695,
+    0.837,
+    0.656,
+    0.635
+   ]
+  },
+  {
+   "id": "CT14",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT14",
+   "locked": true,
+   "explanation": "The quotation attributed to Orellana-Recinos v. Garland appears in the opinion, read with the quotation conventions it uses: bracket [I] read as written (case aside).",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 8438,
+    "end": 8530
+   },
+   "remedies": [],
+   "verdict_id": "151efb16eeeb1f9872d6fbb1ea77fe19",
+   "quote_chars": 94,
+   "quote_words": 13,
+   "source_chars": 24733,
+   "ms_median": 0.3136,
+   "ms_runs": [
+    5.593,
+    0.341,
+    0.314,
+    0.306,
+    0.3
+   ]
+  },
+  {
+   "id": "CT15",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT15",
+   "locked": true,
+   "explanation": "The quotation attributed to Harrington v. Richter appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 30958,
+    "end": 31085
+   },
+   "remedies": [],
+   "verdict_id": "fe7b837359d0abfe3b94e52db795db54",
+   "quote_chars": 127,
+   "quote_words": 21,
+   "source_chars": 60170,
+   "ms_median": 0.4185,
+   "ms_runs": [
+    10.636,
+    0.463,
+    0.419,
+    0.351,
+    0.351
+   ]
+  },
+  {
+   "id": "CT16",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT16",
+   "locked": true,
+   "explanation": "The quotation attributed to Goodyear Tire & Rubber Co. v. Haeger appears in the opinion, read with the quotation conventions it uses: bracket [f] read as written (case aside); quotation marks not compared.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 16040,
+    "end": 16219
+   },
+   "remedies": [],
+   "verdict_id": "ab81fbb5ab63efe3d60f0ed0379b5bae",
+   "quote_chars": 180,
+   "quote_words": 28,
+   "source_chars": 32972,
+   "ms_median": 0.2889,
+   "ms_runs": [
+    4.083,
+    0.303,
+    0.289,
+    0.284,
+    0.285
+   ]
+  },
+  {
+   "id": "CT17",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT17",
+   "locked": true,
+   "explanation": "The quotation attributed to In re Daphnie E. appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 37352,
+    "end": 37505
+   },
+   "remedies": [],
+   "verdict_id": "1569fc4868b86542f22a8141839bb78d",
+   "quote_chars": 153,
+   "quote_words": 26,
+   "source_chars": 55166,
+   "ms_median": 0.3168,
+   "ms_runs": [
+    6.805,
+    0.328,
+    0.317,
+    0.306,
+    0.303
+   ]
+  },
+  {
+   "id": "CT18",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT18",
+   "locked": true,
+   "explanation": "The quotation attributed to Fedele v. Harris is not in the opinion as quoted. The corresponding passage reads: \"Eastern District, the Second Circuit has cautioned district courts “to take seriously the adjective ‘substantial’ ” and thus “for venue to be proper, significant events or omissions material to the plaintiffs claim must have occurred in the district in question.” Gulf Ins\".",
+   "opinion_says": "Eastern District, the Second Circuit has cautioned district courts “to take seriously the adjective ‘substantial’ ” and thus “for venue to be proper, significant events or omissions material to the plaintiffs claim must have occurred in the district in question.” Gulf Ins",
+   "evidence_span": {
+    "start": 19423,
+    "end": 19695
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 18 F. Supp. 3d 309 is not in the opinion as quoted. The corresponding passage reads: \"Eastern District, the Second Circuit has cautioned district courts “to take seriously the adjective ‘substantial’ ” and thus “for venue to be proper, significant events or omissions material to the plaintiffs claim must have occurred in the district in question.” Gulf Ins\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "f2b8f56fa2236933956a8dd1a24c7c69",
+   "quote_chars": 245,
+   "quote_words": 37,
+   "source_chars": 29049,
+   "ms_median": 0.8942,
+   "ms_runs": [
+    5.077,
+    1.545,
+    0.894,
+    0.777,
+    0.775
+   ]
+  },
+  {
+   "id": "CT19",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT19",
+   "locked": true,
+   "explanation": "The quotation attributed to Keys v. Humana, Inc. is not in the opinion as quoted. The corresponding passage reads: \"We must construe the complaint in the light most favorable to the plaintiff and accept all allegations as true. See Harbin-Bey\".",
+   "opinion_says": "We must construe the complaint in the light most favorable to the plaintiff and accept all allegations as true. See Harbin-Bey",
+   "evidence_span": {
+    "start": 7203,
+    "end": 7329
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 684 F.3d 605 is not in the opinion as quoted. The corresponding passage reads: \"We must construe the complaint in the light most favorable to the plaintiff and accept all allegations as true. See Harbin-Bey\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "b0f9fc73fe53221f23b29a9c5fa3ed66",
+   "quote_chars": 99,
+   "quote_words": 16,
+   "source_chars": 16654,
+   "ms_median": 0.2098,
+   "ms_runs": [
+    2.669,
+    0.228,
+    0.193,
+    0.188,
+    0.21
+   ]
+  },
+  {
+   "id": "CT20",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT20",
+   "locked": true,
+   "explanation": "The quotation attributed to Estes Express Lines v. United States appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 5886,
+    "end": 5992
+   },
+   "remedies": [],
+   "verdict_id": "98d056552d82c382f191ace072fe4309",
+   "quote_chars": 106,
+   "quote_words": 15,
+   "source_chars": 13216,
+   "ms_median": 0.2864,
+   "ms_runs": [
+    3.595,
+    0.216,
+    0.129,
+    0.286,
+    0.288
+   ]
+  },
+  {
+   "id": "SP01",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP01",
+   "locked": false,
+   "explanation": "Smith v. Township of Richmond: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 54 A.3d 404, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "a95301d3d910664f281f39ae98be58b0",
+   "quote_chars": 109,
+   "quote_words": 14,
+   "source_chars": 24749,
+   "ms_median": 0.2652,
+   "ms_runs": [
+    6.225,
+    0.303,
+    0.265,
+    0.191,
+    0.209
+   ]
+  },
+  {
+   "id": "SP02",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP02",
+   "locked": false,
+   "explanation": "Christianson v. Colt Industries Operating Corp.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 486 U.S. 800, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "f7d8cd99fcf4f5d7ec54b29c9e808749",
+   "quote_chars": 100,
+   "quote_words": 16,
+   "source_chars": 44157,
+   "ms_median": 0.2924,
+   "ms_runs": [
+    8.358,
+    0.384,
+    0.291,
+    0.292,
+    0.276
+   ]
+  },
+  {
+   "id": "SP03",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP03",
+   "locked": false,
+   "explanation": "Withrow v. Larkin: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 421 U.S. 35, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "d548e4a78d010e8d5efc50a3db3cf38c",
+   "quote_chars": 93,
+   "quote_words": 18,
+   "source_chars": 44365,
+   "ms_median": 0.4341,
+   "ms_runs": [
+    7.125,
+    0.717,
+    0.434,
+    0.35,
+    0.31
+   ]
+  },
+  {
+   "id": "SP04",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP04",
+   "locked": false,
+   "explanation": "Thomas v. Dillard Department Stores, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 116 F.3d 1432, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "71dc9a41a945abea28f7430f8242016c",
+   "quote_chars": 58,
+   "quote_words": 9,
+   "source_chars": 24767,
+   "ms_median": 0.2088,
+   "ms_runs": [
+    4.009,
+    2.413,
+    0.209,
+    0.165,
+    0.164
+   ]
+  },
+  {
+   "id": "SP05",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP05",
+   "locked": false,
+   "explanation": "Matter of Sakow: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 97 N.Y.2d 436, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "49e0a1de2025613aa5268f42b435676e",
+   "quote_chars": 55,
+   "quote_words": 11,
+   "source_chars": 16307,
+   "ms_median": 0.1237,
+   "ms_runs": [
+    2.528,
+    0.144,
+    0.124,
+    0.118,
+    0.122
+   ]
+  },
+  {
+   "id": "SP06",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP06",
+   "locked": false,
+   "explanation": "The quotation attributed to Christian v. Mattel, Inc. was not found as quoted in the opinion. The nearest passage, a partial match only (5 consecutive words; 60% of the quotation's words in order), is: \"objective perspective, and (2) if the attorney has conducted “a reasonable and competent inquiry” before signing\".",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 21665,
+    "end": 21777
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 286 F.3d 1118 was not found as quoted in the opinion; the nearest passage is a partial match only: \"objective perspective, and (2) if the attorney has conducted “a reasonable and competent inquiry” before signing\". Quote the passage the quotation comes from exactly, or withdraw it; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "4b4547e62c1e54a4688c269ea0b63b44",
+   "quote_chars": 65,
+   "quote_words": 10,
+   "source_chars": 39235,
+   "ms_median": 0.2522,
+   "ms_runs": [
+    6.503,
+    0.29,
+    0.252,
+    0.237,
+    0.242
+   ]
+  },
+  {
+   "id": "SP07",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP07",
+   "locked": false,
+   "explanation": "Cooter & Gell v. Hartmarx Corp.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 496 U.S. 384, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "a88460ed3a2e0e4745cdaa5877e51d0c",
+   "quote_chars": 107,
+   "quote_words": 16,
+   "source_chars": 52457,
+   "ms_median": 0.3009,
+   "ms_runs": [
+    8.497,
+    0.34,
+    0.301,
+    0.291,
+    0.293
+   ]
+  },
+  {
+   "id": "SP08",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP08",
+   "locked": false,
+   "explanation": "Hudson v. Moore Business Forms, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 898 F.2d 684, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "d3e477ec35214a55c6930f5a7dad022a",
+   "quote_chars": 93,
+   "quote_words": 16,
+   "source_chars": 8712,
+   "ms_median": 0.0908,
+   "ms_runs": [
+    1.668,
+    0.118,
+    0.091,
+    0.089,
+    0.085
+   ]
+  },
+  {
+   "id": "SP09",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP09",
+   "locked": false,
+   "explanation": "Cooter & Gell v. Hartmarx Corp.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 496 U.S. 384, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "c291cb03e8178aa8d6f9e5348a635ed4",
+   "quote_chars": 31,
+   "quote_words": 7,
+   "source_chars": 52457,
+   "ms_median": 0.3002,
+   "ms_runs": [
+    0.411,
+    0.337,
+    0.3,
+    0.273,
+    0.293
+   ]
+  },
+  {
+   "id": "SP10",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP10",
+   "locked": false,
+   "explanation": "People v. Swafford: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 762 N.W.2d 902, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "c2a6f8fa168454ea440318acce1e15f1",
+   "quote_chars": 68,
+   "quote_words": 12,
+   "source_chars": 29700,
+   "ms_median": 0.223,
+   "ms_runs": [
+    7.353,
+    0.288,
+    0.223,
+    0.211,
+    0.205
+   ]
+  },
+  {
+   "id": "SP11",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP11",
+   "locked": false,
+   "explanation": "People v. Kennedy: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 917 N.W.2d 355, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "241f7c9ea2bf73065652ecb203732021",
+   "quote_chars": 65,
+   "quote_words": 12,
+   "source_chars": 46106,
+   "ms_median": 0.3136,
+   "ms_runs": [
+    7.249,
+    0.436,
+    0.314,
+    0.293,
+    0.3
+   ]
+  },
+  {
+   "id": "SP12",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP12",
+   "locked": false,
+   "explanation": "In re M.A.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 325 Ill. App. 3d 387, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "3e6aaea90cd906e9f4e0bff45b7d99f5",
+   "quote_chars": 182,
+   "quote_words": 24,
+   "source_chars": 13519,
+   "ms_median": 0.1589,
+   "ms_runs": [
+    2.357,
+    0.189,
+    0.159,
+    0.157,
+    0.155
+   ]
+  },
+  {
+   "id": "SP13",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP13",
+   "locked": false,
+   "explanation": "Martinez v. Bloomberg LP: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 740 F.3d 211, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "6c25b0081e436867ccb3fdca347d51b3",
+   "quote_chars": 57,
+   "quote_words": 8,
+   "source_chars": 74049,
+   "ms_median": 0.5269,
+   "ms_runs": [
+    13.865,
+    0.626,
+    0.527,
+    0.513,
+    0.518
+   ]
+  },
+  {
+   "id": "SP14",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP14",
+   "locked": false,
+   "explanation": "Action S.A. v. Marc Rich & Co.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 951 F.2d 504, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "7f0a685bbd4902bf92fcfbe34ef5097a",
+   "quote_chars": 118,
+   "quote_words": 19,
+   "source_chars": 16171,
+   "ms_median": 0.3136,
+   "ms_runs": [
+    4.736,
+    0.231,
+    0.399,
+    0.314,
+    0.216
+   ]
+  },
+  {
+   "id": "SP15",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP15",
+   "locked": false,
+   "explanation": "SEC v. McNulty: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 137 F.3d 732, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "590c0fab05544df4c69d1c845b5557a2",
+   "quote_chars": 57,
+   "quote_words": 9,
+   "source_chars": 33145,
+   "ms_median": 0.2117,
+   "ms_runs": [
+    5.347,
+    0.254,
+    0.212,
+    0.206,
+    0.198
+   ]
+  },
+  {
+   "id": "SP16",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP16",
+   "locked": false,
+   "explanation": "Universal City Development Partners, Ltd. v. Ride & Show Engineering: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 230 F.R.D. 688, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "041f7c50b9e2eb0580073501aa143c3a",
+   "quote_chars": 37,
+   "quote_words": 7,
+   "source_chars": 35929,
+   "ms_median": 0.2077,
+   "ms_runs": [
+    6.999,
+    0.256,
+    0.208,
+    0.197,
+    0.194
+   ]
+  },
+  {
+   "id": "SP17",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP17",
+   "locked": false,
+   "explanation": "Production Resources Group, L.L.C. v. NCT Group, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 863 A.2d 772, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "9f07d0c33cb56e0d44ddb01b121dedcb",
+   "quote_chars": 90,
+   "quote_words": 11,
+   "source_chars": 111071,
+   "ms_median": 0.6911,
+   "ms_runs": [
+    21.138,
+    0.732,
+    0.654,
+    0.633,
+    0.691
+   ]
+  },
+  {
+   "id": "SP18",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP18",
+   "locked": false,
+   "explanation": "Sav-On Drug Stores, Inc. v. Superior Court: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 34 Cal. 4th 319, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "995c4ce141414afb588c2a0e07d0a47a",
+   "quote_chars": 114,
+   "quote_words": 17,
+   "source_chars": 61927,
+   "ms_median": 0.4581,
+   "ms_runs": [
+    10.859,
+    0.458,
+    0.514,
+    0.405,
+    0.381
+   ]
+  }
+ ]
+}

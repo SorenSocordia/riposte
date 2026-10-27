@@ -1,0 +1,80 @@
+name: 'Riposte verify'
+description: 'Re-check extracted documents with deterministic rules. FAIL and can''t-tell (INSUFFICIENT_DATA) findings as SARIF 2.1.0 for code scanning, each with a replayable proof.'
+inputs:
+  files:
+    description: 'Files to check, one glob per line, relative to working-directory (** * ? {a,b}; a leading ! excludes). Each file is an extracted document (JSON), or an inputs object { "extraction", "references", "source", "ruleset" }.'
+    required: true
+  ruleset:
+    description: 'invoice, pay-app, or a declarative ruleset file (relative to working-directory). An inputs file''s own "ruleset" overrides it.'
+    required: false
+    default: 'invoice'
+  sarif-file:
+    description: 'Where the SARIF log is written (relative to working-directory).'
+    required: false
+    default: 'riposte.sarif'
+  proof-dir:
+    description: 'Where each verdict''s replay bundle is written (relative to working-directory). Every alert names the command that re-performs it from this folder.'
+    required: false
+    default: 'riposte-proofs'
+  fail-on:
+    description: 'insufficient-data (default): the step fails when a check FAILs, when a check cannot tell (INSUFFICIENT_DATA, a PASS with a check that could not run included), or when a file could not be checked, as the command-line checks fail closed. To loosen it, set fail: only when a check FAILs (can''t tell then passes the step). none: never. The older value abstain is read as insufficient-data.'
+    required: false
+    default: 'insufficient-data'
+  category:
+    description: 'The SARIF automationDetails category. Empty by default: set it, or the upload step''s category, only when you upload more than one Riposte SARIF file per commit.'
+    required: false
+    default: ''
+  working-directory:
+    description: 'The folder the globs, the ruleset file and the output paths are relative to.'
+    required: false
+    default: '.'
+  cli:
+    description: 'Path to a prebuilt riposte-sarif.mjs. Empty (default): the checker is built from this action''s own repository (npm ci from its package-lock.json, then the adapters bundle). With no package-lock.json there the build step fails and says so; it never installs without the lockfile.'
+    required: false
+    default: ''
+outputs:
+  sarif-file:
+    description: 'The SARIF file, relative to the repository root.'
+    value: ${{ steps.check.outputs.sarif-file }}
+  proof-dir:
+    description: 'The proof folder, relative to the repository root.'
+    value: ${{ steps.check.outputs.proof-dir }}
+  files:
+    description: 'How many files were checked.'
+    value: ${{ steps.check.outputs.files }}
+  pass:
+    description: 'Files whose verdict is PASS.'
+    value: ${{ steps.check.outputs.pass }}
+  fail:
+    description: 'Files whose verdict is FAIL.'
+    value: ${{ steps.check.outputs.fail }}
+  insufficient-data:
+    description: 'Files whose verdict is INSUFFICIENT_DATA (can''t tell: no check could decide; a person does).'
+    value: ${{ steps.check.outputs.insufficient-data }}
+  refused:
+    description: 'Files that could not be checked at all (not JSON, or nothing a verdict can bind to).'
+    value: ${{ steps.check.outputs.refused }}
+  outcome:
+    description: 'FAIL if any file FAILed, else INSUFFICIENT_DATA if any file could not tell or was not checked, else PASS-WITH-OPEN if a PASS has a check that could not run, else PASS.'
+    value: ${{ steps.check.outputs.outcome }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Build the checker
+      id: build
+      if: inputs.cli == ''
+      shell: bash
+      run: bash "$GITHUB_ACTION_PATH/build.sh"
+    - name: Check the files
+      id: check
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_RULESET: ${{ inputs.ruleset }}
+        INPUT_SARIF_FILE: ${{ inputs.sarif-file }}
+        INPUT_PROOF_DIR: ${{ inputs.proof-dir }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+        INPUT_CATEGORY: ${{ inputs.category }}
+        INPUT_CLI: ${{ inputs.cli || steps.build.outputs.cli }}
+      run: bash "$GITHUB_ACTION_PATH/run.sh"

@@ -168,7 +168,7 @@ describe('SELF-VERIFYING: a premise that fails its check withholds the ruling', 
   })
 
   it('a proposal computed under another policy is WITHHELD', () => {
-    const other = { ...P, version: '0.3.0' } // E13: EXAMPLE is 0.2.0 now, so another version is 0.3.0
+    const other = { ...P, version: '0.3.0' } // EXAMPLE is 0.2.0 now, so another version is 0.3.0
     const a = promotionOpinion({ snapshot: snapshotOfLedger(ledger), policy: other, proposal })
     expect(a.ruling.disposition).toBe('WITHHELD')
     expect(a.premises.find(p => p.id === 'P5')!.detail).toMatch(/the proposal cites policy/)
@@ -238,7 +238,7 @@ describe('promotion opinion — the other questions the evidence can pose', () =
     expect(op.ruling).toMatchObject({ disposition: 'RETAIN', favors: 'A' })
     const grant = { level: 'gate' as const, signer_id: 'cfo', signed_at: '2026-09-28T09:00:00Z', policy: policyRef(P), consequence_tier: 'low' }
     const o = promotionOpinion({ snapshot: snapshotOfLedger(ledger), policy: P, declaration: { workflow_id: WF(), consequence_tier: 'low', granted: 'gate', grant } })
-    expect(o.ruling.note).toMatch(/`gate` was granted by cfo at 2026-09-28T09:00:00Z, under policy example-illustrative@0\.2\.0 at tier 'low'\. Those settings stay fixed/) // E13: the fixed body is 0.2.0
+    expect(o.ruling.note).toMatch(/`gate` was granted by cfo at 2026-09-28T09:00:00Z, under policy example-illustrative@0\.2\.0 at tier 'low'\. Those settings stay fixed/) // the fixed body is 0.2.0
   })
 })
 

@@ -71,7 +71,7 @@ describe('twin verdicts are VERDICT-channel material', () => {
 })
 
 describe('`verify twin`', () => {
-  it('PASS → exit 0 and prints {verdict, judgments, twin}; FAIL → 1; ABSTAIN → 2', () => {
+  it('PASS → exit 0 and prints {verdict, judgments, twin}; FAIL → 1; INSUFFICIENT_DATA → 2', () => {
     const html = tmp('primary.htm', HTML)
     const ok = cap()
     expect(run(['twin', '--html', html, '--period-end', '2024-12-31', '--claims', tmp('c.json', [{ id: 'a', field: 'assets', value: 1_234_567_000 }])], ok)).toBe(0)

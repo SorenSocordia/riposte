@@ -1,0 +1,16 @@
+{
+  "spec": "bench-spec/1",
+  "id": "sci-r3-inversions",
+  "title": "Two gravity inversions, sky and sea (findings of the frozen run)",
+  "adapter": "summary",
+  "label": "blind",
+  "blind": true,
+  "run": { "id": "SCI-R3 first run under the frozen prereg", "date": "2026-10-04", "engine_version": null, "ruleset": null },
+  "rows": [],
+  "misses": [
+    { "id": "nfw-at-bound", "kind": "fit-failure", "description": "the NFW fit for UGC01281 failed by the preregistered rule: its scale radius sits at the 500 kpc bound", "post_hoc": false },
+    { "id": "piso-poor-fit", "kind": "fit-quality", "description": "ESO563-G021's decisive pISO fit converged but is statistically poor (reduced chi-squared 14.5; NFW 30.2)", "post_hoc": false },
+    { "id": "box-rule-sampled", "kind": "method", "description": "the preregistered box rule picked boxes already crossed by later ship tracks, so the far field was unsampled; a far-field box was added post hoc (Amendment 1)", "post_hoc": true },
+    { "id": "truth-edited", "kind": "data-limit", "description": "the later 'truth' grid is cell medians, possibly including gridded compilations, and the archive edits soundings that disagree with gravity; two measured versions of one cell differ by RMS up to 139 m", "post_hoc": false }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "format": "bench-run/1",
+  "id": "ap-stress-development",
+  "prereg": "SCOPE.md",
+  "report": "FINDINGS.md",
+  "spec": "spec.json",
+  "not_shipped": [
+    {
+      "file": "STRESS-RESULTS.md",
+      "sha256": "6e041c5571f6673b50c2bb2f7f0358755a07053aac094a488179431f669115e9",
+      "reason": "the authors' stress write-up of 2026-09-23, the record of the development rounds; it names the authors' working folders, so it does not ship. The provenance archive bench/ap-blind/PROVENANCE.md quotes it under \"The development seeds\", with this sha256"
+    }
+  ],
+  "rerun": {
+    "from_tree": "partly",
+    "detail": "The four development seeds rerun from this tree with the shipped harness on today's AP pack: npx tsx bench/ap/stress.ts for the default seed, and the same with --seed fresh1, fresh2 or fresh3. No development rows ship to compare with, so a rerun shows today's decisions; RERUN-2026-10-05.md in this folder records them on that day's pack, 0 wrong on every seed. The five misses were found on the pack of 2026-09-23 and are transcribed from the authors' write-up, which names their working folders and does not ship (its sha256 is under Hashed, not shipped)."
+  },
+  "sources": [
+    {
+      "file": "SCOPE.md",
+      "sha256": "247788a398707b8bb16b27649acda60a58d04faa5735a7f33a7f71f62f72ce36",
+      "from": "written 2026-10-05 in this folder: the document in the prereg's place for a table that records misses only"
+    },
+    {
+      "file": "SCOPE.sha256",
+      "sha256": "c3c93fa14ac75cc66c7d70a9eca0c2bde80af5c299907aeedef59061f009a54d",
+      "from": "written 2026-10-05 in this folder, when SCOPE.md was written: its sha256 and the time it was hashed"
+    },
+    {
+      "file": "FINDINGS.md",
+      "sha256": "a90095e2a55beb464097e5aa7738c87b16da17ad2c26598abef6ea42dd05d94e",
+      "from": "written 2026-10-05 in this folder: the transcription the misses were typed from"
+    },
+    {
+      "file": "REPORTS.sha256",
+      "sha256": "413270e3dd7a718ede53073e30633120fd42cc640430efc720295da6aa5ea2b4",
+      "from": "written 2026-10-05 in this folder: the sha256 of each source the rows were transcribed from"
+    },
+    {
+      "file": "RERUN-2026-10-05.md",
+      "sha256": "031d2b2f853093a35771fb2cc42fade89350f132829771b22f35b825f2801426",
+      "from": "written 2026-10-05 in this folder from the harness output of the re-run it records"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "e2dd09a7b0293705f574c2a113bd502528fd22fdc8260c1df1f0d02a8241e508",
+      "from": "written 2026-10-05 in this folder: the misses, typed from FINDINGS.md"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "SCOPE.md.tsr"
+    }
+  ]
+}

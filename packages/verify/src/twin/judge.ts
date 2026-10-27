@@ -12,26 +12,32 @@
  * v0.2 (map.binding = 'statement', map.matching = 'decimals'; CREDENCE-2): a concept can bind only if the filing's own
  * presentation linkbase places it on a face statement (TwinOptions.presentation, from parseTwinPresentation), and a
  * value PASSes when it equals ANY consistent duplicate of the binding fact; a value inside the binding fact's own
- * declared rounding that equals no duplicate is ABSTAIN (ROUNDED_BINDING). v0.1 (the default map) is unchanged.
+ * declared rounding that equals no duplicate is INSUFFICIENT_DATA (ROUNDED_BINDING). v0.1 (the default map) is unchanged.
  *
  * Outcomes (the reason is always explicit):
  *   PASS     MATCH      |value| = |binding value| (tolerance 0.5 by default)
  *   FAIL     MISMATCH   with a diagnosis, first match wins: SCALE (×10^±3/6/9) · PERIOD (the field's concept in another
  *                       period) · CONCEPT (another concept's fact in the period) · DIMENSION (a dimensional fact of the
  *                       field's concepts) · UNLOCATED (in the twin nowhere)
- *   ABSTAIN  NO_TWIN · FIELD_NOT_MAPPED · PERIOD_UNRESOLVED · NO_BINDING_FACT · NO_USD_FACT · CONFLICTING_FACTS ·
- *            VALUE_UNPARSEABLE; and in v0.2 NO_PRESENTATION_LINKBASE · NO_STATEMENT_ROLES · NOT_ON_STATEMENT ·
- *            ROUNDED_BINDING. An abstention is never a flag: absence proves nothing.
+ *   INSUFFICIENT_DATA  can't tell: NO_TWIN · FIELD_NOT_MAPPED · PERIOD_UNRESOLVED · NO_BINDING_FACT · NO_USD_FACT ·
+ *            CONFLICTING_FACTS · VALUE_UNPARSEABLE; and in v0.2 NO_PRESENTATION_LINKBASE · NO_STATEMENT_ROLES · NOT_ON_STATEMENT ·
+ *            ROUNDED_BINDING. A can't tell is never a flag: absence proves nothing.
  *
- * The result is a standard verify Verdict (ABSTAIN = INSUFFICIENT_DATA, with the twin reason leading
+ * The judgments said ABSTAIN for can't tell before 2026-10-06; they now say INSUFFICIENT_DATA, the verdict's own word. Under
+ * engine 0.6.0 the verdict's explanation for such a claim ends "can't tell." where it ended "abstaining."; earlier engines keep
+ * their text, so their verdicts replay byte for byte.
+ *
+ * The result is a standard verify Verdict (INSUFFICIENT_DATA, with the twin reason leading
  * `insufficiency.detail`) plus the structured judgments. verdict_id = the standard verify derivation over input_hash
  * (twin sha256, claims, period end, map id@version, tolerances), the map's id@version, and the engine version.
  * Deterministic: no network, no randomness, no clock except `issued_at`.
  */
 import { hashOf } from '../verdict/canonical.js'
+import { attachRemedies } from '../verdict/remedy.js'
+import { attachScope } from '../verdict/scope.js'
 import type { ClaimVerdict, Coverage, Evidence, InsufficiencyReason, Outcome, Verdict } from '../verdict/schema.js'
-import { deriveVerdictId } from '../protocol/verdict-id.js'
-import { ENGINE_VERSION, SCHEMA_VERSION } from '../version.js'
+import { verdictIdentity } from '../protocol/verdict-id.js'
+import { SCHEMA_VERSION, engineFor, engineAtLeast } from '../version.js'
 import { isUsGaap, parseInlineXbrl, type InlineXbrl, type TwinContext, type TwinFact } from './ixbrl.js'
 import { FS_CORE_TWIN_MAP, twinFieldConcepts, type TwinConceptMap, type TwinFieldMap, type TwinPeriod } from './map.js'
 import type { TwinPresentation } from './presentation.js'
@@ -55,11 +61,13 @@ export interface TwinOptions {
   now?: () => Date
   /** who produced the extraction, if known (never trusted) */
   producer?: string
+  /** The engine version to re-perform under (2026-10-03, version.ts engineFor): this build's when absent, or an earlier one it retains. For replay. */
+  engine?: string
   /** the filing's presentation (parseTwinPresentation); required by statement-anchored maps (v0.2), ignored by v0.1 */
   presentation?: TwinPresentation | null
 }
 
-export type TwinOutcome = 'PASS' | 'FAIL' | 'ABSTAIN'
+export type TwinOutcome = 'PASS' | 'FAIL' | 'INSUFFICIENT_DATA'
 export type TwinAbstainReason = 'NO_TWIN' | 'FIELD_NOT_MAPPED' | 'PERIOD_UNRESOLVED' | 'NO_BINDING_FACT' | 'NO_USD_FACT' | 'CONFLICTING_FACTS' | 'VALUE_UNPARSEABLE'
   /** v0.2: statement-anchored binding needs the filing's presentation linkbase, and none was supplied or readable */
   | 'NO_PRESENTATION_LINKBASE'
@@ -469,14 +477,16 @@ export function verifyAgainstTwin(twin: InlineXbrl | string, claims: readonly Tw
   const scaleAnchored = (map.scale ?? 'diagnose') === 'anchored' && st.anchor !== null
   const formatAt = new Map(tw.facts.map((f) => [f.span.start, f.format]))
   const judgments: TwinJudgment[] = [], out: ClaimVerdict[] = []
+  // engine 0.6.0: a claim the twin cannot judge says can't tell in its explanation (earlier engines: "abstaining")
+  const cantTellWord = engineAtLeast(engineFor(opts.engine), '0.6.0') ? "can't tell" : 'abstaining'
 
   for (const c of claims) {
     const fm = map.fields.find((f) => f.field === c.field)
     const base = { claim_id: `${c.id}.twin`, kind: 'CROSS_REFERENCE' as const, tier: 'DETERMINISTIC' as const, field: c.field,
       asserted: Number.isFinite(c.value) ? c.value : null, rule_id: 'TWIN_FACT', rule_name: "Extracted value equals the filing's binding XBRL fact", locked: false }
     const abstain = (reason: TwinAbstainReason, detail: string, binding?: TwinBinding, candidates?: TwinFactRef[]): void => {
-      judgments.push({ claim_id: c.id, field: c.field, cell: fm?.cell ?? null, value: c.value, outcome: 'ABSTAIN', reason, detail, ...(binding ? { binding } : {}), ...(candidates ? { candidates } : {}) })
-      out.push({ ...base, outcome: 'INSUFFICIENT_DATA', evidence: [], insufficiency: { reason: INSUFFICIENCY[reason], detail: `${reason}: ${detail}` }, explanation: `${c.field}: ${detail}; abstaining.` })
+      judgments.push({ claim_id: c.id, field: c.field, cell: fm?.cell ?? null, value: c.value, outcome: 'INSUFFICIENT_DATA', reason, detail, ...(binding ? { binding } : {}), ...(candidates ? { candidates } : {}) })
+      out.push({ ...base, outcome: 'INSUFFICIENT_DATA', evidence: [], insufficiency: { reason: INSUFFICIENCY[reason], detail: `${reason}: ${detail}` }, explanation: `${c.field}: ${detail}; ${cantTellWord}.` })
     }
     if (!Number.isFinite(c.value)) { abstain('VALUE_UNPARSEABLE', `the asserted value ${JSON.stringify(String(c.value))} is not a finite number`); continue }
     if (!fm) { abstain('FIELD_NOT_MAPPED', `the map ${map.id}@${map.version} does not define "${c.field}"`); continue }
@@ -557,13 +567,18 @@ export function verifyAgainstTwin(twin: InlineXbrl | string, claims: readonly Tw
   const input = twinVerdictInput(tw.sha256, claims, opts) as { claims: unknown }
   const input_hash = hashOf(input)
   const ruleset = { id: map.id, version: map.version, domain: map.domain }
+  // Engine 0.2.0: the id also binds the remedy table; the twin declares none (every remedy is derived), so it is the empty table.
+  const identity = verdictIdentity(input_hash, ruleset, engineFor(opts.engine), {})
   const verdict: Verdict = {
-    schema_version: SCHEMA_VERSION, verdict_id: deriveVerdictId(input_hash, ruleset, ENGINE_VERSION),
-    issued_at: (opts.now ?? (() => new Date()))().toISOString(), engine_version: ENGINE_VERSION, ruleset, input_hash, replayable: true,
+    schema_version: SCHEMA_VERSION, verdict_id: identity.verdict_id,
+    issued_at: (opts.now ?? (() => new Date()))().toISOString(), engine_version: engineFor(opts.engine), ruleset, input_hash,
+    ...(identity.remedy_table_hash !== undefined ? { remedy_table_hash: identity.remedy_table_hash } : {}), replayable: true,
     document: { extraction_hash: hashOf(input.claims), ...(opts.producer !== undefined ? { producer: opts.producer } : {}), line_items: claims.length },
     references: { contract: false, evidence: statementMode ? 2 : 1, history: 0, source: true },
     outcome, aggregation: 'ANY_FAIL_FAILS', claims: out, coverage,
   }
+  // Typed remedies (verdict/remedy.ts): derived from each claim's insufficiency; a FAIL says `none`. Outside the hashed core.
+  attachScope(attachRemedies(verdict, { document: 'filing' }))
   const p = opts.presentation
   const presentation = p ? { sha256: p.sha256, source: p.source, statement_roles: p.statementRoles.length, statement_concepts: p.statementConcepts.length, ...(p.links ? { links: p.links } : {}) } : null
   return { verdict, judgments, twin: { sha256: tw.sha256, facts: tw.facts.length, contexts: tw.contexts.size, gate, ...(statementMode ? { presentation } : {}) } }

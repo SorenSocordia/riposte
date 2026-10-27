@@ -1,0 +1,796 @@
+{
+  "step": "halfA",
+  "run_utc": "2026-10-05T14:26:10.524Z",
+  "engine": "0.6.0",
+  "tree": {
+    "src/legal/index.ts": "35137247097483ca6da2c67de178e8a79cf74ac1ef7bd42e790546c02a843f36",
+    "src/legal/quotation.ts": "9f5ffee86ab252c380d4111b23e142fd077d3c2919f97249c15532e90e4225e7",
+    "src/legal/binding.ts": "02816bb723291150d5fdff4ed105d6cd26717a987a6faf3e293602e25b72cc3d",
+    "src/version.ts": "9ad7ccf53c401d3c01129a3891fe34e6d506d7d5747dee0987d3133a3309ae5b"
+  },
+  "rules": {
+    "legal@0.0.1": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 0,
+          "n": 10,
+          "rate": 0,
+          "ci95": [
+            0,
+            0.278
+          ]
+        },
+        "known_bad_fail": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 6,
+          "n": 10,
+          "rate": 0.6,
+          "ci95": [
+            0.313,
+            0.832
+          ]
+        },
+        "control_false_fail": {
+          "k": 7,
+          "n": 10,
+          "rate": 0.7,
+          "ci95": [
+            0.397,
+            0.892
+          ]
+        },
+        "control_pass": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "control_abstain": {
+          "k": 1,
+          "n": 10,
+          "rate": 0.1,
+          "ci95": [
+            0.018,
+            0.404
+          ]
+        },
+        "J": 9
+      },
+      "rows": [
+        {
+          "id": "L2-01",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Branzburg v. Hayes. The corresponding passage there reads: \"crime. Citizens generally are not constitutionally immune from grand jury subpoenas; and neither\".",
+          "verdict_id": "2972049e4b6752c6ebd76e16fe8bf173"
+        },
+        {
+          "id": "L2-02",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Blair v. United States. The corresponding passage there reads: \"statutes provide. ■ The personal sacrificó involved is a part of the necessary contribution of the individual to the welfare of the public. The duty\".",
+          "verdict_id": "63f457dc283a63fffd0d81eba6d3fc3f"
+        },
+        {
+          "id": "L2-03",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Norvell v. Apodaca: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "20eddf93f663ffedd9dc82430aae6d3c"
+        },
+        {
+          "id": "L2-04",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Lear, Inc. v. Adkins. The corresponding passage there reads: \"underlying patent. “It is as important to the public that competition should not be repressed by worthless patents, as that the patentee of a really valuable invention should be protected in his monopoly . . . .” Pope Manufacturing\".",
+          "verdict_id": "3c4b0169be87095ddb2249d93138cf5a"
+        },
+        {
+          "id": "L2-13",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for United States v. Philadelphia National Bank.",
+          "verdict_id": "c4b3d32a5be34e260772183c9bbcfbe7"
+        },
+        {
+          "id": "L2-14",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Eastern Railroad Presidents Conference v. Noerr Motor Freight, Inc.: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "1fbe84a0663e1a46efd08ce7c3736658"
+        },
+        {
+          "id": "L2-15",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for United States v. Bass. The corresponding passage there reads: \"today’s result: unless Congress conveys its purpose clearly, it will not be deemed to have significantly changed the federal-state balance. Congress has traditionally been reluctant to define as a federal crime conduct readily denounced as criminal by the States. This congressional policy is rooted in the same concepts of American federalism that have provided the basis for judge-made doctrines. See, e. g., Younger v. Harris, 401 U. S. 37 (1971). As this Court emphasized only last Term in Rewis v. United States, supra, we will not be quick to assume that Congress has meant to effect a significant change in the sensitive relation between federal and state criminal jurisdiction. In traditionally\".",
+          "verdict_id": "52b4665d39eb829fa768f1d0f02ed5ed"
+        },
+        {
+          "id": "L2-16",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Sullivan v. Little Hunting Park, Inc.: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "0e60be43ef1cddd310b393c31c7d7ad5"
+        },
+        {
+          "id": "L2-17",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Commissioner v. Culbertson. The corresponding passage there reads: \"the first principle of income taxation: that income must be taxed to him who earns it. Lucas v\".",
+          "verdict_id": "c7c6f53d247d5ef9b2287091dbb1045d"
+        },
+        {
+          "id": "L2-18",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Logan v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "74a0e44f2204c07de1ddaf2cfbf01f20"
+        },
+        {
+          "id": "L2-19",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Nelson v. George. The corresponding passage there reads: \"challenges the present effect being given the North Carolina detainer by the California authorities, particularly with\".",
+          "verdict_id": "fb673876bbeb46d53ae6405882a1dfc6"
+        },
+        {
+          "id": "L2-20",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Smith v. Hooey: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "4f75ea85e78965880fca084b01f8730c"
+        },
+        {
+          "id": "L2-29",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Michigan v. Wisconsin.",
+          "verdict_id": "ebb0cfcf6eb1005ad1ce2bc2216b5d8c"
+        },
+        {
+          "id": "L2-30",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "McGowan v. Maryland: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "4fb8e507faa45c6c6ecf9aa14b67a82b"
+        },
+        {
+          "id": "L2-31",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Madden v. Kentucky ex rel. Commissioner. The corresponding passage there reads: \"I. Classification. — The broad discretion as to classification possessed by a legislature in the field of taxation has long been recognized. This Court fifty years ago concluded that “the Fourteenth Amendment was hot intended to compel the State to adopt an iron rule of equal taxation,” and the passage of time has only served to underscore the wisdom of that recognition of the largé area of discretion which is needed by a legislature in formulating sound tax policies. Traditionally classification has been a device for fitting tax programs to local needs and usages in order to achieve an equitable distribution of the tax burden. It has, because of this, been pointed out that in taxation, even more than in other fields, legislatures possess the greatest freedom in classification. Since the members of a legislature necessarily enjoy a familiarity with local conditions which this Court cannot have, the presumption of constitutionality can be overcome only by the most explicit demonstration that a classification is a hostile and oppressive discrimination against particular persons and classes. The burden\".",
+          "verdict_id": "5d692daf04f4c535b3544f9918e2211b"
+        },
+        {
+          "id": "L2-32",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Mayer v. City of Chicago: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "f890275ab2421da1becfa71464bd8b4d"
+        },
+        {
+          "id": "L2-33",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Choctaw, Oklahoma & Gulf Railroad v. Mackey. The corresponding passage there reads: \"522.\nThe mere fact that property is used, among others, by the United States as an instrument for éffecting its purpose does not relieve it from state taxation. The most\".",
+          "verdict_id": "1da4e5d724b971a709fcaba78db2679b"
+        },
+        {
+          "id": "L2-34",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Rice v. Olson. The corresponding passage there reads: \"and skill.\nThe policy of leaving Indians free from state jurisdiction and control is deeply rooted in the Nation’s history. See Worcester\".",
+          "verdict_id": "be5a793fb37ee09bf431eaaff75cfa41"
+        },
+        {
+          "id": "L2-35",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Carpenter v. Shaw. The corresponding passage there reads: \"construed. Doubtful expressions are to be resolved in favor of the weak and defenseless people who are the wards of the nation, dependent upon its protection and good faith. Hence, in\".",
+          "verdict_id": "f675b309acda148ce83986419719be50"
+        },
+        {
+          "id": "L2-36",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Warren Trading Post Co. v. Arizona Tax Commission. The corresponding passage there reads: \"were correct.\nCongress has, since the creation of the Navajo Reservation nearly a century ago, left the Indians on it largely free to run the reservation and its affairs without state control, a policy which has automatically relieved Arizona of all burdens for carrying on those same responsibilities. And in\".",
+          "verdict_id": "777cc4c81ba70d8379235917909c1fd3"
+        }
+      ]
+    },
+    "legal@0.1.0": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 0,
+          "n": 10,
+          "rate": 0,
+          "ci95": [
+            0,
+            0.278
+          ]
+        },
+        "known_bad_fail": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 8,
+          "n": 10,
+          "rate": 0.8,
+          "ci95": [
+            0.49,
+            0.943
+          ]
+        },
+        "control_false_fail": {
+          "k": 5,
+          "n": 10,
+          "rate": 0.5,
+          "ci95": [
+            0.237,
+            0.763
+          ]
+        },
+        "control_pass": {
+          "k": 4,
+          "n": 10,
+          "rate": 0.4,
+          "ci95": [
+            0.168,
+            0.687
+          ]
+        },
+        "control_abstain": {
+          "k": 1,
+          "n": 10,
+          "rate": 0.1,
+          "ci95": [
+            0.018,
+            0.404
+          ]
+        },
+        "J": 7.5
+      },
+      "rows": [
+        {
+          "id": "L2-01",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Branzburg v. Hayes. The corresponding passage there reads: \"crime. Citizens generally are not constitutionally immune from grand jury subpoenas; and neither\".",
+          "verdict_id": "049c47fcd8aa02a5ee49c3d54fbe1b8d"
+        },
+        {
+          "id": "L2-02",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Blair v. United States. The corresponding passage there reads: \"statutes provide. ■ The personal sacrificó involved is a part of the necessary contribution of the individual to the welfare of the public. The duty\".",
+          "verdict_id": "795f261622b3d2ef6610192e00178f26"
+        },
+        {
+          "id": "L2-03",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Norvell v. Apodaca: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "97187bde7f16061068874859fe86ba6a"
+        },
+        {
+          "id": "L2-04",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SELECTIVE_QUOTE",
+          "explanation": "Lear, Inc. v. Adkins: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.",
+          "verdict_id": "7f7d668c868e10491bbecc95ffb2b0f6"
+        },
+        {
+          "id": "L2-13",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for United States v. Philadelphia National Bank.",
+          "verdict_id": "33bf1ba44ffbc1125665280c717ff26a"
+        },
+        {
+          "id": "L2-14",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Eastern Railroad Presidents Conference v. Noerr Motor Freight, Inc.: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "d7f4ab7e57bb9dcc178dca7ad488f39c"
+        },
+        {
+          "id": "L2-15",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for United States v. Bass, read with the quotation conventions it uses: bracket [U] read as written (case aside); bracket [W] read as written (case aside); an ellipsis stands for \". This congressional policy is rooted in the same concepts of American federalism that have prov … , 401 U. S. 37 (1971). As this Court emphasized only last Term in Rewis v. United States, supra,\".",
+          "verdict_id": "63c3de8bf2ca57296acbaa58a1244810"
+        },
+        {
+          "id": "L2-16",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Sullivan v. Little Hunting Park, Inc.: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "1690e98c20c0c5e520830f096b641862"
+        },
+        {
+          "id": "L2-17",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Commissioner v. Culbertson. The corresponding passage there reads: \"the first principle of income taxation: that income must be taxed to him who earns it. Lucas v\".",
+          "verdict_id": "0f66235ecd2113bdd24ab2e64ee14c46"
+        },
+        {
+          "id": "L2-18",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Logan v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "8f01734afd5daa6c8d69316772f25f11"
+        },
+        {
+          "id": "L2-19",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears in the opinion text supplied for Nelson v. George, read with the quotation conventions it uses: bracket [Kentucky] stands for \"North Carolina\"; bracket [Alabama] stands for \"California\"; an ellipsis at the edge of the quotation (not located).",
+          "verdict_id": "c803b9d3283ff7de518785722c1d7388"
+        },
+        {
+          "id": "L2-20",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Smith v. Hooey: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "2b5a5ef37431483804316f35750befd7"
+        },
+        {
+          "id": "L2-29",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Michigan v. Wisconsin.",
+          "verdict_id": "2b53e8dedda87733790c365bd48393bb"
+        },
+        {
+          "id": "L2-30",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "McGowan v. Maryland: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "230ffc2d7873bf2b2772e238adb68972"
+        },
+        {
+          "id": "L2-31",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Madden v. Kentucky ex rel. Commissioner. The corresponding passage there reads: \"I. Classification. — The broad discretion as to classification possessed by a legislature in the field of taxation has long been recognized. This Court fifty years ago concluded that “the Fourteenth Amendment was hot intended to compel the State to adopt an iron rule of equal taxation,” and the passage of time has only served to underscore the wisdom of that recognition of the largé area of discretion which is needed by a legislature in formulating sound tax policies. Traditionally classification has been a device for fitting tax programs to local needs and usages in order to achieve an equitable distribution of the tax burden. It has, because of this, been pointed out that in taxation, even more than in other fields, legislatures possess the greatest freedom in classification. Since the members of a legislature necessarily enjoy a familiarity with local conditions which this Court cannot have, the presumption of constitutionality can be overcome only by the most explicit demonstration that a classification is a hostile and oppressive discrimination against particular persons and classes. The burden\".",
+          "verdict_id": "b3ba8cee2adb55917afb835555c437a1"
+        },
+        {
+          "id": "L2-32",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Mayer v. City of Chicago: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "44e15b9f51a637d187ae29694212bf5b"
+        },
+        {
+          "id": "L2-33",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Choctaw, Oklahoma & Gulf Railroad v. Mackey. The corresponding passage there reads: \"522.\nThe mere fact that property is used, among others, by the United States as an instrument for éffecting its purpose does not relieve it from state taxation. The most\".",
+          "verdict_id": "03bc8a713a6420aecef99e2cd3490442"
+        },
+        {
+          "id": "L2-34",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Rice v. Olson. The corresponding passage there reads: \"and skill.\nThe policy of leaving Indians free from state jurisdiction and control is deeply rooted in the Nation’s history. See Worcester\".",
+          "verdict_id": "8aefe23c1c835570e7426452ba4e16e4"
+        },
+        {
+          "id": "L2-35",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Carpenter v. Shaw. The corresponding passage there reads: \"construed. Doubtful expressions are to be resolved in favor of the weak and defenseless people who are the wards of the nation, dependent upon its protection and good faith. Hence, in\".",
+          "verdict_id": "f08acecc460356dfe385d21da8f13337"
+        },
+        {
+          "id": "L2-36",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SELECTIVE_QUOTE",
+          "explanation": "Warren Trading Post Co. v. Arizona Tax Commission: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.",
+          "verdict_id": "1f984c759ad7c6db083e790abcda995d"
+        }
+      ]
+    },
+    "legal@0.2.0": {
+      "score": {
+        "known_bad_false_pass": {
+          "k": 0,
+          "n": 10,
+          "rate": 0,
+          "ci95": [
+            0,
+            0.278
+          ]
+        },
+        "known_bad_fail": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "known_bad_abstain": {
+          "k": 8,
+          "n": 10,
+          "rate": 0.8,
+          "ci95": [
+            0.49,
+            0.943
+          ]
+        },
+        "control_false_fail": {
+          "k": 6,
+          "n": 10,
+          "rate": 0.6,
+          "ci95": [
+            0.313,
+            0.832
+          ]
+        },
+        "control_pass": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "control_abstain": {
+          "k": 2,
+          "n": 10,
+          "rate": 0.2,
+          "ci95": [
+            0.057,
+            0.51
+          ]
+        },
+        "J": 9
+      },
+      "rows": [
+        {
+          "id": "L2-01",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Branzburg v. Hayes. The corresponding passage there reads: \"crime. Citizens generally are not constitutionally immune from grand jury subpoenas; and neither\".",
+          "verdict_id": "c4a91e47546e7ca982ba661b8b18dc34"
+        },
+        {
+          "id": "L2-02",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Blair v. United States. The corresponding passage there reads: \"statutes provide. ■ The personal sacrificó involved is a part of the necessary contribution of the individual to the welfare of the public. The duty\".",
+          "verdict_id": "cb03ca63374595cafa70a3be6ed12fd1"
+        },
+        {
+          "id": "L2-03",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Norvell v. Apodaca: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "f4c6b734c377ee87dfc61d3c8bc33bb5"
+        },
+        {
+          "id": "L2-04",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SELECTIVE_QUOTE",
+          "explanation": "Lear, Inc. v. Adkins: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.",
+          "verdict_id": "9be43f8c002203b560bae28768738afd"
+        },
+        {
+          "id": "L2-13",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for United States v. Philadelphia National Bank.",
+          "verdict_id": "15f9a6329fef1a3adc363bf2658397f6"
+        },
+        {
+          "id": "L2-14",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Eastern Railroad Presidents Conference v. Noerr Motor Freight, Inc.: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "bda164558e9889888f1cfc0fdbbc0133"
+        },
+        {
+          "id": "L2-15",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "ABSTAIN",
+          "reason": "SELECTIVE_QUOTE",
+          "explanation": "United States v. Bass: elided condition — the ellipsis omits \"provided\" and what it governs; not certified.",
+          "verdict_id": "784edf71d3ec6340033c7b09fb6fac7b"
+        },
+        {
+          "id": "L2-16",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Sullivan v. Little Hunting Park, Inc.: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "ce3c64313092ba64eca84218bbb87020"
+        },
+        {
+          "id": "L2-17",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Commissioner v. Culbertson. The corresponding passage there reads: \"the first principle of income taxation: that income must be taxed to him who earns it. Lucas v\".",
+          "verdict_id": "f6a4ec0f52425d1a205ea0a753e5acce"
+        },
+        {
+          "id": "L2-18",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Logan v. United States: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "d133584f31846072711cfd219e1694b8"
+        },
+        {
+          "id": "L2-19",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation alters the meaning of the opinion text supplied for Nelson v. George: the bracket [Kentucky] stands for \"North Carolina\", and \"Kentucky\" is not \"North Carolina\", an inflection of it, or a pronoun or referent. The passage there reads: \"present effect being given the North Carolina detainer by the California authorities\".",
+          "verdict_id": "c13f9e81bfc961f2da8bb3c1bd142eb9"
+        },
+        {
+          "id": "L2-20",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Smith v. Hooey: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "07cb6b5b5fa52d4f44f1e623d6881f8d"
+        },
+        {
+          "id": "L2-29",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "PASS",
+          "reason": null,
+          "explanation": "The quotation appears verbatim in the opinion text supplied for Michigan v. Wisconsin.",
+          "verdict_id": "d77c64c3f45128577f64a1a5b1409c95"
+        },
+        {
+          "id": "L2-30",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "fabricated",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "McGowan v. Maryland: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "e1be711456736ef4d36ad87ec7524a26"
+        },
+        {
+          "id": "L2-31",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Madden v. Kentucky ex rel. Commissioner. The corresponding passage there reads: \"I. Classification. — The broad discretion as to classification possessed by a legislature in the field of taxation has long been recognized. This Court fifty years ago concluded that “the Fourteenth Amendment was hot intended to compel the State to adopt an iron rule of equal taxation,” and the passage of time has only served to underscore the wisdom of that recognition of the largé area of discretion which is needed by a legislature in formulating sound tax policies. Traditionally classification has been a device for fitting tax programs to local needs and usages in order to achieve an equitable distribution of the tax burden. It has, because of this, been pointed out that in taxation, even more than in other fields, legislatures possess the greatest freedom in classification. Since the members of a legislature necessarily enjoy a familiarity with local conditions which this Court cannot have, the presumption of constitutionality can be overcome only by the most explicit demonstration that a classification is a hostile and oppressive discrimination against particular persons and classes. The burden\".",
+          "verdict_id": "4cec85c5b6b5fade99434dc45327c307"
+        },
+        {
+          "id": "L2-32",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "bracket-changed",
+          "out": "ABSTAIN",
+          "reason": "SPAN_NOT_FOUND",
+          "explanation": "Mayer v. City of Chicago: quotation not found in the supplied opinion text; it may be fabricated. Abstaining rather than asserting a fabrication.",
+          "verdict_id": "17d88f09a088cabe6f7970aa66024e6f"
+        },
+        {
+          "id": "L2-33",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Choctaw, Oklahoma & Gulf Railroad v. Mackey. The corresponding passage there reads: \"522.\nThe mere fact that property is used, among others, by the United States as an instrument for éffecting its purpose does not relieve it from state taxation. The most\".",
+          "verdict_id": "0acea805cf85202e8b7388118600cd19"
+        },
+        {
+          "id": "L2-34",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "altered",
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Rice v. Olson. The corresponding passage there reads: \"and skill.\nThe policy of leaving Indians free from state jurisdiction and control is deeply rooted in the Nation’s history. See Worcester\".",
+          "verdict_id": "ea3d2ab6acf6d40719f31795d1876be2"
+        },
+        {
+          "id": "L2-35",
+          "half": "A",
+          "label": "control",
+          "operator": null,
+          "out": "FAIL",
+          "reason": null,
+          "explanation": "The quotation is not found as quoted in the opinion text supplied for Carpenter v. Shaw. The corresponding passage there reads: \"construed. Doubtful expressions are to be resolved in favor of the weak and defenseless people who are the wards of the nation, dependent upon its protection and good faith. Hence, in\".",
+          "verdict_id": "0b880e627991060b0bdbad5dfc490709"
+        },
+        {
+          "id": "L2-36",
+          "half": "A",
+          "label": "known-bad",
+          "operator": "elided",
+          "out": "ABSTAIN",
+          "reason": "SELECTIVE_QUOTE",
+          "explanation": "Warren Trading Post Co. v. Arizona Tax Commission: quoted words present, but an omission in the quotation changes a negation; not certified — possible selective quotation.",
+          "verdict_id": "4ddbced2522621959a7af2dd08e7f969"
+        }
+      ]
+    }
+  }
+}

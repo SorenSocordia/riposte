@@ -1,0 +1,249 @@
+{
+  "spec": "bench-spec/1",
+  "id": "x2b-legal-fix",
+  "title": "Legal quotation conventions, post-hoc fix (legal@0.1.0)",
+  "adapter": "items",
+  "label": "post-hoc",
+  "blind": false,
+  "items": "rows",
+  "run": {
+    "id": "X2b run 2 on the 58 items of X2",
+    "date": "2026-10-03",
+    "engine_version": {
+      "$from": "engine_version"
+    },
+    "ruleset": {
+      "$from": "ruleset"
+    },
+    "dist_sha256": {
+      "$from": "verify_dist_sha256"
+    }
+  },
+  "rows": [
+    {
+      "claim": "B1: the 11 convention false FAILs now PASS",
+      "where": {
+        "id": [
+          "CT01",
+          "CT02",
+          "CT03",
+          "CT05",
+          "CT06",
+          "CT09",
+          "CT10",
+          "CT11",
+          "CT14",
+          "CT16",
+          "CT18"
+        ]
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "B1: the 11 convention false FAILs (CT01, CT02, CT03, CT05, CT06, CT09, CT10, CT11, CT14, CT16, CT18) PASS",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "reported": {
+        "k": 9,
+        "n": 11
+      }
+    },
+    {
+      "claim": "B2: the two misquoting controls still FAIL",
+      "where": {
+        "id": [
+          "CT12",
+          "CT19"
+        ]
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "B2: CT12 (Celotex) and CT19 (Keys v. Humana) stay FAIL",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "reported": {
+        "k": 2,
+        "n": 2
+      }
+    },
+    {
+      "claim": "B3: known-bad and supplementary items certified PASS",
+      "where": {
+        "set": [
+          "known-bad",
+          "supplementary"
+        ]
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "B3: 0 PASS on the 20 known-bad items and 0 PASS on the 18 supplementary items",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 38
+      }
+    },
+    {
+      "claim": "B4: fabricated cases not abstained",
+      "where": {
+        "subset": "fabricated-case"
+      },
+      "hit": {
+        "outcome": {
+          "$ne": "ABSTAIN"
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "B4: the 5 fabricated cases ABSTAIN (0 FAIL, 0 PASS)",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 5
+      }
+    },
+    {
+      "claim": "B5: the six blind PASSes still PASS",
+      "where": {
+        "id": [
+          "CT04",
+          "CT07",
+          "CT13",
+          "CT15",
+          "CT17",
+          "CT20"
+        ]
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "B5: the 6 controls that passed blind (CT04, CT07, CT13, CT15, CT17, CT20) still PASS",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "reported": {
+        "k": 6,
+        "n": 6
+      }
+    },
+    {
+      "claim": "B6: propositions abstained OUT_OF_RULESET_SCOPE",
+      "where": {
+        "subset": "proposition"
+      },
+      "hit": {
+        "outcome": "ABSTAIN",
+        "reason": "OUT_OF_RULESET_SCOPE"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "B6: the 2 propositions still ABSTAIN OUT_OF_RULESET_SCOPE",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "reported": {
+        "k": 2,
+        "n": 2
+      }
+    },
+    {
+      "claim": "controls PASS under legal@0.1.0",
+      "where": {
+        "set": "control"
+      },
+      "hit": {
+        "outcome": "PASS"
+      },
+      "method": "wilson",
+      "note": "post-hoc: the thresholds were chosen with X2's anchor lengths in view",
+      "reported": {
+        "k": 15,
+        "n": 20
+      }
+    },
+    {
+      "claim": "bad quotations still FAILed (known-bad and supplementary)",
+      "where": {
+        "set": [
+          "known-bad",
+          "supplementary"
+        ]
+      },
+      "hit": {
+        "outcome": "FAIL"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 1,
+        "n": 38
+      }
+    }
+  ],
+  "misses": [
+    {
+      "id": "CT18",
+      "kind": "false-fail",
+      "description": "CT18 stays FAIL: the quotation's apostrophe against the OCR source's 'plaintiffs' (predicted by the prereg)",
+      "post_hoc": true
+    },
+    {
+      "id": "CT09",
+      "kind": "unpredicted-abstain",
+      "description": "CT09 abstains SELECTIVE_QUOTE: the preceding-negation guard reads only the opinion ('cannot take on the responsibility of serving'), so a quotation whose own sentence supplies the negation cannot pass",
+      "post_hoc": true
+    },
+    {
+      "id": "KB02-pointer-lost",
+      "kind": "regression",
+      "description": "KB02 no longer shows the related passage X2's audit named; it abstains asking for the complete opinion or a pin cite",
+      "post_hoc": true
+    },
+    {
+      "id": "SP02-pointer-lost",
+      "kind": "regression",
+      "description": "SP02 no longer shows the related passage X2's audit named; it abstains asking for the complete opinion or a pin cite",
+      "post_hoc": true
+    },
+    {
+      "id": "SP17-pointer-lost",
+      "kind": "regression",
+      "description": "SP17 no longer shows the related passage X2's audit named; it abstains asking for the complete opinion or a pin cite",
+      "post_hoc": true
+    }
+  ],
+  "audit": "no new audit: the classes are X2's, from an AI agent's audit (Claude Opus 5.5 (claude-opus-5-5)); no person labelled"
+}

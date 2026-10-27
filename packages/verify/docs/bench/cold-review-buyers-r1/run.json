@@ -1,0 +1,65 @@
+{
+  "format": "bench-run/1",
+  "id": "cold-review-buyers-r1",
+  "prereg": "SCOPE.md",
+  "report": "FINDINGS.md",
+  "spec": "spec.json",
+  "not_shipped": [
+    {
+      "file": "reader-report-buyers-r1-controller-2026-10-13-0106.md",
+      "sha256": "c7bce4534eb8ab87d6eb72eab0a8c104cc6bb07595034a9efcc7425f6897aa2a",
+      "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+    },
+    {
+      "file": "reader-report-buyers-r1-platform-2026-10-13-0106.md",
+      "sha256": "e6cccb516285926bde0712b2755ffbf91b68d460f903694aa05713adab9ec50d",
+      "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+    },
+    {
+      "file": "reader-report-buyers-r1-legal-ops-2026-10-13-0111.md",
+      "sha256": "817430c03fb8e01f29e7f356e57866d2604112441ae33e87789b7987297d7bfa",
+      "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+    },
+    {
+      "file": "reader-report-buyers-r1-research-2026-10-13-0105.md",
+      "sha256": "c2779c86ca972e3d92d8e620a9b011de9c1e043cc679565529232d1e755534e8",
+      "reason": "a reader's own report, written in a copy of the public tree and kept by the authors under a working file name (its sha256 identifies it); it names working folders on the authors' machine, so it does not ship. The rows were transcribed from it into FINDINGS.md"
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "There is no run to repeat: the rows are transcribed from four readers' reports. The reports are hashed, not shipped, because they name working folders on the authors' machine."
+  },
+  "sources": [
+    {
+      "file": "SCOPE.md",
+      "sha256": "df8cfb1bc255a436c05b82d4754e94bb3cfd09b06af26f99b6bb0a7a58f4e03e",
+      "from": "written 2026-10-19 in this folder: the document in the prereg's place for a table that records misses only"
+    },
+    {
+      "file": "SCOPE.sha256",
+      "sha256": "242c5f5d98cdbe25c01bf8d2b6c12cf62baf3e19c26fff8aa2e7c474fdd14d43",
+      "from": "written 2026-10-19 in this folder, when SCOPE.md was written: its sha256 and the time it was hashed"
+    },
+    {
+      "file": "FINDINGS.md",
+      "sha256": "c8d492114dd960945e8f4252db94fb4fd17d46ca9fe4e3eedbaaebad1ed3ba48",
+      "from": "written 2026-10-19 in this folder: the transcription the misses were typed from"
+    },
+    {
+      "file": "REPORTS.sha256",
+      "sha256": "62d5801bd92ed8c7d36ff6bf62583aae3b98a5778398f66d60396650e1b1bd1c",
+      "from": "written 2026-10-19 in this folder: the sha256 of each source the rows were transcribed from"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "59dc153c8933e4ef07f4156feb2f0411a33b689529f39ebf88b9e28d1273af24",
+      "from": "written 2026-10-19 in this folder: the misses, typed from FINDINGS.md, with the fixes recorded since the round"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "SCOPE.md.tsr"
+    }
+  ]
+}

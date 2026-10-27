@@ -1,0 +1,170 @@
+{
+  "format": "bench-run/1",
+  "id": "process-misses-2026-10-26",
+  "prereg": "SCOPE.md",
+  "report": "FINDINGS.md",
+  "spec": "spec.json",
+  "not_shipped": [
+    {
+      "file": "maintainers-log-2026-10-27.md",
+      "sha256": "96005a0fff7d184dd0f923681554c5c7c96bf7719bb68fdc8801f5807feb7572",
+      "reason": "the maintainers' working log, copied while it was still being written, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-intoto-2026-10-26.md",
+      "sha256": "6f0ac0dad289586752cfac251b27b5cf5556495a8049666a1abdaeb2d28c3646",
+      "reason": "the in-toto run's report (the run that wrote in-toto statements for the record), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. No row comes from it: FINDINGS.md lists its kept misses as read and left out, with the reason"
+    },
+    {
+      "file": "run-report-entity-2026-10-26.md",
+      "sha256": "a5c52788c69c4741c2c64bdce7619ef6e7cbe2a4c7ee0459a446041dc5627732",
+      "reason": "the entity run's report (the run that wrote a list of filing steps and a reading list), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-misses-rows-2026-10-26.md",
+      "sha256": "2cc5ff4cc8de4967ca8dcb76f9faaec82c353de16808e3e18f081620d5ecc6ad",
+      "reason": "the misses-rows run's report (the run that wrote the table of the week of 2026-10-20), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-sweep-2026-10-26.md",
+      "sha256": "6e40c38ac32ebc38348c99c2172baf004f781e13bf03623a4872437dd38b3f1a",
+      "reason": "the sweep run's report (the run that generalised a sampler and swept the record with it), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-port-2026-10-26.md",
+      "sha256": "dc4640f84908d783365be4afba81190215c5d49e3a4e7f42eb25db3cefc9a5bd",
+      "reason": "the port run's report (the run that rebuilt a script that ports the tree to another machine), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-swing-c-2026-10-26.md",
+      "sha256": "1d595b9dd3fceb91348bf6f7d070a9e89f9d5b7065a55494f119535049e3e981",
+      "reason": "the swing-C run's report (a run that prepared a swing on a hill), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-swing-a-2026-10-26.md",
+      "sha256": "c82d8fceb751d5b642c20910ac59d0cba23702c5b7c839b488e8f17c0f0718f3",
+      "reason": "the swing-A run's report (a run that prepared a swing on a hill), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-null-design-2026-10-26.md",
+      "sha256": "80c57a1ccbbb2e4f4c337b318575f02f4b28ead31b5f47657535d99f55117613",
+      "reason": "the null-design run's report (the run that designed a ladder of null twins for a hill), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-swing-b-2026-10-26.md",
+      "sha256": "56c05be99b18d6f54d176845b3d51788dde3a1136ccfe7d2f85371636d996d08",
+      "reason": "the swing-B run's report (a run that prepared a swing on a hill), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-census-integration-2026-10-26.md",
+      "sha256": "1c60413826815deebacbe606994bf640c2969e6ba2916d81b722f0a9538f3779",
+      "reason": "the integration census run's report (the run that took a census of how the maintainers' engine library and this tree are joined), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-census-engine-library-2026-10-26.md",
+      "sha256": "69bdf6ced6d7754e066db43fb669a21e618ecdbbb4435e08f1d29d8b5acf87cf",
+      "reason": "the engine-library census run's report (the run that took a census of the maintainers' older engine library and what this tree uses of it), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-census-product-2026-10-26.md",
+      "sha256": "d5c79f3158b9e8d271be98dace6ad1052c86870a94b0ec67709607faedaca3fe",
+      "reason": "the product census run's report (the run that took a census of this tree's products against the maintainers' plan), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-census-papers-2026-10-26.md",
+      "sha256": "d876864e92ff9e27a47cef529c4240c9b043345bfa85ad18c80df82a005cc390",
+      "reason": "the papers census run's report (the run that took a census of the results papers could rest on), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-frontier-2026-10-26.md",
+      "sha256": "89394ef8090e26962ec8a10a71f6b6608b339099ead03a4de0486923195c1e25",
+      "reason": "the frontier run's report (the run that built the frontier's closing edge, its ship mode and its walls), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-engine-slot-2026-10-26.md",
+      "sha256": "ed68b99299d890c740ba9b08535e1e96082164e6c5b71439122789a926a3a9fd",
+      "reason": "the engine-slot run's report (the run that built the hill's engine slot and its numbers judge), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-export-2026-10-26.md",
+      "sha256": "ceee435713d2d68fec69d2fd0c84473457890a77309d071cda0c24025a775c35",
+      "reason": "the export run's report (the run that split the export's switches and built the list of held tables), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-identity-2026-10-26.md",
+      "sha256": "756632a862bbdf54718667049c025bdb7df8ee055aef609f6c72f7e800fcb497",
+      "reason": "the identity run's report (the run that ran the identity scan on the maintainers' transcripts, with a declared style arm), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-harness-2026-10-26.md",
+      "sha256": "6488a42379f09a3300413c7bd6f216bda7cbf41b478c37ff1a9192dcac276429",
+      "reason": "the harness run's report (the run that wrote a preregistered bench's harness block and an amendment draft), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-papers-2026-10-26.md",
+      "sha256": "13ccc88d3d4cd808ebad43846e3e5ca9a654bfea625c2e1ae014fa7c641cc59a",
+      "reason": "the papers run's report (the run that drafted two papers with their claims ledgers), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-record-page-2026-10-27.md",
+      "sha256": "e18787ed91be6d10353d902519272eefa94eea0dced00ad7233c7fd635fa5bf6",
+      "reason": "the record-page run's report (the run that built the record page), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-forecasts-2026-10-27.md",
+      "sha256": "fc5dbb2b97053a048e89734f887d2eefe4bef5324a0e561f0480e7687ac63599",
+      "reason": "the forecasts run's report (the run that sealed a batch of forecasts), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "plan-cycle-2026-10-27.md",
+      "sha256": "7fdea4e81d2e8037324d559f26682fd44bb4aa1d8c119ef6b46960a71db4db5d",
+      "reason": "the lead's plan for the night's cycle, read for the hour its heading gives, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "plan-roadmap-2026-10-26.md",
+      "sha256": "84326a375fa92c4b5e68b9206bee23c7605945766504d5017fbd095d3fc0e2ca",
+      "reason": "the maintainers' roadmap, read for the hour of its status line of 2026-10-26, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "file-times-2026-10-27.txt",
+      "sha256": "dcafef42b04077c0902c4c13f9a69e66f36d0f3989a9907167068844427b4c37",
+      "reason": "the listing of the modification times compared, made by the run that wrote these rows from the original files at 07:5x UTC on 2026-10-27; it names the files by the working names given here and by no folder, but the files it times do not ship, so it is kept with them. The rows that compare a stated time with a file's time were read from it"
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "There is no run to repeat: the rows are transcribed from the maintainers' working log and the runs' reports, and six compare a stated time with a file's modification time. The sources are hashed, not shipped, because they name working folders and private matters on the authors' machine."
+  },
+  "sources": [
+    {
+      "file": "SCOPE.md",
+      "sha256": "872351712f1b7f4d1f7582dcd9d7ba6756c216b2f056ad1dfd5599def90d519a",
+      "from": "written 2026-10-27 in this folder: the document in the prereg's place for a table that records misses only"
+    },
+    {
+      "file": "SCOPE.sha256",
+      "sha256": "db664b4cf7bf125a5b7a042447a57d329df761223aa1b7845c07cc64cc330620",
+      "from": "written 2026-10-27 in this folder, when SCOPE.md was written: its sha256 and the time it was hashed"
+    },
+    {
+      "file": "FINDINGS.md",
+      "sha256": "499ae8a3006175b99ae009265da97a89ad0198c92c59abd7eae59eeb89f2589d",
+      "from": "written 2026-10-27 in this folder: the transcription the misses were typed from"
+    },
+    {
+      "file": "REPORTS.sha256",
+      "sha256": "9def0c9bdc0c16bf9e08aab254c715cffcca655b62331f4061c5994947cdbbd3",
+      "from": "written 2026-10-27 in this folder: the sha256 of each source the rows were transcribed from"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "2f1b103c9866a1d2044d50f2534637640287d023b77cd8b15cd4e60275e966f7",
+      "from": "written 2026-10-27 in this folder: the misses, typed from FINDINGS.md"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "SCOPE.md.tsr"
+    }
+  ]
+}

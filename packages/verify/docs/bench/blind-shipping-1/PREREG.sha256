@@ -1,0 +1,27 @@
+# blind-shipping-1: the preregistration, hashed before any of its data exists and before any engine call on it; refilled 2026-10-13 for the versions that ship; amendment 1 (2026-10-14) corrects the engine and pilot-tool pins to the shipped tree; amendment 2 (2026-10-19) re-pins to the tree after that day's repairs (engine 0.7.2, ap-threeway@0.3.0, legal@0.5.4); amendment 3 (2026-10-20) re-pins the engine and AP pack sources after the same night's hardening (ap-threeway@0.4.0 selectable; the replay reader fails closed); amendment 4 (2026-10-20) re-pins the engine and legal sources after the citation reader's one-pass rewrite (no verdict moves; never stamped); amendment 5 (2026-10-20) re-pins them again after the remaining readers and the 1,024-character bound at the doors (no verdict moves); amendment 6 (2026-10-20) re-pins the engine, legal and pilot-tool sources after the citations index and the ledger's null-line answer (no verdict moves); the earlier hashes are kept below as the record of the stamped filings; amendment 7 (2026-10-26) writes the harness block of section 9 (the second block below), says who labels the e-invoice and legal arms, fixes the readings sections 4 and 6 leave to the scripts, and re-pins the engine sources after the bench tooling's held tables (no verdict moves)
+ae0a6af81666d3ae4e3835fded8abd8979d330dade347095e66e6df4ae19c224 *PREREG.md
+hashed 2026-10-27T13:31:41Z
+earlier filing (stamped 2026-10-20T21:53:10Z, amendment 6): 5e3b686ff26177a24b89cd6cdd4a10db00b45e3d530064fdde1b734c647766e4 *PREREG.md
+earlier filing (stamped 2026-10-20T15:52:31Z, amendment 5): 6be29c5fb3de4a0495289dd2ca88a1f93c642b237a48c5b9d7126417186f6380 *PREREG.md
+earlier filing (stamped 2026-10-20T05:56:03Z, amendment 3): d9a4f31c699039a4bc7d75372c2bd85e05deef9d25d02b073c0e7a9a49a58921 *PREREG.md
+earlier filing (stamped 2026-10-20T03:13:11Z, amendment 2): b809da853652168f0a6433d092a3ca0b4faafef39f39fb6ed62c8f92479a66fa *PREREG.md
+earlier filing (stamped 2026-10-14T10:30:34Z, amendment 1): 95a609598955c25cfd0f5af644034ca1a5a8a2a64c69d7b0fd999fee9ec76445 *PREREG.md
+earlier filing (stamped 2026-10-14T01:55:28Z): 9dafea26589e0823c8a328efd0e2e18b21940392112c5a074d14dbf368525d48 *PREREG.md
+
+# second block: the harness block of section 9 (Amendment 7), hashed 2026-10-27T13:31:41Z, before any data is touched
+ae0a6af81666d3ae4e3835fded8abd8979d330dade347095e66e6df4ae19c224 *PREREG.md
+0e61b71092359a1f2915e4001c60a06177c720e18ef22b4040b500cddc770107 *harness/AP-ARM.md
+30ef5d0740f2233a9e145fcf4ea63963b861ef10e0486ff5f109524d29370241 *harness/LEGAL-TRANSCRIPTION-PROTOCOL.md
+b3fe525d5b3b90e37048efb0412b4cda6dd3d71889ba21edf35fc5e2e6db8af9 *harness/ap-mapping.TEMPLATE.json
+6b2e8d1386db189282667e05478b99700efc6b0826ca02fc888da50275a250c1 *harness/einvoice-extract.mjs
+7343aa2322d9f8d4672e44e3c9001e66c9b481033632747d15f4e922315bf82e *harness/einvoice-fetch.mjs
+5454af26b23fcf4b15b0a336471c57db4311bcb473759c4be74aa879b8f223a0 *harness/einvoice-plant.mjs
+5e82f026cdffe390bc0803fd2d5ccd32bcba2685684f3ae6672802df7d18f860 *harness/einvoice-run.mjs
+52da4a568efd1a9063a89f6f42982881a9edd9dca518239e40637e4aa9242d55 *harness/einvoice-validate.mjs
+74c81dad9de7e394756d4fbe6da97e0af075c730dc63b0f96ba63798b77ca3d4 *harness/ledger.mjs
+e05ddac17223111a51871245d5877a93f9c67b32448c034dc3b12833b0fd3171 *harness/legal-fetch.mjs
+5273fe5626e6f9d96ed36eb18ad6c0cdd8a452ee4adf862af6ad41b1344c656f *harness/legal-run.mjs
+2d6e8f96a72c8bb07000abd5061ef4559e45508c9918aac1b4df4cd1347c37e0 *harness/lib.mjs
+8e3b94efe7c082e85f3d59b8edc0db1c05cc6362bb4580a9902bf240070e42da *harness/schematron-svrl.py
+502d6cdac65264c9913915c4b605f5822d8e6e946fe7a306700f6d4cf4143e98 *harness/score.mjs
+6f2e719d08d1b4f9ac1ce46fe44f560e2bd2c27d79656458e11ebefe567d7afa *harness/test/harness.test.mjs

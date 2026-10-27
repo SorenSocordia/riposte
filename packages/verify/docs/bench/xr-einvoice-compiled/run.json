@@ -1,0 +1,83 @@
+{
+  "format": "bench-run/1",
+  "id": "xr-einvoice-compiled",
+  "prereg": "PREREG-XR-RUN.md",
+  "results": "results",
+  "spec": "spec.json",
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "not_shipped": [
+    {
+      "file": "run-t2.mjs",
+      "sha256": "94eea3145b36e5709c48af3ebf30a58fc26b6d0b77019c1ceabec72ed2640999",
+      "reason": "the run's harness (the prereg names it by an abbreviated hash). It names the authors' private folders, so it does not ship."
+    },
+    {
+      "file": "score-t2.mjs",
+      "sha256": "efbe8dd88862363645368d883c9e9251d93c64c08f31df147c5486c6af20b59d",
+      "reason": "the run's scorer, which wrote results/results.json. It names the authors' private folders, so it does not ship."
+    },
+    {
+      "file": "corpus/manifest.json",
+      "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+      "reason": "the manifest of the 60 rendered e-invoice PDFs (pinned in results/run-receipt.json). The corpus is not in this tree, so the extraction step cannot be rerun from it; the table re-tallies from the per-document results."
+    },
+    {
+      "file": "lib/extract.mjs",
+      "sha256": "470fb72882fd280d378bc75a05742b5bdb25dcda8a72fb07c3b8636e3a11576b",
+      "reason": "the blind extractor of the e-invoice PDF run, unchanged (pinned in results/run-receipt.json). Not copied here: the same bytes ship in x1-einvoice-pdf/lib/extract.mjs"
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The four compiled rulesets ship in rulesets/, but the harness and scorer name the authors' folders and do not ship, and the 60 rendered PDFs are not in this tree. The extractor it reused ships in x1-einvoice-pdf/lib/extract.mjs."
+  },
+  "sources": [
+    {
+      "file": "PREREG-XR-RUN.md",
+      "sha256": "51d62df9ba8bfbc8d44f57405aa985556713659c1dcbbf7fd2acb90934ce49b9",
+      "from": "PREREG-XR-RUN.md"
+    },
+    {
+      "file": "PREREG-XR-RUN.sha256",
+      "sha256": "1b96798bbe5faf0e2a1d7259d12f1e71162e6532fbc08b0dddddcc935a2fc039",
+      "from": "PREREG-XR-RUN.sha256",
+      "from_sha256": "20997fa1fa5b740d172512de32e52de41ab51ad7d0febec18207a8efb610364c",
+      "note": "a dated time line appended 2026-10-05 (the authors' own record); the hash line above it is unchanged"
+    },
+    {
+      "file": "results/results.json",
+      "sha256": "f4e01da233835f153de69806e8e3f7c99a80d97512570df08c8f12cbab5cb90e",
+      "from": "out/t2/results.json, which the run's scorer wrote outside the compiler's folder"
+    },
+    {
+      "file": "results/run-receipt.json",
+      "sha256": "ebb24012b0a7ced13a88d31cab3286b67a58e04715aa89022bcb1f15ec49c341",
+      "from": "out/t2/run-receipt.json, the run's receipt: every pin at the start, no drift during the run"
+    },
+    {
+      "file": "rulesets/xrechnung-cius.ruleset.json",
+      "sha256": "f6e9cf577004519ae386d0bebf3789e25f5bf829e6d428613e276e858025563a",
+      "from": "out/xrechnung-cius.ruleset.json (arm xr_cius; its sha256 is pinned in the receipt)"
+    },
+    {
+      "file": "rulesets/xrechnung-profile.ruleset.json",
+      "sha256": "949e5812d25310aab9e37d8954ce75d3fb83fc3b6bf599b0bc7b219749050ea4",
+      "from": "out/xrechnung-profile.ruleset.json (arm xr_profile; pinned in the receipt)"
+    },
+    {
+      "file": "rulesets/xrechnung-profile-x1scope.ruleset.json",
+      "sha256": "27973e98a08ad8fa42e79d3ec28cde7f23f915822203017071b62225375a4fc4",
+      "from": "out/xrechnung-profile-x1scope.ruleset.json (arm xr_profile_x1scope; pinned in the receipt)"
+    },
+    {
+      "file": "rulesets/peppol-compiled-x1scope.ruleset.json",
+      "sha256": "dc3cf7612daf684c991f42b1fe7b16400be62ddb5fae51aa922041ebc7456354",
+      "from": "out/peppol-compiled-x1scope.ruleset.json (arm peppol_compiled_x1scope; pinned in the receipt)"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "92f4a9e42fd56604239f59eaf321ea5128abc9c35dd111c68bbb677da14f7259",
+      "from": "written 2026-10-05 in this folder: maps the per-document results to rows (the four bars R1 to R4 as the prereg states them) and lists the misses"
+    }
+  ]
+}

@@ -1,0 +1,794 @@
+{
+  "schema_version": "v0",
+  "verdict_id": "d009a0c33e9c814ac86a470c164d672e",
+  "issued_at": "2026-10-03T18:37:34.692Z",
+  "engine_version": "0.1.0",
+  "ruleset": {
+    "id": "peppol-en16931",
+    "version": "0.2.0",
+    "domain": "e-invoice"
+  },
+  "input_hash": "7e07a9e8bd611e6e8f8eae793ed83bfec13151ab49d7e04075dc46707c876dae",
+  "replayable": true,
+  "document": {
+    "extraction_hash": "2c8fd74b2db8c8df67d8d424f1b4ac27615fab27a7470f14946045703f547a74",
+    "line_items": 3
+  },
+  "references": {
+    "contract": false,
+    "evidence": 0,
+    "history": 0,
+    "source": true
+  },
+  "outcome": "PASS",
+  "aggregation": "ANY_FAIL_FAILS",
+  "claims": [
+    {
+      "claim_id": "document.LINES_SUM_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "sum_of_line_net_amount",
+      "rule_id": "LINES_SUM_INT",
+      "rule_name": "BR-CO-10: BT-106 = Σ BT-131, exact to the cent [PEPPOL-RULES-CEN, CEN-SCH]",
+      "outcome": "PASS",
+      "asserted": 5900,
+      "computation": {
+        "formula": "SUM_LINE_NET = sum(LINE_EXT)",
+        "operands": {
+          "left": 5900,
+          "right": 5900
+        },
+        "result": 5900,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_extension_amount"
+          },
+          "value": 5900,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "sum_of_line_net_amount: 5900 = 5900 — holds."
+    },
+    {
+      "claim_id": "document.TAX_EXCL_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "tax_exclusive_amount",
+      "rule_id": "TAX_EXCL_INT",
+      "rule_name": "BR-CO-13: BT-109 = BT-106 − BT-107 + BT-108, exact to the cent [PEPPOL-RULES-CEN, CEN-SCH]",
+      "outcome": "INSUFFICIENT_DATA",
+      "asserted": null,
+      "evidence": [],
+      "insufficiency": {
+        "reason": "UNPARSEABLE",
+        "detail": "TAX_EXCL is printed but no value was read: the label \"Total without VAT\" heads line 23 of the source text: \"Total without VAT E ten\"; ALLOWANCE is printed but no value was read: the label \"Document allowances\" heads line 21 of the source text: \"Document allowances EUR 20\"; CHARGE is printed but no value was read: the label \"Document charges\" heads line 22 of the source text: \"Document charges EU 20 —E\"",
+        "missing": [
+          "TAX_EXCL",
+          "ALLOWANCE",
+          "CHARGE"
+        ]
+      },
+      "locked": false,
+      "explanation": "TAX_EXCL_INT: TAX_EXCL is printed but no value was read: the label \"Total without VAT\" heads line 23 of the source text: \"Total without VAT E ten\"; ALLOWANCE is printed but no value was read: the label \"Document allowances\" heads line 21 of the source text: \"Document allowances EUR 20\"; CHARGE is printed but no value was read: the label \"Document charges\" heads line 22 of the source text: \"Document charges EU 20 —E\""
+    },
+    {
+      "claim_id": "document.TAX_INCL_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "tax_inclusive_amount",
+      "rule_id": "TAX_INCL_INT",
+      "rule_name": "BR-CO-15: BT-112 = BT-109 + BT-110, exact to the cent; BT-110 is required [PEPPOL-RULES-CEN, CEN-SCH]",
+      "outcome": "INSUFFICIENT_DATA",
+      "asserted": null,
+      "evidence": [],
+      "insufficiency": {
+        "reason": "UNPARSEABLE",
+        "detail": "TAX_EXCL is printed but no value was read: the label \"Total without VAT\" heads line 23 of the source text: \"Total without VAT E ten\"; TAX_AMT is printed but no value was read: the label \"VAT total\" heads line 24 of the source text: \"VAT total i °225.0\"",
+        "missing": [
+          "TAX_EXCL",
+          "TAX_AMT"
+        ]
+      },
+      "locked": false,
+      "explanation": "TAX_INCL_INT: TAX_EXCL is printed but no value was read: the label \"Total without VAT\" heads line 23 of the source text: \"Total without VAT E ten\"; TAX_AMT is printed but no value was read: the label \"VAT total\" heads line 24 of the source text: \"VAT total i °225.0\""
+    },
+    {
+      "claim_id": "document.PAYABLE_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "payable_amount",
+      "rule_id": "PAYABLE_INT",
+      "rule_name": "BR-CO-16: BT-115 = BT-112 − BT-113 + BT-114, exact to the cent [PEPPOL-RULES-CEN, CEN-SCH]",
+      "outcome": "PASS",
+      "asserted": 6125,
+      "computation": {
+        "formula": "PAYABLE = TAX_INCL - PREPAID + ROUNDING",
+        "operands": {
+          "left": 6125,
+          "right": 6125
+        },
+        "result": 6125,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "payable_amount"
+          },
+          "value": 6125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "tax_inclusive_amount"
+          },
+          "value": 7125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "prepaid_amount"
+          },
+          "value": 1000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "default(0)"
+          },
+          "value": 0,
+          "confidence": 100,
+          "role": "OPERAND"
+        }
+      ],
+      "locked": false,
+      "explanation": "payable_amount: 6125 = 6125 — holds."
+    },
+    {
+      "claim_id": "document.BR02_PRESENT",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "field": "invoice_number",
+      "rule_id": "BR02_PRESENT",
+      "rule_name": "BR-02: An Invoice shall have an Invoice number (BT-1) [CEN-SCH, assert BR-02: normalize-space(cbc:ID) != '']. Presence only: an absent BT-1 abstains (FIELD_MISSING); a value is not checked for being the right one",
+      "outcome": "PASS",
+      "asserted": "SNIPPET1",
+      "computation": {
+        "formula": "INVOICE_NUMBER = INVOICE_NUMBER (identifier sets; whitespace removed, upper-cased)",
+        "operands": {
+          "INVOICE_NUMBER": [
+            "SNIPPET1"
+          ]
+        },
+        "result": "SNIPPET1"
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "invoice_number"
+          },
+          "value": "SNIPPET1",
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": "Snippet1",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "invoice_number"
+          },
+          "value": "SNIPPET1",
+          "confidence": 100,
+          "role": "OPERAND",
+          "original": "Snippet1",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "invoice_number: SNIPPET1 = SNIPPET1 — holds."
+    },
+    {
+      "claim_id": "document.BR03_PRESENT",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "field": "issue_date",
+      "rule_id": "BR03_PRESENT",
+      "rule_name": "BR-03: An Invoice shall have an Invoice issue date (BT-2) [CEN-SCH, assert BR-03: normalize-space(cbc:IssueDate) != '']. Presence only",
+      "outcome": "PASS",
+      "asserted": "2017-11-13",
+      "computation": {
+        "formula": "ISSUE_DATE = ISSUE_DATE (identifier sets; whitespace removed, upper-cased)",
+        "operands": {
+          "ISSUE_DATE": [
+            "2017-11-13"
+          ]
+        },
+        "result": "2017-11-13"
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "issue_date"
+          },
+          "value": "2017-11-13",
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "issue_date"
+          },
+          "value": "2017-11-13",
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "issue_date: 2017-11-13 = 2017-11-13 — holds."
+    },
+    {
+      "claim_id": "document.BR05_PRESENT",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "field": "currency",
+      "rule_id": "BR05_PRESENT",
+      "rule_name": "BR-05: An Invoice shall have an Invoice currency code (BT-5) [CEN-SCH, assert BR-05: normalize-space(cbc:DocumentCurrencyCode) != '']. Presence only",
+      "outcome": "PASS",
+      "asserted": "EUR",
+      "computation": {
+        "formula": "DOC_CURRENCY = DOC_CURRENCY (identifier sets; whitespace removed, upper-cased)",
+        "operands": {
+          "DOC_CURRENCY": [
+            "EUR"
+          ]
+        },
+        "result": "EUR"
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "currency"
+          },
+          "value": "EUR",
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "currency"
+          },
+          "value": "EUR",
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "currency: EUR = EUR — holds."
+    },
+    {
+      "claim_id": "document.BR15_PRESENT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "payable_amount",
+      "rule_id": "BR15_PRESENT",
+      "rule_name": "BR-15: An Invoice shall have the Amount due for payment (BT-115) [CEN-SCH, assert BR-15: exists(cbc:PayableAmount)]. Presence only",
+      "outcome": "PASS",
+      "asserted": 6125,
+      "computation": {
+        "formula": "PAYABLE = PAYABLE",
+        "operands": {
+          "left": 6125,
+          "right": 6125
+        },
+        "result": 6125,
+        "tolerance": {
+          "abs": 0.005
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "payable_amount"
+          },
+          "value": 6125,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "payable_amount: 6125 = 6125 — holds."
+    },
+    {
+      "claim_id": "document.R051_CURRENCY",
+      "kind": "CROSS_REFERENCE",
+      "tier": "DETERMINISTIC",
+      "field": "amount_currency",
+      "rule_id": "R051_CURRENCY",
+      "rule_name": "PEPPOL-EN16931-R051: All currencyID attributes must have the same value as the invoice currency code (BT-5), except for the invoice total VAT amount in accounting currency (BT-111) [PEPPOL-SCH, assert PEPPOL-EN16931-R051: @currencyID = $documentCurrencyCode]. Read here as: the currency the totals are stated in = the invoice currency code",
+      "outcome": "PASS",
+      "asserted": "EUR",
+      "computation": {
+        "formula": "AMOUNT_CURRENCY = DOC_CURRENCY (identifier sets; whitespace removed, upper-cased)",
+        "operands": {
+          "AMOUNT_CURRENCY": [
+            "EUR"
+          ],
+          "DOC_CURRENCY": [
+            "EUR"
+          ]
+        },
+        "result": "EUR"
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "amount_currency"
+          },
+          "value": "EUR",
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "currency"
+          },
+          "value": "EUR",
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "identifier_normalized"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "amount_currency: EUR = EUR — holds."
+    },
+    {
+      "claim_id": "document.BRCO14_VAT_SUM",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "tax_amount",
+      "rule_id": "BRCO14_VAT_SUM",
+      "rule_name": "BR-CO-14: Invoice total VAT amount (BT-110) = Σ VAT category tax amount (BT-117) [CEN-SCH, assert BR-CO-14 in context cac:TaxTotal: round(sum(cac:TaxSubtotal/cbc:TaxAmount) * 100) div 100], exact to the cent",
+      "outcome": "INSUFFICIENT_DATA",
+      "asserted": null,
+      "evidence": [],
+      "insufficiency": {
+        "reason": "UNPARSEABLE",
+        "detail": "TAX_AMT is printed but no value was read: the label \"VAT total\" heads line 24 of the source text: \"VAT total i °225.0\"",
+        "missing": [
+          "TAX_AMT"
+        ]
+      },
+      "locked": false,
+      "explanation": "BRCO14_VAT_SUM: TAX_AMT is printed but no value was read: the label \"VAT total\" heads line 24 of the source text: \"VAT total i °225.0\""
+    },
+    {
+      "claim_id": "line[0].LINE_MATH_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "line_extension_amount",
+      "rule_id": "LINE_MATH_INT",
+      "rule_name": "PEPPOL-EN16931-R120: BT-131 = BT-129 × (BT-146 / BT-149) + Σ BT-141 − Σ BT-136, slack 0.02 [PEPPOL-RULES-PEPPOL, PEPPOL-SCH]",
+      "outcome": "PASS",
+      "asserted": 4000,
+      "computation": {
+        "formula": "LINE_EXT = QTY * PRICE / BASE_QTY + LINE_CHARGE? - LINE_ALLOWANCE?",
+        "operands": {
+          "left": 4000,
+          "right": 4000
+        },
+        "result": 4000,
+        "tolerance": {
+          "abs": 0.020001
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_extension_amount"
+          },
+          "value": 4000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "invoiced_quantity"
+          },
+          "value": 10,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "price_amount"
+          },
+          "value": 410,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "base_quantity"
+          },
+          "value": 1,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_charge_amount"
+          },
+          "value": 1,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_allowance_amount"
+          },
+          "value": 101,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line_extension_amount: 4000 = 4000 — holds."
+    },
+    {
+      "claim_id": "line[1].LINE_MATH_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "line_extension_amount",
+      "rule_id": "LINE_MATH_INT",
+      "rule_name": "PEPPOL-EN16931-R120: BT-131 = BT-129 × (BT-146 / BT-149) + Σ BT-141 − Σ BT-136, slack 0.02 [PEPPOL-RULES-PEPPOL, PEPPOL-SCH]",
+      "outcome": "PASS",
+      "asserted": 1000,
+      "computation": {
+        "formula": "LINE_EXT = QTY * PRICE / BASE_QTY + LINE_CHARGE? - LINE_ALLOWANCE?",
+        "operands": {
+          "left": 1000,
+          "right": 1000
+        },
+        "result": 1000,
+        "tolerance": {
+          "abs": 0.020001
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_extension_amount"
+          },
+          "value": 1000,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "invoiced_quantity"
+          },
+          "value": 10,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "price_amount"
+          },
+          "value": 200,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "base_quantity"
+          },
+          "value": 2,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line_extension_amount: 1000 = 1000 — holds. Optional terms not reported (counted as 0): LINE_CHARGE, LINE_ALLOWANCE."
+    },
+    {
+      "claim_id": "line[2].LINE_MATH_INT",
+      "kind": "RECOMPUTE",
+      "tier": "DETERMINISTIC",
+      "field": "line_extension_amount",
+      "rule_id": "LINE_MATH_INT",
+      "rule_name": "PEPPOL-EN16931-R120: BT-131 = BT-129 × (BT-146 / BT-149) + Σ BT-141 − Σ BT-136, slack 0.02 [PEPPOL-RULES-PEPPOL, PEPPOL-SCH]",
+      "outcome": "PASS",
+      "asserted": 900,
+      "computation": {
+        "formula": "LINE_EXT = QTY * PRICE / BASE_QTY + LINE_CHARGE? - LINE_ALLOWANCE?",
+        "operands": {
+          "left": 900,
+          "right": 900
+        },
+        "result": 900,
+        "tolerance": {
+          "abs": 0.020001
+        }
+      },
+      "evidence": [
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_extension_amount"
+          },
+          "value": 900,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "invoiced_quantity"
+          },
+          "value": 10,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "price_amount"
+          },
+          "value": 100,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "computed",
+            "path": "default(1)"
+          },
+          "value": 1,
+          "confidence": 100,
+          "role": "OPERAND"
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_charge_amount"
+          },
+          "value": 1,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        },
+        {
+          "locator": {
+            "kind": "field",
+            "source": "invoice",
+            "path": "line_allowance_amount"
+          },
+          "value": 101,
+          "confidence": 100,
+          "role": "OPERAND",
+          "normalizations": [
+            "already_number"
+          ]
+        }
+      ],
+      "locked": false,
+      "explanation": "line_extension_amount: 900 = 900 — holds."
+    }
+  ],
+  "coverage": {
+    "claims_total": 13,
+    "claims_checked": 10,
+    "claims_pass": 10,
+    "claims_fail": 0,
+    "claims_insufficient": 3
+  },
+  "remedies": [
+    {
+      "kind": "missing-operand",
+      "detail": "supply TAX_EXCL (tax_exclusive_amount), BT-109 Invoice total amount without VAT (cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount): unreadable at line 23 of the source text: \"Total without VAT E ten\"; no value was read. Read it off the document and run the check again",
+      "operand": {
+        "source": "e-invoice",
+        "role": "TAX_EXCL",
+        "path": "tax_exclusive_amount"
+      },
+      "clears": [
+        "TAX_EXCL_INT",
+        "TAX_INCL_INT"
+      ],
+      "claims": [
+        "document.TAX_EXCL_INT",
+        "document.TAX_INCL_INT"
+      ]
+    },
+    {
+      "kind": "missing-operand",
+      "detail": "supply ALLOWANCE (allowance_total_amount), BT-107 Sum of allowances on document level (cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount): unreadable at line 21 of the source text: \"Document allowances EUR 20\"; no value was read. Read it off the document and run the check again",
+      "operand": {
+        "source": "e-invoice",
+        "role": "ALLOWANCE",
+        "path": "allowance_total_amount"
+      },
+      "clears": [
+        "TAX_EXCL_INT"
+      ],
+      "claims": [
+        "document.TAX_EXCL_INT"
+      ]
+    },
+    {
+      "kind": "missing-operand",
+      "detail": "supply CHARGE (charge_total_amount), BT-108 Sum of charges on document level (cac:LegalMonetaryTotal/cbc:ChargeTotalAmount): unreadable at line 22 of the source text: \"Document charges EU 20 —E\"; no value was read. Read it off the document and run the check again",
+      "operand": {
+        "source": "e-invoice",
+        "role": "CHARGE",
+        "path": "charge_total_amount"
+      },
+      "clears": [
+        "TAX_EXCL_INT"
+      ],
+      "claims": [
+        "document.TAX_EXCL_INT"
+      ]
+    },
+    {
+      "kind": "missing-operand",
+      "detail": "supply TAX_AMT (tax_amount), BT-110 Invoice total VAT amount (cac:TaxTotal/cbc:TaxAmount): unreadable at line 24 of the source text: \"VAT total i °225.0\"; no value was read. Read it off the document and run the check again",
+      "operand": {
+        "source": "e-invoice",
+        "role": "TAX_AMT",
+        "path": "tax_amount"
+      },
+      "clears": [
+        "TAX_INCL_INT",
+        "BRCO14_VAT_SUM"
+      ],
+      "claims": [
+        "document.TAX_INCL_INT",
+        "document.BRCO14_VAT_SUM"
+      ]
+    }
+  ]
+}

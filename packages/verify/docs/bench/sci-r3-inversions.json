@@ -1,0 +1,99 @@
+{
+  "format": "bench-table/1",
+  "id": "sci-r3-inversions",
+  "title": "Two gravity inversions, sky and sea (findings of the frozen run)",
+  "prereg": {
+    "path": "PREREG.frozen.md",
+    "sha256": "4c493f6cdde006b1fb0dc16527c84ca5709a558444c38c6de930ca6b21b36194",
+    "frozen_sha256": "4c493f6cdde006b1fb0dc16527c84ca5709a558444c38c6de930ca6b21b36194",
+    "amendments": [],
+    "later": [
+      {
+        "sha256": "bf3ea7f2012ba233a21cbccba3ad8655d3abff4ad860f20fc21f14a013665e75",
+        "recorded_in": "PREREG.sha256",
+        "doc": "PREREG.md",
+        "at": "2026-10-04T03:49:17Z",
+        "note": "amendment-1 (heading says 04:05Z; written at 03:49:17Z per file mtime; post-hoc P1-P3 + QA)",
+        "text": "## AMENDMENT 1 (2026-10-04T04:05Z, AFTER the decisive A and B results were seen; everything here is POST-HOC)\n\nReason: the preregistered box rule (most newly measured cells) picked boxes already crossed by many 2019 tracks. In the\ndecisive box no newly measured cell is more than about 20 km from a 2019 sounding, so the far field, where the\nprediction is gravity-only, is unsampled. Also, the B5 0.25-deg checkerboard leaves every TEST cell within about 9 km\nof TRAIN. These additions are labelled POST-HOC in every output and never replace a preregistered number.\n\n- **P1 far-field box.** From the existing scan rows, for each newly measured cell (B1 criteria), compute the along-row\n  distance to the nearest OLD-odd cell in the same sampled row (row-limited, so it is only a screening proxy). Box score =\n  30 x count of newly measured cells whose along-row distance exceeds 50 km. Select the top box between 60S and 60N not\n  among the three already selected and not adjacent to them. Download with a 2.5-deg pad. Run B2 unchanged, with true\n  2-D distances, plus an extra distance bin split of the > 100 km bin into 100-150 and > 150 km (censored at the pad).\n- **P2 hold-out geometry.** Repeat B5 with checkerboard blocks of 0.5 deg and 1.0 deg (same rule otherwise).\n- **P3 interpolation baseline.** For every B5 split, also predict each TEST cell by the nearest TRAIN cell's measured\n  depth, and report its TEST RMS by distance to TRAIN.\n- **QA (not a result).** Check the decoded topo_27.1 geolocation against ERDDAP GEBCO_2020 at sample points in the\n  decisive box, including row/column shifts of -2..+2, to confirm the Mercator decoding is not misregistered.\n",
+        "text_from": "PREREG.md:140-157"
+      },
+      {
+        "sha256": "a931994eb40fb5c410a983ad279bd67aee40bf937c95f4bcc43aff28bb518262",
+        "recorded_in": "PREREG.sha256",
+        "doc": "PREREG.md",
+        "at": "2026-10-04T04:01:28Z",
+        "note": "amendment-1-erratum (text says 04:02Z; corrects the amendment-1 and freeze heading times only; no result changes)",
+        "text": "ERRATUM to AMENDMENT 1 (appended 2026-10-04T04:02Z): the AMENDMENT 1 header time \"04:05Z\" is wrong; it was an estimate.\nThe file's modification time shows AMENDMENT 1 was appended at 2026-10-04T03:49:17Z (23:49:17 local, UTC-4). Likewise the\nheader line \"Frozen 2026-10-04T03:40Z\" is when drafting began; the hash was frozen at 03:42:06Z, as PREREG.sha256 records.\nBoth preregistered first-run outputs (scratch/above-result.run1.json, scratch/below-result.run1.json) record the frozen\nhash 4c493f6c… as the then-current PREREG.md, i.e. they ran before AMENDMENT 1. No result changes.",
+        "text_from": "PREREG.md:158-162"
+      }
+    ],
+    "lab_paths": true,
+    "stamp": {
+      "status": "unstamped (frozen before 2026-10-05)",
+      "proofs": [
+        {
+          "proof": "PREREG.frozen.md.tsr",
+          "covers": "PREREG.frozen.md",
+          "gen_time": "2026-10-05T16:07:26Z",
+          "serial": "00f5d19d2d4523ff9bfee0e4bd5a104e0a",
+          "before_run": false
+        },
+        {
+          "proof": "PREREG.md.tsr",
+          "covers": "PREREG.md",
+          "gen_time": "2026-10-05T16:07:27Z",
+          "serial": "4653003a7fd207fcee0f052d32d15b8e",
+          "before_run": false
+        }
+      ]
+    }
+  },
+  "run": {
+    "id": "SCI-R3 first run under the frozen prereg",
+    "date": "2026-10-04",
+    "engine_version": null,
+    "ruleset": null,
+    "results": {
+      "path": "results/below-result.run1.json",
+      "sha256": "a5c06504f55abfd8e21e146bf851c57a4a4fd67436daa1130e4ec545864d7b85"
+    },
+    "spec_sha256": "c344e2dab82c33771cfeaeff16bfc936eba83f0e23aa039d5d56094ce7664921",
+    "rerun": {
+      "from_tree": "no",
+      "detail": "The run's script is not in this tree. Its inputs are public grids from topex.ucsd.edu (topo_19.1, topo_27.1 and grav_34.1), read by byte range and named by URL and sha256 in results/below-result.run1.json, plus the SPARC files; none is redistributed here."
+    },
+    "blind_basis": "PREREG.sha256 records the frozen prereg's sha256 at 2026-10-04T03:42:06Z, the prereg says no bathymetry or gravity data had been read and the grids were to be downloaded after the freeze, and both first-run outputs name that sha256 as the prereg in force; no download time ships. The list, the prereg and the outputs were written by the authors"
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "nfw-at-bound",
+      "kind": "fit-failure",
+      "description": "the NFW fit for UGC01281 failed by the preregistered rule: its scale radius sits at the 500 kpc bound",
+      "post_hoc": false
+    },
+    {
+      "id": "piso-poor-fit",
+      "kind": "fit-quality",
+      "description": "ESO563-G021's decisive pISO fit converged but is statistically poor (reduced chi-squared 14.5; NFW 30.2)",
+      "post_hoc": false
+    },
+    {
+      "id": "box-rule-sampled",
+      "kind": "method",
+      "description": "the preregistered box rule picked boxes already crossed by later ship tracks, so the far field was unsampled; a far-field box was added post hoc (Amendment 1)",
+      "post_hoc": true
+    },
+    {
+      "id": "truth-edited",
+      "kind": "data-limit",
+      "description": "the later 'truth' grid is cell medians, possibly including gridded compilations, and the archive edits soundings that disagree with gravity; two measured versions of one cell differ by RMS up to 139 m",
+      "post_hoc": false
+    }
+  ],
+  "blind": true,
+  "label": "blind",
+  "findings": [
+    "the prereg has 2 hash(es) recorded after the version this run is held to (4c493f6cdde0…)"
+  ]
+}

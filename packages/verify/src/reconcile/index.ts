@@ -17,8 +17,11 @@
 import { evalExpr, referencedRoles, type Env } from '../declarative/expr.js'
 import { normalizeAmount } from '../binding/forensic-normalizer.js'
 import { hashOf } from '../verdict/canonical.js'
-import { ENGINE_VERSION, SCHEMA_VERSION } from '../version.js'
-import { deriveVerdictId } from '../protocol/verdict-id.js'
+import { attachRemedies } from '../verdict/remedy.js'
+import { attachScope } from '../verdict/scope.js'
+import { SCHEMA_VERSION, engineAtLeast, engineFor } from '../version.js'
+import { formatOfTexts, nearMissPath, strictNumberText, textValues } from '../rulesets/strict.js'
+import { verdictIdentity } from '../protocol/verdict-id.js'
 import type { Verdict, ClaimVerdict, Evidence, Outcome, Coverage, Insufficiency, InsufficiencyReason } from '../verdict/schema.js'
 
 export type Json = Record<string, unknown>
@@ -60,7 +63,11 @@ export interface ReconciliationRuleset {
   tolerance?: { rel: number; absCap: number }
 }
 
-export interface ReconcileOptions { now?: () => Date }
+export interface ReconcileOptions {
+  now?: () => Date
+  /** The engine version to re-perform under (2026-10-03, version.ts engineFor): this build's when absent, or an earlier one it retains. For replay. */
+  engine?: string
+}
 
 function getPath(obj: unknown, path: string): unknown {
   const parts = path.replace(/\[(\d+)\]/g, '.$1').split('.').filter(Boolean)
@@ -72,22 +79,43 @@ function getPath(obj: unknown, path: string): unknown {
   return cur
 }
 
-interface Bound { status: 'ok' | 'doc_missing' | 'field_missing' | 'unparseable'; value?: number; doc: string; path?: string; original?: unknown; norms?: string[] }
+interface Bound { status: 'ok' | 'doc_missing' | 'field_missing' | 'unparseable'; value?: number; doc: string; path?: string; original?: unknown; norms?: string[]; why?: string }
 
-function bindField(documents: Record<string, Json>, spec: ReconField): Bound {
+/**
+ * `strict` (engine 0.6.0, 2026-10-05): a text amount must read as exactly one number
+ * in its document's number format (rulesets/strict.ts: the document's `number_locale`, else what its own text values settle),
+ * else it is unparseable and never falls back to the field's default; a field reported under a near-miss key (spaces or invisible
+ * characters) is unparseable, naming the key, never absent. Below 0.6.0 the lenient normalizer reads as before.
+ */
+function bindField(documents: Record<string, Json>, spec: ReconField, strict = false): Bound {
   const source = documents[spec.doc]
   if (source === undefined) {
     if (spec.default !== undefined) return { status: 'ok', value: spec.default, doc: spec.doc, path: `default(${spec.default})` }
     return { status: 'doc_missing', doc: spec.doc }
   }
   let resolvedButBad = false
+  let why: string | undefined
   for (const p of spec.paths) {
     const raw = getPath(source, p)
     if (raw === undefined || raw === null || raw === '') continue
     const norm = normalizeAmount(raw)
+    if (strict && typeof raw === 'string' && raw.trim() !== '') {
+      const format = formatOfTexts(textValues(source), source.number_locale)
+      const s = strictNumberText(raw, 'amount', format)
+      if (!s.ok) { resolvedButBad = true; why ??= `${p} is ${JSON.stringify(raw)}, which does not read as one number (${s.why}): not read, never guessed`; continue }
+      const value = s.value === null ? null : Math.round(s.value * 100) / 100
+      if (value !== null && !(norm && norm.success !== false && norm.normalized === value)) return { status: 'ok', value, doc: spec.doc, path: p, original: raw, norms: [`strict_reading_${format.tag ?? 'plain'}`] }
+    }
     if (norm && norm.success !== false) return { status: 'ok', value: norm.normalized, doc: spec.doc, path: p, original: raw, norms: norm.transformations }
     resolvedButBad = true
   }
+  if (strict && !resolvedButBad) {
+    for (const p of spec.paths) {
+      const k = nearMissPath(source, p)
+      if (k !== undefined) { resolvedButBad = true; why = `${p} was reported under the key path ${JSON.stringify(k)}, which differs from it only by spaces or invisible characters: not read`; break }
+    }
+  }
+  if (strict && resolvedButBad) return { status: 'unparseable', doc: spec.doc, ...(why !== undefined ? { why } : {}) }
   if (spec.default !== undefined) return { status: 'ok', value: spec.default, doc: spec.doc, path: `default(${spec.default})` }
   return { status: resolvedButBad ? 'unparseable' : 'field_missing', doc: spec.doc }
 }
@@ -97,10 +125,11 @@ const OP_LABEL: Record<ReconCheck['op'], string> = { '=': '=', '<=': '≤', '>='
 export function reconcile(documents: Record<string, Json>, ruleset: ReconciliationRuleset, options: ReconcileOptions = {}): Verdict {
   const policy = ruleset.tolerance ?? { rel: 0.0003, absCap: 0 }
   const claims: ClaimVerdict[] = []
+  const strict = engineAtLeast(engineFor(options.engine), '0.6.0') // engine 0.6.0: bindField reads strictly
 
   for (const chk of ruleset.checks) {
     const roles = [...new Set([...referencedRoles(chk.left), ...referencedRoles(chk.right)])].filter(r => r in ruleset.fields)
-    const bounds = new Map(roles.map(r => [r, bindField(documents, ruleset.fields[r]!)]))
+    const bounds = new Map(roles.map(r => [r, bindField(documents, ruleset.fields[r]!, strict)]))
     const base = { claim_id: `recon.${chk.code}`, kind: 'CROSS_REFERENCE' as const, tier: 'DETERMINISTIC' as const, field: chk.field ?? chk.code.toLowerCase(), rule_id: chk.code, rule_name: chk.name ?? chk.code }
 
     // Insufficiency: a whole document absent = REFERENCE_NOT_PROVIDED; a field absent in a provided doc = FIELD_MISSING; unparseable = UNPARSEABLE.
@@ -111,7 +140,7 @@ export function reconcile(documents: Record<string, Json>, ruleset: Reconciliati
       }
       for (const r of roles) {
         const b = bounds.get(r)!
-        if (b.status === 'unparseable') return { reason: 'UNPARSEABLE', detail: `${r} in "${b.doc}" is present but not a number`, missing: [r] }
+        if (b.status === 'unparseable') return { reason: 'UNPARSEABLE', detail: `${r} in "${b.doc}" is present but not a number${b.why !== undefined ? `: ${b.why}` : ''}`, missing: [r] }
         if (b.status === 'field_missing') return { reason: 'FIELD_MISSING', detail: `${r} not found in document "${b.doc}"`, missing: [r] }
       }
       return null
@@ -161,15 +190,20 @@ export function reconcile(documents: Record<string, Json>, ruleset: Reconciliati
     claims_insufficient: claims.filter(c => c.outcome === 'INSUFFICIENT_DATA').length,
   }
   const input_hash = hashOf({ documents, ruleset })
-  const verdict_id = deriveVerdictId(input_hash, ruleset, ENGINE_VERSION)
+  const engine_version = engineFor(options.engine)
+  // Engine 0.2.0: the id also binds the remedy table; a reconciliation ruleset declares none, so it is the empty table.
+  const { verdict_id, remedy_table_hash } = verdictIdentity(input_hash, ruleset, engine_version, {})
   const issued_at = (options.now ?? (() => new Date()))().toISOString()
 
-  return {
-    schema_version: SCHEMA_VERSION, verdict_id, issued_at, engine_version: ENGINE_VERSION,
+  const verdict: Verdict = {
+    schema_version: SCHEMA_VERSION, verdict_id, issued_at, engine_version,
     ruleset: { id: ruleset.id, version: ruleset.version, domain: ruleset.domain ?? ruleset.id },
-    input_hash, replayable: true,
+    input_hash, ...(remedy_table_hash !== undefined ? { remedy_table_hash } : {}), replayable: true,
     document: { extraction_hash: hashOf(documents), line_items: 0 },
     references: { contract: false, evidence: Object.keys(documents).length, history: 0, source: false },
     outcome, aggregation: 'ANY_FAIL_FAILS', claims, coverage,
   }
+  // Typed remedies (verdict/remedy.ts): a reconciliation ruleset declares none, so each can't-tell names what its
+  // insufficiency implies and a FAIL says `none` (the finding stands). Outside the hashed core.
+  return attachScope(attachRemedies(verdict, { document: 'documents' }))
 }

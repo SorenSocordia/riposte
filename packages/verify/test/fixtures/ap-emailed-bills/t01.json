@@ -1,0 +1,655 @@
+{
+  "verdict": {
+    "schema_version": "v0",
+    "verdict_id": "b100ce43f344d08f551fc8f707661d68",
+    "issued_at": "2026-10-12T22:13:23.775Z",
+    "engine_version": "0.6.0",
+    "ruleset": {
+      "id": "ap-threeway",
+      "version": "0.2.0",
+      "domain": "accounts-payable"
+    },
+    "input_hash": "b97d260edf5a4188df018b150b89aa179dd50b363d63c8641ed34ad076fa6df2",
+    "remedy_table_hash": "dfeada8c6ecb422a8a6448de85725e2161d05edb078ccb05b7537fe33b893d99",
+    "replayable": true,
+    "document": {
+      "extraction_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+      "line_items": 2
+    },
+    "references": {
+      "contract": true,
+      "evidence": 1,
+      "history": 0,
+      "source": true
+    },
+    "outcome": "PASS",
+    "gate_status": "PASS",
+    "aggregation": "ANY_FAIL_FAILS",
+    "claims": [
+      {
+        "claim_id": "ap.duplicate",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "invoice_number",
+        "rule_id": "AP_DUPLICATE",
+        "rule_name": "Invoice not already booked",
+        "outcome": "PASS",
+        "asserted": "GCS-20417",
+        "computation": {
+          "formula": "invoice_number not in history (same vendor; vendors compared by tax id, vendor id, then normalized name)",
+          "operands": {
+            "invoice_number": "GCS-20417",
+            "history_size": 0,
+            "same_number_other_vendor": 0
+          },
+          "result": null
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 86,
+              "end": 95,
+              "line": 3
+            },
+            "value": "GCS-20417",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "field",
+              "source": "history",
+              "path": "history"
+            },
+            "value": 0,
+            "confidence": 100,
+            "role": "CONTEXT"
+          }
+        ],
+        "locked": true,
+        "explanation": "Invoice GCS-20417 does not appear among 0 booked invoice(s)."
+      },
+      {
+        "claim_id": "ap.po_number",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "po_number",
+        "asserted": "PO-7731",
+        "rule_id": "AP_PO_MATCH",
+        "rule_name": "Invoice references the purchase order",
+        "computation": {
+          "formula": "invoice.po_number = po.number",
+          "operands": {
+            "invoice_po": "PO-7731",
+            "po": "PO-7731"
+          },
+          "result": "PO-7731"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 276,
+              "end": 283,
+              "line": 13
+            },
+            "value": "PO-7731",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bd51886ca33ed334e202c2c678f4f3b42cd986e15b2c3d132c9c545c41a0fb0a",
+              "start": 21,
+              "end": 28,
+              "line": 2
+            },
+            "value": "PO-7731",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "Invoice cites PO-7731, which is the purchase order."
+      },
+      {
+        "claim_id": "ap.vendor",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "vendor",
+        "rule_id": "AP_VENDOR_MATCH",
+        "rule_name": "Bill is from the purchase order's vendor",
+        "outcome": "PASS",
+        "asserted": "billing@gulfcoastsupply.com",
+        "computation": {
+          "formula": "the invoice names purchase_order.vendor (by name, or by a sender's address built from it)",
+          "operands": {
+            "po_vendor": "Gulf Coast Supply",
+            "read_by": "sender address",
+            "invoice_reads": "billing@gulfcoastsupply.com"
+          },
+          "result": "Gulf Coast Supply"
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 154,
+              "end": 187,
+              "line": 8
+            },
+            "value": "billing@gulfcoastsupply.com",
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bd51886ca33ed334e202c2c678f4f3b42cd986e15b2c3d132c9c545c41a0fb0a",
+              "start": 21,
+              "end": 79,
+              "line": 2
+            },
+            "value": "Gulf Coast Supply",
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "The invoice's sender, billing@gulfcoastsupply.com, writes from a domain built from the purchase order's vendor name, Gulf Coast Supply (invoice line 8)."
+      },
+      {
+        "claim_id": "ap.line[1].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].quantity",
+        "asserted": 40,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 40,
+            "received": 40
+          },
+          "result": 40
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 40,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bac2e073a56e3aa1d31809961f9587cd3d333bcbc98fc3b3462471651d420afe",
+              "start": 32,
+              "end": 74,
+              "line": 2
+            },
+            "value": 40,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "3/4 in EMT conduit, 10 ft: billed 40, received 40. (Invoice line \"3/4 EMT CONDUIT 10FT\".)"
+      },
+      {
+        "claim_id": "ap.line[1].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].unit_price",
+        "asserted": 8.12,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 8.12,
+            "po_unit": 8.12
+          },
+          "result": 8.2824,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 8.12,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bd51886ca33ed334e202c2c678f4f3b42cd986e15b2c3d132c9c545c41a0fb0a",
+              "start": 80,
+              "end": 133,
+              "line": 3
+            },
+            "value": 8.12,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "3/4 in EMT conduit, 10 ft: invoiced 8.12, PO 8.12 (max 8.2824 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[1].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[1].amount",
+        "asserted": 324.8,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 40,
+            "unit_price": 8.12,
+            "exact_product": "324.8",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 324.8,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 324.8,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 40,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 8.12,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bd51886ca33ed334e202c2c678f4f3b42cd986e15b2c3d132c9c545c41a0fb0a",
+              "start": 80,
+              "end": 133,
+              "line": 3
+            },
+            "value": "USD",
+            "confidence": 100,
+            "role": "CONTEXT"
+          }
+        ],
+        "locked": true,
+        "explanation": "3/4 in EMT conduit, 10 ft: 40 × 8.12 = 324.8; the line says 324.8. (Invoice line \"3/4 EMT CONDUIT 10FT\".)"
+      },
+      {
+        "claim_id": "ap.line[2].quantity",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].quantity",
+        "asserted": 12,
+        "rule_id": "AP_QTY_RECEIVED",
+        "rule_name": "Billed units were received",
+        "computation": {
+          "formula": "invoice.qty ≤ receipt.received",
+          "operands": {
+            "invoiced": 12,
+            "received": 12
+          },
+          "result": 12
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 12,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bac2e073a56e3aa1d31809961f9587cd3d333bcbc98fc3b3462471651d420afe",
+              "start": 75,
+              "end": 107,
+              "line": 3
+            },
+            "value": 12,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "200A panelboard: billed 12, received 12. (Invoice line \"200A PANELBOARD\".)"
+      },
+      {
+        "claim_id": "ap.line[2].price",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].unit_price",
+        "asserted": 410,
+        "rule_id": "AP_PRICE_PO",
+        "rule_name": "Unit price within PO tolerance",
+        "computation": {
+          "formula": "invoice.unit ≤ po.unit × 1.02",
+          "operands": {
+            "invoiced": 410,
+            "po_unit": 410
+          },
+          "result": 418.2,
+          "tolerance": {
+            "rel": 0.02
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 410,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bd51886ca33ed334e202c2c678f4f3b42cd986e15b2c3d132c9c545c41a0fb0a",
+              "start": 134,
+              "end": 179,
+              "line": 4
+            },
+            "value": 410,
+            "confidence": 100,
+            "role": "REFERENCE"
+          }
+        ],
+        "locked": true,
+        "explanation": "200A panelboard: invoiced 410, PO 410 (max 418.2000 at the 2% price tolerance)."
+      },
+      {
+        "claim_id": "ap.line[2].amount",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "line[2].amount",
+        "asserted": 4920,
+        "rule_id": "AP_LINE_MATH",
+        "rule_name": "Line amount equals quantity × unit price",
+        "computation": {
+          "formula": "|line.amount − quantity × unit_price| ≤ one minor unit",
+          "operands": {
+            "quantity": 12,
+            "unit_price": 410,
+            "exact_product": "4920",
+            "currency": "USD",
+            "minor_unit_digits": 2
+          },
+          "result": 4920,
+          "tolerance": {
+            "abs": 0.01
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 4920,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 12,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 410,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "bd51886ca33ed334e202c2c678f4f3b42cd986e15b2c3d132c9c545c41a0fb0a",
+              "start": 134,
+              "end": 179,
+              "line": 4
+            },
+            "value": "USD",
+            "confidence": 100,
+            "role": "CONTEXT"
+          }
+        ],
+        "locked": true,
+        "explanation": "200A panelboard: 12 × 410 = 4920; the line says 4920. (Invoice line \"200A PANELBOARD\".)"
+      },
+      {
+        "claim_id": "ap.total",
+        "kind": "RECOMPUTE",
+        "tier": "DETERMINISTIC",
+        "outcome": "PASS",
+        "field": "total",
+        "asserted": 5244.8,
+        "rule_id": "AP_TOTAL_SUM",
+        "rule_name": "Stated total equals the lines (+ allowed freight)",
+        "computation": {
+          "formula": "total = Σ line.amount + (freight if PO allows)",
+          "operands": {
+            "lines": 5244.8,
+            "freight": 0,
+            "freight_allowed": false
+          },
+          "result": 5244.8,
+          "tolerance": {
+            "abs": 0.005
+          }
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 411,
+              "end": 434,
+              "line": 18
+            },
+            "value": 5244.8,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 324.8,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 4920,
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "The lines add to 5,244.80; the bill says 5,244.80."
+      },
+      {
+        "claim_id": "ap.po_balance",
+        "kind": "CROSS_REFERENCE",
+        "tier": "DETERMINISTIC",
+        "field": "po_balance",
+        "rule_id": "AP_PO_BALANCE",
+        "rule_name": "Billed to date within the purchase order",
+        "outcome": "PASS",
+        "asserted": 5244.8,
+        "computation": {
+          "formula": "Σ booked on this PO (same vendor) + Σ this bill's line amounts ≤ Σ PO line quantity × unit price",
+          "operands": {
+            "po": "PO-7731",
+            "booked": 0,
+            "this_bill": 5244.8,
+            "booked_invoices": 0,
+            "history_size": 0
+          },
+          "result": null
+        },
+        "evidence": [
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 307,
+              "end": 358,
+              "line": 15
+            },
+            "value": 324.8,
+            "confidence": 100,
+            "role": "OPERAND"
+          },
+          {
+            "locator": {
+              "kind": "span",
+              "source_hash": "1826abe46d4da3d71a59ef89f46b862299edf671f27550f6e3326e6874914815",
+              "start": 359,
+              "end": 409,
+              "line": 16
+            },
+            "value": 4920,
+            "confidence": 100,
+            "role": "OPERAND"
+          }
+        ],
+        "locked": true,
+        "explanation": "The payment history is empty, so nothing is booked on PO-7731 to net against this bill."
+      }
+    ],
+    "coverage": {
+      "claims_total": 11,
+      "claims_checked": 11,
+      "claims_pass": 11,
+      "claims_fail": 0,
+      "claims_insufficient": 0
+    },
+    "scope": {
+      "ruleset": "ap-threeway@0.2.0",
+      "engine_version": "0.6.0",
+      "evidence_floor": "unstated",
+      "statements": [
+        "advisories are counsel, not verdicts",
+        "this is a check, not a decision"
+      ]
+    }
+  },
+  "decision": "approve",
+  "payable": true,
+  "grounding": {
+    "invoice_number": "GCS-20417",
+    "po_number": "PO-7731",
+    "item": null,
+    "invoiced": null,
+    "expected": null
+  },
+  "reasons": [
+    "all checks passed; the payment history supplied is empty, so the duplicate check had no booked invoice to compare"
+  ],
+  "not_checked": [
+    "vendor identity: matched by the sender's address, billing@gulfcoastsupply.com (invoice line 8), whose domain is the vendor's name run together; no domain for the vendor is on file (none on the purchase order, no sender on a booked bill), so it was compared with names built from the vendor's name only, and that this is the vendor's own domain, that the sender owns it, and that the vendor record is genuine were not checked",
+    "payment redirection: none of the 25 phrasings listed in docs/AP-INPUT.md (bank, payment or remittance details changed, a new account, an IBAN, a routing or account number, SWIFT, wire or ACH, Zelle, Venmo, PayPal, Cash App, a pay-by-link or a web address to pay at, an email address or phone number named as the payee, and the rest of that list) matched any line of the bill; a wording not on that list is not caught; the vendor's bank details are not part of the inputs, so where the payment goes was not checked against the vendor master",
+    "tax: no amount on the bill was read as tax (every amount on it was read as a line, the total or freight); tax included in a price, or a tax line with no amount, is not read, and the text path reads no tax terms on the purchase order, so whether tax was due was not checked"
+  ]
+}

@@ -1,0 +1,17 @@
+# first hash (superseded before any engine call: CRLF/LF mismatch, see PREREG.md)
+7d3b9d47cba536ef876deed6ef7aaf4199f7c47484d45cdde9072ca06274419a *PREREG.md
+4aa34a1d40f6906d9e932d37b34bae20637111e6ec41374762466f4d60a19160 *items/MANIFEST.json
+28d40673a2369ae2764defde69f11b1575f554bc1e19bba01eabb4a01d8a1c20 *harness/run.mjs
+689419186555b66541bcb885f747dd8ce38ce80dffa94ce5d6ab25c5b02e0e10 *harness/build_manifest.py
+73832a19e5b258b587265d184b5d8dd4f1531e0d176094f52a2faa904800d90b *harness/controls_extract.py
+3e9f76b82395da8cd9cbdeb1b7a7ba1f28379da1615328364d401024c5c3ac43 *harness/timing-probe.mjs
+hashed 2026-10-03T10:49:49Z
+# second hash (the run's)
+4dbc3039e6f0279a7533153c955b2eb0299a5ed7ac832f1e3bb5b5434945e2af *PREREG.md
+f23c549714d166e05a6cd14c62b4a180aaf992d75142aaf62719da7d61492938 *items/MANIFEST.json
+28d40673a2369ae2764defde69f11b1575f554bc1e19bba01eabb4a01d8a1c20 *harness/run.mjs
+7bd012f9f2ecab4142df502153b6786aafa2575de0195994d8d2ce27f95c0a1d *harness/build_manifest.py
+73832a19e5b258b587265d184b5d8dd4f1531e0d176094f52a2faa904800d90b *harness/controls_extract.py
+3e9f76b82395da8cd9cbdeb1b7a7ba1f28379da1615328364d401024c5c3ac43 *harness/timing-probe.mjs
+3cc07eb0186bdb06596196fbb8e2c9f146b6f107a705d89abeaff826f7aba719 *harness/acquire.py
+hashed 2026-10-03T10:50:31Z

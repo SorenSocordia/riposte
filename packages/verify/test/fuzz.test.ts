@@ -1,5 +1,5 @@
 /**
- * Seeded generative fuzzing — pre-registered claim W1 ("zero hallucinated verdicts by construction") as a TEST,
+ * Seeded generative fuzzing — the pre-registered claim ("zero hallucinated verdicts by construction") as a TEST,
  * not a slogan. Hundreds of random, adversarial extractions: mixed number formats (US / EU / parenthesized /
  * currency-prefixed), missing and duplicated fields, unknown key names that only fuzzy-match, `line_items`
  * that isn't an array, junk types, prior-id fields of the wrong shape.
@@ -8,7 +8,7 @@
  *   - never throw
  *   - satisfy every schema invariant (three outcomes; PASS/FAIL ⇒ evidence, computation, all operands ≥ 90, no
  *     insufficiency; INSUFFICIENT_DATA ⇒ explained; unique claim ids; coverage sums; aggregation rule)
- *   - replay byte-identically (W2, under fuzz)
+ *   - replay byte-identically (under fuzz)
  *
  * The PRNG is seeded (mulberry32); a failure names its seed so it can be reproduced exactly.
  */

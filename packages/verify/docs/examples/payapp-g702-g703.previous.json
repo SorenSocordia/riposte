@@ -1,0 +1,28 @@
+{
+  "project": "Riverside Clinic HVAC renovation (synthetic example)",
+  "contractor": "Example Mechanical Services",
+  "owner": "Example Health Properties",
+  "architect": "Example Design Group",
+  "application_number": 2,
+  "period_to": "2026-08-31",
+  "currency": "USD",
+  "original_contract_sum": 412000,
+  "net_change_orders": 18500,
+  "contract_sum_to_date": 430500,
+  "schedule_of_values": [
+    { "item_no": "1", "description": "Mobilization and submittals", "scheduled_value": 12000, "previous": 12000, "this_period": 0, "materials_stored": 0, "completed_to_date": 12000, "percent_complete": 100, "balance_to_finish": 0, "retainage": 1200 },
+    { "item_no": "2", "description": "Ductwork, supply and return", "scheduled_value": 128000, "previous": 0, "this_period": 64000, "materials_stored": 0, "completed_to_date": 64000, "percent_complete": 50, "balance_to_finish": 64000, "retainage": 6400 },
+    { "item_no": "3", "description": "Rooftop units (2) and curbs", "scheduled_value": 96000, "previous": 0, "this_period": 24000, "materials_stored": 0, "completed_to_date": 24000, "percent_complete": 25, "balance_to_finish": 72000, "retainage": 2400 },
+    { "item_no": "4", "description": "Hydronic piping and insulation", "scheduled_value": 84500, "previous": 0, "this_period": 30000, "materials_stored": 0, "completed_to_date": 30000, "percent_complete": 35.5, "balance_to_finish": 54500, "retainage": 3000 },
+    { "item_no": "5", "description": "Controls and building automation integration", "scheduled_value": 73500, "previous": 0, "this_period": 0, "materials_stored": 0, "completed_to_date": 0, "percent_complete": 0, "balance_to_finish": 73500, "retainage": 0 },
+    { "item_no": "6", "description": "Testing, adjusting and balancing", "scheduled_value": 18000, "previous": 0, "this_period": 0, "materials_stored": 0, "completed_to_date": 0, "percent_complete": 0, "balance_to_finish": 18000, "retainage": 0 },
+    { "item_no": "7", "description": "Change order 01: added exhaust fans", "scheduled_value": 18500, "previous": 0, "this_period": 0, "materials_stored": 0, "completed_to_date": 0, "percent_complete": 0, "balance_to_finish": 18500, "retainage": 0 }
+  ],
+  "total_completed_and_stored": 130000,
+  "retainage_rate": "10%",
+  "total_retainage": 13000,
+  "total_earned_less_retainage": 117000,
+  "less_previous_certificates": 10800,
+  "current_payment_due": 106200,
+  "balance_to_finish_including_retainage": 313500
+}

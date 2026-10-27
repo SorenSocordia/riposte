@@ -1,0 +1,23 @@
+{
+  "built_by": "scripts/build-plugin.mjs",
+  "engine_version": "0.7.2",
+  "checker_version": "0.0.1",
+  "esbuild": "0.27.2",
+  "sources": {
+    "file": "bin/BUILD-SOURCES.txt",
+    "files": 236,
+    "sha256": "07ec35d0d02cbac6606784ea8b0433f46f89751b0b6fda265486ba43cf2b08fd"
+  },
+  "files": {
+    "bin/riposte-action-hook.mjs": "893ed8cfedaf4309c94207a223524450f2f72e1adb9cb62af729fd653c0159e0",
+    "bin/riposte-action.mjs": "caeebd6520716ae41e7b6fa1d9f744f430da0896cc2154826670cdfcef8dc109",
+    "bin/riposte-attest.mjs": "b533a35a115936523da88bbc5b548ec9c1cd8eaf9cb93f7c571e13b11fc70b4f",
+    "bin/riposte-claims.mjs": "c39ffb026dd01b6f9a2bfe5115c813228ecc560e4d6b600620f69c5e5ad00654",
+    "bin/riposte-ledger.mjs": "eb53599d8b2456c2d9d21b9f9e6447a7bebb4ec90be28795a51d3226c06610eb",
+    "bin/riposte-mcp.mjs": "8c3aab67b86ab3744c082c8ac8deb41a66e8ad21f01bb8cd8560294b6fe85fd0",
+    "bin/riposte-replay.mjs": "61651b87b6dc5ea78bad8ec578b4cf7cdd49e91316832f36b419085cf353c5b1",
+    "hosts/codex/riposte-codex.mjs": "8f1a024883b55c6467e38c8272dad77f3db0f9735a343f7b479aaa886c96cf6b",
+    "hosts/cursor/riposte-cursor.mjs": "bb88bbcbb628ee3bc7325d01963265ea1495832963aac16198bf92aae181c02a",
+    "hosts/opencode/riposte.js": "a2cb9d87fce9c10d7945102ef1279efcb85823dcdfc2ab302f8e7eabd2a88462"
+  }
+}

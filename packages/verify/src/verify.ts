@@ -22,11 +22,16 @@ import { getValidationGavel, setGavelLogger } from './kernel/validation-gavel.js
 import type { BindingContext, ComputationalAxiom, UniversalRole, ValidationResult } from './kernel/types.js'
 import { resolveRuleset, INVOICE_RULESET } from './rulesets/index.js'
 import type { Ruleset } from './rulesets/types.js'
-import { verifyDeclarative } from './declarative/evaluate.js'
-import { isDeclarativeRuleset, type DeclarativeRuleset } from './declarative/types.js'
+import { verifyDeclarative, type ArchiveFile } from './declarative/evaluate.js'
+import { isDeclarativeRuleset, type DeclarativeRuleset, type SuppliedChoice } from './declarative/types.js'
 import { hashOf, sha256 } from './verdict/canonical.js'
-import { assertExtraction } from './protocol/input.js'
-import { applyTolerancePolicy, toleranceIdentity, type TolerancePolicy } from './tolerance.js'
+import { attachRemedies, type RemedyContext, type RemedyTable } from './verdict/remedy.js'
+import { attachScope } from './verdict/scope.js'
+import { assertExtraction, InputRefused } from './protocol/input.js'
+import { verifyInputHash } from './protocol/inputs.js'
+import { verdictIdentity } from './protocol/verdict-id.js'
+import { nonFinitePath, nonFiniteRefusal, unsafeMagnitudePath, unsafeMagnitudeRefusal, valueAtPath } from './protocol/hash-input.js'
+import { applyTolerancePolicy, toleranceProblem, type TolerancePolicy } from './tolerance.js'
 import { prepareSource, verifyQuote, verifyValueInText, type QuoteAssertion, type ValueAssertion } from './textmatch/index.js'
 import {
   abstainOnGuessedOperands,
@@ -35,7 +40,8 @@ import {
   type ReferenceFlags,
 } from './verdict/from-report.js'
 import type { ClaimVerdict, Coverage, Evidence, Outcome, Verdict } from './verdict/schema.js'
-import { ENGINE_VERSION, SCHEMA_VERSION } from './version.js'
+import { SCHEMA_VERSION, engineFor, engineAtLeast } from './version.js'
+import { cantTellInWords } from './verdict/cant-tell.js'
 
 export type Json = Record<string, unknown>
 
@@ -65,6 +71,18 @@ export interface VerifyOptions {
   tolerance?: TolerancePolicy
   /** Injectable clock — the ONLY source of non-determinism, and it touches only `issued_at`. */
   now?: () => Date
+  /**
+   * The engine version to re-perform under (2026-10-03, version.ts engineFor): this build's when absent, or an earlier one it
+   * retains ('0.0.1'). For replay: a verdict is re-performed under the engine it names, and the verdict made names that engine.
+   */
+  engine?: string
+  /**
+   * Engine 0.5.0 (2026-10-04), declarative rulesets only: values the judge supplies for the ruleset's choice slots
+   * (slot id → { value, source }), and archive files as bytes (base64) for archive provenance whose file is not text. Both are part
+   * of the input the verdict is bound to. A built-in ruleset declares no choice slots and reads neither.
+   */
+  supplied_choices?: Record<string, SuppliedChoice>
+  archive_files?: ArchiveFile[]
 }
 
 const initialized = new Set<string>()
@@ -81,14 +99,24 @@ function init(rs: Ruleset): void {
 const isObj = (x: unknown): x is Json => x !== null && typeof x === 'object' && !Array.isArray(x)
 
 export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
-  // Refuse what no verdict can be bound to (null, undefined, a function/symbol/bigint) rather than crash or collide (N7).
+  // Refuse what no verdict can be bound to (null, undefined, a function/symbol/bigint) rather than crash or collide.
   assertExtraction(extraction)
+  // The hash contract at the library's own door (2026-10-05): what the CLI refuses when it reads a file is refused
+  // here too, so a library, HTTP or MCP caller cannot issue two verdicts under one id (assertHashableInputs, below).
+  assertHashableInputs(extraction, options)
+  const engine_version = engineFor(options.engine)
   // A declarative (JSON) ruleset takes a separate, enum-free evaluation path — same proof object out.
   if (isDeclarativeRuleset(options.ruleset)) {
     return verifyDeclarative(extraction, options.ruleset, {
       ...(options.now ? { now: options.now } : {}),
       ...(options.producer !== undefined ? { producer: options.producer } : {}),
       ...(options.tolerance ? { tolerance: options.tolerance } : {}),
+      // 2026-10-03: the source-text axis runs for a declarative ruleset too (its `quotes`, and the caller's quotes/values).
+      ...(options.source !== undefined ? { source: options.source } : {}),
+      // Engine 0.5.0: the judge's choice values and archive bytes, when given
+      ...(options.supplied_choices !== undefined ? { supplied_choices: options.supplied_choices } : {}),
+      ...(options.archive_files !== undefined ? { archive_files: options.archive_files } : {}),
+      engine: engine_version,
     })
   }
   const rs = resolveRuleset(options.ruleset as 'invoice' | 'pay-app' | Ruleset | undefined)
@@ -110,14 +138,9 @@ export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
   const sourceGiven = typeof options.source?.text === 'string' && options.source.text.length > 0
 
   // Hash what the caller actually sent (junk included) — two different inputs must never share a hash.
-  const input_hash = hashOf({
-    extraction,
-    references: { contract: options.references?.contract ?? null, evidence: rawEvidence ?? [], history: rawHistory ?? [] },
-    source: options.source ?? null,
-    // A tolerance override can change the outcome, so the input it is bound to includes it; absent, the ruleset's own policy
-    // is named by its version (D-TOL-ID).
-    ...(options.tolerance ? { tolerance: toleranceIdentity(options.tolerance) } : {}),
-  })
+  // A tolerance override can change the outcome, so the input it is bound to includes it; absent, the ruleset's own policy
+  // is named by its version (D-TOL-ID). One builder (protocol/inputs.ts, 2026-10-03) makes this hash and a replay bundle's inputs.
+  const input_hash = verifyInputHash(extraction, options)
   const extraction_hash = hashOf(extraction)
 
   const axiomsFor = (codes: readonly string[]): ComputationalAxiom[] =>
@@ -135,6 +158,8 @@ export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
   // Computed roles (with provenance) and the reasons for anything that could not be computed.
   const { docAbsence, lineAbsence, attach, claims: rulesetClaims } = rs.compute({
     extraction, references: { contract: contractGiven ? contract : null, evidence, history }, docCtx, lineCtxs,
+    // Engine 0.6.0 (2026-10-05): the built-in rulesets read strictly from 0.6.0 (rulesets/strict.ts)
+    engine: engine_version,
   })
 
   // ------------------------------------------------------------------ judge
@@ -153,7 +178,7 @@ export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
   if (rulesetClaims) claims.push(...rulesetClaims)
 
   // The operands behind computed roles belong on the receipt too, each with its own provenance.
-  // Indexed once: a find() per attachment was O(claims × attachments), ~11% of a 300-line verify (perf finding F3b).
+  // Indexed once: a find() per attachment was O(claims × attachments), ~11% of a 300-line verify (a perf finding, 2026-09-28).
   const claimById = indexClaims(claims)
   for (const [claimId, extra] of Object.entries(attach)) attachEvidence(claimById.get(claimId), extra)
 
@@ -166,6 +191,10 @@ export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
   abstainOnGuessedOperands(claims)
   // Honesty rule 4 — no verdict against a reference that offers several candidates none of which matched this line.
   abstainOnAmbiguousReference(rs, claims, lineCtxs, contract, contractGiven)
+  // A ruleset may reword a still-FAILed claim in its own words (pay-app, engine 0.6.0); never an outcome, a value or an id.
+  rs.finish?.(claims, { engine: engine_version })
+  // Engine 0.6.0: a check that could not run never reads "… VIOLATED"; it says can't tell, in words (verdict/cant-tell.ts)
+  if (engineAtLeast(engine_version, '0.6.0')) cantTellInWords(claims)
 
   // Source-text axis — independent of the numeric gavel; span evidence at confidence 100 (verbatim or nothing).
   if (sourceGiven) {
@@ -184,16 +213,20 @@ export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
     : coverage.claims_checked === 0 ? 'INSUFFICIENT_DATA'
     : 'PASS'
 
-  const verdict_id = sha256(`${input_hash}:${rs.id}@${rs.version}:${ENGINE_VERSION}`).slice(0, 32)
+  // Engine 0.2.0: the id also binds the ruleset's remedy table (protocol/verdict-id.ts verdictIdentity).
+  // 2026-10-05: a ruleset may answer each engine from its own table (Ruleset.remedyByCodeFor); the id binds the one used.
+  const remedyTable = rs.remedyByCodeFor?.(engine_version) ?? rs.remedyByCode ?? {}
+  const { verdict_id, remedy_table_hash } = verdictIdentity(input_hash, rs, engine_version, remedyTable)
   const issued_at = (options.now ?? (() => new Date()))().toISOString()
 
-  return {
+  const verdict: Verdict = {
     schema_version: SCHEMA_VERSION,
     verdict_id,
     issued_at,
-    engine_version: ENGINE_VERSION,
+    engine_version,
     ruleset: { id: rs.id, version: rs.version, domain: rs.domain },
     input_hash,
+    ...(remedy_table_hash !== undefined ? { remedy_table_hash } : {}),
     replayable: true,
     document: {
       extraction_hash,
@@ -205,6 +238,67 @@ export function verify(extraction: Json, options: VerifyOptions = {}): Verdict {
     aggregation: 'ANY_FAIL_FAILS',
     claims,
     coverage,
+  }
+  // Typed remedies for every non-PASS claim (verdict/remedy.ts), declared by the ruleset next to its laws. Outside the
+  // hashed core: verdict_id above derives exactly as before.
+  return attachScope(attachRemedies(verdict, remedyContextFor(rs, remedyTable)))
+}
+
+/**
+ * Refuse, before anything is hashed, an input verify() could not bind faithfully (2026-10-05; a cold
+ * reader's Collisions A and B in cold review round 2, both reached through the library and HTTP, never through the CLI):
+ *   - a tolerance override whose shape the engine and its identity would read differently (tolerance.ts toleranceProblem: a
+ *     string `roundingCap.perLine` hashed like the array of its characters, and one verdict_id named a PASS and a FAIL);
+ *   - a non-finite number (Infinity, -Infinity, NaN) anywhere in what input_hash covers: the extraction, the references, the
+ *     source, the tolerance, the judge's choice values and the archive files. canonicalize writes each as null, so `total: null`
+ *     (PASS) and `total: Infinity` (FAIL) shared one input_hash and one verdict_id. JSON cannot carry these values (the CLI,
+ *     HTTP and MCP readers refuse `1e999`), so only an in-memory caller ever passed one.
+ * Both throw InputRefused (the CLI's exit 3, HTTP's 400). Every engine version: no verdict that a replay can confirm was ever
+ * issued on such an input, because the hash could not tell it from its null twin. Every input accepted before is unchanged.
+ */
+export function assertHashableInputs(extraction: unknown, options: VerifyOptions = {}): void {
+  if (options.tolerance !== undefined) {
+    const problem = toleranceProblem(options.tolerance)
+    if (problem) throw new InputRefused('tolerance', `verify: ${problem}`)
+  }
+  const parts: [string, string, unknown][] = [
+    ['extraction', 'the extraction', extraction],
+    ['references', 'references.contract', options.references?.contract],
+    ['references', 'references.evidence', options.references?.evidence],
+    ['references', 'references.history', options.references?.history],
+    ['source', 'source', options.source],
+    ['tolerance', 'tolerance', options.tolerance],
+    ['supplied_choices', 'supplied_choices', options.supplied_choices],
+    ['archive_files', 'archive_files', options.archive_files],
+  ]
+  for (const [input, name, value] of parts) {
+    if (value === undefined) continue
+    const at = nonFinitePath(value)
+    if (at !== undefined) throw new InputRefused(input, `verify: ${nonFiniteRefusal(name, at).message}`)
+  }
+  // Engine 0.6.0 (2026-10-05): a number past 2^53 − 1 in magnitude may already have been rounded when it was
+  // parsed (9007199254740993 reads as 9007199254740992), and the library has no text to compare it with, so it is refused. The
+  // text readers (CLI, HTTP, MCP) also refuse any number token that does not read back as written (hash-input.ts
+  // parseJsonStrict). Under an earlier engine the input is read as it always was, so an earlier verdict re-performs byte for byte.
+  let engine: ReturnType<typeof engineFor> | undefined
+  try { engine = engineFor(options.engine) } catch { engine = undefined } // an unknown engine is refused by verify() itself
+  if (engine !== undefined && engineAtLeast(engine, '0.6.0')) {
+    for (const [input, name, value] of parts) {
+      if (value === undefined) continue
+      const at = unsafeMagnitudePath(value)
+      if (at !== undefined) throw new InputRefused(input, `verify: ${unsafeMagnitudeRefusal(name, at, valueAtPath(value, at)).message}`)
+    }
+  }
+}
+
+/** How a built-in ruleset's claims are answered: its declared table, where each role comes from, which roles it computes. */
+function remedyContextFor(rs: Ruleset, table: RemedyTable): RemedyContext {
+  const sources: [string, readonly string[]][] = [['contract', rs.referenceRoles.contract], ['evidence', rs.referenceRoles.evidence], ['history', rs.referenceRoles.history]]
+  return {
+    declared: (rule) => table[rule],
+    sourceOfRole: (role) => sources.find(([, roles]) => roles.includes(role))?.[0],
+    isComputed: (role) => (rs.computedRoles as readonly string[]).includes(role),
+    document: rs.id,
   }
 }
 

@@ -17,7 +17,7 @@ const BEFORE = json('fixtures', 'golden-rulesets', 'purchase-order.ruleset.v0.0.
 const AFTER = json('..', 'docs', 'examples', 'purchase-order.ruleset.json')
 const measure = (rs: DeclarativeRuleset) => measureRuleset(rs, PO_PRICE_SET.map(c => ({ extraction: c.extraction, label: c.label })))
 const counts = (rs: DeclarativeRuleset) => { const { tp, tn, fp, fn, abstain, total } = measure(rs).metrics; return { tp, tn, fp, fn, abstain, total } }
-const line0 = (x: Record<string, unknown>, rs: DeclarativeRuleset) => verifyDeclarative(x, rs, { now: () => new Date(0) }).claims.find(c => c.claim_id === 'line[0].MATH_INT')!
+const line0 = (x: Record<string, unknown>, rs: DeclarativeRuleset, engine?: string) => verifyDeclarative(x, rs, { now: () => new Date(0), ...(engine ? { engine } : {}) }).claims.find(c => c.claim_id === 'line[0].MATH_INT')!
 
 describe('purchase-order LINE_PRICE is a full-precision unit price (0.1.0)', () => {
   it('only the version and the LINE_PRICE kind changed; it lints clean', () => {
@@ -38,8 +38,8 @@ describe('purchase-order LINE_PRICE is a full-precision unit price (0.1.0)', () 
     expect(line0(po(130), BEFORE).outcome).toBe('PASS')
     expect(line0(po(130), AFTER)).toMatchObject({ outcome: 'FAIL', variance: 5 })
   })
-  it('a formatted price string with more than two decimals abstains (UNPARSEABLE); it is never rounded', () => {
-    const c = line0({ items: [{ qty: 2, unit_price: '$1,234.5678', amount: 2469.14 }], subtotal: 2469.14, tax: 0, total: 2469.14 }, AFTER)
+  it('engine 0.1.0: a formatted price string with more than two decimals abstains (UNPARSEABLE); it is never rounded (0.2.0 reads it whole: fixv-redteam)', () => {
+    const c = line0({ items: [{ qty: 2, unit_price: '$1,234.5678', amount: 2469.14 }], subtotal: 2469.14, tax: 0, total: 2469.14 }, AFTER, '0.1.0')
     expect(c.outcome).toBe('INSUFFICIENT_DATA')
     expect(c.insufficiency).toMatchObject({ reason: 'UNPARSEABLE' })
     expect(line0({ items: [{ qty: 2, unit_price: '$1,234.56', amount: 2469.12 }], subtotal: 2469.12, tax: 0, total: 2469.12 }, AFTER).outcome).toBe('PASS')

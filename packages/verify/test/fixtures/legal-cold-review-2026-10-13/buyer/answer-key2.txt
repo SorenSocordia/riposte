@@ -1,0 +1,17 @@
+t1 B dropped state near page footer
+t2 G curly apostrophe
+t3 B typo cite 445
+t4 G quoting parenthetical inside quote string
+t5 B-minor unbracketed case change + inner quote marks dropped
+t6 B-minor semicolon to period
+t7 B silent omission of a clause
+t8 G curly apostrophe
+t9 G full sentence
+t10 G truncated at end
+t11 G
+t12 G
+t13 B-minor hyphen dropped + case
+t14 B dropped not (inverted)
+t15 B inquiry->actual
+t16 G
+t17 G fair ellipsis

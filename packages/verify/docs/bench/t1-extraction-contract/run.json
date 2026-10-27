@@ -1,0 +1,75 @@
+{
+  "format": "bench-run/1",
+  "id": "t1-extraction-contract",
+  "prereg": "PREREG.md",
+  "results": "results",
+  "spec": "spec.json",
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "rerun": {
+    "from_tree": "no",
+    "detail": "The run read the e-invoice PDF corpus and the first legal blind set's decision PDFs, neither of which is in this tree. Its harness, copies of the e-invoice run's scripts with their paths changed, names the authors' folders and does not ship."
+  },
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "dddf142136114b46e8e0c0bb9d83ad9b883160d935a57c96f692e14fc85bfb9a",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG.sha256",
+      "sha256": "7b153dea62ddedd0b39364e6ca970f51ad7a43b75b8dc4c1232040389581aedd",
+      "from": "PREREG.sha256",
+      "from_sha256": "0fdbae4c7c84c94f3831e008983877e10bc89838af3f2c8d2908019462c1f7b3",
+      "note": "a dated time line appended 2026-10-05 (the authors' own record); the hash line above it is unchanged"
+    },
+    {
+      "file": "results/out/c1/results.json",
+      "sha256": "ea5678208694bc84ceb8d1fcf02d1b009ff227aeed1d4acb85287c30a37d8226",
+      "from": "out/c1/results.json"
+    },
+    {
+      "file": "results/out/b0/results.json",
+      "sha256": "102fad02b6223256463e9564b34d08ad542ee5047e4620f3582e76451ad55f54",
+      "from": "out/b0/results.json"
+    },
+    {
+      "file": "results/results/x2-c1/run.json",
+      "sha256": "44180e2e9b2900f2efcc5e730239b20396cfdd3aa416ddd3774af2865b97bfc3",
+      "from": "results/x2-c1/run.json"
+    },
+    {
+      "file": "results/results/x2-b0/run.json",
+      "sha256": "793d0a97b2240c5102edeea4b5ad014c63cc947867cb02f580c7a941ede220f8",
+      "from": "results/x2-b0/run.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "66cc64d1ceb8a1f45cafde40dff0faa2eaffbc1904d86ba8014fba7a94d565c6",
+      "from": "the run spec written when the tables were first emitted",
+      "from_sha256": "f659112f015d67751fee903662e033d30de25151d18095530d34c32955e13a3c",
+      "note": "audit statement added from the run's files; on 2026-10-05, seven descriptive rows added from the same results files (figures EXTRACTION-CONTRACT.md prints)"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "fbad3d6b377b93ac79c40eed88c124af4b3f5dafde3cb67f0e4b5f7590a713aa",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "21043674e9521e3b9aa225a8145dd1fd19cf395b1832d127ee9c0284b6f0ba6c",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ],
+  "not_shipped": [
+    {
+      "file": "corpus/manifest.json",
+      "sha256": "c6807187e43961303f9541b821b0da787e300c97661f8c44c75ed5bab44c8021",
+      "reason": "the e-invoice corpus manifest the run read, pinned in PREREG.md line 128. It does not ship: x1-einvoice-pdf/ lists the same file with the reason"
+    }
+  ]
+}

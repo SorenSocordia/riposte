@@ -1,5 +1,5 @@
 /**
- * SECURITY FIX, R4 / D-ANCHOR (2026-09-28). The red team (redteam/r4-unanchored-self-grant.redteam.ts) showed that on a
+ * SECURITY FIX, D-ANCHOR (2026-09-28). The red team (redteam/r4-unanchored-self-grant.redteam.ts) showed that on a
  * default book (no trusted_keys, no root key) any key that could append to the book moved a rung: an agent generated its
  * own key, signed a GRANT of its workflow to autonomy, and readRung honored it. The design ruling is "only a person moves a
  * rung, in either direction". A signature proves a key holder; anchoring (trusted_keys, or a root key and its registry) is
@@ -73,7 +73,7 @@ const reg = (subject: string, key: { pub: string }, roles: ('key_admin' | 'polic
   signDecision(makeKeyRegister({ subject_id: subject, public_key: key.pub, roles, signer_id: 'root', signed_at: iso() }), ROOT.priv)
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-describe('R4: an unanchored self-grant is on the book and has no effect (the PoC\'s BROKEN cases, as regressions)', () => {
+describe('an unanchored self-grant is on the book and has no effect (the PoC\'s BROKEN cases, as regressions)', () => {
   it('a self-grant to autonomy on a default book: accepted as a signature, listed, and the rung does not move', () => {
     const led = createLedger({ now: tick })
     evidence(led, { passes: 3 })
@@ -295,6 +295,6 @@ describe('who reads what: every reader selects through the anchored selectors', 
     expect(d.under_grant).toBeUndefined()
     const db = led.decisionBook()
     expect(decisionConflict(d, [...db.decisions, ...db.canaries])).toBeUndefined()
-    expect(() => led.decide(signDecision(d, OWNER.priv))).not.toThrow() // P1 (ledger-scale folded it into decide(), 2026-09-28)
+    expect(() => led.decide(signDecision(d, OWNER.priv))).not.toThrow() // (folded into decide() on 2026-09-28)
   })
 })

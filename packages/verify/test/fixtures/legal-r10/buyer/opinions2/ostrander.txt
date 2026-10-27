@@ -1,0 +1,43 @@
+Ostrander Freight, Inc. v. Calvary Mutual Insurance Co., 519 F.4th 1107 (2026)
+
+519 F.4th 1107
+United States Court of Appeals, Fourteenth Circuit.
+
+OSTRANDER FREIGHT, INC., Plaintiff-Appellee,
+v.
+CALVARY MUTUAL INSURANCE COMPANY, Defendant-Appellant.
+
+No. 25-5023
+|
+Decided August 30, 2026
+
+Synopsis
+Background: Carrier sued insurer for unpaid cargo claims. After a jury verdict for the carrier, the insurer appealed the admission of a spreadsheet of delivery logs.
+
+West Headnotes (1)
+
+[1] Evidence — Business records
+A record is admissible as a business record only if it was made at or near the time of the event by someone with knowledge.
+
+Opinion
+
+ROSSITER, Circuit Judge:
+
+Calvary Mutual appeals a judgment entered on a jury verdict for Ostrander Freight. It contends that the district court should not have admitted a spreadsheet of delivery logs. We affirm.
+
+[1] A record of an act or event is admissible under the business-records exception if it was made at or near the time by, or from information transmitted by, someone with knowledge, and if it was kept in the course of a regularly conducted activity. Fed. R. Evid. 803(6). The proponent need not call the person who made the record; a custodian or other qualified witness who can explain how the records are kept will suffice. The exception does not apply, however, if the opponent shows that the source of information or the method or circumstances of preparation indicate a lack of trustworthiness.
+
+In Benfield, we said that “a spreadsheet compiled for litigation is never a business record.” Benfield v. Strand Marine Co., 402 F.4th 88, 91 (14th Cir. 2023). We part ways with that formulation today. A compilation prepared for trial may still qualify where the underlying entries were themselves made in the regular course of business. *1109 The question is what the entries are, not when they were gathered.
+
+The district court did not abuse its discretion in admitting the logs.
+
+AFFIRMED.
+
+VANTREASE, Circuit Judge, dissenting.
+
+I would hold that a summary prepared by a party's own employee after the dispute arose bears the marks of untrustworthiness that Rule 803(6) was written to exclude. The majority's rule invites litigants to launder hearsay through a spreadsheet.
+
+All Citations
+519 F.4th 1107
+
+End of Document

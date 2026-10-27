@@ -1,0 +1,11 @@
+FAIL cite.r0
+FAIL cite.r1
+FAIL cite.r2
+FAIL cite.r3
+FAIL cite.r4
+FAIL cite.r5
+FAIL cite.r6
+PASS cite.r7
+PASS cite.r8
+FAIL cite.r9
+FAIL cite.r10

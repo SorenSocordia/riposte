@@ -1,0 +1,388 @@
+{
+  "spec": "bench-spec/1",
+  "id": "process-misses-2026-10-26",
+  "title": "Process misses of 2026-10-26 from 04:18, and of the night after: what the lead and the runs recorded, and what the file times show",
+  "adapter": "transcribed",
+  "label": "transcribed",
+  "blind": false,
+  "run": {
+    "id": "process misses of 2026-10-26 from 04:18:40 to 2026-10-27 03:4x, transcribed on 2026-10-27 from the maintainers' working log and twenty-one runs' reports, with stated times compared against the modification times of their files",
+    "date": "2026-10-27"
+  },
+  "rows": [],
+  "misses": [
+    {
+      "id": "p-01",
+      "kind": "method",
+      "description": "a run (the entity run), hour not given: three government web pages the run addressed from memory answered 404; it found the right pages by following links from pages it had downloaded, and the three 404 rows stay in its fetch ledger",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-02",
+      "kind": "harness defect",
+      "description": "a run (the entity run), hour not given: an edit to the run's quote verifier, written through a shell here-document, lost a backslash, the known trap of the shell tool on this machine; the edit failed its own assertion and was redone with a file-editing tool",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-03",
+      "kind": "harness defect",
+      "description": "a run (the misses-rows run, which wrote the table of the week of 2026-10-20), hour not given: a search over the backups folder and the tree's scratch folder for old copies of a sample ran past 60 seconds and went to the background; the run stopped it and went to the known backup",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-04",
+      "kind": "method",
+      "description": "a run (the sweep run), hour not given: the run wrote into a source file's header that its output diffed identical before any diff had run; it reworded the header within minutes to point at its report, and both diffs passed later",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-05",
+      "kind": "method",
+      "description": "a run (the sweep run), hour not given: a baseline sweep of about 35 minutes was started as a background child of the shell, against the maintainers' rule that long runs are launched detached; it survived, and the run launched its second sweep detached",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-06",
+      "kind": "harness defect",
+      "description": "a run (the sweep run), hour not given: a listing of a very large folder stalled past two minutes, and the search tool timed out twice over the whole tree; the run switched to narrow searches and did not list that folder again",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-07",
+      "kind": "clock",
+      "description": "a run (the sweep run), hour not given: while polling, the run misjudged the clock and wrote two wrong time estimates into interim notes; both were replaced with measured times",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-08",
+      "kind": "defect",
+      "description": "a run (the sweep run), hour not given: the loader's name filter, meant to skip one class of private transcripts, also skipped a run's transcript whose file name carried the same word, so 67 records were left out of the sweep; the run reported it with the sweep",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-09",
+      "kind": "method",
+      "description": "a run (the sweep run), hour not given: a search whose exclude options named two folders the maintainers' read guard protects was refused by the guard on the names alone; nothing was read, and the search ran again without naming them",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-10",
+      "kind": "method",
+      "description": "a run (the port run), hour not given: the run overwrote version 1 of a port script before backing it up, against the maintainers' rule of a local backup before any edit; it restored version 1 from its own full read of the file, whose size matches the original, with no older copy it could compare bytes with",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-11",
+      "kind": "clock",
+      "description": "the lead, by 05:32: a note the lead wrote at dawn to another of the maintainers' agents gave its own hour as 05:4x, though it was sent at 05:32, and gave a rounded hour for one of the night's misses; logged at 05:49 with the note's reply, and the lead widened its rule that morning to read every hour it writes from the clock, notes included",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-12",
+      "kind": "harness defect",
+      "description": "the lead, 05:57: the stamp command the morning report handed the maintainer began with a change of folder relative to the tree's root; at 07:14 the stamp had not landed and the command was given again with an absolute folder, and at 07:25 a pasted copy had split the timestamp authority's flag from its address; the lead then wrote a one-line script, with which the stamp landed at 07:26",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-13",
+      "kind": "method",
+      "description": "the lead, 07:25: the preregistration of a hill described each null twin as a bag of its item's own words; the generator it names draws from the pooled words of the item's kind; the swing-B run found it at 08:55 and noted it, and the frozen text was not changed",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-14",
+      "kind": "clock",
+      "description": "a run (the swing-A run), about 08:00: an interim section of the run's report was headed about 08:25 when the time was about 08:00; corrected in place, with both values kept",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-15",
+      "kind": "numbering",
+      "description": "a run (the swing-C run), hour not given: its declaration, frozen before the run, states a split of 470 held-in and 470 held-out items, but the declared rule gives 469 and 471; the rule ran as declared, and the run recorded the sentence's arithmetic as wrong",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-16",
+      "kind": "method",
+      "description": "a run (the swing-C run), hour not given: a search for copies of the ledger used an exclude pattern that named folders the maintainers' read guard protects; the guard refused it on the names, nothing was read, and the search ran again without naming them",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-17",
+      "kind": "harness defect",
+      "description": "a run (the swing-A run), hour not given: a regular expression written through a shell here-document lost a backslash, so a script failed to parse; the run rewrote it with a file-writing tool and wrote every later code file that way",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-18",
+      "kind": "method",
+      "description": "a run (the swing-A run), hour not given: its final verification command included a version-control command that changed nothing (the short status of one folder), which its brief forbade; the files were then checked by sha256",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-19",
+      "kind": "clock",
+      "description": "a run (the null-design run), about 08:30 and 09:00: two times in the run's report were wrong, an addendum stamped 09:08 that was written at about 09:00 and a read time given as about 09:00 that was about 08:30; corrected in place, with both values kept",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-20",
+      "kind": "harness defect",
+      "description": "a run (the swing-B run), hour not given: launch scripts written through printf lost their backslashes, the same shell trap, so four launches did nothing; the run rewrote them with a file-writing tool",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-21",
+      "kind": "scope",
+      "description": "a run (the swing-B run), hour not given: a reset of the shell's working folder put the run's three-line test file inside the tree's claims folder, a folder that ships; the run deleted it with the empty folders it had made, and used absolute paths after that",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-22",
+      "kind": "harness defect",
+      "description": "a run (the swing-B run), hour not given: the detached launchers never wrote their closing status line; each run was checked from its output files and final log lines instead, and no process was left running",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-23",
+      "kind": "harness defect",
+      "description": "a run (the null-design run), hour not given: a shell here-document turned an escaped newline into a real newline inside a Python script; a parse check caught it before the script ran, and it was fixed with a file-editing tool",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-24",
+      "kind": "brief error",
+      "description": "the lead, before 10:24: the brief of the papers census run carried a rule that no person appears in any paper, read from a plan section that bars the maintainers' private work and data from papers, not a human author; the run named the rule's conflict with a preprint server's human-author requirement, and the lead withdrew the rule at 10:4x and logged at 11:1x that the brief had over-read the section",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-25",
+      "kind": "clock",
+      "description": "a run (the integration census run), about 10:14 and 10:21: two progress times in the run's report named later times than the clock read when they were written (10:25 and 10:40, written at about 10:14 and 10:21); the run replaced them with a time read from the clock",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-26",
+      "kind": "scope",
+      "description": "a run (the integration census run), hour not given: the run wrote one scratch file outside the one file its brief allowed it to write, a list of pins printed from a pin file; it deleted the file within a minute, and nothing read it",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-27",
+      "kind": "clock",
+      "description": "a run (the papers census run), 10:24: a progress line in the run's report said it was updated at 10:42 when the clock read 10:24; the run corrected it within a minute",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-28",
+      "kind": "clock",
+      "description": "a run (the product census run), by 10:28: the run's report gave its last update as 11:15, but the file was last written at 10:28:05, so the stated time ran about 47 minutes ahead of the clock; found by the run that wrote these rows, by comparing the stated time with the file's modification time",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-29",
+      "kind": "clock",
+      "description": "a run (the engine-library census run), by 10:35: the run's report gave its last update as 10:45:00, but the file was last written at 10:35:50, about nine minutes earlier; found by the run that wrote these rows, by comparing the stated time with the file's modification time",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-30",
+      "kind": "brief error",
+      "description": "the lead, before 10:42: the brief of the run that built the frontier's closing edge named a pin file at a path that does not exist, one folder short; the run found the file under the bench's items folder and checked its pins there. The same class as the two wrong paths in the briefs of 2026-10-25 (process-misses-2026-10-20#p-11)",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-31",
+      "kind": "clock",
+      "description": "a run (the frontier run), 10:58 and 11:09: two progress times in the run's report were estimates ahead of the clock (11:25 and 11:55, written at 10:58 and 11:09); caught when the run built its code, and replaced by the logs' write times",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-32",
+      "kind": "defect",
+      "description": "a run (the frontier run), between 10:42 and 11:16: two test hill folders with byte-identical contracts collapsed in a map keyed by the contract's digest, and one hill vanished from the frontier without a word; the run's tests caught it before it landed",
+      "post_hoc": false,
+      "date": "2026-10-26",
+      "fixed_by": "riposte-second frontier, 2026-10-26: a hill is its contract; a folder that copies another's contract is read once, as one hill, and the copy is listed as superseded, with its own test"
+    },
+    {
+      "id": "p-33",
+      "kind": "harness defect",
+      "description": "a run (the frontier run), hour not given: a search over the whole products tree for report files ran past the shell's 120-second limit and was killed; it read nothing wrong, and the run went on with narrow listings",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-34",
+      "kind": "method",
+      "description": "the lead, 11:1x: a rewrite of two claims in the paper draft that the bench page contradicts (a checker frozen before the other cases were seen, and five seeds called unseen) fixed the two passages and left the same claims in the abstract, a table header and five rows of the draft's claims ledger; the papers run found them, and the lead rewrote them at 12:49 to 12:50 by the files' times",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-35",
+      "kind": "stale read",
+      "description": "the lead, 11:2x: the log line recording the frontier run's landing said three of its parts (walls on its map, a narrative field and a measured-change field) did not land; they had landed at 11:26:58, and the lead's search and re-run had read the state of 11:13; the run's report gave the write times, and the lead logged the stale read as its own miss at 11:4x, calling it its 11:3x line",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-36",
+      "kind": "brief error",
+      "description": "the lead, before 11:29: the brief of the engine-slot run set the claims checker as the judge of a hill whose artifact is a summary; an honest summary carries no checkable claim, so the checker answers can't tell, and in the run's replay test the one scored attempt was a planted false done-claim, which the hill then held as its best; the run showed it, and the lead had it build a judge that checks each number in the artifact against the source",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-37",
+      "kind": "scope",
+      "description": "a run (the engine-slot run), 11:29: reading which models were loaded, with the model runner's command-line tool, started that runner's desktop app and server, which had not been running; the run reported it, and the lead ruled to leave them running",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-38",
+      "kind": "clock",
+      "description": "a run (the export run), hour not given: two interim times in the run's report (11:50 and 12:40) were estimates, not clock readings, as the run itself recorded; its final time, 12:20, was also later than the file's last write, 12:11:06, which the run that wrote these rows found by comparing the stated time with the file's modification time",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-39",
+      "kind": "method",
+      "description": "the lead, 12:0x: the lead told a run to stop its build and restore the engine files it had changed, to protect a preregistered bench's pin over the engine's sources, before reading the sections of that preregistration on who runs it, its harness block and its partner data; read, they showed that the run waits on steps of the maintainers' hand (a harness block stamped before any data is touched, among others) and that engine files moved before the run are re-pinned by the next amendment, so the lead sent resume about ten minutes later; both messages reached the run together after its build had finished, and nothing was reverted",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-40",
+      "kind": "numbering",
+      "description": "the lead, 12:0x and 12:3x: a ruling and a later message called the next amendment of that preregistration Amendment 4 and asked a run to compute its pins; the file already held six amendments, so the next is Amendment 7; the lead had counted them from a search whose output was cut to its opening lines; the export run's report counted six, and the lead corrected the number at 12:4x",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-41",
+      "kind": "clock",
+      "description": "a run (the engine-slot run), 12:15: a draft of the run's report said a model had unloaded at 12:15:20, a time at which the model runner still listed it as loaded until 12:15:39; caught on the same reading, before the report was sent, and replaced by the 12:16:02 reading that showed nothing loaded",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-42",
+      "kind": "brief error",
+      "description": "the lead, 12:28: a restated brief naming six model classes, where the earlier brief named five, reached the identity run after its five-class run had finished (12:18 to 12:24); the run declared and ran a second, six-class run, whose declaration says it is not blind to the five-class results",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-43",
+      "kind": "clock",
+      "description": "a run (the identity run), 12:28: the declaration of the six-class run, hashed at 12:28:44 before the run, says it was written at about 12:35, an estimate about seven minutes ahead, as the run recorded; the file's time and the hash log are the record. The run's report also gave its last update as 12:40:00 while the file was last written at 12:35:44, which the run that wrote these rows found by comparing the stated time with the file's modification time",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-44",
+      "kind": "method",
+      "description": "a run (the harness run), before 12:44: the harness it wrote for a preregistered bench fetches a public legal site's calendar page and docket data at addresses the run wrote from memory and marked as unchecked; the lead's requests found two of them dead (one redirected to a not-found page, one answered 404); the run replaced them with addresses the lead had verified live, and its new check by HEAD request passed at 12:44",
+      "post_hoc": false,
+      "date": "2026-10-26",
+      "fixed_by": "the bench harness's legal-fetch --head-check, 2026-10-26: a HEAD request to each address the harness fetches, failing any required address that does not answer 200 at the address asked"
+    },
+    {
+      "id": "p-45",
+      "kind": "method",
+      "description": "a run (the harness run), hour not given: adding a folder to a preregistered bench changed the file list the bench page prints for that planned run, so the export refused because the bench page no longer reproduced; the run regenerated the bench page after a scratch diff showed one line changing, with the misses page and the ledger byte-identical",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-46",
+      "kind": "harness defect",
+      "description": "a run (the papers run), hour not given: the run's opening re-check of 360 identity items ran a built program without resolving its two dependencies, so every item exited 1 on a missing module and the run's script counted each as a fail, the trap the tree's own notes name; the control items failing gave it away, and the run re-ran with a module-resolution hook and overwrote the bad output",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-47",
+      "kind": "scope",
+      "description": "a run (the papers run), hour not given: one token extraction wrote to the shell's own temporary folder, outside the tree's scratch folder where the maintainers' rules put scratch files, before the run moved its scratch there",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-48",
+      "kind": "clock",
+      "description": "a run (the papers run), by 12:49: the run's report gave its last update as 12:52:00, but the file was last written at 12:49:14; found by the run that wrote these rows, by comparing the stated time with the file's modification time",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-49",
+      "kind": "clock",
+      "description": "the lead, by 12:53: hours the lead wrote ran ahead of the clock by up to about two hours; a plan headed as drafted at 14:4x was last written at 12:53:02, and a status line headed 14:2x sits in another plan last written at 12:51:09 and cites the maintainers' log up to a line headed 14:1x, so that line was written by then; the same class as process-misses-2026-10-20#p-21; found by the run that wrote these rows, by comparing the stated hours with the files' modification times",
+      "post_hoc": false,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "p-50",
+      "kind": "clock",
+      "description": "a run (the record-page run), about 03:20 and 03:30: two progress lines in the run's report carried guessed times ahead of the clock (03:35 for its last update, written at about 03:20, and 03:58 for a build, when the clock read about 03:30); the run replaced every time with one read from the clock or a tool's output",
+      "post_hoc": false,
+      "date": "2026-10-27"
+    },
+    {
+      "id": "p-51",
+      "kind": "harness defect",
+      "description": "a run (the forecasts run), hour not given: a search over the whole products tree ran past the shell's 120-second limit; the run narrowed it to known paths. The same as row p-33",
+      "post_hoc": false,
+      "date": "2026-10-27"
+    },
+    {
+      "id": "p-52",
+      "kind": "harness defect",
+      "description": "a run (the forecasts run), hour not given: a probe imported a built package with no module-resolution hook and failed on a missing module, the trap of row p-46; the run added the hook the tree's own tools use, and nothing was written before the fix",
+      "post_hoc": false,
+      "date": "2026-10-27"
+    },
+    {
+      "id": "p-53",
+      "kind": "harness defect",
+      "description": "a run (the forecasts run), hour not given: the stamp script's tests showed 22 false failures because Python, asked to run bash, reached the bash of the Windows Subsystem for Linux before Git Bash on this machine's search path; the run pinned its tests to the Git Bash program with an assert, and they passed 30 of 30",
+      "post_hoc": false,
+      "date": "2026-10-27"
+    }
+  ]
+}

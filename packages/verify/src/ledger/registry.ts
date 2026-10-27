@@ -1,5 +1,5 @@
 /**
- * The key registry on the book of record — who may sign what, read from the book itself (2026-09-28, evidence-integrity lane).
+ * The key registry on the book of record — who may sign what, read from the book itself (2026-09-28).
  *
  * Before this, `trusted_keys` (signer_id → public key) was passed in from outside on every open. Here the anchor is ONE
  * registry ROOT KEY supplied out of band (`root_keys`), and everything else is on the chain as signed events:
@@ -31,7 +31,7 @@
  * nothing). Binding the root key to the person who holds it (the deployment owner) is a human act, done once, out of band.
  */
 
-import { createPublicKey } from 'node:crypto'
+import { createHash, createPublicKey } from 'node:crypto'
 import { sha256 } from '../verdict/canonical.js'
 
 export type Role = 'key_admin' | 'policy_author' | 'reviewer' | 'grant_signer' | 'witness'
@@ -57,12 +57,33 @@ export const ROLE_FOR: Readonly<Record<SignedKind, Role>> = {
 /** SPKI PEM public key(s) of the registry root. Supplied out of band; never read from the book. */
 export type RootKeys = readonly string[]
 
-/** sha256 over the key's SPKI DER (base64), or undefined when it is not a public key. Stable across PEM formatting. */
+/**
+ * A key's fingerprint: sha256 over the bytes of its DER-encoded SubjectPublicKeyInfo, as 64 lowercase hex, or undefined when
+ * `pem` is not an Ed25519 public key. Stable across PEM formatting. The one derivation (2026-10-05): replay's
+ * "signing key fingerprint", `--trusted-key`, the key registry and the receipts ledger (`riposte-ledger fingerprint`) all print
+ * and pin this value, in full. It equals `openssl pkey -pubin -outform DER | sha256sum`.
+ */
 export function keyFingerprint(pem: string): string | undefined {
+  const der = ed25519Der(pem)
+  return der === undefined ? undefined : createHash('sha256').update(der).digest('hex')
+}
+
+/**
+ * The older fingerprint form: sha256 over the BASE64 TEXT of the key's DER (what replay printed and pinned until 2026-10-05).
+ * Still accepted by `verify replay --trusted-key` for this release, with a note naming it the older fingerprint form, and still
+ * read where a stored record names a key by it (an arbitration move's "by"); nothing prints it any more.
+ */
+export function legacyKeyFingerprint(pem: string): string | undefined {
+  const der = ed25519Der(pem)
+  return der === undefined ? undefined : sha256(der.toString('base64'))
+}
+
+/** The DER SubjectPublicKeyInfo bytes of an Ed25519 public key, or undefined. */
+function ed25519Der(pem: string): Buffer | undefined {
   try {
     const k = createPublicKey(pem)
     if (k.asymmetricKeyType !== 'ed25519') return undefined
-    return sha256(k.export({ type: 'spki', format: 'der' }).toString('base64'))
+    return k.export({ type: 'spki', format: 'der' })
   } catch {
     return undefined
   }
@@ -73,7 +94,7 @@ export interface KeyEntry {
   subject_id: string
   public_key: string
   roles: Role[]
-  /** The tenants this key may act for (F-B). Absent: deployment-wide. A tenant-scoped key never signs a deployment-wide act. */
+  /** The tenants this key may act for. Absent: deployment-wide. A tenant-scoped key never signs a deployment-wide act. */
   tenants?: string[]
   registered: { seq: number; decision_id: string; by: string }
   revoked?: { seq: number; decision_id: string; by: string; reason: string }
@@ -91,7 +112,7 @@ export interface KeyEventLike {
 }
 
 /**
- * The tenant a workflow belongs to under the default key (`<tenant>/<ruleset>@<version>`; the opinion lane's O6 rule), or
+ * The tenant a workflow belongs to under the default key (`<tenant>/<ruleset>@<version>`), or
  * undefined when the id has no tenant prefix. Only tenant-SCOPED keys are constrained by it; deployment-wide keys are not.
  */
 export function tenantOfWorkflow(workflow_id: string): string | undefined {
@@ -174,7 +195,7 @@ export class KeyRegistry {
     const authorized = root || selfRevoke || (admin !== undefined && this.holds(seq, d.signer_id, pem, 'key_admin', admin.tenants?.[0]).ok)
     if (!authorized) return `a ${d.kind} must be signed by the registry root key or a registered 'key_admin'${d.kind === 'KEY_REVOKE' ? ' (or by the key itself)' : ''}`
     const e = this.keys.get(fp)
-    // A tenant-scoped key_admin manages only keys scoped within its own tenants (F-B: the per-tenant part of the registry).
+    // A tenant-scoped key_admin manages only keys scoped within its own tenants (the per-tenant part of the registry).
     const within = (t: readonly string[] | undefined): boolean => !admin?.tenants || (!!t && t.length > 0 && t.every(x => admin.tenants!.includes(x)))
     if (d.kind === 'KEY_REGISTER') {
       if (e?.revoked) return `this key was revoked at position ${e.revoked.seq}: a revoked key is never re-registered (rotate: register a new key)`

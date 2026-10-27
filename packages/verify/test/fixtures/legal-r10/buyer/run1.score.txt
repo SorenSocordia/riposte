@@ -1,0 +1,70 @@
+h01 | G | PASS | CITE_VERBATIM |  | genuine whole sentence after a West headnote number
+h02 | B | CT | CITE_VERBATIM |  | quotes the West headnote, not the opinion
+h03 | B | FAIL | CITE_VERBATIM |  | dropped "ordinarily"
+h04 | B | CT | CITE_VERBATIM |  | cut before ", but a court may excuse"
+h05 | B | CT | CITE_VERBATIM |  | party view after "In its view,"
+h06 | B | CT | CITE_VERBATIM |  | party request after "asks us to hold that"
+h07 | G | PASS | CITE_VERBATIM |  | genuine, right after star paging *235
+h08 | G | PASS | CITE_VERBATIM |  | genuine, across a Thomson Reuters footer and running header mid-sentence
+h09 | B | CT | CITE_VERBATIM |  | silently dropped ", unsupported by specific facts," (matches headnote 2 word for word)
+h10 | B | CT | CITE_VERBATIM |  | ellipsis drops "the opposing party suffers no prejudice and" from an and-joined condition
+h11 | B | FAIL | CITE_VERBATIM |  | "may" changed to "must"
+h12 | B | FAIL | CITE_VERBATIM |  | "plainly" changed to "clearly"
+h13 | G | PASS | CITE_VERBATIM |  | genuine, court speaks again after "We disagree."
+h14 | B | PASS | CITE_VERBATIM | MISS | party position after an unlisted frame ("Harrowgate's fallback is that")
+h15 | B | CT | CITE_VERBATIM |  | counterfactual after "we might agree that"
+h16 | B | CT | CITE_VERBATIM |  | transposed "does not ordinarily" to "ordinarily does not"
+h17 | B | FAIL | CITE_VERBATIM |  | "reason" made plural
+h18 | G | PASS | CITE_VERBATIM |  | genuine mid-sentence start with bracketed capital
+h19 | G | PASS | CITE_VERBATIM |  | genuine, short-form cite resolvable to the full cite in this brief
+h20 | G | CT | CITE_VERBATIM | cost | genuine, "Id." short form left unresolved in the JSON
+h21 | B | FAIL | CITE_VERBATIM |  | joins two sentences two paragraphs apart with an ellipsis
+h22 | B | CT | CITE_VERBATIM |  | paraphrase put in quotation marks
+h23 | G | PASS | CITE_VERBATIM |  | genuine words, WRONG pin page (299 is outside the opinion)
+h24 | B | FAIL | CITE_VERBATIM |  | rule citation sentence silently left out between two quoted sentences
+h25 | G | FAIL | CITE_VERBATIM | FALSE FAIL | same as h24 but disclosed with (citation omitted)
+h26 | B | CT | CITE_VERBATIM |  | first letter lowercased without a bracket
+q01 | G | PASS | CITE_VERBATIM |  | genuine whole sentence after an HN1 marker
+q02 | B | FAIL | CITE_VERBATIM |  | silently dropped "or should have discovered"
+q03 | B | PASS | CITE_VERBATIM | MISS | ellipsis drops "or should have discovered" (or-joined condition)
+q04 | B | CT | CITE_VERBATIM |  | concurrence words attributed to the court (Lexis "Concur" layout)
+q05 | B | CT | CITE_VERBATIM |  | party contention after "Marbeck contends that"
+q06 | G | CT | CITE_VERBATIM | cost | genuine, court answers the contention
+q07 | G | PASS | CITE_VERBATIM |  | genuine, after [**4] star paging and before a glued Lexis footnote call n1
+q08 | B | FAIL | CITE_VERBATIM |  | "or" changed to "and"
+q09 | G | PASS | CITE_VERBATIM |  | genuine whole sentence
+q10 | B | CT | CITE_VERBATIM |  | opening "Where ..." condition cut off
+q11 | B | FAIL | CITE_VERBATIM |  | "troublesome" changed to "problematic"
+q12 | B | FAIL | CITE_VERBATIM |  | inserted "closely"
+q13 | B | CT | CITE_VERBATIM |  | quotes the Lexis headnote
+q14 | B | CT | CITE_VERBATIM |  | party position after an unlisted frame ("On Marbeck's telling,")
+q15 | G | CT | CITE_VERBATIM | cost | genuine, cited by its Lexis database number only
+q16 | G | CT | CITE_VERBATIM | cost | genuine majority footnote (printed after the concurrence, as Lexis does)
+q17 | B | CT | CITE_VERBATIM |  | quotes the Lexis Case Summary overview
+q18 | B | CT | CITE_VERBATIM |  | Quillon words cited to Harrowgate (wrong case)
+o01 | G | PASS | CITE_VERBATIM |  | genuine whole sentence
+o02 | B | PASS | CITE_VERBATIM | MISS | standard the court quotes and then rejects in other words ("We part ways with that formulation today."), no (quoting)
+o03 | B | CT | CITE_VERBATIM |  | dissent words attributed to the court
+o04 | B | FAIL | CITE_VERBATIM |  | "other qualified" changed to "any"
+o05 | B | FAIL | CITE_VERBATIM |  | burden shift: silently dropped "the opponent shows that"
+o06 | B | PASS | CITE_VERBATIM | MISS | burden shift by ellipsis over "the opponent shows that"
+o07 | G | PASS | CITE_VERBATIM |  | genuine, before star paging *1109
+o08 | B | FAIL | CITE_VERBATIM |  | rule citation silently left out across two sentences
+o09 | G | FAIL | CITE_VERBATIM | FALSE FAIL | same as o08, disclosed with (citation omitted)
+o10 | G | CT | CITE_VERBATIM | cost | benign cut before ", not when they were gathered" (meaning kept)
+o11 | B | CT | CITE_VERBATIM |  | quotes the West headnote
+o12 | B | PASS | CITE_VERBATIM | MISS | rejected standard, with a (quoting) parenthetical
+f01 | G | CT | CITE_VERBATIM | cost | genuine whole sentence
+f02 | B | CT | CITE_VERBATIM |  | dropped "only"
+f03 | G | CT | CITE_VERBATIM | cost | genuine whole sentence
+f04 | G | CT | CITE_VERBATIM | cost | genuine, ellipsis over an appositive (no condition)
+f05 | B | CT | CITE_VERBATIM |  | "fourteen" changed to "thirty"
+f06 | B | CT | CITE_VERBATIM |  | "fourteen" written as "14" without a bracket
+f07 | B | CT | CITE_VERBATIM |  | party request after "asks the Court to"
+f08 | G | CT | CITE_VERBATIM | cost | genuine whole sentence
+f09 | G | CT | CITE_VERBATIM | cost | genuine, full Bluebook-style WL cite with star pin
+f10 | B | CT | CITE_VERBATIM |  | "shall" changed to "may"
+f11 | B | CT | CITE_VERBATIM |  | fabricated sentence
+
+engine 0.7.2 ruleset legal@0.5.4 verdict cdaa0243be73b45fcd6ef081d08586f1
+genuine (G): {"PASS":12,"FAIL":2,"CT":10}  altered (B): {"PASS":5,"FAIL":13,"CT":25}

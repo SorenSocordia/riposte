@@ -1,0 +1,45 @@
+{
+  "id": "x1-supplement",
+  "version": "0.1.0",
+  "domain": "e-invoice",
+  "name": "X1 supplement to peppol-en16931 0.1.0: the planted-defect classes the shipped ruleset does not read (house, written BEFORE the X1 run; not a shipped ruleset)",
+  "sources": {
+    "CEN-SCH": "https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/261c458474e27d58a25be629cccac28883171c92/rules/sch/CEN-EN16931-UBL.sch (sha256 bdcbb7b702cce55c7f8c789bef0cb9bebf6d376140c1776e683bd6d9bc0ad331)",
+    "PEPPOL-SCH": "https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/261c458474e27d58a25be629cccac28883171c92/rules/sch/PEPPOL-EN16931-UBL.sch (sha256 5ddf3a2f6633147b20b7805df9902d825af1a984f10014fcee186d4170364b1d)"
+  },
+  "lineArrayKeys": ["lines"],
+  "tolerance": { "rel": 0, "absCap": 0 },
+  "fields": {
+    "INVOICE_NUMBER": { "paths": ["invoice_number"], "kind": "identifier" },
+    "ISSUE_DATE": { "paths": ["issue_date"], "kind": "identifier" },
+    "DOC_CURRENCY": { "paths": ["currency"], "kind": "identifier" },
+    "AMOUNT_CURRENCY": { "paths": ["amount_currency"], "kind": "identifier" },
+    "PAYABLE": { "paths": ["payable_amount"] },
+    "TAX_AMT": { "paths": ["tax_amount"] },
+    "VBD_ROW_2": { "paths": ["vat_breakdown[1].row"], "kind": "quantity" },
+    "VBD_ROW_3": { "paths": ["vat_breakdown[2].row"], "kind": "quantity" },
+    "VBD_ROW_4": { "paths": ["vat_breakdown[3].row"], "kind": "quantity" },
+    "VBD_ROW_5": { "paths": ["vat_breakdown[4].row"], "kind": "quantity" },
+    "VBD_TAX_1": { "paths": ["vat_breakdown[0].tax_amount"] },
+    "VBD_TAX_2": { "paths": ["vat_breakdown[1].tax_amount"] },
+    "VBD_TAX_3": { "paths": ["vat_breakdown[2].tax_amount"] },
+    "VBD_TAX_4": { "paths": ["vat_breakdown[3].tax_amount"] }
+  },
+  "checks": [
+    { "code": "BR02_PRESENT", "field": "invoice_number", "compare": "identifier", "left": "INVOICE_NUMBER", "op": "=", "right": "INVOICE_NUMBER",
+      "name": "BR-02: An Invoice shall have an Invoice number (BT-1) [CEN-SCH]. Presence only: an absent BT-1 abstains (FIELD_MISSING)." },
+    { "code": "BR03_PRESENT", "field": "issue_date", "compare": "identifier", "left": "ISSUE_DATE", "op": "=", "right": "ISSUE_DATE",
+      "name": "BR-03: An Invoice shall have an Invoice issue date (BT-2) [CEN-SCH]. Presence only." },
+    { "code": "BR05_PRESENT", "field": "currency", "compare": "identifier", "left": "DOC_CURRENCY", "op": "=", "right": "DOC_CURRENCY",
+      "name": "BR-05: An Invoice shall have an Invoice currency code (BT-5) [CEN-SCH]. Presence only." },
+    { "code": "BR15_PRESENT", "field": "payable_amount", "left": "PAYABLE", "op": "=", "right": "PAYABLE", "tol": 0.005,
+      "name": "BR-15: An Invoice shall have the Amount due for payment (BT-115) [CEN-SCH]. Presence only." },
+    { "code": "R051_CURRENCY", "field": "amount_currency", "compare": "identifier", "left": "AMOUNT_CURRENCY", "op": "=", "right": "DOC_CURRENCY",
+      "name": "PEPPOL-EN16931-R051: All currencyID attributes must have the same value as the invoice currency code (BT-5), except BT-111 [PEPPOL-SCH]. Read here as: the currency printed on the totals = the stated invoice currency." },
+    { "code": "BRCO14_VAT_SUM", "field": "tax_amount", "tol": 0.005, "left": "TAX_AMT", "op": "=", "right": "VBD_TAX_1 + VBD_TAX_2? + VBD_TAX_3? + VBD_TAX_4?",
+      "abstain_if_present": ["VBD_ROW_5"],
+      "abstain_if_present_without": [ { "present": "VBD_ROW_2", "without": "VBD_TAX_2" }, { "present": "VBD_ROW_3", "without": "VBD_TAX_3" }, { "present": "VBD_ROW_4", "without": "VBD_TAX_4" } ],
+      "guard_reason": "this ruleset reads at most four VAT breakdown rows by position, and a row whose tax amount was not read cannot be summed",
+      "name": "BR-CO-14: Invoice total VAT amount (BT-110) = Σ VAT category tax amount (BT-117) [CEN-SCH]" }
+  ]
+}

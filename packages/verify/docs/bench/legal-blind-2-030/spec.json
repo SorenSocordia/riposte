@@ -1,0 +1,137 @@
+{
+  "spec": "bench-spec/1",
+  "id": "legal-blind-2-030",
+  "title": "legal@0.3.0 on the second legal blind set, post-hoc",
+  "adapter": "items",
+  "label": "post-hoc",
+  "blind": false,
+  "files": {
+    "b030": "run-halfB-legal-0.3.0.json",
+    "all40": "legal-0.3.0.json"
+  },
+  "run": {
+    "id": "note hashed before run; outcomes already known; post-hoc: legal@0.3.0 on half B, run once two seconds after its note was hashed (legal@0.3.0 was not tuned on this set)",
+    "date": "2026-10-05T17:50:41Z",
+    "engine_version": {
+      "$from": "b030:engine"
+    },
+    "ruleset": "legal@0.3.0"
+  },
+  "rows": [
+    {
+      "claim": "legal@0.3.0, half B: known-bad quotations certified PASS",
+      "items": "b030:rules[\"legal@0.3.0\"].rows",
+      "where": {
+        "label": "known-bad"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "note": "post-hoc: the blind rows for the earlier rules are the table legal-blind-2. Stamp after the run: the note was hashed 2 s before the run (17:50:39Z) and stamped by the timestamp authority 81 min after it (19:12:24Z), although stamping had begun at 16:07Z that day, so the stamp shows the note existed by then, not that it came before the run",
+      "reported": {
+        "k": 0,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.3.0, half B: genuine quotations FAILed (false FAIL)",
+      "items": "b030:rules[\"legal@0.3.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "FAIL"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 1,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.3.0, half B: genuine quotations PASS",
+      "items": "b030:rules[\"legal@0.3.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "PASS"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 5,
+        "n": 10
+      }
+    },
+    {
+      "claim": "legal@0.3.0, half B: genuine quotations abstained",
+      "items": "b030:rules[\"legal@0.3.0\"].rows",
+      "where": {
+        "label": "control"
+      },
+      "hit": {
+        "out": "ABSTAIN"
+      },
+      "method": "wilson",
+      "note": "the same four label errors as legal-blind-2",
+      "reported": {
+        "k": 4,
+        "n": 10
+      }
+    },
+    {
+      "claim": "half-B items whose legal@0.3.0 outcome differs from legal@0.2.0's",
+      "n": 20,
+      "k": {
+        "$from": "b030:compared_with_shipped_legal_0_2_0.outcomes_that_differ.length"
+      },
+      "method": "wilson",
+      "note": "compared with the shipped legal@0.2.0 rows of legal-blind-2"
+    },
+    {
+      "claim": "all 40 items whose legal@0.3.0 outcome differs from legal@0.2.0's (an earlier comparison, hashed in the note's list)",
+      "items": "all40:rows",
+      "where": {},
+      "hit": {
+        "$or": [
+          {
+            "r020": "PASS",
+            "r030": {
+              "$ne": "PASS"
+            }
+          },
+          {
+            "r020": "FAIL",
+            "r030": {
+              "$ne": "FAIL"
+            }
+          },
+          {
+            "r020": "ABSTAIN",
+            "r030": {
+              "$ne": "ABSTAIN"
+            }
+          }
+        ]
+      },
+      "method": "wilson",
+      "note": "run before the note was written, after the set had been seen"
+    },
+    {
+      "claim": "all 40 items: known-bad quotations certified PASS under legal@0.3.0",
+      "items": "all40:rows",
+      "where": {
+        "label": {
+          "$re": "^known-bad"
+        }
+      },
+      "hit": {
+        "r030": "PASS"
+      },
+      "method": "wilson"
+    }
+  ],
+  "misses": [],
+  "audit": "no new audit: the labels are the blind set's, with its five label errors (see the table legal-blind-2)"
+}

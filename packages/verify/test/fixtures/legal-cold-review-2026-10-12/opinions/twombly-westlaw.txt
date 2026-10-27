@@ -1,0 +1,51 @@
+Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007)
+127 S.Ct. 1955, 167 L.Ed.2d 929, 75 USLW 4337, 2007-1 Trade Cases P 75,709
+
+KeyCite Yellow Flag - Negative Treatment
+Distinguished by Doe v. Roe Holdings, Inc., 2nd Cir., June 3, 2008
+
+127 S.Ct. 1955
+Supreme Court of the United States
+
+BELL ATLANTIC CORPORATION et al., Petitioners,
+v.
+William TWOMBLY et al.
+
+No. 05-1126.
+|
+Argued Nov. 27, 2006.
+|
+Decided May 21, 2007.
+
+Synopsis
+Background: Subscribers of local telephone and high-speed internet services brought putative class action against incumbent local exchange carriers, alleging conspiracy in restraint of trade.
+Holdings: The Supreme Court, Justice Souter, held that allegations of parallel conduct and a bare assertion of conspiracy did not suffice to state a claim.
+
+West Headnotes (12)
+[1] Federal Civil Procedure
+Factual allegations must be enough to raise right to relief above speculative level.
+
+Attorneys and Law Firms
+Michael K. Kellogg, Washington, DC, for petitioners.
+
+Opinion
+Justice SOUTER delivered the opinion of the Court.
+Liability under § 1 of the Sherman Act requires a “contract, combination ..., or conspiracy, in restraint of trade or commerce.” The question in this putative class action is whether a § 1 complaint can survive a motion to dismiss when it alleges that major telecommunications providers engaged in certain parallel conduct unfavorable to competition, absent some factual context suggesting agreement, as distinguished from identical, independent action. We hold that such a complaint should be dismissed.
+II
+*555 [3] Federal Rule of Civil Procedure 8(a)(2) requires only “a short and plain statement of the claim showing that the pleader is entitled to relief,” in order to “give the defendant fair notice of what the ... claim is and the grounds upon which it rests,” Conley v. Gibson, 355 U.S. 41, 47, 78 S.Ct. 99, 2 L.Ed.2d 80 (1957). While a complaint attacked by a Rule 12(b)(6) motion to dismiss does not need detailed factual allegations, ibid.; Sanjuan v. American Bd. of Psychiatry and Neurology, Inc., 40 F.3d 247, 251 (C.A.7 1994), a plaintiff's obligation to provide the “grounds” of his “entitle[ment] to relief” requires more than labels and conclusions, and a formulaic recitation of the elements of a cause of action will not do, see Papasan v. Allain, 478 U.S. 265, 286, 106 S.Ct. 2932, 92 L.Ed.2d 209 (1986).3 [4] Factual allegations must be enough to raise a right to relief above the speculative level, see 5 C. Wright & A. Miller, Federal Practice and Procedure § 1216, pp. 235-236 (3d ed. 2004), on the assumption that all the allegations in the complaint are true (even if doubtful in fact).
+*556 [5] In applying these general standards to a § 1 claim, we hold that stating such a claim requires a complaint with enough factual matter (taken as true) to suggest that an agreement was made. Asking for plausible grounds to infer an agreement does not impose a probability requirement at the pleading stage; it simply calls for enough fact to raise a reasonable expectation that discovery will reveal evidence of illegal agreement.
+*561 The Court of Appeals reversed, relying on Conley's statement that “a complaint should not be dismissed for failure to state a claim unless it appears beyond doubt that the plaintiff can prove no set of facts in support of his claim which would entitle him to relief.” 355 U.S., at 45-46. We could go on, but there is no need to pile up further citations to show that Conley's “no set of facts” language has been questioned, criticized, and explained away long enough. *563 [8] After puzzling the profession for 50 years, this famous observation has earned
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 7
+Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007)
+127 S.Ct. 1955, 167 L.Ed.2d 929, 75 USLW 4337, 2007-1 Trade Cases P 75,709
+its retirement. The phrase is best forgotten as an incomplete, negative gloss on an accepted pleading standard: once a claim has been stated adequately, it may be supported by showing any set of facts consistent with the allegations in the complaint.
+*570 Because the plaintiffs here have not nudged their claims across the line from conceivable to plausible, their complaint must be dismissed.
+It is so ordered.
+
+Justice STEVENS, with whom Justice GINSBURG joins except as to Part IV, dissenting.
+Under the relaxed pleading standards of the Federal Rules, the idea was not to keep litigants out of court but rather to keep them in. The transparent policy concern that drives the decision is the interest in protecting antitrust defendants from the burdens of pretrial discovery.
+
+All Citations
+550 U.S. 544, 127 S.Ct. 1955, 167 L.Ed.2d 929, 75 USLW 4337
+
+End of Document © 2026 Thomson Reuters. No claim to original U.S. Government Works.

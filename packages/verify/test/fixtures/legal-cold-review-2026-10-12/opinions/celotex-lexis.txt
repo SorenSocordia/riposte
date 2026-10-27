@@ -1,0 +1,53 @@
+Celotex Corp. v. Catrett
+Supreme Court of the United States
+April 1, 1986, Argued ; June 25, 1986, Decided
+No. 85-198
+
+Reporter
+477 U.S. 317 *; 106 S. Ct. 2548 **; 91 L. Ed. 2d 265 ***; 1986 U.S. LEXIS 118 ****
+
+CELOTEX CORP. v. CATRETT, ADMINISTRATRIX OF THE ESTATE OF CATRETT
+
+Prior History: CERTIORARI TO THE UNITED STATES COURT OF APPEALS FOR THE DISTRICT OF COLUMBIA CIRCUIT.
+
+Disposition: 756 F.2d 181, reversed and remanded.
+
+Core Terms
+summary judgment, moving party, nonmoving party, burden of proof
+
+Case Summary
+
+Procedural Posture
+Petitioner sought review of a judgment reversing summary judgment in its favor.
+
+Overview
+The Court held that Rule 56 does not require the moving party to support its motion with affidavits negating the opponent's claim.
+
+LexisNexis® Headnotes
+
+Civil Procedure > Summary Judgment > Burdens of Proof
+HN1[ ] The plain language of Fed. R. Civ. P. 56(c) mandates the entry of summary judgment against a party who fails to make a showing sufficient to establish an element essential to that party's case.
+
+Counsel: Leland S. Van Koten argued the cause for petitioner.
+
+Judges: REHNQUIST, J., delivered the opinion of the Court, in which MARSHALL, POWELL, and O'CONNOR, JJ., joined. WHITE, J., filed a concurring opinion. BRENNAN, J., filed a dissenting opinion, in which BURGER, C. J., and BLACKMUN, J., joined. STEVENS, J., filed a dissenting opinion.
+
+Opinion by: REHNQUIST
+
+Opinion
+
+ [*319]  [**2550]  JUSTICE REHNQUIST delivered the opinion of the Court.
+The United States District Court for the District of Columbia granted the motion of petitioner Celotex Corporation for summary judgment against respondent Catrett because the latter was unable to produce evidence in support of her allegation in her wrongful-death complaint that the decedent had been exposed to petitioner's asbestos products.
+ [*322]  HN2[ ] In our view, the plain language of Rule 56(c) mandates the entry of summary judgment, after adequate time for discovery and upon motion, against a party who fails to make a showing sufficient to establish the existence of an element essential to that party's [*323]  case, and on which that party will bear the burden of proof at trial. In such a situation, there can be "no genuine issue as to any material fact," since a complete failure of proof concerning an essential element of the nonmoving party's case necessarily renders all other facts immaterial.
+Of course, a party seeking summary judgment always bears the initial responsibility of informing the district court of the basis for its motion, and identifying those portions of "the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any," which it believes demonstrate the absence of a genuine issue of material fact. But unlike the Court of Appeals, we find no express or implied requirement in Rule 56 that the moving party support its motion with affidavits or other similar materials negating the opponent's claim. n5
+ [*327]  HN3[ ] Summary judgment procedure is properly regarded not as a disfavored procedural shortcut, but rather as an integral part of the Federal Rules as a whole, which are designed "to secure the just, speedy and inexpensive determination of every action." Fed. Rule Civ. Proc. 1.
+
+Dissent by: BRENNAN
+
+Dissent
+
+JUSTICE BRENNAN, with whom THE CHIEF JUSTICE and JUSTICE BLACKMUN join, dissenting.
+This case requires the Court to determine whether Celotex satisfied its initial burden of production in moving for summary judgment. In my view, the Court has not clearly explained what is required of a moving party seeking summary judgment on the ground that the nonmoving party cannot prove its case.
+
+Footnotes
+n5 Of course, it would be premature to hold that summary judgment is proper where discovery is incomplete.

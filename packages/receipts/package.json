@@ -2,8 +2,8 @@
   "name": "riposte-ai",
   "version": "0.0.1",
   "private": true,
-  "description": "Receipts for AI agents: check decisions, actions and \"done\" claims against reality, deterministically. PASS | FAIL | ABSTAIN, a tamper-evident signed ledger, and an MCP server.",
-  "author": "Tucker Anderson",
+  "description": "Receipts for AI agents: check decisions, actions and \"done\" claims against reality, deterministically. PASS | FAIL | INSUFFICIENT_DATA, a tamper-evident signed ledger, and an MCP server.",
+  "author": "E. Tucker Anderson",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SorenSocordia/riposte.git",
@@ -16,8 +16,11 @@
   "bin": {
     "riposte-mcp": "dist/stdio.js",
     "riposte-attest": "dist/attest-cli.js",
+    "riposte-attest-monitor": "dist/attest-monitor-cli.js",
     "riposte-claims": "dist/claims-cli.js",
-    "riposte-ledger": "dist/ledger-cli.js"
+    "riposte-ledger": "dist/ledger-cli.js",
+    "riposte-replay": "dist/replay-cli.js",
+    "riposte-pilot": "dist/pilot-cli.js"
   },
   "files": [
     "dist",
@@ -30,7 +33,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "riposte-verify": "0.0.1"
+    "riposte-verify": "0.7.2"
   },
   "devDependencies": {
     "@types/node": "^22",

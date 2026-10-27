@@ -1,0 +1,110 @@
+{
+  "format": "bench-run/1",
+  "id": "process-misses-2026-10-20",
+  "prereg": "SCOPE.md",
+  "report": "FINDINGS.md",
+  "spec": "spec.json",
+  "not_shipped": [
+    {
+      "file": "maintainers-log-2026-10-26.md",
+      "sha256": "6700ceba8d49795ca32c9ca56fec729207c351b14468d4e4a21ea7179ea7d370",
+      "reason": "the maintainers' working log, copied while it was still being written, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "lead-note-2026-10-20-a.md",
+      "sha256": "6bd61ea802b1a9478f9285b1338980a0bda6d561e98df785355fa6827a83e2d7",
+      "reason": "the lead's note a: its own misses of 2026-10-20, written at the end of that day's work, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "lead-note-2026-10-20-b.md",
+      "sha256": "a769dddac46298bd5379ff304a3c552a9f266da4596db74dd40d774550838ab4",
+      "reason": "the lead's note b: the same day's misses with their hours, written at 23:1x, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "waiter-script-2026-10-20.cmd",
+      "sha256": "b03ebaf91066665528b5f27e6407fe42d86ffa73b67d077efaad98f4603bb5df",
+      "reason": "the waiting script of row p-10, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "waiter-status-2026-10-21.txt",
+      "sha256": "7ca4199e5d6a40caedbd83dbb0d6b70007d7622aa805e0bfe59ef6b3c0fabea0",
+      "reason": "the status file the waiting script wrote, kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-hill-2026-10-26.md",
+      "sha256": "66cafda9214bd8df7e6fd24b538cf6ef5567088d09eb8f76b9895a73e82744fb",
+      "reason": "the hill run's report (the run that wrote the hill harness), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-veto-2026-10-26.md",
+      "sha256": "c86dccfd65a5a7f26cfba9e432920a3430aee2e946a6ab4fabddd8909ed03cc2",
+      "reason": "the veto run's report (the run that added the judge veto to the release check), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-rust-2026-10-26.md",
+      "sha256": "bcd342168c88a62ab726dcce69493362370f06f874486c7a13db55400b052cdb",
+      "reason": "the Rust run's report (the run that wrote the Rust reader of the record vectors), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-guard-2026-10-26.md",
+      "sha256": "3b7cb3aa44d09ac9ed62c625896856c71886c8bb65153ea898ca9810927107b1",
+      "reason": "the guard run's report (the run that wrote a start guard for another of the maintainers' agents), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-age-2026-10-26.md",
+      "sha256": "fc4f559b7317283354930072ffb7e966120c9914766b37eab369c21c3a0ae39e",
+      "reason": "the age run's report (the run that dated the record's earliest timestamps), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. The rows that name it in FINDINGS.md were transcribed from it"
+    },
+    {
+      "file": "run-report-forecast-2026-10-26.md",
+      "sha256": "33c373f3ca6ace767f7f789fa031511d82b986cdd375d893c0eeb1eebea32d09",
+      "reason": "the forecast run's report (the run that wrote the forecast record), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. No row comes from it: FINDINGS.md lists its kept misses as read and left out, with the reason"
+    },
+    {
+      "file": "run-report-meter-2026-10-26.md",
+      "sha256": "ef7b7122a73d2dbacc20bf57d76ee0d06ef8f97ae9b4c852ff549fd81e4fa3f9",
+      "reason": "the meter run's report (the run that wrote the difficulty meter), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. No row comes from it: FINDINGS.md lists its kept misses as read and left out, with the reason"
+    },
+    {
+      "file": "run-report-proofs-2026-10-26.md",
+      "sha256": "5821a80126403a1518f75cdc6352d335282f00f5fa435b18a6677628a9c2b8cc",
+      "reason": "the proofs run's report (the run that designed the inclusion proofs), kept by the authors under a working file name (its sha256 identifies the copy read); it names working folders and private matters on the authors' machine, so it does not ship. No row comes from it: FINDINGS.md lists its kept misses as read and left out, with the reason"
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "There is no run to repeat: the rows are transcribed from the maintainers' working log, two notes of the lead, a script and its status file, and the runs' reports. They are hashed, not shipped, because they name working folders and private matters on the authors' machine."
+  },
+  "sources": [
+    {
+      "file": "SCOPE.md",
+      "sha256": "490d091128f62b6e07343b4d8b7d3159134a82921a3c088753e16bab813ef43b",
+      "from": "written 2026-10-26 in this folder: the document in the prereg's place for a table that records misses only"
+    },
+    {
+      "file": "SCOPE.sha256",
+      "sha256": "c395956616b41ec8a78ce397f6b0abe183e0104f905d5e147f81739f94d3495c",
+      "from": "written 2026-10-26 in this folder, when SCOPE.md was written: its sha256 and the time it was hashed"
+    },
+    {
+      "file": "FINDINGS.md",
+      "sha256": "33aa161f9686985724a80053e636cf4f199456949daf73d309bf83eac43f7b12",
+      "from": "written 2026-10-26 in this folder: the transcription the misses were typed from"
+    },
+    {
+      "file": "REPORTS.sha256",
+      "sha256": "38603d7c7b58c6bed20c3f9fed3452cba54d69787d576f71a3d71b8c2d0e280c",
+      "from": "written 2026-10-26 in this folder: the sha256 of each source the rows were transcribed from"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "eb25d1d334e002d89b1af565a69357209091f4d281b97f166bbf63745040fc88",
+      "from": "written 2026-10-26 in this folder: the misses, typed from FINDINGS.md"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "SCOPE.md.tsr"
+    }
+  ]
+}

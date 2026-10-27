@@ -1,0 +1,65 @@
+Harrowgate Supply Co. v. Pellworth Logistics, LLC, 512 F.4th 233 (2026)
+Distinguished by Annesley v. Corran Mills, Inc., 14th Cir., September 2, 2026
+
+512 F.4th 233
+United States Court of Appeals, Fourteenth Circuit.
+
+HARROWGATE SUPPLY CO., Plaintiff-Appellant,
+v.
+PELLWORTH LOGISTICS, LLC, Defendant-Appellee.
+
+No. 25-4410
+|
+Argued May 6, 2026
+|
+Decided July 21, 2026
+
+Synopsis
+Background: Supplier brought action against logistics company for breach of a warehousing agreement. The district court granted summary judgment for the logistics company and denied the supplier's motion for leave to file a late opposing affidavit. Supplier appealed.
+
+Holdings: The Court of Appeals held that the district court did not abuse its discretion in denying leave.
+
+Affirmed.
+
+West Headnotes (2)
+
+[1] Federal Civil Procedure — Time for motion or opposition
+A party seeking an extension after a deadline has passed must show excusable neglect, and inadvertence alone does not suffice.
+
+[2] Federal Civil Procedure — Affidavits
+A conclusory affidavit does not create a genuine dispute of material fact.
+
+Attorneys and Law Firms
+*234 Miriam Okafor-Lind, Talbridge, for Plaintiff-Appellant.
+Desmond Fairweather, Talbridge, for Defendant-Appellee.
+Before ROSSITER, HALVERSEN, and VANTREASE, Circuit Judges.
+
+Opinion
+
+HALVERSEN, Circuit Judge:
+
+Harrowgate Supply Co. asks us to hold that a district court must grant any extension requested within a week of a missed deadline. We decline to do so.
+
+I
+
+Harrowgate's opposition to summary judgment was due on March 3. It filed nothing. On March 9 it moved for leave to file a late affidavit, explaining that counsel had calendared the wrong date.
+
+II
+
+[1] A party seeking an extension after a deadline has passed must show excusable neglect. Fed. R. Civ. P. 6(b)(1)(B). The inquiry is an equitable one, and the district court may consider the length of the delay, the reason for it, and whether the movant acted in good faith. Inadvertence alone does not ordinarily constitute excusable neglect, but a court may excuse a short delay where the opposing party suffers no prejudice and the movant acted promptly once the error came to light. *235 Whether to do so is committed to the sound discretion of the district court, and we will reverse only where that discretion was plainly abused.
+
+Harrowgate argues that a delay of six days is too short to justify denial. In its view, the brevity of the delay should be dispositive. We disagree. The length of the delay is one factor among several, and it is not controlling. Were we writing on a clean slate, we might agree that a six-day delay is excusable as a matter of course. We are not.
+
+Harrowgate's fallback is that the district court should have at least read the affidavit before striking it. The record shows that it did.
+
+[2] Nor did the district court err in disregarding the affidavit itself. A conclusory affidavit, unsupported by specific facts, does not create a genuine dispute of material
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 3
+Harrowgate Supply Co. v. Pellworth Logistics, LLC, 512 F.4th 233 (2026)
+fact. The affidavit here stated only that Pellworth "failed to perform as required," without saying what was required or how the performance fell short.
+
+The judgment of the district court is AFFIRMED.
+
+All Citations
+512 F.4th 233
+
+End of Document

@@ -1,0 +1,20 @@
+INVOICE MESSAGE
+From: ar@summitelec.example
+Subject: Summit Electrical invoice SES-20418
+
+Invoice SES-20418   PO: PO-7740
+
+Qty   Item                         Unit       Ext
+4     400A PANELBOARD 42CKT        1,450.00   5,800.00
+2000  THHN 12AWG CU FT             0.85       1,700.00
+
+Total due: USD 7,500.00
+
+PURCHASE ORDER (ERP)
+PO-7740 | Vendor: Summit Electrical Supply | Freight: not allowed
+1. 400A panelboard, 42 circuit | qty 8 | unit USD 1,450.00
+2. THHN 12 AWG copper, ft | qty 5000 | unit USD 0.85
+
+GOODS RECEIPT (ERP) for PO-7740
+1. 400A panelboard, 42 circuit | received 4
+2. THHN 12 AWG copper, ft | received 2000

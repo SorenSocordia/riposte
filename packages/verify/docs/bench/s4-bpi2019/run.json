@@ -1,0 +1,153 @@
+{
+  "format": "bench-run/1",
+  "id": "s4-bpi2019",
+  "prereg": "PREREG.md",
+  "results": "results",
+  "spec": "spec.json",
+  "chains": [
+    "PREREG-HASHES.txt"
+  ],
+  "docs": [
+    "PREREG-v0.frozen.md",
+    "PREREG-final.frozen.md"
+  ],
+  "amendment_text": [
+    {
+      "sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+      "from": "PREREG.md:139-219"
+    }
+  ],
+  "stamps": [
+    {
+      "proof": "PREREG.md.tsr"
+    },
+    {
+      "proof": "PREREG-final.frozen.md.tsr"
+    },
+    {
+      "proof": "PREREG-v0.frozen.md.tsr"
+    }
+  ],
+  "unstamped": "unstamped (frozen before 2026-10-05)",
+  "not_shipped": [
+    {
+      "file": "BPI_Challenge_2019.xes",
+      "sha256": "af63bc687fc4152f2123b05c3af7772b37ef3fce2d3f67f812666c9e356baae7",
+      "reason": "the public event log (728,558,522 bytes, md5 4eb909242351193a61e1c15b9c3cc814), not redistributed here. It is published by 4TU.ResearchData, doi 10.4121/uuid:d06aff4b-79f0-45e6-8ec8-e19730c248f1; this sha256 identifies the copy the run read."
+    },
+    {
+      "file": "results/run-blind.jsonl",
+      "sha256": "4365d239253b1bc60c36b0dd9799cf53daf0aafadd01fae65fa9c40544f33103",
+      "reason": "the per-case file (250,234 rows, 97,323,075 bytes), not shipped for its size. The coverage and flag-rate rows are read from results/summary-blind.json, which names this file by this sha256; they are summary only."
+    },
+    {
+      "file": "verify-snapshot",
+      "sha256": "e4673ab6c50127cac2c3e9c70486c751b5aedbba9bfecfc92787983cbe6e3b6c",
+      "reason": "a tree hash in PREREG-HASHES.txt: the copy of the engine build (engine 0.0.1) that run.mjs imports. A build output does not ship, and the source in this tree has changed since"
+    }
+  ],
+  "rerun": {
+    "from_tree": "no",
+    "detail": "Its scripts ship in this folder, but run.mjs imports a copy of the engine build as the run used it (engine 0.0.1), which is not in this tree, and it reads the public BPI Challenge 2019 event log (728 MB, 4TU.ResearchData, doi 10.4121/uuid:d06aff4b-79f0-45e6-8ec8-e19730c248f1), which is not redistributed here. The 97 MB per-case file is not shipped for its size, so the audit counts re-tally only from results/audit-labels.json and results/summary-blind.json."
+  },
+  "blind_basis": "PREREG-HASHES.txt records the first prereg's sha256 at 2026-10-03T06:19:45Z, noted as made while the log was still downloading and before any trace was parsed, and the amended prereg's at 06:54:39Z, before any scored trace was parsed; the amendment says 1,500 development traces were read before it and are left out of every scored number. The list and its notes were written by the authors",
+  "sources": [
+    {
+      "file": "PREREG.md",
+      "sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+      "from": "PREREG.md"
+    },
+    {
+      "file": "PREREG-HASHES.txt",
+      "sha256": "0902655b8483c6f82770564d9a1966aae2d8fe1acce615c6d2fe0a742ad4b23e",
+      "from": "PREREG-HASHES.txt"
+    },
+    {
+      "file": "PREREG-v0.frozen.md",
+      "sha256": "37f97a990eae538196933f7172560fb512a6f7829a4dbe2c1883430c40f4229f",
+      "from": "PREREG-v0.frozen.md"
+    },
+    {
+      "file": "PREREG-final.frozen.md",
+      "sha256": "41e0908d17d006f3db19ff5e1affdc8409f149333b50a2eef398ef2cf84e0d31",
+      "from": "PREREG-final.frozen.md"
+    },
+    {
+      "file": "results/summary-blind.json",
+      "sha256": "c8ea0c4fe5baf3029a8863cac4c17e88e2c8a031c74635e98f020481fab068a2",
+      "from": "results/summary-blind.json"
+    },
+    {
+      "file": "results/audit-labels.json",
+      "sha256": "7e670634614094559c6a6c134e646526854a785376d9fe274dac62790cf1e70a",
+      "from": "results/audit-labels.json"
+    },
+    {
+      "file": "spec.json",
+      "sha256": "cb8f5b466f727a45911be4700498bd8d36724745dbea798ba93a9ff4736200ea",
+      "from": "the run spec written when the tables were first emitted",
+      "from_sha256": "9c59741bb5a9392e4a0df3d78202a10824b7309e8451d197b9bc0d0dfdc90a83",
+      "note": "audit statement added from the run's files; on 2026-10-05, the four preregistered secondaries (PREREG §8, Amendment A6) added as rows, the coverage and flag-rate rows labelled summary only, and the meaning of CONFIRMED stated; on 2026-10-05 the log-agreement row moved first and the primary row says it re-counts the check's own rule; no count, bar or verdict changed; on 2026-10-06 a descriptive row gives the recall side of the log agreement (held items the check flagged, from the same summary counts), and the agreement row says what most of its 61.7% is; no other row changed"
+    },
+    {
+      "file": "run.mjs",
+      "sha256": "41ab2f1a2609844d8658e51641fd32d2f8790a85b0c976cfd384d5c9555c3759",
+      "from": "run.mjs"
+    },
+    {
+      "file": "mapping.mjs",
+      "sha256": "202a710d893d7878ea3ee120da17575475867d27c488812b7e23b43b5bfdcaaa",
+      "from": "mapping.mjs"
+    },
+    {
+      "file": "xes.mjs",
+      "sha256": "7af2234e27f6afd02c2b4e429012ea30bfa4786d0eacdc331c42d889be81f4e1",
+      "from": "xes.mjs"
+    },
+    {
+      "file": "score.mjs",
+      "sha256": "319b6c68fa3f36793a99c6aa357d6a641d68001efef28d0cd5a74222df8241f4",
+      "from": "score.mjs"
+    },
+    {
+      "file": "stats.mjs",
+      "sha256": "a178f3d6b31923adf04b5a3d11f040e9a35c2f074058ea7b364015a70fdd5031",
+      "from": "stats.mjs"
+    },
+    {
+      "file": "dump.mjs",
+      "sha256": "39541b345cd9cf3047a9db25e9dd04571ebfe125976bd9be2a8e289cd70f888a",
+      "from": "dump.mjs"
+    },
+    {
+      "file": "PREREG.md.tsr",
+      "sha256": "26a1a75d4f21a899d94af13676a8122b1e1f1cac5c633a6c3568704e71533e07",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG.md.tsq",
+      "sha256": "f2096560373914d14396bf8673ef31d6543cec131abf55270c3e7bfbbfeb14f9",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    },
+    {
+      "file": "PREREG-final.frozen.md.tsr",
+      "sha256": "e72024381e8b3a47fbde97ffd3f8d7661b0d5eb3f9460cf504acdb3fce4b2d5c",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG-final.frozen.md.tsq",
+      "sha256": "2f2bf04a9367cd1eb81aae721b424238269384bfa806964c3204209cd1dcbef4",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    },
+    {
+      "file": "PREREG-v0.frozen.md.tsr",
+      "sha256": "5445c354dce373d1a5e4f07fcf8cd9e4d66b6a3efb68f8ffa1ec9aab77209b41",
+      "from": "a timestamp reply from DigiCert's authority, written beside the prereg on 2026-10-05 (16:07Z)"
+    },
+    {
+      "file": "PREREG-v0.frozen.md.tsq",
+      "sha256": "0d4e1d2b931d8006006e5a982fc6c4c9e332f07607e47f58bd7c769b738a852c",
+      "from": "the timestamp query sent for that reply, written beside the prereg on 2026-10-05"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+ "file": "jw04488006001_02101_00001_mirimage_cal.fits",
+ "sha256": "0109007319fd874d5ce5c03ddd41ed36ee130fefed78ec03d56046bbe56df167",
+ "sci_shape_numpy": [
+  64,
+  72
+ ],
+ "sci_dtype": ">f4",
+ "checks": [
+  {
+   "id": "F1",
+   "source": "FITS",
+   "verdict": "PASS",
+   "detail": "file length 262080 is a multiple of 2880-byte blocks"
+  },
+  {
+   "id": "F2",
+   "source": "FITS",
+   "verdict": "PASS",
+   "detail": "primary header starts SIMPLE=T, BITPIX, NAXIS, (EXTEND)"
+  },
+  {
+   "id": "F3",
+   "source": "FITS",
+   "verdict": "PASS",
+   "detail": "every extension starts XTENSION, BITPIX, NAXIS, NAXISn, PCOUNT, GCOUNT in order"
+  },
+  {
+   "id": "F4",
+   "source": "FITS",
+   "verdict": "PASS",
+   "detail": "astropy verify('exception') raises nothing"
+  },
+  {
+   "id": "F5",
+   "source": "FITS",
+   "verdict": "FAIL",
+   "detail": "CHECKSUM/DATASUM present on every HDU (FITS checksum convention; optional, not mandatory)"
+  },
+  {
+   "id": "F6",
+   "source": "FITS",
+   "verdict": "PASS",
+   "detail": "DQ uses the BZERO=2^31 unsigned-32-bit convention"
+  },
+  {
+   "id": "F7",
+   "source": "FITS/WCS",
+   "verdict": "PASS",
+   "detail": "CTYPEn '-SIP' suffix is backed by A_/B_/AP_/BP_ORDER keywords (SIP convention)"
+  },
+  {
+   "id": "F8",
+   "source": "FITS/WCS",
+   "verdict": "PASS",
+   "detail": "astropy.wcs builds a 2-axis WCS"
+  },
+  {
+   "id": "J1",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "SCI NAXIS1,2 = 72,64 equals SUBSIZE1,2 = 72,64 for SUBARRAY=SUB64"
+  },
+  {
+   "id": "J2",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "SCI/ERR/DQ/AREA/VAR_* share shape (64, 72)"
+  },
+  {
+   "id": "J3",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "SCI and ERR BUNIT = MJy/sr for a photom-calibrated (cal) image"
+  },
+  {
+   "id": "J4",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "FILENAME keyword equals the file's own name"
+  },
+  {
+   "id": "J5",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "TELESCOP/INSTRUME/EXP_TYPE consistent with the filename suffix 'mirimage'"
+  },
+  {
+   "id": "J6",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "calibration steps a _cal image needs are COMPLETE (missing/not complete: [])"
+  },
+  {
+   "id": "J7",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "(EXPEND-EXPSTART)*86400 = 34.0480 s vs DURATION 34.048"
+  },
+  {
+   "id": "J8",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "NGROUPS*TFRAME*NINTS = 34.0480 s vs EFFEXPTM 34.048 (MIRI FASTR1)"
+  },
+  {
+   "id": "J9",
+   "source": "JWST",
+   "verdict": "FAIL",
+   "detail": "PIXAR_SR*4.254517e+10 = 0.01217061 vs PIXAR_A2 0.01217199"
+  },
+  {
+   "id": "J10",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "PHOTMJSR -> uJy/arcsec2 = 10.18398076 vs PHOTUJA2 10.183980761775189"
+  },
+  {
+   "id": "J11",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "DATE-BEG 2023-08-21T08:33:05.173 = DATE-OBS + TIME-OBS"
+  },
+  {
+   "id": "J12",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "every NaN SCI pixel (988) carries DQ bit 0 DO_NOT_USE (988 flagged)"
+  },
+  {
+   "id": "J13",
+   "source": "JWST",
+   "verdict": "PASS",
+   "detail": "TARG_RA/DEC maps to pixel (35.5, 35.3) inside 72x64"
+  },
+  {
+   "id": "A1",
+   "source": "ARCH",
+   "verdict": "PASS",
+   "detail": "file md5 e8b688264096a0ef50aedf2efce8b78d equals MAST 'checksum' field e8b688264096a0ef50aedf2efce8b78d"
+  },
+  {
+   "id": "A2",
+   "source": "ARCH",
+   "verdict": "PASS",
+   "detail": "file size 262080 equals MAST fileSize 262080"
+  },
+  {
+   "id": "A3",
+   "source": "ARCH",
+   "verdict": "PASS",
+   "detail": "header CAL_VER/CRDS_CTX = 2.0.1/jwst_1535.pmap match MAST row"
+  },
+  {
+   "id": "A4",
+   "source": "ARCH",
+   "verdict": "PASS",
+   "detail": "MAST isRestricted=false; observed 2023-08-21T08:33:05.173000+00:00, public 2023-08-22T02:54:01+00:00"
+  }
+ ]
+}

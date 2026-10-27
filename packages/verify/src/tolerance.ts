@@ -62,7 +62,7 @@ export interface TolerancePolicy {
   roundingCap?: RoundingCap
 }
 
-/** Default for invoice ruleset 0.0.1: a 0.03% relative band over the rule's floor, uncapped (red-team R6, 2026-09-28). */
+/** Default for invoice ruleset 0.0.1: a 0.03% relative band over the rule's floor, uncapped (2026-09-28). */
 export const PRACTITIONER: TolerancePolicy = { rel: 0.0003, absCap: 0 }
 /**
  * Default for invoices from ruleset 0.1.0 (2026-09-28): the same 0.03% band, capped at what rounding can produce (U × k).
@@ -74,16 +74,56 @@ export const CAPPED: TolerancePolicy = { rel: 0.0003, absCap: 0, roundingCap: { 
 export const STRICT: TolerancePolicy = { rel: 0, absCap: 0 }
 
 /**
+ * Why `t` is not a tolerance override the engines can read exactly as its identity hashes it, or undefined when it is one
+ * (2026-10-05; a cold reader's Collision A, cold review round 2). The shape is checked strictly, because the identity below and
+ * the engine must read the same thing: `{ rel, absCap, roundingCap?: { perLine?, cashStep? }, rounding? }`, where rel and absCap
+ * are finite numbers ≥ 0, perLine and cashStep are arrays of rule-id strings, rounding is 'infer' or 'none' (the declarative
+ * engine's mode), and no other key is present. Before this check, `perLine: "TAX_INT"` (a string) and `perLine: ["T","A","X",
+ * "_","I","N","T"]` (its characters) hashed alike, while the engine's `.includes()` read them differently: one verdict_id named
+ * a PASS and a FAIL. Every input that issued a verdict before passes unchanged: the engines never read anything else.
+ */
+export function toleranceProblem(t: unknown): string | undefined {
+  const isObj = (x: unknown): x is Record<string, unknown> => x !== null && typeof x === 'object' && !Array.isArray(x)
+  const shape = '{ "rel": <number ≥ 0>, "absCap": <number ≥ 0>, "roundingCap"?: { "perLine"?: [<rule id>...], "cashStep"?: [<rule id>...] }, "rounding"?: "infer" | "none" }'
+  if (!isObj(t)) return `tolerance must be an object ${shape}`
+  const extra = Object.keys(t).filter(k => !['rel', 'absCap', 'roundingCap', 'rounding'].includes(k))
+  if (extra.length) return `tolerance carries ${extra.map(k => JSON.stringify(k)).join(', ')}, which no engine reads (so its identity would not commit to it); the shape is ${shape}`
+  for (const k of ['rel', 'absCap'] as const) {
+    const v = t[k]
+    if (typeof v !== 'number' || !Number.isFinite(v) || v < 0) return `tolerance.${k} must be a finite number ≥ 0 (got ${typeof v === 'number' ? String(v) : JSON.stringify(v) ?? typeof v})`
+  }
+  if (t.rounding !== undefined && t.rounding !== 'infer' && t.rounding !== 'none') return `tolerance.rounding must be "infer" or "none" (got ${JSON.stringify(t.rounding) ?? typeof t.rounding})`
+  if (t.roundingCap !== undefined) {
+    const rc = t.roundingCap
+    if (!isObj(rc)) return `tolerance.roundingCap must be an object { "perLine"?: [<rule id>...], "cashStep"?: [<rule id>...] }`
+    const extraRc = Object.keys(rc).filter(k => k !== 'perLine' && k !== 'cashStep')
+    if (extraRc.length) return `tolerance.roundingCap carries ${extraRc.map(k => JSON.stringify(k)).join(', ')}, which no engine reads; it takes "perLine" and "cashStep"`
+    for (const k of ['perLine', 'cashStep'] as const) {
+      const v = rc[k]
+      if (v === undefined) continue
+      if (!Array.isArray(v)) return `tolerance.roundingCap.${k} must be an array of rule-id strings, such as ["TAX_INT"] (got ${typeof v === 'string' ? `the string ${JSON.stringify(v)}` : JSON.stringify(v) ?? typeof v}): a string would be read one character at a time by the hash but as one id by the engine`
+      const bad = v.findIndex(x => typeof x !== 'string')
+      if (bad >= 0) return `tolerance.roundingCap.${k}[${bad}] must be a rule-id string (got ${JSON.stringify(v[bad]) ?? typeof v[bad]})`
+    }
+  }
+  return undefined
+}
+
+/**
  * The part of a tolerance override that can change an outcome, in a stable shape: what a verdict's input identity
  * commits to when an override is given (D-TOL-ID). `rounding` is the declarative engine's rounding-aware mode.
+ * The rule-id lists keep their type (2026-10-05): an array is copied as it was, byte for byte as before; anything
+ * else (a string, which toleranceProblem refuses wherever a verdict is issued) is kept as given, so it can never hash like the
+ * array of its characters.
  */
 export function toleranceIdentity(t: TolerancePolicy & { rounding?: string }): Record<string, unknown> {
+  const list = (x: unknown): unknown => (Array.isArray(x) ? [...x] : x === undefined ? [] : x)
   return {
     rel: t.rel,
     absCap: t.absCap,
     ...(t.rounding !== undefined ? { rounding: t.rounding } : {}),
     ...(t.roundingCap !== undefined ? {
-      roundingCap: { perLine: [...(t.roundingCap.perLine ?? [])], cashStep: [...(t.roundingCap.cashStep ?? [])] },
+      roundingCap: { perLine: list(t.roundingCap.perLine), cashStep: list(t.roundingCap.cashStep) },
     } : {}),
   }
 }

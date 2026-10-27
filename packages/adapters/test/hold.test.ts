@@ -45,11 +45,11 @@ describe('policy', () => {
 describe('dispositions follow the rung (the design ruling): record/advise surface, gate/autonomy hold', () => {
   const table: Record<string, Record<string, string>> = {
     FAIL: { record: 'record', advise: 'surface', gate: 'hold', autonomy: 'hold' },
-    ABSTAIN: { record: 'record', advise: 'surface', gate: 'hold', autonomy: 'hold' },
+    INSUFFICIENT_DATA: { record: 'record', advise: 'surface', gate: 'hold', autonomy: 'hold' },
     PASS: { record: 'proceed', advise: 'proceed', gate: 'review', autonomy: 'proceed' },
   }
-  const allowedFor = { FAIL: WRONG_ACCOUNT, ABSTAIN: undefined, PASS: GROUNDED }
-  for (const outcome of ['FAIL', 'ABSTAIN', 'PASS'] as const) {
+  const allowedFor = { FAIL: WRONG_ACCOUNT, INSUFFICIENT_DATA: undefined, PASS: GROUNDED }
+  for (const outcome of ['FAIL', 'INSUFFICIENT_DATA', 'PASS'] as const) {
     for (const level of VOICE_LADDER) {
       it(`${outcome} at ${level} → ${table[outcome]![level]}`, () => {
         const r = checkAction(policyAt(level, allowedFor[outcome]), transfer, { now })
@@ -84,7 +84,7 @@ describe('THE GUARD: never deliver an outcome softer than the verdict', () => {
       expect(r.disposition).toBe(want)
       expect(r.notice.outcome).toBe('INSUFFICIENT_DATA')
       expect(r.guard).toBeUndefined() // verify is strict itself since F1 was fixed (09-28); the guard stays as a belt
-      expect(r.delivery.facts.findings.map((f) => [f.id, f.status])).toEqual([['arg.to_account', 'ABSTAIN']])
+      expect(r.delivery.facts.findings.map((f) => [f.id, f.status])).toEqual([['arg.to_account', 'INSUFFICIENT_DATA']])
     })
   }
   it('leaves an agreeing notice alone', () => {

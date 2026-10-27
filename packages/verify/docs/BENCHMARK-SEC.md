@@ -103,7 +103,7 @@ link and reason.
 
 ## Re-run it
 
-From the repository root, after `npm install && npm run build`, download the quarters into `bench/sec/data/` (see
+From the repository root, after `npm install --legacy-peer-deps && npm run build`, download the quarters into `bench/sec/data/` (see
 [`bench/sec/README.md`](../../../bench/sec/README.md)), then:
 - Blind run: `npx tsx bench/sec/sec-run.mts`, then `python bench/sec/audit_sample.py`, `npx tsx bench/sec/audit.mts` and
   `npx tsx bench/sec/audit-assist.mts`.
@@ -111,4 +111,6 @@ From the repository root, after `npm install && npm run build`, download the qua
   `npx tsx bench/sec/audit-v02.mts`, `npx tsx bench/sec/audit-assist-v02.mts` and `python bench/sec/audit_final_v02.py`.
 - Mining: `npx tsx bench/sec/sec-mine.mts`, then `npx tsx bench/sec/sec-mine-explore.mts`.
 
-The hand labels (`manual-labels*.json`) and the published outputs are in `bench/sec/results/`.
+The audit labels (`manual-labels*.json`) and the published outputs are in `bench/sec/results/`. The first study's files do
+not record whether a person or an AI agent made its labels; the second study's audit was done by a separate AI agent.
+The misses all three studies report are rows in [MISSES.md](MISSES.md), table `sec-misses`.

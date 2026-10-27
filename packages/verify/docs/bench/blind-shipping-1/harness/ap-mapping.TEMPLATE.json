@@ -1,0 +1,48 @@
+{
+  "source": "",
+  "columns": {
+    "bills": {
+      "ref": "",
+      "invoice_number": "",
+      "vendor": "",
+      "date": "",
+      "total": "",
+      "po": "",
+      "line_id": "",
+      "item": "",
+      "description": "",
+      "quantity": "",
+      "rate": "",
+      "amount": "",
+      "price_per": "",
+      "unit": ""
+    },
+    "purchase_orders": {
+      "ref": "",
+      "number": "",
+      "vendor": "",
+      "line_id": "",
+      "item": "",
+      "description": "",
+      "quantity": "",
+      "rate": "",
+      "amount": "",
+      "price_per": "",
+      "unit": ""
+    },
+    "item_receipts": {
+      "ref": "",
+      "number": "",
+      "po": "",
+      "date": "",
+      "item": "",
+      "quantity": ""
+    }
+  },
+  "status": {
+    "pay": [],
+    "hold": []
+  },
+  "ignore": [],
+  "_template": "blind-shipping-1 AP arm: every column name is blank until a partner's export header row is read (PREREG.md section 4.1). Not a mapping yet: never pass it to riposte-pilot as one."
+}

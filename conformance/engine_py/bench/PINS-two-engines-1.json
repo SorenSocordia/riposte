@@ -1,0 +1,37 @@
+{
+  "engine_sources": {
+    "sha256": "66a645e738a7a40483b59e2094cee5f6d40a09d08849adc763f2fb973d149ad8",
+    "files": 218
+  },
+  "python_engine": {
+    "sha256": "41a95efae6721ef953655ab6ae28e61642ef38ee84a906a6b44c186d925bbbc0",
+    "files": 43
+  },
+  "binding_verifier": {
+    "sha256": "d8b4113d662463c7c03bd86ec32535c7f15aeb4c03e89b5fa51162051761e94d"
+  },
+  "harness": {
+    "sha256": "98eb87217099411b2499063b7b22e618343bd174e500e99105b404d078e08076"
+  },
+  "whetstone_files": {
+    "mutations.json": "b59513f1522b5253832c88943167eef4b71c8f6773a1beb8fb78c60d36182c8e",
+    "mutations-2.json": "97f96a7bea0d190e78bc5688d074bed9a5c7fab1053641727c599bb76d0eb86b",
+    "HELDOUT.sha256": "3c6054518484333686fb4368555775ddb8463ccea222440c3bb4688bd9391658",
+    "HELDOUT-2.sha256": "5a176ee7bb515901429b22fb3b2c6090286b9ed96f256edf38df538d85aeba89"
+  },
+  "whetstone_dev_replayed": {
+    "sha256": "998c7b1c11a73356ce03f75549074ad95f3dba75d77490d9dcd18dbe8b9bc898",
+    "rows": 150
+  },
+  "vectors_manifest": {
+    "sha256": "c5c5923cd2ef30043e62d886b12dbfc6464fd53763533b0e1ca91a9515ba0b1b"
+  },
+  "pack": {
+    "sha256": "5c8d6c1f9f1a50af6925017d84c1c45e471b41d514e9b17489aa2eaf37181453"
+  },
+  "node": "v25.2.1",
+  "python": "3.10.16",
+  "platform": "win32",
+  "computed_at": "2026-10-20T14:38:31Z",
+  "note": "engine_sources over the export of 2026-10-20 06:30 local (the Linux lane run 8 export, the tree after the legal citation reader fix); the rest over the tree that export is made from, whose pinned files ship byte for byte"
+}

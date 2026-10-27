@@ -72,7 +72,7 @@ export function renderCompletenessReport(r: CompletenessReport, opts: RenderComp
   // Exceptions, most severe first.
   const pdh = r.exceptions.paid_despite_hold
   L.push(`## PAID DESPITE HOLD (${pdh.length}): a control override`, '')
-  if (pdh.length === 0) L.push('None. No payment was made on a FAIL/ABSTAIN that the book held at gate or autonomy without a person\'s resolution.', '')
+  if (pdh.length === 0) L.push('None. No payment was made on a FAIL or INSUFFICIENT_DATA verdict that the book held at gate or autonomy without a person\'s resolution.', '')
   else {
     L.push('Paid, while the book says the verdict was held at a holding rung and no person had resolved it by the payment date.', '')
     L.push('| row | key | paid | payment date | verdict | outcome | hold |', '|---|---|---|---|---|---|---|')
@@ -144,7 +144,7 @@ export function renderCompletenessReport(r: CompletenessReport, opts: RenderComp
   L.push('')
   const or = r.exceptions.orphans
   if (or.length > 0) {
-    L.push(`**Orphans (${or.length}).** A verdict in the period with no payment. A held FAIL/ABSTAIN that was never paid is the control working. A PASS orphan was checked and not paid in this population: open, paid elsewhere, or a sign the population is incomplete.`, '')
+    L.push(`**Orphans (${or.length}).** A verdict in the period with no payment. A held FAIL or INSUFFICIENT_DATA verdict that was never paid is the control working. A PASS orphan was checked and not paid in this population: open, paid elsewhere, or a sign the population is incomplete.`, '')
     L.push('| verdict | outcome | held | reviewed | key | recorded |', '|---|---|---|---|---|---|')
     for (const o of or.slice(0, max)) L.push(`| ${verdictRef(o.book)} | ${o.book.outcome} | ${o.held ? 'yes' : 'no'} | ${o.reviewed ? 'yes' : 'no'} | ${cell(keyOf(o.book.key))} | ${o.book.recorded_at} |`)
     more(L, or.length, Math.min(max, or.length))

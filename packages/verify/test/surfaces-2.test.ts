@@ -303,10 +303,10 @@ describe('twin v0.2 flat fields (ruleset, pre, filing_summary, schema): the CLI 
 
   it('ruleset 0.2 with no linkbase abstains NO_PRESENTATION_LINKBASE (CREDENCE-2 §7), never guesses', () => {
     const r = twinFromJson({ ...BASE, ruleset: '0.2' }, NOW)
-    expect(r.judgments.map(j => [j.outcome, j.reason])).toEqual([['ABSTAIN', 'NO_PRESENTATION_LINKBASE']])
+    expect(r.judgments.map(j => [j.outcome, j.reason])).toEqual([['INSUFFICIENT_DATA', 'NO_PRESENTATION_LINKBASE']])
     expect(r.verdict.outcome).toBe('INSUFFICIENT_DATA')
     // a filing summary alone is not a linkbase
-    expect(twinFromJson({ ...BASE, ruleset: '0.2', filing_summary: FS }, NOW).judgments[0]).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_PRESENTATION_LINKBASE' })
+    expect(twinFromJson({ ...BASE, ruleset: '0.2', filing_summary: FS }, NOW).judgments[0]).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_PRESENTATION_LINKBASE' })
   })
 
   it('ruleset 0.1 is the default map, byte for byte', () => {

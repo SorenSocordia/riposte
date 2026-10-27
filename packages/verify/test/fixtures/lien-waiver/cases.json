@@ -1,0 +1,3721 @@
+{
+ "about": "The 30 synthetic lien-waiver cases of the lien-waiver demo (20 clean, 10 with one planted defect each), copied with their manifest rows. Synthetic fixtures, not a benchmark.",
+ "source_sha256": {
+  "lien-waiver.ruleset.json": "453b8c738fba5940bb68cc6a9dfdf6f97dd5ecd36b87a95412493db0d7097c9d",
+  "statutory-forms.json": "fe88b4fd90d3ee284e44b8c035b3d4d2e262bea54909cdeb4221f4a0fb4f00ad",
+  "manifest.json": "98c9c7e89881604e1d5b1cffeac2bb930cb7d192e4a6835d5806b141cab168d5"
+ },
+ "cases": [
+  {
+   "id": "F01",
+   "label": "clean",
+   "form": "CA-8132",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "job_location": "4410 Ninefold Way, Fresno, CA 93721",
+     "customer": "Orrery Lane Holdings LLC",
+     "through_date": "2026-08-31",
+     "amount": 134100,
+     "signed_date": "2026-09-05"
+    },
+    "pay_app": {
+     "application_number": 6,
+     "period_to": "2026-08-31",
+     "final": false,
+     "contractor": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "project": {
+      "name": "Ninefold Commons Clinic",
+      "address": "4410 Ninefold Way, Fresno, CA 93721",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1650000,
+     "net_change_orders": 50000,
+     "contract_sum_to_date": 1700000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 40000,
+       "previous": 40000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 40000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 4000
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 260000,
+       "previous": 195000,
+       "this_period": 39000,
+       "materials_stored": 0,
+       "completed_to_date": 234000,
+       "percent_complete": 90,
+       "balance_to_finish": 26000,
+       "retainage": 23400
+      },
+      {
+       "item_no": "3",
+       "description": "Concrete",
+       "scheduled_value": 420000,
+       "previous": 210000,
+       "this_period": 42000,
+       "materials_stored": 0,
+       "completed_to_date": 252000,
+       "percent_complete": 60,
+       "balance_to_finish": 168000,
+       "retainage": 25200
+      },
+      {
+       "item_no": "4",
+       "description": "Framing",
+       "scheduled_value": 380000,
+       "previous": 190000,
+       "this_period": 38000,
+       "materials_stored": 0,
+       "completed_to_date": 228000,
+       "percent_complete": 60,
+       "balance_to_finish": 152000,
+       "retainage": 22800
+      },
+      {
+       "item_no": "5",
+       "description": "MEP",
+       "scheduled_value": 600000,
+       "previous": 150000,
+       "this_period": 30000,
+       "materials_stored": 0,
+       "completed_to_date": 180000,
+       "percent_complete": 30,
+       "balance_to_finish": 420000,
+       "retainage": 18000
+      }
+     ],
+     "total_completed_and_stored": 934000,
+     "retainage_rate": "10%",
+     "total_retainage": 93400,
+     "total_earned_less_retainage": 840600,
+     "less_previous_certificates": 706500,
+     "current_payment_due": 134100,
+     "balance_to_finish_including_retainage": 859400
+    },
+    "payment": {
+     "payee": "Paxwick Builders Inc.",
+     "maker": "Orrery Lane Holdings LLC",
+     "method": "check",
+     "check_no": "NC-2207-6",
+     "amount": 134100,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Paxwick Builders Inc.\n\nName of Customer: Orrery Lane Holdings LLC\n\nJob Location: 4410 Ninefold Way, Fresno, CA 93721\n\nOwner: Orrery Lane Holdings LLC\n\nThrough Date: August 31, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Orrery Lane Holdings LLC\n\nAmount of Check: $134,100.00\n\nCheck Payable to: Paxwick Builders Inc.\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release:\n\nAmount(s) of unpaid progress payment(s): $\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Renata Quillon\n\nClaimant’s Title: Project Manager\n\nDate of Signature: September 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F02",
+   "label": "clean",
+   "form": "CA-8132",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "QUARREL  &  FINCH  CONSTRUCTION  CO.",
+     "owner": "  hollin creek civic trust ",
+     "job_location": "88 Vellum St, Sacramento, CA 95814",
+     "customer": "  hollin creek civic trust ",
+     "through_date": "2026-07-31",
+     "amount": 114950,
+     "signed_date": "2026-08-05"
+    },
+    "pay_app": {
+     "application_number": 3,
+     "period_to": "2026-07-31",
+     "final": false,
+     "contractor": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "project": {
+      "name": "Vellum Street Library Annex",
+      "address": "88 Vellum St, Sacramento, CA 95814",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 820000,
+     "net_change_orders": 0,
+     "contract_sum_to_date": 820000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 60000,
+       "previous": 24000,
+       "this_period": 12000,
+       "materials_stored": 0,
+       "completed_to_date": 36000,
+       "percent_complete": 60,
+       "balance_to_finish": 24000,
+       "retainage": 1800
+      },
+      {
+       "item_no": "2",
+       "description": "Demolition",
+       "scheduled_value": 90000,
+       "previous": 63000,
+       "this_period": 27000,
+       "materials_stored": 0,
+       "completed_to_date": 90000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 4500
+      },
+      {
+       "item_no": "3",
+       "description": "Structure",
+       "scheduled_value": 300000,
+       "previous": 90000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 135000,
+       "percent_complete": 45,
+       "balance_to_finish": 165000,
+       "retainage": 6750
+      },
+      {
+       "item_no": "4",
+       "description": "Finishes",
+       "scheduled_value": 250000,
+       "previous": 50000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 75000,
+       "percent_complete": 30,
+       "balance_to_finish": 175000,
+       "retainage": 3750
+      },
+      {
+       "item_no": "5",
+       "description": "Electrical",
+       "scheduled_value": 120000,
+       "previous": 24000,
+       "this_period": 12000,
+       "materials_stored": 0,
+       "completed_to_date": 36000,
+       "percent_complete": 30,
+       "balance_to_finish": 84000,
+       "retainage": 1800
+      }
+     ],
+     "total_completed_and_stored": 372000,
+     "retainage_rate": "5%",
+     "total_retainage": 18600,
+     "total_earned_less_retainage": 353400,
+     "less_previous_certificates": 238450,
+     "current_payment_due": 114950,
+     "balance_to_finish_including_retainage": 466600
+    },
+    "payment": {
+     "payee": "Quarrel & Finch Construction Co.",
+     "maker": "Hollin Creek Civic Trust",
+     "method": "check",
+     "check_no": "VS-0415-3",
+     "amount": 114950,
+     "cleared": true,
+     "cleared_date": "2026-08-20"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: QUARREL  &  FINCH  CONSTRUCTION  CO.\n\nName of Customer:   hollin creek civic trust \n\nJob Location: 88 Vellum St, Sacramento, CA 95814\n\nOwner:   hollin creek civic trust \n\nThrough Date: July 31, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Hollin Creek Civic Trust\n\nAmount of Check: $114,950.00\n\nCheck Payable to: Quarrel & Finch Construction Co.\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release:\n\nAmount(s) of unpaid progress payment(s): $\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Dov Halloway\n\nClaimant’s Title: Vice President\n\nDate of Signature: August 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F03",
+   "label": "clean",
+   "form": "CA-8132",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "job_location": "1501 Sablewood Ave, Riverside, CA 92501",
+     "customer": "Sablewood Unified Facilities Corp.",
+     "through_date": "2026-08-31",
+     "amount": 283500,
+     "exceptions": {
+      "unpaid_progress_amount_stated": 12500
+     },
+     "signed_date": "2026-09-05"
+    },
+    "pay_app": {
+     "application_number": 4,
+     "period_to": "2026-08-31",
+     "final": false,
+     "contractor": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "project": {
+      "name": "Sablewood Middle School Gym",
+      "address": "1501 Sablewood Ave, Riverside, CA 92501",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 2300000,
+     "net_change_orders": 100000,
+     "contract_sum_to_date": 2400000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 100000,
+       "previous": 100000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 10000
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 500000,
+       "previous": 300000,
+       "this_period": 100000,
+       "materials_stored": 0,
+       "completed_to_date": 400000,
+       "percent_complete": 80,
+       "balance_to_finish": 100000,
+       "retainage": 40000
+      },
+      {
+       "item_no": "3",
+       "description": "Steel",
+       "scheduled_value": 700000,
+       "previous": 315000,
+       "this_period": 105000,
+       "materials_stored": 0,
+       "completed_to_date": 420000,
+       "percent_complete": 60,
+       "balance_to_finish": 280000,
+       "retainage": 42000
+      },
+      {
+       "item_no": "4",
+       "description": "Roofing",
+       "scheduled_value": 400000,
+       "previous": 120000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 160000,
+       "percent_complete": 40,
+       "balance_to_finish": 240000,
+       "retainage": 16000
+      },
+      {
+       "item_no": "5",
+       "description": "Interiors",
+       "scheduled_value": 700000,
+       "previous": 210000,
+       "this_period": 70000,
+       "materials_stored": 0,
+       "completed_to_date": 280000,
+       "percent_complete": 40,
+       "balance_to_finish": 420000,
+       "retainage": 28000
+      }
+     ],
+     "total_completed_and_stored": 1360000,
+     "retainage_rate": "10%",
+     "total_retainage": 136000,
+     "total_earned_less_retainage": 1224000,
+     "less_previous_certificates": 940500,
+     "current_payment_due": 283500,
+     "balance_to_finish_including_retainage": 1176000
+    },
+    "payment": {
+     "payee": "Tamsin Ridge Builders LLC",
+     "maker": "Sablewood Unified Facilities Corp.",
+     "method": "check",
+     "check_no": "SW-3302-4",
+     "amount": 283500,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    },
+    "waiver_exception_items": [
+     {
+      "waiver_date": "2026-06-30",
+      "amount": 12500
+     }
+    ]
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Tamsin Ridge Builders LLC\n\nName of Customer: Sablewood Unified Facilities Corp.\n\nJob Location: 1501 Sablewood Ave, Riverside, CA 92501\n\nOwner: Sablewood Unified Facilities Corp.\n\nThrough Date: August 31, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Sablewood Unified Facilities Corp.\n\nAmount of Check: $283,500.00\n\nCheck Payable to: Tamsin Ridge Builders LLC\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release: June 30, 2026\n\nAmount(s) of unpaid progress payment(s): $12,500.00\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Imke Sorrel\n\nClaimant’s Title: Controller\n\nDate of Signature: September 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F04",
+   "label": "clean",
+   "form": "CA-8134",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8134",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "job_location": "4410 Ninefold Way, Fresno, CA 93721",
+     "customer": "Orrery Lane Holdings LLC",
+     "through_date": "2026-07-31",
+     "amount": 134100,
+     "signed_date": "2026-08-05"
+    },
+    "pay_app": {
+     "application_number": 5,
+     "period_to": "2026-07-31",
+     "final": false,
+     "contractor": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "project": {
+      "name": "Ninefold Commons Clinic",
+      "address": "4410 Ninefold Way, Fresno, CA 93721",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1650000,
+     "net_change_orders": 50000,
+     "contract_sum_to_date": 1700000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 40000,
+       "previous": 40000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 40000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 4000
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 260000,
+       "previous": 156000,
+       "this_period": 39000,
+       "materials_stored": 0,
+       "completed_to_date": 195000,
+       "percent_complete": 75,
+       "balance_to_finish": 65000,
+       "retainage": 19500
+      },
+      {
+       "item_no": "3",
+       "description": "Concrete",
+       "scheduled_value": 420000,
+       "previous": 168000,
+       "this_period": 42000,
+       "materials_stored": 0,
+       "completed_to_date": 210000,
+       "percent_complete": 50,
+       "balance_to_finish": 210000,
+       "retainage": 21000
+      },
+      {
+       "item_no": "4",
+       "description": "Framing",
+       "scheduled_value": 380000,
+       "previous": 152000,
+       "this_period": 38000,
+       "materials_stored": 0,
+       "completed_to_date": 190000,
+       "percent_complete": 50,
+       "balance_to_finish": 190000,
+       "retainage": 19000
+      },
+      {
+       "item_no": "5",
+       "description": "MEP",
+       "scheduled_value": 600000,
+       "previous": 120000,
+       "this_period": 30000,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 25,
+       "balance_to_finish": 450000,
+       "retainage": 15000
+      }
+     ],
+     "total_completed_and_stored": 785000,
+     "retainage_rate": "10%",
+     "total_retainage": 78500,
+     "total_earned_less_retainage": 706500,
+     "less_previous_certificates": 572400,
+     "current_payment_due": 134100,
+     "balance_to_finish_including_retainage": 993500
+    },
+    "payment": {
+     "payee": "Paxwick Builders Inc.",
+     "maker": "Orrery Lane Holdings LLC",
+     "method": "check",
+     "check_no": "NC-2207-5",
+     "amount": 134100,
+     "cleared": true,
+     "cleared_date": "2026-08-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Paxwick Builders Inc.\n\nName of Customer: Orrery Lane Holdings LLC\n\nJob Location: 4410 Ninefold Way, Fresno, CA 93721\n\nOwner: Orrery Lane Holdings LLC\n\nThrough Date: July 31, 2026\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has received the following progress payment: $134,100.00\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to recover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Renata Quillon\n\nClaimant’s Title: Project Manager\n\nDate of Signature: August 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F05",
+   "label": "clean",
+   "form": "CA-8134",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8134",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "job_location": "88 Vellum St, Sacramento, CA 95814",
+     "customer": "Hollin Creek Civic Trust",
+     "through_date": "2026-06-30",
+     "amount": 119225,
+     "signed_date": "2026-07-05"
+    },
+    "pay_app": {
+     "application_number": 2,
+     "period_to": "2026-06-30",
+     "final": false,
+     "contractor": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "project": {
+      "name": "Vellum Street Library Annex",
+      "address": "88 Vellum St, Sacramento, CA 95814",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 820000,
+     "net_change_orders": 0,
+     "contract_sum_to_date": 820000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 60000,
+       "previous": 12000,
+       "this_period": 12000,
+       "materials_stored": 0,
+       "completed_to_date": 24000,
+       "percent_complete": 40,
+       "balance_to_finish": 36000,
+       "retainage": 1200
+      },
+      {
+       "item_no": "2",
+       "description": "Demolition",
+       "scheduled_value": 90000,
+       "previous": 31500,
+       "this_period": 31500,
+       "materials_stored": 0,
+       "completed_to_date": 63000,
+       "percent_complete": 70,
+       "balance_to_finish": 27000,
+       "retainage": 3150
+      },
+      {
+       "item_no": "3",
+       "description": "Structure",
+       "scheduled_value": 300000,
+       "previous": 45000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 90000,
+       "percent_complete": 30,
+       "balance_to_finish": 210000,
+       "retainage": 4500
+      },
+      {
+       "item_no": "4",
+       "description": "Finishes",
+       "scheduled_value": 250000,
+       "previous": 25000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 50000,
+       "percent_complete": 20,
+       "balance_to_finish": 200000,
+       "retainage": 2500
+      },
+      {
+       "item_no": "5",
+       "description": "Electrical",
+       "scheduled_value": 120000,
+       "previous": 12000,
+       "this_period": 12000,
+       "materials_stored": 0,
+       "completed_to_date": 24000,
+       "percent_complete": 20,
+       "balance_to_finish": 96000,
+       "retainage": 1200
+      }
+     ],
+     "total_completed_and_stored": 251000,
+     "retainage_rate": "5%",
+     "total_retainage": 12550,
+     "total_earned_less_retainage": 238450,
+     "less_previous_certificates": 119225,
+     "current_payment_due": 119225,
+     "balance_to_finish_including_retainage": 581550
+    },
+    "payment": {
+     "payee": "Quarrel & Finch Construction Co.",
+     "maker": "Hollin Creek Civic Trust",
+     "method": "check",
+     "check_no": "VS-0415-2",
+     "amount": 119225,
+     "cleared": true,
+     "cleared_date": "2026-07-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Quarrel & Finch Construction Co.\n\nName of Customer: Hollin Creek Civic Trust\n\nJob Location: 88 Vellum St, Sacramento, CA 95814\n\nOwner: Hollin Creek Civic Trust\n\nThrough Date: June 30, 2026\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has received the following progress payment: $119,225.00\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to recover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Dov Halloway\n\nClaimant’s Title: Vice President\n\nDate of Signature: July 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F06",
+   "label": "clean",
+   "form": "CA-8134",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8134",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "job_location": "1501 Sablewood Ave, Riverside, CA 92501",
+     "customer": "Sablewood Unified Facilities Corp.",
+     "through_date": "2026-07-31",
+     "amount": 310500,
+     "signed_date": "2026-08-05"
+    },
+    "pay_app": {
+     "application_number": 3,
+     "period_to": "2026-07-31",
+     "final": false,
+     "contractor": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "project": {
+      "name": "Sablewood Middle School Gym",
+      "address": "1501 Sablewood Ave, Riverside, CA 92501",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 2300000,
+     "net_change_orders": 100000,
+     "contract_sum_to_date": 2400000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 100000,
+       "previous": 70000,
+       "this_period": 30000,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 10000
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 500000,
+       "previous": 200000,
+       "this_period": 100000,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 60,
+       "balance_to_finish": 200000,
+       "retainage": 30000
+      },
+      {
+       "item_no": "3",
+       "description": "Steel",
+       "scheduled_value": 700000,
+       "previous": 210000,
+       "this_period": 105000,
+       "materials_stored": 0,
+       "completed_to_date": 315000,
+       "percent_complete": 45,
+       "balance_to_finish": 385000,
+       "retainage": 31500
+      },
+      {
+       "item_no": "4",
+       "description": "Roofing",
+       "scheduled_value": 400000,
+       "previous": 80000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 120000,
+       "percent_complete": 30,
+       "balance_to_finish": 280000,
+       "retainage": 12000
+      },
+      {
+       "item_no": "5",
+       "description": "Interiors",
+       "scheduled_value": 700000,
+       "previous": 140000,
+       "this_period": 70000,
+       "materials_stored": 0,
+       "completed_to_date": 210000,
+       "percent_complete": 30,
+       "balance_to_finish": 490000,
+       "retainage": 21000
+      }
+     ],
+     "total_completed_and_stored": 1045000,
+     "retainage_rate": "10%",
+     "total_retainage": 104500,
+     "total_earned_less_retainage": 940500,
+     "less_previous_certificates": 630000,
+     "current_payment_due": 310500,
+     "balance_to_finish_including_retainage": 1459500
+    },
+    "payment": {
+     "payee": "Tamsin Ridge Builders LLC",
+     "maker": "Sablewood Unified Facilities Corp.",
+     "method": "check",
+     "check_no": "SW-3302-3",
+     "amount": 310500,
+     "cleared": true,
+     "cleared_date": "2026-08-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Tamsin Ridge Builders LLC\n\nName of Customer: Sablewood Unified Facilities Corp.\n\nJob Location: 1501 Sablewood Ave, Riverside, CA 92501\n\nOwner: Sablewood Unified Facilities Corp.\n\nThrough Date: July 31, 2026\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has received the following progress payment: $310,500.00\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to recover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Imke Sorrel\n\nClaimant’s Title: Controller\n\nDate of Signature: August 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F07",
+   "label": "clean",
+   "form": "CA-8136",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8136",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": false,
+      "final": true
+     },
+     "claimant": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "job_location": "4410 Ninefold Way, Fresno, CA 93721",
+     "customer": "Orrery Lane Holdings LLC",
+     "amount": 638000,
+     "signed_date": "2026-12-05"
+    },
+    "pay_app": {
+     "application_number": 9,
+     "period_to": "2026-11-30",
+     "final": true,
+     "contractor": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "project": {
+      "name": "Ninefold Commons Clinic",
+      "address": "4410 Ninefold Way, Fresno, CA 93721",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1650000,
+     "net_change_orders": 50000,
+     "contract_sum_to_date": 1700000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 40000,
+       "previous": 40000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 40000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 260000,
+       "previous": 260000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 260000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Concrete",
+       "scheduled_value": 420000,
+       "previous": 336000,
+       "this_period": 84000,
+       "materials_stored": 0,
+       "completed_to_date": 420000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Framing",
+       "scheduled_value": 380000,
+       "previous": 304000,
+       "this_period": 76000,
+       "materials_stored": 0,
+       "completed_to_date": 380000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "MEP",
+       "scheduled_value": 600000,
+       "previous": 240000,
+       "this_period": 360000,
+       "materials_stored": 0,
+       "completed_to_date": 600000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 1700000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 1700000,
+     "less_previous_certificates": 1062000,
+     "current_payment_due": 638000,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Paxwick Builders Inc.",
+     "maker": "Orrery Lane Holdings LLC",
+     "method": "check",
+     "check_no": "NC-2207-9",
+     "amount": 638000,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Paxwick Builders Inc.\n\nName of Customer: Orrery Lane Holdings LLC\n\nJob Location: 4410 Ninefold Way, Fresno, CA 93721\n\nOwner: Orrery Lane Holdings LLC\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\n\nMaker of Check: Orrery Lane Holdings LLC\n\nAmount of Check: $638,000.00\n\nCheck Payable to: Paxwick Builders Inc.\n\nExceptions\n\nThis document does not affect any of the following:\n\nDisputed claims for extras in the amount of: $0.00\n\nSignature\n\nClaimant’s Signature: /s/ Renata Quillon\n\nClaimant’s Title: Project Manager\n\nDate of Signature: December 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F08",
+   "label": "clean",
+   "form": "CA-8136",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8136",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": false,
+      "final": true
+     },
+     "claimant": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "job_location": "88 Vellum St, Sacramento, CA 95814",
+     "customer": "Hollin Creek Civic Trust",
+     "amount": 210100,
+     "signed_date": "2026-11-05"
+    },
+    "pay_app": {
+     "application_number": 7,
+     "period_to": "2026-10-31",
+     "final": true,
+     "contractor": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "project": {
+      "name": "Vellum Street Library Annex",
+      "address": "88 Vellum St, Sacramento, CA 95814",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 820000,
+     "net_change_orders": 0,
+     "contract_sum_to_date": 820000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 60000,
+       "previous": 60000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 60000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Demolition",
+       "scheduled_value": 90000,
+       "previous": 90000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 90000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Structure",
+       "scheduled_value": 300000,
+       "previous": 270000,
+       "this_period": 30000,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Finishes",
+       "scheduled_value": 250000,
+       "previous": 150000,
+       "this_period": 100000,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Electrical",
+       "scheduled_value": 120000,
+       "previous": 72000,
+       "this_period": 48000,
+       "materials_stored": 0,
+       "completed_to_date": 120000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 820000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 820000,
+     "less_previous_certificates": 609900,
+     "current_payment_due": 210100,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Quarrel & Finch Construction Co.",
+     "maker": "Hollin Creek Civic Trust",
+     "method": "check",
+     "check_no": "VS-0415-7",
+     "amount": 210100,
+     "cleared": true,
+     "cleared_date": "2026-11-20"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Quarrel & Finch Construction Co.\n\nName of Customer: Hollin Creek Civic Trust\n\nJob Location: 88 Vellum St, Sacramento, CA 95814\n\nOwner: Hollin Creek Civic Trust\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\n\nMaker of Check: Hollin Creek Civic Trust\n\nAmount of Check: $210,100.00\n\nCheck Payable to: Quarrel & Finch Construction Co.\n\nExceptions\n\nThis document does not affect any of the following:\n\nDisputed claims for extras in the amount of: $0.00\n\nSignature\n\nClaimant’s Signature: /s/ Dov Halloway\n\nClaimant’s Title: Vice President\n\nDate of Signature: November 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F09",
+   "label": "clean",
+   "form": "CA-8138",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8138",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": true,
+      "final": true
+     },
+     "claimant": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "job_location": "1501 Sablewood Ave, Riverside, CA 92501",
+     "customer": "Sablewood Unified Facilities Corp.",
+     "signed_date": "2027-01-05"
+    },
+    "pay_app": {
+     "application_number": 8,
+     "period_to": "2026-12-31",
+     "final": true,
+     "contractor": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "project": {
+      "name": "Sablewood Middle School Gym",
+      "address": "1501 Sablewood Ave, Riverside, CA 92501",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 2300000,
+     "net_change_orders": 100000,
+     "contract_sum_to_date": 2400000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 100000,
+       "previous": 100000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 500000,
+       "previous": 500000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Steel",
+       "scheduled_value": 700000,
+       "previous": 700000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 700000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Roofing",
+       "scheduled_value": 400000,
+       "previous": 280000,
+       "this_period": 120000,
+       "materials_stored": 0,
+       "completed_to_date": 400000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Interiors",
+       "scheduled_value": 700000,
+       "previous": 490000,
+       "this_period": 210000,
+       "materials_stored": 0,
+       "completed_to_date": 700000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 2400000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 2400000,
+     "less_previous_certificates": 1863000,
+     "current_payment_due": 537000,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Tamsin Ridge Builders LLC",
+     "maker": "Sablewood Unified Facilities Corp.",
+     "method": "check",
+     "check_no": "SW-3302-8",
+     "amount": 537000,
+     "cleared": true,
+     "cleared_date": "2027-01-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Tamsin Ridge Builders LLC\n\nName of Customer: Sablewood Unified Facilities Corp.\n\nJob Location: 1501 Sablewood Ave, Riverside, CA 92501\n\nOwner: Sablewood Unified Facilities Corp.\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for all labor and service provided, and equipment and material delivered, to the customer on this job. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has been paid in full.\n\nExceptions\n\nThis document does not affect the following:\n\nDisputed claims for extras in the amount of: $0.00\n\nSignature\n\nClaimant’s Signature: /s/ Imke Sorrel\n\nClaimant’s Title: Controller\n\nDate of Signature: January 5, 2027\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F10",
+   "label": "clean",
+   "form": "CA-8138",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8138",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": true,
+      "final": true
+     },
+     "claimant": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "job_location": "4410 Ninefold Way, Fresno, CA 93721",
+     "customer": "Orrery Lane Holdings LLC",
+     "signed_date": "2026-12-05"
+    },
+    "pay_app": {
+     "application_number": 9,
+     "period_to": "2026-11-30",
+     "final": true,
+     "contractor": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "project": {
+      "name": "Ninefold Commons Clinic",
+      "address": "4410 Ninefold Way, Fresno, CA 93721",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1650000,
+     "net_change_orders": 50000,
+     "contract_sum_to_date": 1700000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 40000,
+       "previous": 40000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 40000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 260000,
+       "previous": 260000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 260000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Concrete",
+       "scheduled_value": 420000,
+       "previous": 336000,
+       "this_period": 84000,
+       "materials_stored": 0,
+       "completed_to_date": 420000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Framing",
+       "scheduled_value": 380000,
+       "previous": 304000,
+       "this_period": 76000,
+       "materials_stored": 0,
+       "completed_to_date": 380000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "MEP",
+       "scheduled_value": 600000,
+       "previous": 240000,
+       "this_period": 360000,
+       "materials_stored": 0,
+       "completed_to_date": 600000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 1700000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 1700000,
+     "less_previous_certificates": 1062000,
+     "current_payment_due": 638000,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Paxwick Builders Inc.",
+     "maker": "Orrery Lane Holdings LLC",
+     "method": "check",
+     "check_no": "NC-2207-9",
+     "amount": 638000,
+     "cleared": true,
+     "cleared_date": "2026-12-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Paxwick Builders Inc.\n\nName of Customer: Orrery Lane Holdings LLC\n\nJob Location: 4410 Ninefold Way, Fresno, CA 93721\n\nOwner: Orrery Lane Holdings LLC\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for all labor and service provided, and equipment and material delivered, to the customer on this job. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has been paid in full.\n\nExceptions\n\nThis document does not affect the following:\n\nDisputed claims for extras in the amount of: $0.00\n\nSignature\n\nClaimant’s Signature: /s/ Renata Quillon\n\nClaimant’s Title: Project Manager\n\nDate of Signature: December 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F11",
+   "label": "clean",
+   "form": "TX-53.284(b)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(b)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "job_location": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+     "contracted_with": "Mesa Ledger Partners LP",
+     "project": "Cobalt Mesa Distribution Center",
+     "job_no": "CM-118",
+     "amount": 324000,
+     "attached_request_no": 4,
+     "signed_date": "2026-09-05"
+    },
+    "pay_app": {
+     "application_number": 4,
+     "period_to": "2026-08-31",
+     "final": false,
+     "contractor": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "project": {
+      "name": "Cobalt Mesa Distribution Center",
+      "address": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 3100000,
+     "net_change_orders": -100000,
+     "contract_sum_to_date": 3000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Site prep",
+       "scheduled_value": 300000,
+       "previous": 270000,
+       "this_period": 30000,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 30000
+      },
+      {
+       "item_no": "2",
+       "description": "Slab",
+       "scheduled_value": 800000,
+       "previous": 360000,
+       "this_period": 120000,
+       "materials_stored": 0,
+       "completed_to_date": 480000,
+       "percent_complete": 60,
+       "balance_to_finish": 320000,
+       "retainage": 48000
+      },
+      {
+       "item_no": "3",
+       "description": "Tilt-up panels",
+       "scheduled_value": 900000,
+       "previous": 405000,
+       "this_period": 135000,
+       "materials_stored": 0,
+       "completed_to_date": 540000,
+       "percent_complete": 60,
+       "balance_to_finish": 360000,
+       "retainage": 54000
+      },
+      {
+       "item_no": "4",
+       "description": "Roof",
+       "scheduled_value": 500000,
+       "previous": 150000,
+       "this_period": 50000,
+       "materials_stored": 0,
+       "completed_to_date": 200000,
+       "percent_complete": 40,
+       "balance_to_finish": 300000,
+       "retainage": 20000
+      },
+      {
+       "item_no": "5",
+       "description": "Dock equipment",
+       "scheduled_value": 500000,
+       "previous": 75000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 20,
+       "balance_to_finish": 400000,
+       "retainage": 10000
+      }
+     ],
+     "total_completed_and_stored": 1620000,
+     "retainage_rate": "10%",
+     "total_retainage": 162000,
+     "total_earned_less_retainage": 1458000,
+     "less_previous_certificates": 1134000,
+     "current_payment_due": 324000,
+     "balance_to_finish_including_retainage": 1542000
+    },
+    "payment": {
+     "payee": "Brindle Oak Contractors Inc.",
+     "maker": "Mesa Ledger Partners LP",
+     "method": "check",
+     "check_no": "CM-118-4",
+     "amount": 324000,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Cobalt Mesa Distribution Center\n\nJob No. CM-118\n\nOn receipt by the signer of this document of a check from Mesa Ledger Partners LP (maker of check) in the sum of $324,000.00 payable to Brindle Oak Contractors Inc. (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position  that the signer has on the property of Mesa Ledger Partners LP (owner) located at 9020 Cobalt Mesa Pkwy, Austin, TX 78744 (location) to the following extent: general construction of the Cobalt Mesa Distribution Center under the prime contract (job description).\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Mesa Ledger Partners LP (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate September 5, 2026\n\nBrindle Oak Contractors Inc. (Company name)\n\nBy /s/ Teo Vashti (Signature)\n\nProject Executive (Title)\n\nAttached: Application and Certificate for Payment No. 4, for the period to August 31, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F12",
+   "label": "clean",
+   "form": "TX-53.284(b)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(b)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "job_location": "300 Larkfield Ln, San Antonio, TX 78205",
+     "contracted_with": "Larkfield Housing Fund LLC",
+     "project": "Larkfield Senior Residences",
+     "job_no": "LF-0907",
+     "amount": 109250,
+     "attached_request_no": 6,
+     "signed_date": "2026-09-05"
+    },
+    "pay_app": {
+     "application_number": 6,
+     "period_to": "2026-08-31",
+     "final": false,
+     "contractor": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "project": {
+      "name": "Larkfield Senior Residences",
+      "address": "300 Larkfield Ln, San Antonio, TX 78205",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1480000,
+     "net_change_orders": 20000,
+     "contract_sum_to_date": 1500000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 100000,
+       "previous": 75000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 90000,
+       "percent_complete": 90,
+       "balance_to_finish": 10000,
+       "retainage": 4500
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 250000,
+       "previous": 250000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 12500
+      },
+      {
+       "item_no": "3",
+       "description": "Framing",
+       "scheduled_value": 400000,
+       "previous": 200000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 240000,
+       "percent_complete": 60,
+       "balance_to_finish": 160000,
+       "retainage": 12000
+      },
+      {
+       "item_no": "4",
+       "description": "MEP",
+       "scheduled_value": 450000,
+       "previous": 225000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 270000,
+       "percent_complete": 60,
+       "balance_to_finish": 180000,
+       "retainage": 13500
+      },
+      {
+       "item_no": "5",
+       "description": "Finishes",
+       "scheduled_value": 300000,
+       "previous": 75000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 90000,
+       "percent_complete": 30,
+       "balance_to_finish": 210000,
+       "retainage": 4500
+      }
+     ],
+     "total_completed_and_stored": 940000,
+     "retainage_rate": "5%",
+     "total_retainage": 47000,
+     "total_earned_less_retainage": 893000,
+     "less_previous_certificates": 783750,
+     "current_payment_due": 109250,
+     "balance_to_finish_including_retainage": 607000
+    },
+    "payment": {
+     "payee": "Ostrander-Vey Builders LLC",
+     "maker": "Larkfield Housing Fund LLC",
+     "method": "check",
+     "check_no": "LF-0907-6",
+     "amount": 109250,
+     "cleared": true,
+     "cleared_date": "2026-09-20"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Larkfield Senior Residences\n\nJob No. LF-0907\n\nOn receipt by the signer of this document of a check from Larkfield Housing Fund LLC (maker of check) in the sum of $109,250.00 payable to Ostrander-Vey Builders LLC (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position  that the signer has on the property of Larkfield Housing Fund LLC (owner) located at 300 Larkfield Ln, San Antonio, TX 78205 (location) to the following extent: general construction of the Larkfield Senior Residences under the prime contract (job description).\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Larkfield Housing Fund LLC (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate September 5, 2026\n\nOstrander-Vey Builders LLC (Company name)\n\nBy /s/ Marguerite Obi (Signature)\n\nPresident (Title)\n\nAttached: Application and Certificate for Payment No. 6, for the period to August 31, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F13",
+   "label": "clean",
+   "form": "TX-53.284(b)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(b)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "job_location": "77 Pellucid Creek Rd, Waco, TX 76701",
+     "contracted_with": "Pellucid Creek Municipal Utility Holdings",
+     "project": "Pellucid Creek Fire Station 9",
+     "job_no": "PC-0009",
+     "amount": 157500,
+     "attached_request_no": 2,
+     "signed_date": "2026-08-05"
+    },
+    "pay_app": {
+     "application_number": 2,
+     "period_to": "2026-07-31",
+     "final": false,
+     "contractor": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "project": {
+      "name": "Pellucid Creek Fire Station 9",
+      "address": "77 Pellucid Creek Rd, Waco, TX 76701",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 960000,
+     "net_change_orders": 40000,
+     "contract_sum_to_date": 1000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 50000,
+       "previous": 25000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 50000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 5000
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 150000,
+       "previous": 37500,
+       "this_period": 37500,
+       "materials_stored": 0,
+       "completed_to_date": 75000,
+       "percent_complete": 50,
+       "balance_to_finish": 75000,
+       "retainage": 7500
+      },
+      {
+       "item_no": "3",
+       "description": "Building shell",
+       "scheduled_value": 400000,
+       "previous": 60000,
+       "this_period": 60000,
+       "materials_stored": 0,
+       "completed_to_date": 120000,
+       "percent_complete": 30,
+       "balance_to_finish": 280000,
+       "retainage": 12000
+      },
+      {
+       "item_no": "4",
+       "description": "Apparatus bay",
+       "scheduled_value": 250000,
+       "previous": 37500,
+       "this_period": 37500,
+       "materials_stored": 0,
+       "completed_to_date": 75000,
+       "percent_complete": 30,
+       "balance_to_finish": 175000,
+       "retainage": 7500
+      },
+      {
+       "item_no": "5",
+       "description": "Systems",
+       "scheduled_value": 150000,
+       "previous": 15000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 30000,
+       "percent_complete": 20,
+       "balance_to_finish": 120000,
+       "retainage": 3000
+      }
+     ],
+     "total_completed_and_stored": 350000,
+     "retainage_rate": "10%",
+     "total_retainage": 35000,
+     "total_earned_less_retainage": 315000,
+     "less_previous_certificates": 157500,
+     "current_payment_due": 157500,
+     "balance_to_finish_including_retainage": 685000
+    },
+    "payment": {
+     "payee": "Gannet & Rowe Constructors Inc.",
+     "maker": "Pellucid Creek Municipal Utility Holdings",
+     "method": "check",
+     "check_no": "PC-0009-2",
+     "amount": 157500,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Pellucid Creek Fire Station 9\n\nJob No. PC-0009\n\nOn receipt by the signer of this document of a check from Pellucid Creek Municipal Utility Holdings (maker of check) in the sum of $157,500.00 payable to Gannet & Rowe Constructors Inc. (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position  that the signer has on the property of Pellucid Creek Municipal Utility Holdings (owner) located at 77 Pellucid Creek Rd, Waco, TX 76701 (location) to the following extent: general construction of the Pellucid Creek Fire Station 9 under the prime contract (job description).\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate August 5, 2026\n\nGannet & Rowe Constructors Inc. (Company name)\n\nBy /s/ Lio Fenwick (Signature)\n\nChief Financial Officer (Title)\n\nAttached: Application and Certificate for Payment No. 2, for the period to July 31, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F14",
+   "label": "clean",
+   "form": "TX-53.284(c)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(c)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "job_location": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+     "contracted_with": "Mesa Ledger Partners LP",
+     "project": "Cobalt Mesa Distribution Center",
+     "job_no": "CM-118",
+     "amount": 378000,
+     "attached_request_no": 3,
+     "signed_date": "2026-08-05"
+    },
+    "pay_app": {
+     "application_number": 3,
+     "period_to": "2026-07-31",
+     "final": false,
+     "contractor": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "project": {
+      "name": "Cobalt Mesa Distribution Center",
+      "address": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 3100000,
+     "net_change_orders": -100000,
+     "contract_sum_to_date": 3000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Site prep",
+       "scheduled_value": 300000,
+       "previous": 180000,
+       "this_period": 90000,
+       "materials_stored": 0,
+       "completed_to_date": 270000,
+       "percent_complete": 90,
+       "balance_to_finish": 30000,
+       "retainage": 27000
+      },
+      {
+       "item_no": "2",
+       "description": "Slab",
+       "scheduled_value": 800000,
+       "previous": 240000,
+       "this_period": 120000,
+       "materials_stored": 0,
+       "completed_to_date": 360000,
+       "percent_complete": 45,
+       "balance_to_finish": 440000,
+       "retainage": 36000
+      },
+      {
+       "item_no": "3",
+       "description": "Tilt-up panels",
+       "scheduled_value": 900000,
+       "previous": 270000,
+       "this_period": 135000,
+       "materials_stored": 0,
+       "completed_to_date": 405000,
+       "percent_complete": 45,
+       "balance_to_finish": 495000,
+       "retainage": 40500
+      },
+      {
+       "item_no": "4",
+       "description": "Roof",
+       "scheduled_value": 500000,
+       "previous": 100000,
+       "this_period": 50000,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 30,
+       "balance_to_finish": 350000,
+       "retainage": 15000
+      },
+      {
+       "item_no": "5",
+       "description": "Dock equipment",
+       "scheduled_value": 500000,
+       "previous": 50000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 75000,
+       "percent_complete": 15,
+       "balance_to_finish": 425000,
+       "retainage": 7500
+      }
+     ],
+     "total_completed_and_stored": 1260000,
+     "retainage_rate": "10%",
+     "total_retainage": 126000,
+     "total_earned_less_retainage": 1134000,
+     "less_previous_certificates": 756000,
+     "current_payment_due": 378000,
+     "balance_to_finish_including_retainage": 1866000
+    },
+    "payment": {
+     "payee": "Brindle Oak Contractors Inc.",
+     "maker": "Mesa Ledger Partners LP",
+     "method": "check",
+     "check_no": "CM-118-3",
+     "amount": 378000,
+     "cleared": true,
+     "cleared_date": "2026-08-20"
+    }
+   },
+   "waiver_text": "NOTICE:\n\nThis document waives rights unconditionally and states that you have been paid for giving up those rights.  It is prohibited for a person to require you to sign this document if you have not been paid the payment amount set forth below.  If you have not been paid, use a conditional release form.\n\nUNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Cobalt Mesa Distribution Center\n\nJob No. CM-118\n\nThe signer of this document has been paid and has received a progress payment in the sum of $378,000.00 for all labor, services, equipment, or materials furnished to the property or to Mesa Ledger Partners LP (person with whom signer contracted) on the property of Mesa Ledger Partners LP (owner) located at  9020 Cobalt Mesa Pkwy, Austin, TX 78744 (location) to the following extent:  general construction of the Cobalt Mesa Distribution Center under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the above referenced project to the following extent:\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Mesa Ledger Partners LP (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate August 5, 2026\n\nBrindle Oak Contractors Inc. (Company name)\n\nBy /s/ Teo Vashti (Signature)\n\nProject Executive (Title)\n\nAttached: Application and Certificate for Payment No. 3, for the period to July 31, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F15",
+   "label": "clean",
+   "form": "TX-53.284(c)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(c)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "job_location": "300 Larkfield Ln, San Antonio, TX 78205",
+     "contracted_with": "Larkfield Housing Fund LLC",
+     "project": "Larkfield Senior Residences",
+     "job_no": "LF-0907",
+     "amount": 156750,
+     "attached_request_no": 5,
+     "signed_date": "2026-08-05"
+    },
+    "pay_app": {
+     "application_number": 5,
+     "period_to": "2026-07-31",
+     "final": false,
+     "contractor": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "project": {
+      "name": "Larkfield Senior Residences",
+      "address": "300 Larkfield Ln, San Antonio, TX 78205",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1480000,
+     "net_change_orders": 20000,
+     "contract_sum_to_date": 1500000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 100000,
+       "previous": 60000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 75000,
+       "percent_complete": 75,
+       "balance_to_finish": 25000,
+       "retainage": 3750
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 250000,
+       "previous": 200000,
+       "this_period": 50000,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 12500
+      },
+      {
+       "item_no": "3",
+       "description": "Framing",
+       "scheduled_value": 400000,
+       "previous": 160000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 200000,
+       "percent_complete": 50,
+       "balance_to_finish": 200000,
+       "retainage": 10000
+      },
+      {
+       "item_no": "4",
+       "description": "MEP",
+       "scheduled_value": 450000,
+       "previous": 180000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 225000,
+       "percent_complete": 50,
+       "balance_to_finish": 225000,
+       "retainage": 11250
+      },
+      {
+       "item_no": "5",
+       "description": "Finishes",
+       "scheduled_value": 300000,
+       "previous": 60000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 75000,
+       "percent_complete": 25,
+       "balance_to_finish": 225000,
+       "retainage": 3750
+      }
+     ],
+     "total_completed_and_stored": 825000,
+     "retainage_rate": "5%",
+     "total_retainage": 41250,
+     "total_earned_less_retainage": 783750,
+     "less_previous_certificates": 627000,
+     "current_payment_due": 156750,
+     "balance_to_finish_including_retainage": 716250
+    },
+    "payment": {
+     "payee": "Ostrander-Vey Builders LLC",
+     "maker": "Larkfield Housing Fund LLC",
+     "method": "check",
+     "check_no": "LF-0907-5",
+     "amount": 156750,
+     "cleared": true,
+     "cleared_date": "2026-08-20"
+    }
+   },
+   "waiver_text": "NOTICE:\n\nThis document waives rights unconditionally and states that you have been paid for giving up those rights.  It is prohibited for a person to require you to sign this document if you have not been paid the payment amount set forth below.  If you have not been paid, use a conditional release form.\n\nUNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Larkfield Senior Residences\n\nJob No. LF-0907\n\nThe signer of this document has been paid and has received a progress payment in the sum of $156,750.00 for all labor, services, equipment, or materials furnished to the property or to Larkfield Housing Fund LLC (person with whom signer contracted) on the property of Larkfield Housing Fund LLC (owner) located at  300 Larkfield Ln, San Antonio, TX 78205 (location) to the following extent:  general construction of the Larkfield Senior Residences under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the above referenced project to the following extent:\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Larkfield Housing Fund LLC (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate August 5, 2026\n\nOstrander-Vey Builders LLC (Company name)\n\nBy /s/ Marguerite Obi (Signature)\n\nPresident (Title)\n\nAttached: Application and Certificate for Payment No. 5, for the period to July 31, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F16",
+   "label": "clean",
+   "form": "TX-53.284(c)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(c)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "job_location": "77 Pellucid Creek Rd, Waco, TX 76701",
+     "contracted_with": "Pellucid Creek Municipal Utility Holdings",
+     "project": "Pellucid Creek Fire Station 9",
+     "job_no": "PC-0009",
+     "amount": 135000,
+     "attached_request_no": 3,
+     "signed_date": "2026-09-05"
+    },
+    "pay_app": {
+     "application_number": 3,
+     "period_to": "2026-08-31",
+     "final": false,
+     "contractor": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "project": {
+      "name": "Pellucid Creek Fire Station 9",
+      "address": "77 Pellucid Creek Rd, Waco, TX 76701",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 960000,
+     "net_change_orders": 40000,
+     "contract_sum_to_date": 1000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 50000,
+       "previous": 50000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 50000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 5000
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 150000,
+       "previous": 75000,
+       "this_period": 37500,
+       "materials_stored": 0,
+       "completed_to_date": 112500,
+       "percent_complete": 75,
+       "balance_to_finish": 37500,
+       "retainage": 11250
+      },
+      {
+       "item_no": "3",
+       "description": "Building shell",
+       "scheduled_value": 400000,
+       "previous": 120000,
+       "this_period": 60000,
+       "materials_stored": 0,
+       "completed_to_date": 180000,
+       "percent_complete": 45,
+       "balance_to_finish": 220000,
+       "retainage": 18000
+      },
+      {
+       "item_no": "4",
+       "description": "Apparatus bay",
+       "scheduled_value": 250000,
+       "previous": 75000,
+       "this_period": 37500,
+       "materials_stored": 0,
+       "completed_to_date": 112500,
+       "percent_complete": 45,
+       "balance_to_finish": 137500,
+       "retainage": 11250
+      },
+      {
+       "item_no": "5",
+       "description": "Systems",
+       "scheduled_value": 150000,
+       "previous": 30000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 45000,
+       "percent_complete": 30,
+       "balance_to_finish": 105000,
+       "retainage": 4500
+      }
+     ],
+     "total_completed_and_stored": 500000,
+     "retainage_rate": "10%",
+     "total_retainage": 50000,
+     "total_earned_less_retainage": 450000,
+     "less_previous_certificates": 315000,
+     "current_payment_due": 135000,
+     "balance_to_finish_including_retainage": 550000
+    },
+    "payment": {
+     "payee": "Gannet & Rowe Constructors Inc.",
+     "maker": "Pellucid Creek Municipal Utility Holdings",
+     "method": "check",
+     "check_no": "PC-0009-3",
+     "amount": 135000,
+     "cleared": true,
+     "cleared_date": "2026-09-20"
+    }
+   },
+   "waiver_text": "NOTICE:\n\nThis document waives rights unconditionally and states that you have been paid for giving up those rights.  It is prohibited for a person to require you to sign this document if you have not been paid the payment amount set forth below.  If you have not been paid, use a conditional release form.\n\nUNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Pellucid Creek Fire Station 9\n\nJob No. PC-0009\n\nThe signer of this document has been paid and has received a progress payment in the sum of $135,000.00 for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted) on the property of Pellucid Creek Municipal Utility Holdings (owner) located at  77 Pellucid Creek Rd, Waco, TX 76701 (location) to the following extent:  general construction of the Pellucid Creek Fire Station 9 under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the above referenced project to the following extent:\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate September 5, 2026\n\nGannet & Rowe Constructors Inc. (Company name)\n\nBy /s/ Lio Fenwick (Signature)\n\nChief Financial Officer (Title)\n\nAttached: Application and Certificate for Payment No. 3, for the period to August 31, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F17",
+   "label": "clean",
+   "form": "TX-53.284(d)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(d)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": false,
+      "final": true
+     },
+     "claimant": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "job_location": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+     "contracted_with": "Mesa Ledger Partners LP",
+     "project": "Cobalt Mesa Distribution Center",
+     "job_no": "CM-118",
+     "amount": 727500,
+     "signed_date": "2027-01-05"
+    },
+    "pay_app": {
+     "application_number": 8,
+     "period_to": "2026-12-31",
+     "final": true,
+     "contractor": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "project": {
+      "name": "Cobalt Mesa Distribution Center",
+      "address": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 3100000,
+     "net_change_orders": -100000,
+     "contract_sum_to_date": 3000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Site prep",
+       "scheduled_value": 300000,
+       "previous": 300000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Slab",
+       "scheduled_value": 800000,
+       "previous": 800000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 800000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Tilt-up panels",
+       "scheduled_value": 900000,
+       "previous": 900000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 900000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Roof",
+       "scheduled_value": 500000,
+       "previous": 350000,
+       "this_period": 150000,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Dock equipment",
+       "scheduled_value": 500000,
+       "previous": 175000,
+       "this_period": 325000,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 3000000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 3000000,
+     "less_previous_certificates": 2272500,
+     "current_payment_due": 727500,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Brindle Oak Contractors Inc.",
+     "maker": "Mesa Ledger Partners LP",
+     "method": "check",
+     "check_no": "CM-118-8",
+     "amount": 727500,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nProject Cobalt Mesa Distribution Center\n\nJob No. CM-118\n\nOn receipt by the signer of this document of a check from Mesa Ledger Partners LP (maker of check) in the sum of $727,500.00 payable to Brindle Oak Contractors Inc. (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the property of Mesa Ledger Partners LP (owner) located at 9020 Cobalt Mesa Pkwy, Austin, TX 78744 (location) to the following extent:  general construction of the Cobalt Mesa Distribution Center under the prime contract (job description).\n\nThis release covers the final payment to the signer for all labor, services, equipment, or materials furnished to the property or to Mesa Ledger Partners LP (person with whom signer contracted).\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this final payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project up to the date of this waiver and release.\n\nDate January 5, 2027\n\nBrindle Oak Contractors Inc. (Company name)\n\nBy /s/ Teo Vashti (Signature)\n\nProject Executive (Title)\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F18",
+   "label": "clean",
+   "form": "TX-53.284(d)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(d)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": false,
+      "final": true
+     },
+     "claimant": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "job_location": "300 Larkfield Ln, San Antonio, TX 78205",
+     "contracted_with": "Larkfield Housing Fund LLC",
+     "project": "Larkfield Senior Residences",
+     "job_no": "LF-0907",
+     "amount": 312500,
+     "signed_date": "2026-12-05"
+    },
+    "pay_app": {
+     "application_number": 10,
+     "period_to": "2026-11-30",
+     "final": true,
+     "contractor": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "project": {
+      "name": "Larkfield Senior Residences",
+      "address": "300 Larkfield Ln, San Antonio, TX 78205",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1480000,
+     "net_change_orders": 20000,
+     "contract_sum_to_date": 1500000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 100000,
+       "previous": 100000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 250000,
+       "previous": 250000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Framing",
+       "scheduled_value": 400000,
+       "previous": 360000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 400000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "MEP",
+       "scheduled_value": 450000,
+       "previous": 405000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 450000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Finishes",
+       "scheduled_value": 300000,
+       "previous": 135000,
+       "this_period": 165000,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 1500000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 1500000,
+     "less_previous_certificates": 1187500,
+     "current_payment_due": 312500,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Ostrander-Vey Builders LLC",
+     "maker": "Larkfield Housing Fund LLC",
+     "method": "check",
+     "check_no": "LF-0907-10",
+     "amount": 312500,
+     "cleared": true,
+     "cleared_date": "2026-12-20"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nProject Larkfield Senior Residences\n\nJob No. LF-0907\n\nOn receipt by the signer of this document of a check from Larkfield Housing Fund LLC (maker of check) in the sum of $312,500.00 payable to Ostrander-Vey Builders LLC (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the property of Larkfield Housing Fund LLC (owner) located at 300 Larkfield Ln, San Antonio, TX 78205 (location) to the following extent:  general construction of the Larkfield Senior Residences under the prime contract (job description).\n\nThis release covers the final payment to the signer for all labor, services, equipment, or materials furnished to the property or to Larkfield Housing Fund LLC (person with whom signer contracted).\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this final payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project up to the date of this waiver and release.\n\nDate December 5, 2026\n\nOstrander-Vey Builders LLC (Company name)\n\nBy /s/ Marguerite Obi (Signature)\n\nPresident (Title)\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F19",
+   "label": "clean",
+   "form": "TX-53.284(e)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(e)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": true,
+      "final": true
+     },
+     "claimant": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "job_location": "77 Pellucid Creek Rd, Waco, TX 76701",
+     "contracted_with": "Pellucid Creek Municipal Utility Holdings",
+     "project": "Pellucid Creek Fire Station 9",
+     "job_no": "PC-0009",
+     "signed_date": "2026-11-05"
+    },
+    "pay_app": {
+     "application_number": 6,
+     "period_to": "2026-10-31",
+     "final": true,
+     "contractor": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "project": {
+      "name": "Pellucid Creek Fire Station 9",
+      "address": "77 Pellucid Creek Rd, Waco, TX 76701",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 960000,
+     "net_change_orders": 40000,
+     "contract_sum_to_date": 1000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 50000,
+       "previous": 50000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 50000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 150000,
+       "previous": 150000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Building shell",
+       "scheduled_value": 400000,
+       "previous": 300000,
+       "this_period": 100000,
+       "materials_stored": 0,
+       "completed_to_date": 400000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Apparatus bay",
+       "scheduled_value": 250000,
+       "previous": 187500,
+       "this_period": 62500,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Systems",
+       "scheduled_value": 150000,
+       "previous": 75000,
+       "this_period": 75000,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 1000000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 1000000,
+     "less_previous_certificates": 686250,
+     "current_payment_due": 313750,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Gannet & Rowe Constructors Inc.",
+     "maker": "Pellucid Creek Municipal Utility Holdings",
+     "method": "check",
+     "check_no": "PC-0009-6",
+     "amount": 313750,
+     "cleared": true,
+     "cleared_date": "2026-11-20"
+    }
+   },
+   "waiver_text": "NOTICE:\n\nThis document waives rights unconditionally and states that you have been paid for giving up those rights.  It is prohibited for a person to require you to sign this document if you have not been paid the payment amount set forth below.  If you have not been paid, use a conditional release form.\n\nUNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nProject Pellucid Creek Fire Station 9\n\nJob No. PC-0009\n\nThe signer of this document has been paid in full for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted) on the property of Pellucid Creek Municipal Utility Holdings (owner) located at 77 Pellucid Creek Rd, Waco, TX 76701 (location) to the following extent: general construction of the Pellucid Creek Fire Station 9 under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position.\n\nThe signer warrants that the signer has already paid or will use the funds received from this final payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project up to the date of this waiver and release.\n\nDate November 5, 2026\n\nGannet & Rowe Constructors Inc. (Company name)\n\nBy /s/ Lio Fenwick (Signature)\n\nChief Financial Officer (Title)\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F20",
+   "label": "clean",
+   "form": "TX-53.284(e)",
+   "defect": null,
+   "defect_field": null,
+   "expected_outcome": "PASS",
+   "expected_rules": [],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(e)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": true,
+      "final": true
+     },
+     "claimant": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "job_location": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+     "contracted_with": "Mesa Ledger Partners LP",
+     "project": "Cobalt Mesa Distribution Center",
+     "job_no": "CM-118",
+     "signed_date": "2027-01-05"
+    },
+    "pay_app": {
+     "application_number": 8,
+     "period_to": "2026-12-31",
+     "final": true,
+     "contractor": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "project": {
+      "name": "Cobalt Mesa Distribution Center",
+      "address": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 3100000,
+     "net_change_orders": -100000,
+     "contract_sum_to_date": 3000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Site prep",
+       "scheduled_value": 300000,
+       "previous": 300000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Slab",
+       "scheduled_value": 800000,
+       "previous": 800000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 800000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Tilt-up panels",
+       "scheduled_value": 900000,
+       "previous": 900000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 900000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Roof",
+       "scheduled_value": 500000,
+       "previous": 350000,
+       "this_period": 150000,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Dock equipment",
+       "scheduled_value": 500000,
+       "previous": 175000,
+       "this_period": 325000,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 3000000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 3000000,
+     "less_previous_certificates": 2272500,
+     "current_payment_due": 727500,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Brindle Oak Contractors Inc.",
+     "maker": "Mesa Ledger Partners LP",
+     "method": "check",
+     "check_no": "CM-118-8",
+     "amount": 727500,
+     "cleared": true,
+     "cleared_date": "2027-01-20"
+    }
+   },
+   "waiver_text": "NOTICE:\n\nThis document waives rights unconditionally and states that you have been paid for giving up those rights.  It is prohibited for a person to require you to sign this document if you have not been paid the payment amount set forth below.  If you have not been paid, use a conditional release form.\n\nUNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nProject Cobalt Mesa Distribution Center\n\nJob No. CM-118\n\nThe signer of this document has been paid in full for all labor, services, equipment, or materials furnished to the property or to Mesa Ledger Partners LP (person with whom signer contracted) on the property of Mesa Ledger Partners LP (owner) located at 9020 Cobalt Mesa Pkwy, Austin, TX 78744 (location) to the following extent: general construction of the Cobalt Mesa Distribution Center under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position.\n\nThe signer warrants that the signer has already paid or will use the funds received from this final payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project up to the date of this waiver and release.\n\nDate January 5, 2027\n\nBrindle Oak Contractors Inc. (Company name)\n\nBy /s/ Teo Vashti (Signature)\n\nProject Executive (Title)\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F21",
+   "label": "defect",
+   "form": "CA-8132",
+   "defect": "through-date",
+   "defect_field": "waiver.through_date",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_THROUGH"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "job_location": "4410 Ninefold Way, Fresno, CA 93721",
+     "customer": "Orrery Lane Holdings LLC",
+     "through_date": "2026-08-31",
+     "amount": 122400,
+     "signed_date": "2026-10-05"
+    },
+    "pay_app": {
+     "application_number": 7,
+     "period_to": "2026-09-30",
+     "final": false,
+     "contractor": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "project": {
+      "name": "Ninefold Commons Clinic",
+      "address": "4410 Ninefold Way, Fresno, CA 93721",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1650000,
+     "net_change_orders": 50000,
+     "contract_sum_to_date": 1700000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 40000,
+       "previous": 40000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 40000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 4000
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 260000,
+       "previous": 234000,
+       "this_period": 26000,
+       "materials_stored": 0,
+       "completed_to_date": 260000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 26000
+      },
+      {
+       "item_no": "3",
+       "description": "Concrete",
+       "scheduled_value": 420000,
+       "previous": 252000,
+       "this_period": 42000,
+       "materials_stored": 0,
+       "completed_to_date": 294000,
+       "percent_complete": 70,
+       "balance_to_finish": 126000,
+       "retainage": 29400
+      },
+      {
+       "item_no": "4",
+       "description": "Framing",
+       "scheduled_value": 380000,
+       "previous": 228000,
+       "this_period": 38000,
+       "materials_stored": 0,
+       "completed_to_date": 266000,
+       "percent_complete": 70,
+       "balance_to_finish": 114000,
+       "retainage": 26600
+      },
+      {
+       "item_no": "5",
+       "description": "MEP",
+       "scheduled_value": 600000,
+       "previous": 180000,
+       "this_period": 30000,
+       "materials_stored": 0,
+       "completed_to_date": 210000,
+       "percent_complete": 35,
+       "balance_to_finish": 390000,
+       "retainage": 21000
+      }
+     ],
+     "total_completed_and_stored": 1070000,
+     "retainage_rate": "10%",
+     "total_retainage": 107000,
+     "total_earned_less_retainage": 963000,
+     "less_previous_certificates": 840600,
+     "current_payment_due": 122400,
+     "balance_to_finish_including_retainage": 737000
+    },
+    "payment": {
+     "payee": "Paxwick Builders Inc.",
+     "maker": "Orrery Lane Holdings LLC",
+     "method": "check",
+     "check_no": "NC-2207-7",
+     "amount": 122400,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Paxwick Builders Inc.\n\nName of Customer: Orrery Lane Holdings LLC\n\nJob Location: 4410 Ninefold Way, Fresno, CA 93721\n\nOwner: Orrery Lane Holdings LLC\n\nThrough Date: August 31, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Orrery Lane Holdings LLC\n\nAmount of Check: $122,400.00\n\nCheck Payable to: Paxwick Builders Inc.\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release:\n\nAmount(s) of unpaid progress payment(s): $\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Renata Quillon\n\nClaimant’s Title: Project Manager\n\nDate of Signature: October 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F22",
+   "label": "defect",
+   "form": "TX-53.284(b)",
+   "defect": "amount-retainage",
+   "defect_field": "waiver.amount",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_AMOUNT"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(b)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "job_location": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+     "contracted_with": "Mesa Ledger Partners LP",
+     "project": "Cobalt Mesa Distribution Center",
+     "job_no": "CM-118",
+     "amount": 330000,
+     "attached_request_no": 5,
+     "signed_date": "2026-10-05"
+    },
+    "pay_app": {
+     "application_number": 5,
+     "period_to": "2026-09-30",
+     "final": false,
+     "contractor": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "project": {
+      "name": "Cobalt Mesa Distribution Center",
+      "address": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 3100000,
+     "net_change_orders": -100000,
+     "contract_sum_to_date": 3000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Site prep",
+       "scheduled_value": 300000,
+       "previous": 300000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 30000
+      },
+      {
+       "item_no": "2",
+       "description": "Slab",
+       "scheduled_value": 800000,
+       "previous": 480000,
+       "this_period": 120000,
+       "materials_stored": 0,
+       "completed_to_date": 600000,
+       "percent_complete": 75,
+       "balance_to_finish": 200000,
+       "retainage": 60000
+      },
+      {
+       "item_no": "3",
+       "description": "Tilt-up panels",
+       "scheduled_value": 900000,
+       "previous": 540000,
+       "this_period": 135000,
+       "materials_stored": 0,
+       "completed_to_date": 675000,
+       "percent_complete": 75,
+       "balance_to_finish": 225000,
+       "retainage": 67500
+      },
+      {
+       "item_no": "4",
+       "description": "Roof",
+       "scheduled_value": 500000,
+       "previous": 200000,
+       "this_period": 50000,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 50,
+       "balance_to_finish": 250000,
+       "retainage": 25000
+      },
+      {
+       "item_no": "5",
+       "description": "Dock equipment",
+       "scheduled_value": 500000,
+       "previous": 100000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 125000,
+       "percent_complete": 25,
+       "balance_to_finish": 375000,
+       "retainage": 12500
+      }
+     ],
+     "total_completed_and_stored": 1950000,
+     "retainage_rate": "10%",
+     "total_retainage": 195000,
+     "total_earned_less_retainage": 1755000,
+     "less_previous_certificates": 1458000,
+     "current_payment_due": 297000,
+     "balance_to_finish_including_retainage": 1245000
+    },
+    "payment": {
+     "payee": "Brindle Oak Contractors Inc.",
+     "maker": "Mesa Ledger Partners LP",
+     "method": "check",
+     "check_no": "CM-118-5",
+     "amount": 297000,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Cobalt Mesa Distribution Center\n\nJob No. CM-118\n\nOn receipt by the signer of this document of a check from Mesa Ledger Partners LP (maker of check) in the sum of $330,000.00 payable to Brindle Oak Contractors Inc. (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position  that the signer has on the property of Mesa Ledger Partners LP (owner) located at 9020 Cobalt Mesa Pkwy, Austin, TX 78744 (location) to the following extent: general construction of the Cobalt Mesa Distribution Center under the prime contract (job description).\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Mesa Ledger Partners LP (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate October 5, 2026\n\nBrindle Oak Contractors Inc. (Company name)\n\nBy /s/ Teo Vashti (Signature)\n\nProject Executive (Title)\n\nAttached: Application and Certificate for Payment No. 5, for the period to September 30, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F23",
+   "label": "defect",
+   "form": "CA-8134",
+   "defect": "uncond-before-cleared",
+   "defect_field": "payment.cleared",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_UNCOND_PAID"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8134",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "job_location": "88 Vellum St, Sacramento, CA 95814",
+     "customer": "Hollin Creek Civic Trust",
+     "through_date": "2026-08-31",
+     "amount": 89300,
+     "signed_date": "2026-09-05"
+    },
+    "pay_app": {
+     "application_number": 4,
+     "period_to": "2026-08-31",
+     "final": false,
+     "contractor": "Quarrel & Finch Construction Co.",
+     "owner": "Hollin Creek Civic Trust",
+     "project": {
+      "name": "Vellum Street Library Annex",
+      "address": "88 Vellum St, Sacramento, CA 95814",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 820000,
+     "net_change_orders": 0,
+     "contract_sum_to_date": 820000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 60000,
+       "previous": 36000,
+       "this_period": 12000,
+       "materials_stored": 0,
+       "completed_to_date": 48000,
+       "percent_complete": 80,
+       "balance_to_finish": 12000,
+       "retainage": 2400
+      },
+      {
+       "item_no": "2",
+       "description": "Demolition",
+       "scheduled_value": 90000,
+       "previous": 90000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 90000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 4500
+      },
+      {
+       "item_no": "3",
+       "description": "Structure",
+       "scheduled_value": 300000,
+       "previous": 135000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 180000,
+       "percent_complete": 60,
+       "balance_to_finish": 120000,
+       "retainage": 9000
+      },
+      {
+       "item_no": "4",
+       "description": "Finishes",
+       "scheduled_value": 250000,
+       "previous": 75000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 40,
+       "balance_to_finish": 150000,
+       "retainage": 5000
+      },
+      {
+       "item_no": "5",
+       "description": "Electrical",
+       "scheduled_value": 120000,
+       "previous": 36000,
+       "this_period": 12000,
+       "materials_stored": 0,
+       "completed_to_date": 48000,
+       "percent_complete": 40,
+       "balance_to_finish": 72000,
+       "retainage": 2400
+      }
+     ],
+     "total_completed_and_stored": 466000,
+     "retainage_rate": "5%",
+     "total_retainage": 23300,
+     "total_earned_less_retainage": 442700,
+     "less_previous_certificates": 353400,
+     "current_payment_due": 89300,
+     "balance_to_finish_including_retainage": 377300
+    },
+    "payment": {
+     "payee": "Quarrel & Finch Construction Co.",
+     "maker": "Hollin Creek Civic Trust",
+     "method": "check",
+     "check_no": "VS-0415-4",
+     "amount": 89300,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Quarrel & Finch Construction Co.\n\nName of Customer: Hollin Creek Civic Trust\n\nJob Location: 88 Vellum St, Sacramento, CA 95814\n\nOwner: Hollin Creek Civic Trust\n\nThrough Date: August 31, 2026\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has received the following progress payment: $89,300.00\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to recover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Dov Halloway\n\nClaimant’s Title: Vice President\n\nDate of Signature: September 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F24",
+   "label": "defect",
+   "form": "TX-53.284(c)",
+   "defect": "missing-notice",
+   "defect_field": "TX-53.284(c).notice",
+   "expected_outcome": "ABSTAIN",
+   "expected_rules": [
+    "QUOTE_MATCH"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(c)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "job_location": "300 Larkfield Ln, San Antonio, TX 78205",
+     "contracted_with": "Larkfield Housing Fund LLC",
+     "project": "Larkfield Senior Residences",
+     "job_no": "LF-0907",
+     "amount": 104500,
+     "attached_request_no": 7,
+     "signed_date": "2026-10-05"
+    },
+    "pay_app": {
+     "application_number": 7,
+     "period_to": "2026-09-30",
+     "final": false,
+     "contractor": "Ostrander-Vey Builders LLC",
+     "owner": "Larkfield Housing Fund LLC",
+     "project": {
+      "name": "Larkfield Senior Residences",
+      "address": "300 Larkfield Ln, San Antonio, TX 78205",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1480000,
+     "net_change_orders": 20000,
+     "contract_sum_to_date": 1500000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "General conditions",
+       "scheduled_value": 100000,
+       "previous": 90000,
+       "this_period": 10000,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 5000
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 250000,
+       "previous": 250000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 12500
+      },
+      {
+       "item_no": "3",
+       "description": "Framing",
+       "scheduled_value": 400000,
+       "previous": 240000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 280000,
+       "percent_complete": 70,
+       "balance_to_finish": 120000,
+       "retainage": 14000
+      },
+      {
+       "item_no": "4",
+       "description": "MEP",
+       "scheduled_value": 450000,
+       "previous": 270000,
+       "this_period": 45000,
+       "materials_stored": 0,
+       "completed_to_date": 315000,
+       "percent_complete": 70,
+       "balance_to_finish": 135000,
+       "retainage": 15750
+      },
+      {
+       "item_no": "5",
+       "description": "Finishes",
+       "scheduled_value": 300000,
+       "previous": 90000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 105000,
+       "percent_complete": 35,
+       "balance_to_finish": 195000,
+       "retainage": 5250
+      }
+     ],
+     "total_completed_and_stored": 1050000,
+     "retainage_rate": "5%",
+     "total_retainage": 52500,
+     "total_earned_less_retainage": 997500,
+     "less_previous_certificates": 893000,
+     "current_payment_due": 104500,
+     "balance_to_finish_including_retainage": 502500
+    },
+    "payment": {
+     "payee": "Ostrander-Vey Builders LLC",
+     "maker": "Larkfield Housing Fund LLC",
+     "method": "check",
+     "check_no": "LF-0907-7",
+     "amount": 104500,
+     "cleared": true,
+     "cleared_date": "2026-10-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Larkfield Senior Residences\n\nJob No. LF-0907\n\nThe signer of this document has been paid and has received a progress payment in the sum of $104,500.00 for all labor, services, equipment, or materials furnished to the property or to Larkfield Housing Fund LLC (person with whom signer contracted) on the property of Larkfield Housing Fund LLC (owner) located at  300 Larkfield Ln, San Antonio, TX 78205 (location) to the following extent:  general construction of the Larkfield Senior Residences under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the above referenced project to the following extent:\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Larkfield Housing Fund LLC (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate October 5, 2026\n\nOstrander-Vey Builders LLC (Company name)\n\nBy /s/ Marguerite Obi (Signature)\n\nPresident (Title)\n\nAttached: Application and Certificate for Payment No. 7, for the period to September 30, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F25",
+   "label": "defect",
+   "form": "CA-8132",
+   "defect": "exception-not-itemized",
+   "defect_field": "waiver_exception_items[0].waiver_date",
+   "expected_outcome": "ABSTAIN",
+   "expected_rules": [
+    "LW_EXC_DATED"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "job_location": "1501 Sablewood Ave, Riverside, CA 92501",
+     "customer": "Sablewood Unified Facilities Corp.",
+     "through_date": "2026-09-30",
+     "amount": 283500,
+     "exceptions": {
+      "unpaid_progress_amount_stated": 12500
+     },
+     "signed_date": "2026-10-05"
+    },
+    "pay_app": {
+     "application_number": 5,
+     "period_to": "2026-09-30",
+     "final": false,
+     "contractor": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "project": {
+      "name": "Sablewood Middle School Gym",
+      "address": "1501 Sablewood Ave, Riverside, CA 92501",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 2300000,
+     "net_change_orders": 100000,
+     "contract_sum_to_date": 2400000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 100000,
+       "previous": 100000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 10000
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 500000,
+       "previous": 400000,
+       "this_period": 100000,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 50000
+      },
+      {
+       "item_no": "3",
+       "description": "Steel",
+       "scheduled_value": 700000,
+       "previous": 420000,
+       "this_period": 105000,
+       "materials_stored": 0,
+       "completed_to_date": 525000,
+       "percent_complete": 75,
+       "balance_to_finish": 175000,
+       "retainage": 52500
+      },
+      {
+       "item_no": "4",
+       "description": "Roofing",
+       "scheduled_value": 400000,
+       "previous": 160000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 200000,
+       "percent_complete": 50,
+       "balance_to_finish": 200000,
+       "retainage": 20000
+      },
+      {
+       "item_no": "5",
+       "description": "Interiors",
+       "scheduled_value": 700000,
+       "previous": 280000,
+       "this_period": 70000,
+       "materials_stored": 0,
+       "completed_to_date": 350000,
+       "percent_complete": 50,
+       "balance_to_finish": 350000,
+       "retainage": 35000
+      }
+     ],
+     "total_completed_and_stored": 1675000,
+     "retainage_rate": "10%",
+     "total_retainage": 167500,
+     "total_earned_less_retainage": 1507500,
+     "less_previous_certificates": 1224000,
+     "current_payment_due": 283500,
+     "balance_to_finish_including_retainage": 892500
+    },
+    "payment": {
+     "payee": "Tamsin Ridge Builders LLC",
+     "maker": "Sablewood Unified Facilities Corp.",
+     "method": "check",
+     "check_no": "SW-3302-5",
+     "amount": 283500,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    },
+    "waiver_exception_items": [
+     {
+      "amount": 12500
+     }
+    ]
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Tamsin Ridge Builders LLC\n\nName of Customer: Sablewood Unified Facilities Corp.\n\nJob Location: 1501 Sablewood Ave, Riverside, CA 92501\n\nOwner: Sablewood Unified Facilities Corp.\n\nThrough Date: September 30, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Sablewood Unified Facilities Corp.\n\nAmount of Check: $283,500.00\n\nCheck Payable to: Tamsin Ridge Builders LLC\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release:\n\nAmount(s) of unpaid progress payment(s): $12,500.00\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Imke Sorrel\n\nClaimant’s Title: Controller\n\nDate of Signature: October 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F26",
+   "label": "defect",
+   "form": "TX-53.284(d)",
+   "defect": "claimant-mismatch",
+   "defect_field": "waiver.claimant",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_CLAIMANT",
+    "LW_PAYEE"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(d)",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": false,
+      "final": true
+     },
+     "claimant": "Gannet & Rowe Constructors of Texas LLC",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "job_location": "77 Pellucid Creek Rd, Waco, TX 76701",
+     "contracted_with": "Pellucid Creek Municipal Utility Holdings",
+     "project": "Pellucid Creek Fire Station 9",
+     "job_no": "PC-0009",
+     "amount": 212500,
+     "signed_date": "2026-12-05"
+    },
+    "pay_app": {
+     "application_number": 7,
+     "period_to": "2026-11-30",
+     "final": true,
+     "contractor": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "project": {
+      "name": "Pellucid Creek Fire Station 9",
+      "address": "77 Pellucid Creek Rd, Waco, TX 76701",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 960000,
+     "net_change_orders": 40000,
+     "contract_sum_to_date": 1000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 50000,
+       "previous": 50000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 50000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 150000,
+       "previous": 150000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Building shell",
+       "scheduled_value": 400000,
+       "previous": 360000,
+       "this_period": 40000,
+       "materials_stored": 0,
+       "completed_to_date": 400000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Apparatus bay",
+       "scheduled_value": 250000,
+       "previous": 225000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 250000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Systems",
+       "scheduled_value": 150000,
+       "previous": 90000,
+       "this_period": 60000,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 1000000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 1000000,
+     "less_previous_certificates": 787500,
+     "current_payment_due": 212500,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Gannet & Rowe Constructors Inc.",
+     "maker": "Pellucid Creek Municipal Utility Holdings",
+     "method": "check",
+     "check_no": "PC-0009-7",
+     "amount": 212500,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nProject Pellucid Creek Fire Station 9\n\nJob No. PC-0009\n\nOn receipt by the signer of this document of a check from Pellucid Creek Municipal Utility Holdings (maker of check) in the sum of $212,500.00 payable to Gannet & Rowe Constructors of Texas LLC (payee or payees of check) and when the check has been properly endorsed and has been paid by the bank on which it is drawn, this document becomes effective to release any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the property of Pellucid Creek Municipal Utility Holdings (owner) located at 77 Pellucid Creek Rd, Waco, TX 76701 (location) to the following extent:  general construction of the Pellucid Creek Fire Station 9 under the prime contract (job description).\n\nThis release covers the final payment to the signer for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted).\n\nBefore any recipient of this document relies on this document, the recipient should verify evidence of payment to the signer.\n\nThe signer warrants that the signer has already paid or will use the funds received from this final payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project up to the date of this waiver and release.\n\nDate December 5, 2026\n\nGannet & Rowe Constructors of Texas LLC (Company name)\n\nBy /s/ Lio Fenwick (Signature)\n\nChief Financial Officer (Title)\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F27",
+   "label": "defect",
+   "form": "CA-8132",
+   "defect": "progress-on-final",
+   "defect_field": "waiver.form.final",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_FINAL_MATCH"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "job_location": "4410 Ninefold Way, Fresno, CA 93721",
+     "customer": "Orrery Lane Holdings LLC",
+     "through_date": "2026-11-30",
+     "amount": 638000,
+     "signed_date": "2026-12-05"
+    },
+    "pay_app": {
+     "application_number": 9,
+     "period_to": "2026-11-30",
+     "final": true,
+     "contractor": "Paxwick Builders Inc.",
+     "owner": "Orrery Lane Holdings LLC",
+     "project": {
+      "name": "Ninefold Commons Clinic",
+      "address": "4410 Ninefold Way, Fresno, CA 93721",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 1650000,
+     "net_change_orders": 50000,
+     "contract_sum_to_date": 1700000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 40000,
+       "previous": 40000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 40000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 260000,
+       "previous": 260000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 260000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Concrete",
+       "scheduled_value": 420000,
+       "previous": 336000,
+       "this_period": 84000,
+       "materials_stored": 0,
+       "completed_to_date": 420000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Framing",
+       "scheduled_value": 380000,
+       "previous": 304000,
+       "this_period": 76000,
+       "materials_stored": 0,
+       "completed_to_date": 380000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "MEP",
+       "scheduled_value": 600000,
+       "previous": 240000,
+       "this_period": 360000,
+       "materials_stored": 0,
+       "completed_to_date": 600000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 1700000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 1700000,
+     "less_previous_certificates": 1062000,
+     "current_payment_due": 638000,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Paxwick Builders Inc.",
+     "maker": "Orrery Lane Holdings LLC",
+     "method": "check",
+     "check_no": "NC-2207-9",
+     "amount": 638000,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Paxwick Builders Inc.\n\nName of Customer: Orrery Lane Holdings LLC\n\nJob Location: 4410 Ninefold Way, Fresno, CA 93721\n\nOwner: Orrery Lane Holdings LLC\n\nThrough Date: November 30, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Orrery Lane Holdings LLC\n\nAmount of Check: $638,000.00\n\nCheck Payable to: Paxwick Builders Inc.\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release:\n\nAmount(s) of unpaid progress payment(s): $\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Renata Quillon\n\nClaimant’s Title: Project Manager\n\nDate of Signature: December 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F28",
+   "label": "defect",
+   "form": "CA-8138",
+   "defect": "location-mismatch",
+   "defect_field": "waiver.job_location",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_LOCATION"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8138",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT",
+      "unconditional": true,
+      "final": true
+     },
+     "claimant": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "job_location": "88 Vellum St, Sacramento, CA 95814",
+     "customer": "Sablewood Unified Facilities Corp.",
+     "signed_date": "2027-01-05"
+    },
+    "pay_app": {
+     "application_number": 8,
+     "period_to": "2026-12-31",
+     "final": true,
+     "contractor": "Tamsin Ridge Builders LLC",
+     "owner": "Sablewood Unified Facilities Corp.",
+     "project": {
+      "name": "Sablewood Middle School Gym",
+      "address": "1501 Sablewood Ave, Riverside, CA 92501",
+      "state": "CA"
+     },
+     "currency": "USD",
+     "original_contract_sum": 2300000,
+     "net_change_orders": 100000,
+     "contract_sum_to_date": 2400000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 100000,
+       "previous": 100000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 100000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "2",
+       "description": "Foundations",
+       "scheduled_value": 500000,
+       "previous": 500000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 500000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "3",
+       "description": "Steel",
+       "scheduled_value": 700000,
+       "previous": 700000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 700000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "4",
+       "description": "Roofing",
+       "scheduled_value": 400000,
+       "previous": 280000,
+       "this_period": 120000,
+       "materials_stored": 0,
+       "completed_to_date": 400000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      },
+      {
+       "item_no": "5",
+       "description": "Interiors",
+       "scheduled_value": 700000,
+       "previous": 490000,
+       "this_period": 210000,
+       "materials_stored": 0,
+       "completed_to_date": 700000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 0
+      }
+     ],
+     "total_completed_and_stored": 2400000,
+     "retainage_rate": "0%",
+     "total_retainage": 0,
+     "total_earned_less_retainage": 2400000,
+     "less_previous_certificates": 1863000,
+     "current_payment_due": 537000,
+     "balance_to_finish_including_retainage": 0
+    },
+    "payment": {
+     "payee": "Tamsin Ridge Builders LLC",
+     "maker": "Sablewood Unified Facilities Corp.",
+     "method": "check",
+     "check_no": "SW-3302-8",
+     "amount": 537000,
+     "cleared": true,
+     "cleared_date": "2027-01-20"
+    }
+   },
+   "waiver_text": "UNCONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT\n\nNOTICE TO CLAIMANT: THIS DOCUMENT WAIVES AND RELEASES LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS UNCONDITIONALLY AND STATES THAT YOU HAVE BEEN PAID FOR GIVING UP THOSE RIGHTS. THIS DOCUMENT IS ENFORCEABLE AGAINST YOU IF YOU SIGN IT, EVEN IF YOU HAVE NOT BEEN PAID. IF YOU HAVE NOT BEEN PAID, USE A CONDITIONAL WAIVER AND RELEASE FORM.\n\nIdentifying Information\n\nName of Claimant: Tamsin Ridge Builders LLC\n\nName of Customer: Sablewood Unified Facilities Corp.\n\nJob Location: 88 Vellum St, Sacramento, CA 95814\n\nOwner: Sablewood Unified Facilities Corp.\n\nUnconditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for all labor and service provided, and equipment and material delivered, to the customer on this job. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. The claimant has been paid in full.\n\nExceptions\n\nThis document does not affect the following:\n\nDisputed claims for extras in the amount of: $0.00\n\nSignature\n\nClaimant’s Signature: /s/ Imke Sorrel\n\nClaimant’s Title: Controller\n\nDate of Signature: January 5, 2027\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F29",
+   "label": "defect",
+   "form": "TX-53.284(c)",
+   "defect": "attached-request-mismatch",
+   "defect_field": "waiver.attached_request_no",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_ATTACHED"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "TX",
+      "statute": "Tex. Prop. Code 53.284(c)",
+      "title": "UNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": true,
+      "final": false
+     },
+     "claimant": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "job_location": "77 Pellucid Creek Rd, Waco, TX 76701",
+     "contracted_with": "Pellucid Creek Municipal Utility Holdings",
+     "project": "Pellucid Creek Fire Station 9",
+     "job_no": "PC-0009",
+     "amount": 135000,
+     "attached_request_no": 3,
+     "signed_date": "2026-10-05"
+    },
+    "pay_app": {
+     "application_number": 4,
+     "period_to": "2026-09-30",
+     "final": false,
+     "contractor": "Gannet & Rowe Constructors Inc.",
+     "owner": "Pellucid Creek Municipal Utility Holdings",
+     "project": {
+      "name": "Pellucid Creek Fire Station 9",
+      "address": "77 Pellucid Creek Rd, Waco, TX 76701",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 960000,
+     "net_change_orders": 40000,
+     "contract_sum_to_date": 1000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Mobilization",
+       "scheduled_value": 50000,
+       "previous": 50000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 50000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 5000
+      },
+      {
+       "item_no": "2",
+       "description": "Sitework",
+       "scheduled_value": 150000,
+       "previous": 112500,
+       "this_period": 37500,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 15000
+      },
+      {
+       "item_no": "3",
+       "description": "Building shell",
+       "scheduled_value": 400000,
+       "previous": 180000,
+       "this_period": 60000,
+       "materials_stored": 0,
+       "completed_to_date": 240000,
+       "percent_complete": 60,
+       "balance_to_finish": 160000,
+       "retainage": 24000
+      },
+      {
+       "item_no": "4",
+       "description": "Apparatus bay",
+       "scheduled_value": 250000,
+       "previous": 112500,
+       "this_period": 37500,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 60,
+       "balance_to_finish": 100000,
+       "retainage": 15000
+      },
+      {
+       "item_no": "5",
+       "description": "Systems",
+       "scheduled_value": 150000,
+       "previous": 45000,
+       "this_period": 15000,
+       "materials_stored": 0,
+       "completed_to_date": 60000,
+       "percent_complete": 40,
+       "balance_to_finish": 90000,
+       "retainage": 6000
+      }
+     ],
+     "total_completed_and_stored": 650000,
+     "retainage_rate": "10%",
+     "total_retainage": 65000,
+     "total_earned_less_retainage": 585000,
+     "less_previous_certificates": 450000,
+     "current_payment_due": 135000,
+     "balance_to_finish_including_retainage": 415000
+    },
+    "payment": {
+     "payee": "Gannet & Rowe Constructors Inc.",
+     "maker": "Pellucid Creek Municipal Utility Holdings",
+     "method": "check",
+     "check_no": "PC-0009-4",
+     "amount": 135000,
+     "cleared": true,
+     "cleared_date": "2026-10-20"
+    }
+   },
+   "waiver_text": "NOTICE:\n\nThis document waives rights unconditionally and states that you have been paid for giving up those rights.  It is prohibited for a person to require you to sign this document if you have not been paid the payment amount set forth below.  If you have not been paid, use a conditional release form.\n\nUNCONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nProject Pellucid Creek Fire Station 9\n\nJob No. PC-0009\n\nThe signer of this document has been paid and has received a progress payment in the sum of $135,000.00 for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted) on the property of Pellucid Creek Municipal Utility Holdings (owner) located at  77 Pellucid Creek Rd, Waco, TX 76701 (location) to the following extent:  general construction of the Pellucid Creek Fire Station 9 under the prime contract (job description).  The signer therefore waives and releases any mechanic's lien right, any right arising from a payment bond that complies with a state or federal statute, any common law payment bond right, any claim for payment, and any rights under any similar ordinance, rule, or statute related to claim or payment rights for persons in the signer's position that the signer has on the above referenced project to the following extent:\n\nThis release covers a progress payment for all labor, services, equipment, or materials furnished to the property or to Pellucid Creek Municipal Utility Holdings (person with whom signer contracted) as indicated in the attached statement(s) or progress payment request(s), except for unpaid retention, pending modifications and changes, or other items furnished.\n\nThe signer warrants that the signer has already paid or will use the funds received from this progress payment to promptly pay in full all of the signer's laborers, subcontractors, materialmen, and suppliers for all work, materials, equipment, or services provided for or to the above referenced project in regard to the attached statement(s) or progress payment request(s).\n\nDate October 5, 2026\n\nGannet & Rowe Constructors Inc. (Company name)\n\nBy /s/ Lio Fenwick (Signature)\n\nChief Financial Officer (Title)\n\nAttached: Application and Certificate for Payment No. 3, for the period to September 30, 2026.\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  },
+  {
+   "id": "F30",
+   "label": "defect",
+   "form": "CA-8132",
+   "defect": "wrong-state-form",
+   "defect_field": "waiver.form.state",
+   "expected_outcome": "FAIL",
+   "expected_rules": [
+    "LW_STATE"
+   ],
+   "extraction": {
+    "waiver": {
+     "form": {
+      "state": "CA",
+      "statute": "Cal. Civ. Code 8132",
+      "title": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT",
+      "unconditional": false,
+      "final": false
+     },
+     "claimant": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "job_location": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+     "customer": "Mesa Ledger Partners LP",
+     "through_date": "2026-09-30",
+     "amount": 297000,
+     "signed_date": "2026-10-05"
+    },
+    "pay_app": {
+     "application_number": 6,
+     "period_to": "2026-09-30",
+     "final": false,
+     "contractor": "Brindle Oak Contractors Inc.",
+     "owner": "Mesa Ledger Partners LP",
+     "project": {
+      "name": "Cobalt Mesa Distribution Center",
+      "address": "9020 Cobalt Mesa Pkwy, Austin, TX 78744",
+      "state": "TX"
+     },
+     "currency": "USD",
+     "original_contract_sum": 3100000,
+     "net_change_orders": -100000,
+     "contract_sum_to_date": 3000000,
+     "schedule_of_values": [
+      {
+       "item_no": "1",
+       "description": "Site prep",
+       "scheduled_value": 300000,
+       "previous": 300000,
+       "this_period": 0,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 100,
+       "balance_to_finish": 0,
+       "retainage": 30000
+      },
+      {
+       "item_no": "2",
+       "description": "Slab",
+       "scheduled_value": 800000,
+       "previous": 600000,
+       "this_period": 120000,
+       "materials_stored": 0,
+       "completed_to_date": 720000,
+       "percent_complete": 90,
+       "balance_to_finish": 80000,
+       "retainage": 72000
+      },
+      {
+       "item_no": "3",
+       "description": "Tilt-up panels",
+       "scheduled_value": 900000,
+       "previous": 675000,
+       "this_period": 135000,
+       "materials_stored": 0,
+       "completed_to_date": 810000,
+       "percent_complete": 90,
+       "balance_to_finish": 90000,
+       "retainage": 81000
+      },
+      {
+       "item_no": "4",
+       "description": "Roof",
+       "scheduled_value": 500000,
+       "previous": 250000,
+       "this_period": 50000,
+       "materials_stored": 0,
+       "completed_to_date": 300000,
+       "percent_complete": 60,
+       "balance_to_finish": 200000,
+       "retainage": 30000
+      },
+      {
+       "item_no": "5",
+       "description": "Dock equipment",
+       "scheduled_value": 500000,
+       "previous": 125000,
+       "this_period": 25000,
+       "materials_stored": 0,
+       "completed_to_date": 150000,
+       "percent_complete": 30,
+       "balance_to_finish": 350000,
+       "retainage": 15000
+      }
+     ],
+     "total_completed_and_stored": 2280000,
+     "retainage_rate": "10%",
+     "total_retainage": 228000,
+     "total_earned_less_retainage": 2052000,
+     "less_previous_certificates": 1755000,
+     "current_payment_due": 297000,
+     "balance_to_finish_including_retainage": 948000
+    },
+    "payment": {
+     "payee": "Brindle Oak Contractors Inc.",
+     "maker": "Mesa Ledger Partners LP",
+     "method": "check",
+     "check_no": "CM-118-6",
+     "amount": 297000,
+     "cleared": false,
+     "status": "issued, not yet cleared"
+    }
+   },
+   "waiver_text": "CONDITIONAL WAIVER AND RELEASE ON PROGRESS PAYMENT\n\nNOTICE: THIS DOCUMENT WAIVES THE CLAIMANT’S LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT HAS RECEIVED PAYMENT.\n\nIdentifying Information\n\nName of Claimant: Brindle Oak Contractors Inc.\n\nName of Customer: Mesa Ledger Partners LP\n\nJob Location: 9020 Cobalt Mesa Pkwy, Austin, TX 78744\n\nOwner: Mesa Ledger Partners LP\n\nThrough Date: September 30, 2026\n\nConditional Waiver and Release\n\nThis document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant’s receipt of payment from the financial institution on which the following check is drawn:\n\nMaker of Check: Mesa Ledger Partners LP\n\nAmount of Check: $297,000.00\n\nCheck Payable to: Brindle Oak Contractors Inc.\n\nExceptions\n\nThis document does not affect any of the following:\n\n(1) Retentions.\n\n(2) Extras for which the claimant has not received payment.\n\n(3) The following progress payments for which the claimant has previously given a conditional waiver and release but has not received payment:\n\nDate(s) of waiver and release:\n\nAmount(s) of unpaid progress payment(s): $\n\n(4) Contract rights, including (A) a right based on rescission, abandonment, or breach of contract, and (B) the right to\nrecover compensation for work not compensated by the payment.\n\nSignature\n\nClaimant’s Signature: /s/ Teo Vashti\n\nClaimant’s Title: Project Executive\n\nDate of Signature: October 5, 2026\n\n---\nSYNTHETIC TEST DOCUMENT generated for the X3 lien-waiver demo. All parties, projects and addresses are invented.\n"
+  }
+ ]
+}

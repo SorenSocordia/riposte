@@ -1,8 +1,8 @@
 /**
- * The opinion reads the book (opinion lane, 2026-09-28): a person's signed decisions on the chain are what an opinion argues
+ * The opinion reads the book (2026-09-28): a person's signed decisions on the chain are what an opinion argues
  * from, and what it cites.
- *   - the snapshot verifies the whole book with the ledger's own reader (header-aware; F2), and a REVIEW refreshes the
- *     verdict's reviewer as the ledger does (F1);
+ *   - the snapshot verifies the whole book with the ledger's own reader (header-aware), and a REVIEW refreshes the
+ *     verdict's reviewer as the ledger does;
  *   - a promotion / demotion opinion cites the GRANT in force as the decision its ruling would amend (P8), and a declaration
  *     or proposal that disagrees with the signed book is WITHHELD (a flag never overrides a signed grant);
  *   - a person's standing DECLINE shows as DECLINED, not a fresh ask (P9), until the evidence it saw changes; then the
@@ -33,8 +33,8 @@ function grantedBook(level: VoiceLevel, o: { passOverturned?: number } = {}): { 
   return { ledger, grantId: e.decision_id, grantSeq: e.seq, grantHash: e.entry_hash }
 }
 
-describe('the snapshot reads the whole book (F1, F2)', () => {
-  it('F2: a relabelled event header (not covered by entry_hash) used to pass the payload check; the opinion now WITHHOLDS', () => {
+describe('the snapshot reads the whole book', () => {
+  it('a relabelled event header (not covered by entry_hash) used to pass the payload check; the opinion now WITHHOLDS', () => {
     const { ledger } = buildLedger({ passes: 3, fails: 3 })
     const { events, payloads } = parseChainJSONL(ledger.chainJSONL())
     const i = events.findIndex(e => e.type === 'REVIEW')
@@ -50,14 +50,14 @@ describe('the snapshot reads the whole book (F1, F2)', () => {
     expect(premise(op, 'P1').check).toMatch(/^readDecisionBook \(ledger\/decisions\)/)
   })
 
-  it('F1: the rebuilt records equal the ledger\'s, reviewer included (a REVIEW refreshes verdict.ledger.reviewer)', () => {
+  it('the rebuilt records equal the ledger\'s, reviewer included (a REVIEW refreshes verdict.ledger.reviewer)', () => {
     const { ledger } = buildLedger({ passes: 4, fails: 4, failOverturned: 1 })
     const rebuilt = openSnapshot(snapshotOfLedger(ledger)).records
     expect(rebuilt).toEqual(ledger.all())
     expect(rebuilt.find(r => r.review?.decision === 'OVERTURNED')!.verdict.ledger!.reviewer).toMatchObject({ id: 'ap-lead', decision: 'OVERTURNED' })
   })
 
-  it('decision events are verified and exposed; REVIEW events alone are filed as reviews (D7)', () => {
+  it('decision events are verified and exposed; REVIEW events alone are filed as reviews', () => {
     const { ledger, grantId } = grantedBook('gate')
     const view = openSnapshot(snapshotOfLedger(ledger), { trusted_keys: TRUSTED })
     expect(view.content_verified).toBe(true)

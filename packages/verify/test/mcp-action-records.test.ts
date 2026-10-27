@@ -24,7 +24,7 @@ describe('MCP action_check: sources.records', () => {
       .post.requestBody.content['application/json'].schema.properties.sources!.properties!.records!)
     expect(mcp).toEqual(http)
     expect(mcp.description).toMatch(/mix-and-match/)
-    expect(Object.keys(tool.inputSchema.properties.sources!.properties!).sort()).toEqual(['allowed', 'records', 'require', 'text'])
+    expect(Object.keys(tool.inputSchema.properties.sources!.properties!).sort()).toEqual(['allowed', 'fields', 'records', 'require', 'text'])
     expect(tool.description).toMatch(/approved records/)
   })
 

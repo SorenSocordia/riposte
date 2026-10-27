@@ -1,5 +1,5 @@
 /**
- * Publishing checkpoints: where a checkpoint goes so the book's writer cannot take it back (2026-09-28, anchor lane).
+ * Publishing checkpoints: where a checkpoint goes so the book's writer cannot take it back (2026-09-28).
  *
  * A checkpoint anchors nothing while it sits beside the book it protects. It must reach storage that the party with write
  * access to the book cannot rewrite: a WORM / object-lock bucket the customer controls, a separate account, an auditor's

@@ -129,10 +129,10 @@ export function clopperPearsonInterval(k: number, n: number, confidence: number)
   return { lower, upper }
 }
 
-// ── sidedness, made explicit (2026-09-28, evidence-integrity lane) ────────────────────────────────────────────────────
+// ── sidedness, made explicit (2026-09-28) ────────────────────────────────────────────────────
 //
 // Every bound in this product has always been ONE-SIDED at the stated confidence (the audit-sampling convention: AS 2315
-// fn 9 speaks of "a 5 percent to 10 percent risk of assessing control risk too low", one tail). The research lane found two
+// fn 9 speaks of "a 5 percent to 10 percent risk of assessing control risk too low", one tail). Research for this product found two
 // public demo numbers that silently mixed sidedness (≈0.44% for 3/2,000 is two-sided z = 1.96; one-sided it is 0.375%).
 // So sidedness is now a declared parameter everywhere a number is produced. A TWO-SIDED interval at confidence c puts
 // (1 − c)/2 in each tail, so each of its edges equals the ONE-SIDED edge at confidence 1 − (1 − c)/2.

@@ -1,5 +1,5 @@
 /**
- * GOVERNANCE-2 (2026-09-28): dual authorization (D-DUAL), the review queue's tenant wall (F-S2-1), and a surveillance-found
+ * 2026-09-28: dual authorization (D-DUAL), the review queue's tenant wall (F-S2-1), and a surveillance-found
  * failure argued as a demotion (FS4).
  *
  * D-DUAL: a tier may declare `grant_signatures: 2` ("Automated-approval evidence", 2026-09-28, §5.6: autonomy at T3 only with

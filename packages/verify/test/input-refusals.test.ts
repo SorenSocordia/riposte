@@ -1,5 +1,5 @@
 /**
- * Library refusals, not throws (N7, wave 4, 2026-09-28).
+ * Library refusals, not throws (2026-09-28).
  *   - verifyReplay(<not a verdict>) answers { ok: false, refused: true, reason } instead of throwing from inside the
  *     derivation; every verdict-shaped input gets the identical result it got before (held to the derivation itself).
  *   - assertExtraction(x) (src/protocol/input.ts) refuses, with a typed InputRefused, exactly what verify() cannot bind a
@@ -38,16 +38,17 @@ describe('verifyReplay: a refusal for what is not a verdict, never a throw', () 
 
   it('every verdict-shaped input: the same answer as the derivation itself (valid, altered id, wrong inputs)', () => {
     const v = verify(clean, { now: FIXED_NOW })
-    const derive = (x: Verdict): string => deriveVerdictId(x.input_hash, x.ruleset, x.engine_version)
-    // R1 (2026-09-28): without inputs the binding is all that is checked, and the result says so (outcome NOT re-performed)
+    const derive = (x: Verdict): string => deriveVerdictId(x.input_hash, x.ruleset, x.engine_version, x.remedy_table_hash)
+    // 2026-09-28: without inputs the binding is all that is checked, and the result says so (outcome NOT re-performed)
     expect(verifyReplay(v)).toEqual({
       ok: true, id_ok: true, expected_verdict_id: derive(v), outcome_verified: false, status: 'STRUCTURE_ONLY',
       not_reperformed: 'structure verified; outcome NOT re-performed: no inputs were supplied, so the check was not run again (the verdict_id binds the inputs, not the outcome)',
     })
     const altered = { ...v, verdict_id: '0'.repeat(32) }
-    expect(verifyReplay(altered)).toEqual({ ok: false, id_ok: false, expected_verdict_id: derive(v), outcome_verified: false, status: 'FAILED', reason: `verdict_id does not derive from input_hash + ruleset@version + engine_version (expected ${derive(v)})` })
+    expect(verifyReplay(altered)).toEqual({ ok: false, id_ok: false, expected_verdict_id: derive(v), outcome_verified: false, status: 'FAILED', reason: `verdict_id does not derive from input_hash + ruleset@version + engine_version${v.remedy_table_hash !== undefined ? ' + remedy_table_hash' : ''} (expected ${derive(v)})` })
     const wrong = verifyReplay(v, { not: 'these' })
-    expect(wrong).toEqual({ ok: false, id_ok: true, input_ok: false, expected_verdict_id: derive(v), expected_input_hash: hashOf({ not: 'these' }), outcome_verified: false, status: 'FAILED', reason: `input_hash does not match the supplied inputs (expected ${hashOf({ not: 'these' })}) — this verdict is not for these inputs` })
+    // 2026-10-05: both hashes, labelled recorded (the verdict's) and computed (from the inputs given)
+    expect(wrong).toEqual({ ok: false, id_ok: true, input_ok: false, expected_verdict_id: derive(v), expected_input_hash: hashOf({ not: 'these' }), recorded_input_hash: v.input_hash, computed_input_hash: hashOf({ not: 'these' }), outcome_verified: false, status: 'FAILED', reason: `input_hash does not match the supplied inputs: recorded ${v.input_hash}, computed ${hashOf({ not: 'these' })} — this verdict is not for these inputs` })
     expect(verifyReplay(v).refused).toBeUndefined()
     // another verdict family (verify_action), re-bound to its own inputs and re-performed
     const action = { tool: 'wire', arguments: { to: '9' } }, sources = { allowed: { to: ['9'] } }
@@ -149,7 +150,7 @@ describe('the CLI: input refusals exit 3 with the reason', () => {
     }
   })
 
-  it('a real verdict still replays: exit 2 without inputs (structure only, R1), 0 re-performed; an altered one: exit 1', () => {
+  it('a real verdict still replays: exit 2 without inputs (structure only), 0 re-performed; an altered one: exit 1', () => {
     const v = verify(clean, { now: FIXED_NOW })
     expect(run(['replay', file(JSON.stringify(v))], cap())).toBe(2)
     expect(run(['replay', file(JSON.stringify(v)), '--extraction', file(JSON.stringify(clean))], cap())).toBe(0)

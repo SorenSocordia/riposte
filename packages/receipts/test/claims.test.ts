@@ -86,7 +86,7 @@ describe('claims vs the session\'s tool evidence', () => {
 
   it('UNSUPPORTED: "tests pass" with no test run in the session — the confident done with nothing behind it', () => {
     const r = check(prompt('fix it'), edit('src/a.ts'), say('Fixed it — all tests pass.'))
-    expect(r.outcome).toBe('ABSTAIN')
+    expect(r.outcome).toBe('INSUFFICIENT_DATA')
     expect(r.claims[0]).toMatchObject({ status: 'UNSUPPORTED', reason: 'no test run anywhere in this session' })
   })
 
@@ -128,7 +128,7 @@ describe('claims vs the session\'s tool evidence', () => {
   it('git: committed / pushed need a successful command; "nothing to commit" and rejected pushes contradict', () => {
     expect(check(bash('git commit -m x', '[main 20ee033] x\n 3 files changed'), bash('git push origin main', 'To github.com:o/r.git\n   cf41d0d..20ee033  main -> main'), say('Committed and pushed.')).outcome).toBe('PASS')
     expect(check(bash('git commit -m x', 'nothing to commit, working tree clean'), say('Committed.')).claims[0]!.status).toBe('CONTRADICTED')
-    expect(check(bash('git push', ' ! [rejected]        main -> main (fetch first)\nerror: failed to push some refs')).outcome).toBe('ABSTAIN') // no claim made
+    expect(check(bash('git push', ' ! [rejected]        main -> main (fetch first)\nerror: failed to push some refs')).outcome).toBe('INSUFFICIENT_DATA') // no claim made
     expect(check(bash('git push', ' ! [rejected]        main -> main (fetch first)\nerror: failed to push some refs'), say('Pushed.')).outcome).toBe('FAIL')
     expect(check(say('Pushed to main.')).claims[0]).toMatchObject({ status: 'UNSUPPORTED', reason: 'no git push ran in this session' })
   })
@@ -145,7 +145,7 @@ describe('claims vs the session\'s tool evidence', () => {
     expect(checkClaims(steps, firstText).claims[0]!.status).toBe('UNSUPPORTED')
   })
 
-  it('a message with no checkable claims ABSTAINs (nothing verified is not the same as verified)', () => {
+  it('a message with no checkable claims is INSUFFICIENT_DATA (nothing verified is not the same as verified)', () => {
     expect(check(say('Here is my plan for tomorrow.')).reasons[0]).toMatch(/no checkable completion claims/)
   })
 
@@ -171,10 +171,14 @@ describe('riposte-claims CLI and the MCP check_claims tool', () => {
   }
   const read = (p: string) => { const f = files[p]; if (f === undefined) throw new Error('ENOENT'); return f }
 
-  it('exit 0 PASS · 1 FAIL · 2 ABSTAIN · 3 usage; hook JSON on stdin works', () => {
+  it('exit 0 PASS · 1 FAIL · 2 INSUFFICIENT_DATA · 3 usage; hook JSON on stdin works', () => {
     expect(claimsCli(['good.jsonl'], read).code).toBe(0)
     expect(claimsCli(['bad.jsonl'], read).code).toBe(1)
-    expect(claimsCli(['bare.jsonl'], read).code).toBe(2)
+    const bare = claimsCli(['bare.jsonl'], read)
+    expect(bare.code).toBe(2)
+    expect(bare.err).toMatch(/^INSUFFICIENT_DATA: /)
+    expect(JSON.parse(bare.out).outcome).toBe('INSUFFICIENT_DATA')
+    expect(bare.out + bare.err).not.toContain('ABSTAIN')
     expect(claimsCli(['--nope'], read).code).toBe(3)
     expect(claimsCli([], read, JSON.stringify({ transcript_path: 'bad.jsonl', hook_event_name: 'Stop' })).code).toBe(1)
   })

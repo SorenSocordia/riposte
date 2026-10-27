@@ -1,0 +1,15 @@
+STY0	LINDQVIST, Circuit Judge, concurring dubitante:
+STY1	LINDQVIST, Circuit Judge, specially concurring:
+STY2	LINDQVIST, Circuit Judge, concurring in the result:
+STY3	LINDQVIST, Circuit Judge, concurring in the judgment only:
+STY4	LINDQVIST, J., concurs in the result.
+STY5	LINDQVIST, Circuit Judge, statement respecting the denial of rehearing en banc:
+STY6	LINDQVIST, Circuit Judge, joining the opinion of the court and concurring:
+STY7	LINDQVIST, Circuit Judge, concurring, with whom OKAFOR, Circuit Judge, joins:
+STY8	Concurring Opinion of Judge Lindqvist
+STY9	LINDQVIST, Circuit Judge, dissenting in part:
+STY10	LINDQVIST, Senior Circuit Judge, concurring in part:
+STY11	Judge LINDQVIST, concurring dubitante.
+STY12	LINDQVIST, P.J. (concurring in result only)
+STY13	LINDQVIST, J., would grant the petition.
+STY14	Separate Statement of LINDQVIST, J.

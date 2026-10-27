@@ -1,0 +1,52 @@
+{
+  "citations": [
+    {
+      "id": "desig-A",
+      "cite": "601 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style A"
+    },
+    {
+      "id": "desig-B",
+      "cite": "602 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style B"
+    },
+    {
+      "id": "desig-C",
+      "cite": "603 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style C"
+    },
+    {
+      "id": "desig-D",
+      "cite": "604 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style D"
+    },
+    {
+      "id": "desig-E",
+      "cite": "605 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style E"
+    },
+    {
+      "id": "desig-F",
+      "cite": "606 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style F"
+    },
+    {
+      "id": "desig-G",
+      "cite": "607 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style G"
+    },
+    {
+      "id": "desig-H",
+      "cite": "608 U.S. 1, 9 (2020)",
+      "case_name": "Acme Arbitration Co. v. Roe Contractors, Inc.",
+      "quote": "the period should run from the date the party learns of the arbitrator's undisclosed conflict, style H"
+    }
+  ]
+}

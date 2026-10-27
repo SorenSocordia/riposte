@@ -1,6 +1,6 @@
 /**
  * `verify anchor checkpoint|verify` (core-tidy, 2026-09-29): external anchoring at the command line, through run().
- *   - THE INSIDER REWRITE (the anchor lane's red-team case): a held FAIL is re-recorded as a PASS and the whole chain
+ *   - THE INSIDER REWRITE (a red-team case): a held FAIL is re-recorded as a PASS and the whole chain
  *     recomputed. The forged file verifies internally; `anchor verify` exits 2 at the first anchored position after the
  *     change, and `anchor checkpoint` refuses to extend it (exit 2), the witness store byte-identical.
  *   - Truncation past a checkpoint: exit 2, the position named.

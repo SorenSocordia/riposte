@@ -124,15 +124,15 @@ describe('v0.2 statement-anchored binding: the CREDENCE-1 false flags, in miniat
   it('NOT_ON_STATEMENT: the statement prints the line under another concept; the map\'s concept is only in MD&A', () => {
     expect(one('cash', 4_558_160, OPTS)).toMatchObject({ outcome: 'FAIL' }) // v0.1: "4.6" million in MD&A
     const j = one('cash', 4_558_160)
-    expect(j).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
+    expect(j).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
     expect(j.detail).toMatch(/CashAndCashEquivalentsAtCarryingValue is reported in the instant period/)
   })
   it('a concept presented only on a PARENTHETICAL statement does not bind', () => {
-    expect(one('liabilities', 700_000_000)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NOT_ON_STATEMENT' })
+    expect(one('liabilities', 700_000_000)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NOT_ON_STATEMENT' })
     expect(one('liabilities', 700_000_000, OPTS)).toMatchObject({ outcome: 'PASS' }) // v0.1 binds it anywhere
   })
   it('a concept on no statement and in no period fact is NO_BINDING_FACT, as before', () => {
-    expect(one('gross_profit', 1)).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_BINDING_FACT' })
+    expect(one('gross_profit', 1)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_BINDING_FACT' })
   })
   it('still FAILs a wrong value on a statement line, with a diagnosis (a statement is not a softer judge)', () => {
     expect(one('current_assets', 600_000)).toMatchObject({ outcome: 'FAIL', diagnosis: 'SCALE' })
@@ -159,28 +159,28 @@ describe('v0.2 decimals-aware matching', () => {
     expect(HTML.slice(span.start, span.end)).toContain('>1,234,567<')
     expect(r.verdict.claims[0]!.evidence[0]!.normalizations).toEqual(['ix:scale=3', 'ix:format=num-dot-decimal', 'twin:statement-anchored'])
   })
-  it('ROUNDED_BINDING: inside the binding fact\'s own rounding but equal to none of its figures is ABSTAIN, never FAIL or PASS', () => {
+  it('ROUNDED_BINDING: inside the binding fact\'s own rounding but equal to none of its figures is INSUFFICIENT_DATA, never FAIL or PASS', () => {
     expect(one('operating_income', 12_345_678, OPTS)).toMatchObject({ outcome: 'FAIL' }) // v0.1
     const j = one('operating_income', 12_345_678)
-    expect(j).toMatchObject({ outcome: 'ABSTAIN', reason: 'ROUNDED_BINDING', binding: { value: 12_300_000, decimals: -5 } })
+    expect(j).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'ROUNDED_BINDING', binding: { value: 12_300_000, decimals: -5 } })
     expect(one('operating_income', 12_300_000)).toMatchObject({ outcome: 'PASS' })
     expect(one('operating_income', 12_400_000)).toMatchObject({ outcome: 'FAIL' }) // outside ± 50,000
   })
 })
 
-describe('v0.2 ABSTAINs when its anchor is missing (never falls back to whole-document binding)', () => {
+describe('v0.2 answers INSUFFICIENT_DATA when its anchor is missing (never falls back to whole-document binding)', () => {
   it('NO_PRESENTATION_LINKBASE: no presentation supplied', () => {
-    expect(one('assets', 1_234_567_000, { ...OPTS, map: FS_CORE_TWIN_MAP_V02 })).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_PRESENTATION_LINKBASE' })
-    expect(one('assets', 1_234_567_000, { ...OPTS, map: FS_CORE_TWIN_MAP_V02, presentation: null })).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_PRESENTATION_LINKBASE' })
+    expect(one('assets', 1_234_567_000, { ...OPTS, map: FS_CORE_TWIN_MAP_V02 })).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_PRESENTATION_LINKBASE' })
+    expect(one('assets', 1_234_567_000, { ...OPTS, map: FS_CORE_TWIN_MAP_V02, presentation: null })).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_PRESENTATION_LINKBASE' })
   })
   it('NO_STATEMENT_ROLES: a linkbase with no identifiable statement role', () => {
     const p = parseTwinPresentation({ pre: PRE })!
-    expect(one('assets', 1_234_567_000, { ...V2, presentation: p })).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_STATEMENT_ROLES' })
+    expect(one('assets', 1_234_567_000, { ...V2, presentation: p })).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_STATEMENT_ROLES' })
   })
   it('the NO_TWIN gate and the claim checks come first, as in v0.1', () => {
-    expect(one('assets', Number.NaN)).toMatchObject({ outcome: 'ABSTAIN', reason: 'VALUE_UNPARSEABLE' })
-    expect(one('ebitda', 1)).toMatchObject({ outcome: 'ABSTAIN', reason: 'FIELD_NOT_MAPPED' })
-    expect(one('assets', 1, { ...V2, periodEnd: '2021-12-31' })).toMatchObject({ outcome: 'ABSTAIN', reason: 'NO_TWIN' })
+    expect(one('assets', Number.NaN)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'VALUE_UNPARSEABLE' })
+    expect(one('ebitda', 1)).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'FIELD_NOT_MAPPED' })
+    expect(one('assets', 1, { ...V2, periodEnd: '2021-12-31' })).toMatchObject({ outcome: 'INSUFFICIENT_DATA', reason: 'NO_TWIN' })
   })
   it('the abstentions map to standard insufficiency reasons, with the twin reason leading the detail', () => {
     const r = verifyAgainstTwin(HTML, [{ id: 'c', field: 'cash', value: 4_558_160 }, { id: 'o', field: 'operating_income', value: 12_345_678 }], V2)

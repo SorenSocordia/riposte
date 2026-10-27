@@ -1,0 +1,828 @@
+{
+  "spec": "bench-spec/1",
+  "id": "xr-einvoice-compiled",
+  "title": "A compiled XRechnung ruleset on the 60 e-invoice PDFs (preregistered, not blind)",
+  "adapter": "items",
+  "label": "post-hoc",
+  "blind": false,
+  "files": {
+    "scores": "results.json",
+    "receipt": "run-receipt.json"
+  },
+  "items": "scores:docs",
+  "run": {
+    "id": "compiled-ruleset corpus run: four arms over the 60 PDFs of the e-invoice PDF run, its blind extractor unchanged",
+    "date": "2026-10-03",
+    "engine_version": "0.2.0",
+    "ruleset": "xrechnung-cius + xrechnung-profile (compiled from KoSIT XRechnung v2.6.0 and CEN EN16931 v1.3.15, compiler 0.1.0), with CEN + Peppol recompiled as reference"
+  },
+  "rows": [
+    {
+      "claim": "XRechnung rules alone: planted defects caught (FAIL)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_cius.class": "caught"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: planted defects abstained",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_cius.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 20,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: planted defects certified PASS (WRONG PASS)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_cius.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R1: every WRONG PASS on a planted defect is of a predicted type (line_math or currency in the scoped XRechnung profile); any other is a miss (none predicted in this arm)",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: clean invoices correctly PASS",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_cius.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: clean invoices certified PASS wrongly",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_cius.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R2: no WRONG PASS on a clean document in any arm",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: clean invoices false FAIL",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_cius.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: clean invoices abstained",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_cius.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 20,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: noisy scans correctly PASS",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_cius.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: noisy scans certified PASS wrongly, outside the named candidates",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_cius.class": "WRONG_PASS",
+        "id": {
+          "$nin": [
+            "X1-N07",
+            "X1-N18"
+          ]
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R3: noisy WRONG PASS only among the named candidates (X1-N07, X1-N18); any other is a miss",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: noisy scans false FAIL (FAIL where the reference reading PASSes)",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_cius.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "XRechnung rules alone: noisy scans abstained",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_cius.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 20,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: planted defects caught (FAIL)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile.class": "caught"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 8,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: planted defects abstained",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 12,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: planted defects certified PASS (WRONG PASS)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R1: every WRONG PASS on a planted defect is of a predicted type (line_math or currency in the scoped XRechnung profile); any other is a miss (none predicted in this arm)",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: clean invoices correctly PASS",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: clean invoices certified PASS wrongly",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R2: no WRONG PASS on a clean document in any arm",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: clean invoices false FAIL",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: clean invoices abstained",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 20,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: noisy scans correctly PASS",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: noisy scans certified PASS wrongly, outside the named candidates",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile.class": "WRONG_PASS",
+        "id": {
+          "$nin": [
+            "X1-N07",
+            "X1-N18"
+          ]
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R3: noisy WRONG PASS only among the named candidates (X1-N07, X1-N18); any other is a miss",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: noisy scans false FAIL (FAIL where the reference reading PASSes)",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung: noisy scans FAILed on a misread where the reference reading also FAILs",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile.class": "fail_oracle_agrees"
+      },
+      "method": "wilson"
+    },
+    {
+      "claim": "EN 16931 + XRechnung: noisy scans abstained",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 18,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: planted defects caught (FAIL)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "caught"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 8,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: planted defects abstained",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 4,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: planted defects certified PASS (WRONG PASS), any type",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "note": "predicted for the four line-math and four currency defects",
+      "reported": {
+        "k": 8,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: planted defects certified PASS of a type not predicted",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "WRONG_PASS",
+        "defect.type": {
+          "$nin": [
+            "line_math",
+            "currency"
+          ]
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R1: every WRONG PASS on a planted defect is of a predicted type (line_math or currency in the scoped XRechnung profile); any other is a miss",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "note": "X1-D15: the invoice currency removed from the page; the extractor invented one and a presence check passed it"
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: clean invoices correctly PASS",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 17,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: clean invoices certified PASS wrongly",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R2: no WRONG PASS on a clean document in any arm",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: clean invoices false FAIL",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: clean invoices abstained",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 3,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: noisy scans correctly PASS",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 10,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: noisy scans certified PASS wrongly, outside the named candidates",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "WRONG_PASS",
+        "id": {
+          "$nin": [
+            "X1-N07",
+            "X1-N18"
+          ]
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R3: noisy WRONG PASS only among the named candidates (X1-N07, X1-N18); any other is a miss",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: noisy scans false FAIL (FAIL where the reference reading PASSes)",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 2,
+        "n": 20
+      }
+    },
+    {
+      "claim": "EN 16931 + XRechnung, the extractor's terms only: noisy scans abstained",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "xr_profile_x1scope.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 8,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): planted defects caught (FAIL)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "caught"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 17,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): planted defects abstained",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 3,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): planted defects certified PASS (WRONG PASS)",
+      "where": {
+        "arm": "defect"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R1: every WRONG PASS on a planted defect is of a predicted type (line_math or currency in the scoped XRechnung profile); any other is a miss (none predicted in this arm)",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): clean invoices correctly PASS",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 17,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): clean invoices certified PASS wrongly",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "WRONG_PASS"
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R2: no WRONG PASS on a clean document in any arm",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      },
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): clean invoices false FAIL",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 0,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): clean invoices abstained",
+      "where": {
+        "arm": "clean"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 3,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): noisy scans correctly PASS",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "correct_pass"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 10,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): noisy scans certified PASS wrongly, outside the named candidates",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "WRONG_PASS",
+        "id": {
+          "$nin": [
+            "X1-N07",
+            "X1-N18"
+          ]
+        }
+      },
+      "method": "wilson",
+      "bar": {
+        "text": "R3: noisy WRONG PASS only among the named candidates (X1-N07, X1-N18); any other is a miss",
+        "test": {
+          "k": {
+            "eq": 0
+          }
+        }
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): noisy scans false FAIL (FAIL where the reference reading PASSes)",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "false_fail"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 2,
+        "n": 20
+      }
+    },
+    {
+      "claim": "CEN + Peppol recompiled, the extractor's terms only (reference arm): noisy scans abstained",
+      "where": {
+        "arm": "noise"
+      },
+      "hit": {
+        "peppol_compiled_x1scope.class": "abstain"
+      },
+      "method": "wilson",
+      "reported": {
+        "k": 8,
+        "n": 20
+      }
+    },
+    {
+      "claim": "R4: the 60 extractions equal the e-invoice PDF run's first run byte for byte",
+      "n": 60,
+      "k": 60,
+      "method": "wilson",
+      "bar": {
+        "text": "R4: the extractions equal X1 run 1's byte for byte (60/60), or every difference is listed",
+        "test": {
+          "k": {
+            "eq": "$n"
+          }
+        }
+      },
+      "note": "from results/results.json: extractions_identical_to_x1_run1 \"60/60\", differing []",
+      "reported": {
+        "k": 60,
+        "n": 60
+      }
+    }
+  ],
+  "misses": [
+    {
+      "id": "X1-D15-unpredicted-pass",
+      "kind": "wrong PASS (not predicted)",
+      "description": "under EN 16931 + XRechnung, the extractor's terms only, X1-D15 PASSed: the invoice currency (BT-5) was removed from the page, the blind extractor invented one, and the compiled presence check passed it; R1 predicted no WRONG PASS of this type",
+      "post_hoc": false
+    },
+    {
+      "id": "BR-CO-15-uncompiled",
+      "kind": "compiler miss (predicted)",
+      "description": "compiler 0.1.0 left the currency-count conjunct of BR-CO-15 uncompiled (a cardinality test), so three currency defects (X1-D04, X1-D14, X1-D19) PASSed under the scoped XRechnung profile, where the profile itself would catch them",
+      "post_hoc": false,
+      "fixed_by": "compiler 0.1.1 compiles the currency count (a post-hoc re-run, listed outside the bench rule)"
+    },
+    {
+      "id": "no-line-math-rule",
+      "kind": "scope (predicted)",
+      "description": "EN 16931 and XRechnung have no line-math rule (that is Peppol's R120), so the four line-math defects (X1-D01, X1-D06, X1-D11, X1-D16) PASS under the scoped XRechnung profile",
+      "post_hoc": false
+    },
+    {
+      "id": "full-profiles-hold-open",
+      "kind": "scope (predicted)",
+      "description": "the full XRechnung profiles require fields this extractor never reads (BT-10, BT-24, the seller's address and contact), so they hold every document open: they cannot pass, though EN 16931 + XRechnung still catches the VAT-breakdown and payable defects",
+      "post_hoc": false
+    },
+    {
+      "id": "X1-N06-false-fail",
+      "kind": "false-fail (OCR)",
+      "description": "X1-N06 (a stamped scan): false FAIL on BR-CL-03 in both scoped arms (and on R051 and CL007 in the Peppol arm): the amounts' currency was read as \"CEN\"",
+      "post_hoc": false
+    },
+    {
+      "id": "X1-N20-false-fail",
+      "kind": "false-fail (OCR)",
+      "description": "X1-N20 (a rotated scan): false FAIL on BR-CO-10 in both scoped arms (and on R120 in the Peppol arm) from an OCR misread",
+      "post_hoc": false
+    }
+  ],
+  "audit": "no new audit: the planted defects are known by construction, and the reference reading is the corpus's own ground-truth fields; the run's author, an AI agent (Claude Opus 5.5 (claude-opus-5-5)), wrote the predictions and bars before the run"
+}

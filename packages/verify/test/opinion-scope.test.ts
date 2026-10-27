@@ -1,5 +1,5 @@
 /**
- * The tenant scope (opinion lane, 2026-09-28, W4). On a hosted book shared by several tenants, an opinion's precedent,
+ * The tenant scope (2026-09-28). On a hosted book shared by several tenants, an opinion's precedent,
  * evidence, prior ruling and decisions are drawn ONLY from the requesting tenant's records. It never quotes another
  * tenant's reviews (their reviewer ids, notes or verdicts) as precedent. The chain is still verified whole.
  *
@@ -107,9 +107,9 @@ describe('one verdict id, two tenants (the same document verified by both)', () 
     return { ledger, id: v.verdict_id }
   }
 
-  // Flipped by the evidence-integrity lane (2026-09-28) when it fixed F-A in the ledger: this test pinned the leak as
+  // Flipped on 2026-09-28, when the ledger was fixed to keep each tenant's review apart: this test pinned the leak as
   // measured; it now pins the fix (records keyed by tenant and verdict id; a review never crosses tenants).
-  it('F-A fixed: the live ledger no longer hands acme\'s review to globex\'s re-record; each tenant keeps its own record', () => {
+  it('fixed: the live ledger no longer hands acme\'s review to globex\'s re-record; each tenant keeps its own record', () => {
     const { ledger, id } = collision()
     expect(ledger.get(id)!.tenant_id).toBe('globex')
     expect(ledger.get(id)!.review).toBeUndefined()

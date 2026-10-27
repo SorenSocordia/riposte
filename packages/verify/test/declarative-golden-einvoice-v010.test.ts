@@ -11,9 +11,14 @@ import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { verifyDeclarative, lintRuleset } from '../src/index'
 import { buildGoldenCasesV010, hashOfV010, V010_FILES, V010_SHA256, type GoldenApiV010 } from './fixtures/declarative-golden-einvoice-v010-cases'
+import { coreOf } from './fixtures/remedy-core'
 
 const GOLDEN = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'fixtures', 'declarative-golden-einvoice-v010-hashes.json'), 'utf8')) as { cases: number; hashes: Record<string, string> }
-const api = { verifyDeclarative, lintRuleset } as unknown as GoldenApiV010
+// Engine 0.0.1 (2026-10-03): the bytes this golden was frozen on; see test/declarative-golden.test.ts.
+const api = {
+  verifyDeclarative: (x: Record<string, unknown>, rs: never, o: Record<string, unknown>) => verifyDeclarative(x, rs, { ...o, engine: '0.0.1' }),
+  lintRuleset,
+} as unknown as GoldenApiV010
 
 describe('the e-invoice rulesets at 0.1.0 are byte-identical to the frozen golden (second golden)', () => {
   const cases = buildGoldenCasesV010()
@@ -25,7 +30,8 @@ describe('the e-invoice rulesets at 0.1.0 are byte-identical to the frozen golde
     expect(cases.map(c => c.id).sort()).toEqual(Object.keys(GOLDEN.hashes).sort())
   })
   it(`all ${GOLDEN.cases} results hash exactly as frozen (synthetic, the constructed corrections set, lint)`, () => {
-    const mismatched = cases.filter(c => hashOfV010(c.run(api)) !== GOLDEN.hashes[c.id]).map(c => c.id)
+    // Compared on the core: typed remedies (2026-10-02) are additive and outside it (fixtures/remedy-core.ts). Not re-pinned.
+    const mismatched = cases.filter(c => hashOfV010(coreOf(c.run(api))) !== GOLDEN.hashes[c.id]).map(c => c.id)
     expect(mismatched).toEqual([])
   })
 })

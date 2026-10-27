@@ -1,5 +1,5 @@
 Riposte
-Copyright 2026 Tucker Anderson
+Copyright 2026 E. Tucker Anderson
 
 Licensed under the Apache License, Version 2.0 (see LICENSE).
 
@@ -24,3 +24,37 @@ This repository redistributes third-party data under its original licences:
 - AgamiAI/Indian-Bank-Statements, schema only (Apache-2.0)
   https://huggingface.co/datasets/AgamiAI/Indian-Bank-Statements
   -> packages/verify/data/real/C-bank-paystub/
+
+Standards excerpts used as test fixtures:
+
+- CEN EN 16931 UBL schematron, v1.3.15 (European Union Public Licence 1.2, EUPL-1.2)
+  as published in https://github.com/OpenPEPPOL/peppol-bis-invoice-3 at commit
+  261c458474e27d58a25be629cccac28883171c92, rules/sch/CEN-EN16931-UBL.sch
+  (sha256 bdcbb7b702cce55c7f8c789bef0cb9bebf6d376140c1776e683bd6d9bc0ad331; its header reads
+  "Licensed under European Union Public Licence (EUPL) version 1.2.")
+  -> packages/verify/test/fixtures/compile/cen-excerpt.sch
+     packages/verify/test/fixtures/compile/cen-brco15-excerpt.sch
+  Lines copied byte for byte. Each file's header names the source lines kept, the tags added around them, and the date.
+  These two files are licensed under EUPL-1.2, not Apache-2.0. Licence text: LICENSES/EUPL-1.2.txt
+  (the English text as distributed in spdx/license-list-data, text/EUPL-1.2.txt,
+  sha256 57fb42fbcd0b037ce528ed8f72f1ec095d67bc6825ecf1448ff39be1fe68a4b4).
+
+- Peppol BIS Billing 3.0 schematron, release 3.0.20, and its UBL invoice structure (OpenPeppol AISBL)
+  https://github.com/OpenPEPPOL/peppol-bis-invoice-3 at commit 261c458474e27d58a25be629cccac28883171c92,
+  rules/sch/PEPPOL-EN16931-UBL.sch (sha256 5ddf3a2f6633147b20b7805df9902d825af1a984f10014fcee186d4170364b1d),
+  and the invoice structure of the same repository at the same commit
+  -> packages/verify/test/fixtures/compile/peppol-excerpt.sch (lines copied byte for byte; the header names them)
+     packages/verify/test/fixtures/compile/structure-excerpt.tsv (path, cardinality, business term, name, default;
+     the rules column dropped)
+  That repository carries no licence file. The schematron's own header says it "uses business terms defined the
+  CEN/EN16931-1 and is reproduced with permission from CEN". The Peppol BIS Billing 3.0 specification
+  (https://docs.peppol.eu/poacc/billing/3.0/bis/, read 2026-10-05) states: "OpenPeppol AISBL holds the copyright of this
+  Peppol BIS, developed and published subject to the conditions of the agreement between the European Commission and CEN
+  allowing derivate works to be developed and distributed with no additional licensing requirements."
+
+Sample e-invoices in packages/verify/test/fixtures/einvoice/ (peppol-bis3-invoice.xml, zatca-standard-invoice.xml,
+ksef-fa3-invoice.xml) were constructed for this repository's tests. They are not copied from any third party, and every
+party, number and identifier in them is fictitious. Their element names and order follow the published specifications
+named in each file's header: the Peppol BIS Billing 3.0 UBL Invoice syntax
+(https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/), the ZATCA E-Invoice Data Dictionary v1.2 (2023-05-19)
+with the XML Implementation Standard v1.2, and the KSeF FA(3) schema (http://crd.gov.pl/wzor/2025/06/25/13775/schemat.xsd).

@@ -1,13 +1,18 @@
 /**
  * Stress test (see README.md). Meaning-preserving perturbations of the INVOICE text only; the production AP pack is
- * called unmodified. Deterministic (seeded per case × perturbation). Writes results/stress-<P>.jsonl and prints a scorecard.
- *   npx tsx bench/ap/stress.ts
+ * called unmodified. Deterministic (seeded per case × perturbation). Prints a scorecard.
+ *   npx tsx bench/ap/stress.ts --seed holdout1
+ * Every row carries the engine version, the AP ruleset, and checker_sha256: the sha256 over the AP pack's source files
+ * (src/ap/*.ts of the verify package, sorted by name; the folder is --pack <dir>, default the repository's packages/verify),
+ * computed by apPackDigest, the same function `bench check` uses to compare the banked rows with the tree.
+ * Rows go to a NEW folder reruns/stress-<seed>-<time>/ (or --out <dir>), and each file is compared byte for byte with the
+ * shipped results/stress-<P>[-<seed>].jsonl (identical / differs). Only --bank writes into results/, to re-bank on purpose.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { join, dirname } from 'node:path'
+import { join, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { verifyInvoiceMatch, splitApLayout, parseInvoice } from 'riposte-verify'
+import { verifyInvoiceMatch, splitApLayout, parseInvoice, ENGINE_VERSION, AP_RULESET, apPackDigest } from 'riposte-verify'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const cases = readFileSync(join(HERE, 'data', 'distil', 'invoice_cases.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l))
@@ -92,10 +97,27 @@ function perturb(invoice: string, kind: P, seed: string): string {
   return lines.join('\n')
 }
 
+const argv = (name: string): string | undefined => process.argv.includes(name) ? process.argv[process.argv.indexOf(name) + 1] : undefined
 const SEED_SUFFIX = process.argv.includes('--seed') ? ':' + process.argv[process.argv.indexOf('--seed') + 1] : ''
 const KINDS: P[] = ['P1_order', 'P2_wording', 'P3_numbers', 'P4_ocr', 'P5_layout', 'P6_all']
-mkdirSync(join(HERE, 'results'), { recursive: true })
 const NOW = () => new Date('2026-09-23T00:00:00Z')
+
+// provenance on every row: the engine, the ruleset, and the AP pack's source digest
+const PACK = resolve(argv('--pack') ?? process.env.RIPOSTE_AP_PACK ?? join(HERE, '..', '..', 'packages', 'verify', 'src', 'ap'))
+if (!existsSync(PACK)) { console.error(`cannot find the AP pack sources at ${PACK}: pass --pack <the verify package's src/ap folder>`); process.exit(2) }
+// the one digest function, shared with `bench check` (which compares every banked row's checker_sha256 with it)
+const { sha256: CHECKER_SHA, files: packFiles } = apPackDigest(PACK)
+const PROV = { engine_version: ENGINE_VERSION, ruleset: `${AP_RULESET.id}@${AP_RULESET.version}`, checker_sha256: CHECKER_SHA }
+console.log(`engine ${ENGINE_VERSION} · ruleset ${PROV.ruleset} · checker_sha256 ${CHECKER_SHA} (sha256 over ${packFiles.length} AP pack source files)\n`)
+
+// where the rows go: a new folder by default; results/ only with --bank
+const SHIPPED_DIR = join(HERE, 'results')
+const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')
+const BANK = process.argv.includes('--bank')
+const OUT_DIR = BANK ? SHIPPED_DIR : resolve(argv('--out') ?? join(HERE, 'reruns', `stress-${SEED_SUFFIX ? SEED_SUFFIX.slice(1) : 'default'}-${stamp}`))
+if (!BANK && resolve(OUT_DIR) === resolve(SHIPPED_DIR)) { console.error('refused: results/ holds the shipped results; re-bank on purpose with --bank'); process.exit(2) }
+mkdirSync(OUT_DIR, { recursive: true })
+const compared: string[] = []
 console.log('| perturbation | decided | WRONG | correct | abstained | six-field |')
 console.log('|---|---|---|---|---|---|')
 let totalWrong = 0
@@ -105,17 +127,28 @@ for (const kind of KINDS) {
   for (const c of cases) {
     const d = splitApLayout(c.input)!
     const inv2 = perturb(d.invoice, kind, `${c.id}:${kind}${SEED_SUFFIX}`)
-    const r = verifyInvoiceMatch({ ...d, invoice: inv2 }, { now: NOW })
+    // Amendment 2026-10-05 (docs/bench/ap-blind/STRESS-AMENDMENT-2026-10-05.md): the benchmark's invoices have no payment
+    // history by construction, so the harness states it as known-empty. Under engine 0.6.0 a bill with NO history supplied
+    // is held for a person (the duplicate check could not run); an empty history lets the check run and find nothing.
+    const r = verifyInvoiceMatch({ ...d, invoice: inv2, history: [] }, { now: NOW })
     const ok = r.decision === c.decision
     if (r.decision === 'abstain') abst++; else { decided++; if (ok) correct++; else wrong++ }
     const g = r.grounding
     const numEq = (a: unknown, b: unknown): boolean => (a == null || b == null) ? a == null && b == null : typeof b === 'number' ? Math.abs(Number(a) - b) <= 0.005 : String(a) === String(b)
     if (ok && g.invoice_number === c.invoice.invoice_number && g.po_number === c.invoice.po_number && (g.item ?? null) === (c.grounding?.item ?? null) &&
       numEq(g.invoiced, c.grounding?.invoice_value ?? null) && numEq(g.expected, c.grounding?.reference_value ?? null)) six++
-    rows.push(JSON.stringify({ id: c.id, kind: c.kind, gold: c.decision, got: r.decision, wrong: r.decision !== 'abstain' && !ok, reasons: r.reasons, invoice_perturbed: inv2 }))
+    rows.push(JSON.stringify({ id: c.id, kind: c.kind, gold: c.decision, got: r.decision, wrong: r.decision !== 'abstain' && !ok, reasons: r.reasons, invoice_perturbed: inv2, ...PROV }))
   }
   totalWrong += wrong
-  writeFileSync(join(HERE, 'results', `stress-${kind}${SEED_SUFFIX.replace(':', '-')}.jsonl`), rows.join('\n') + '\n')
+  const name = `stress-${kind}${SEED_SUFFIX.replace(':', '-')}.jsonl`
+  const shipped = join(SHIPPED_DIR, name)
+  const prior = existsSync(shipped) ? readFileSync(shipped, 'utf8') : null
+  const bytes = rows.join('\n') + '\n'
+  writeFileSync(join(OUT_DIR, name), bytes)
+  compared.push(prior === null ? `${name}: no shipped file to compare with` : `${name}: ${prior === bytes ? 'IDENTICAL to' : 'DIFFERS from'} the shipped file${BANK ? ' that this run replaced' : ''}`)
   console.log(`| ${kind} | ${decided} | ${wrong} | ${correct} | ${abst} | ${six} |`)
 }
 console.log(`\nTOTAL wrong decisions across all perturbations: ${totalWrong}`)
+console.log(`rows -> ${OUT_DIR}${BANK ? ' (re-banked on purpose)' : ''}`)
+for (const c of compared) console.log(`compare: ${c}`)
+if (!BANK && compared.some((c) => c.includes('DIFFERS'))) process.exitCode = 1

@@ -1,5 +1,5 @@
 /**
- * SECURITY FIX, R3 (2026-09-28). The red team (redteam/r3-book-content-not-revalidated.redteam.ts) showed that the content
+ * SECURITY FIX (2026-09-28). The red team (redteam/r3-book-content-not-revalidated.redteam.ts) showed that the content
  * check never re-applied the verdict door to a RECORD: a rewriter could splice a COUNSEL wearing a verdict_id (or a
  * malformed verdict) into a re-linked book and verifyContent() said OK. readDecisionBook now re-applies the door to every
  * RECORD payload (recordedVerdictProblem), with two tolerances so every book valid today stays valid: a judgement-tier
@@ -7,7 +7,7 @@
  * legitimately differ (R3-OUTCOME: verifyAction holds a partially grounded action as INSUFFICIENT_DATA).
  *
  * HONEST BOUNDARY, pinned below: a SELF-CONSISTENT forged outcome (claims, outcome and coverage all rewritten) still reads.
- * verdict_id binds the inputs, not the result (R1): only re-execution, a signed envelope or an anchored head shows it.
+ * verdict_id binds the inputs, not the result: only re-execution, a signed envelope or an anchored head shows it.
  */
 import { describe, it, expect, afterAll } from 'vitest'
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
@@ -40,7 +40,7 @@ function relink(events: readonly LedgerEvent[], payloads: readonly unknown[]): {
 const now = () => new Date('2026-09-28T00:00:00Z')
 const PASS = verifyAction({ tool: 'transfer', arguments: { amount: 500 } }, { allowed: { amount: [500] } })
 const FAIL = verify({ ...broken, invoice_number: 'R3-F' }, { now: FIXED_NOW })
-const HELD = verifyAction({ tool: 'pay', arguments: { amount: 999, vendor: 'x' } }, { allowed: { vendor: ['x'] } }) // F1: partially grounded
+const HELD = verifyAction({ tool: 'pay', arguments: { amount: 999, vendor: 'x' } }, { allowed: { vendor: ['x'] } }) // partially grounded
 
 /** Record `v` on a fresh book, doctor its RECORD verdict with `edit`, re-link, write it to disk, reopen it. */
 function doctored(v: Verdict, edit: (verdict: Record<string, unknown>) => Record<string, unknown>, name: string) {
@@ -54,7 +54,7 @@ function doctored(v: Verdict, edit: (verdict: Record<string, unknown>) => Record
   return openFileLedger(path)
 }
 
-describe('R3: the verdict door is re-applied to every RECORD on the book', () => {
+describe('the verdict door is re-applied to every RECORD on the book', () => {
   it('a COUNSEL wearing a verdict_id, spliced into a re-linked book, fails verification with a named reason (the PoC)', () => {
     const reopened = doctored(PASS, v => ({
       channel: 'COUNSEL', counsel_version: 'counsel-v0', counsel_id: 'deadbeef', dismissible: true, holds_action: false,
@@ -84,7 +84,7 @@ describe('R3: the verdict door is re-applied to every RECORD on the book', () =>
     }
   })
 
-  it('HONEST BOUNDARY: a self-consistent forged outcome still reads (R1: verdict_id binds the inputs, not the result)', () => {
+  it('HONEST BOUNDARY: a self-consistent forged outcome still reads (verdict_id binds the inputs, not the result)', () => {
     // Only re-executing the engine, a signed envelope (verifyEnvelope), or an externally anchored head shows this one.
     const reopened = doctored(PASS, v => ({
       ...v, outcome: 'FAIL',
@@ -96,7 +96,7 @@ describe('R3: the verdict door is re-applied to every RECORD on the book', () =>
   })
 })
 
-describe('R3: every book valid today stays valid', () => {
+describe('every book valid today stays valid', () => {
   it('every engine output reads, and a book of them verifies (documents, actions, a held action)', () => {
     const verdicts = [
       ...ALL_STANDALONE.map(([, doc]) => verify(doc, { now: FIXED_NOW })),
@@ -115,7 +115,7 @@ describe('R3: every book valid today stays valid', () => {
     expect(new MemoryLedger({ seed: parseChainJSONL(led.chainJSONL()) }).verifyContent().ok).toBe(true)
   })
 
-  it('R3-OUTCOME: a held action (a PASS claim and an ungrounded one: INSUFFICIENT_DATA, since F1) is on the book and verifies', () => {
+  it('R3-OUTCOME: a held action (a PASS claim and an ungrounded one: INSUFFICIENT_DATA, since 2026-09-28) is on the book and verifies', () => {
     expect(HELD.outcome).toBe('INSUFFICIENT_DATA')
     expect(HELD.claims.map(c => c.outcome).sort()).toEqual(['INSUFFICIENT_DATA', 'PASS'])
     const led = createLedger({ now })
@@ -123,7 +123,7 @@ describe('R3: every book valid today stays valid', () => {
     expect(led.verifyContent().ok).toBe(true)
   })
 
-  it('a book written before F-A (a REVIEW without a tenant, a re-RECORD) still verifies', () => {
+  it('a book written before 2026-09-28 (a REVIEW without a tenant, a re-RECORD) still verifies', () => {
     const v = verify({ ...clean, invoice_number: 'R3-L' }, { now: FIXED_NOW })
     const rec = (ts: string) => ({ type: 'RECORD', tenant_id: 'acme', recorded_at: ts, retention_until: '2033-09-26T00:00:00.000Z', verdict: { ...v, ledger: { tenant_id: 'acme', retention_until: '2033-09-26T00:00:00.000Z' } } })
     const review = { type: 'REVIEW', verdict_id: v.verdict_id, review: { reviewer_id: 'ap-lead', decision: 'UPHELD', decided_at: '2026-09-20T00:01:00.000Z' } }

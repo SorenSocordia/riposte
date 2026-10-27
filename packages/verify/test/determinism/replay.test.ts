@@ -1,5 +1,5 @@
 /**
- * Determinism — pre-registered claim W2: same input + ruleset + engine → byte-identical verdict (except issued_at).
+ * Determinism, a pre-registered claim: same input + ruleset + engine → byte-identical verdict (except issued_at).
  * Any non-identical replay is a kill (and a bug).
  */
 import { describe, it, expect } from 'vitest'
@@ -7,12 +7,12 @@ import { verify, replayView, canonicalize } from '../../src/index'
 import { ALL_STANDALONE, FIXED_NOW, reverseKeysDeep, singleLine, contractOk, evidenceOk } from '../fixtures/invoices'
 import { ALL_PAY_APPS, cleanApp, prevApp } from '../fixtures/pay-apps'
 
-// Pre-registered claim W2 names 10,000 replays across the golden corpus; ALL_STANDALONE × REPLAYS meets it.
+// The pre-registered claim names 10,000 replays across the golden corpus; ALL_STANDALONE × REPLAYS meets it.
 const REPLAYS = 1250
 // The second ruleset replays too (fewer per fixture — the claim is already met above; this guards the ruleset host).
 const PAY_APP_REPLAYS = 250
 
-describe('determinism (W2) — pay-app ruleset', () => {
+describe('determinism — pay-app ruleset', () => {
   for (const [name, ex] of ALL_PAY_APPS) {
     it(`${name}: ${PAY_APP_REPLAYS} replays are byte-identical, key order and clock do not matter`, () => {
       const opts = { ruleset: 'pay-app' as const, now: FIXED_NOW, references: { history: [prevApp] } }
@@ -42,7 +42,7 @@ describe('determinism (W2) — pay-app ruleset', () => {
   })
 })
 
-describe('determinism (W2)', () => {
+describe('determinism', () => {
   for (const [name, ex] of ALL_STANDALONE) {
     it(`${name}: ${REPLAYS} replays are byte-identical`, () => {
       const first = JSON.stringify(replayView(verify(ex, { now: FIXED_NOW })))

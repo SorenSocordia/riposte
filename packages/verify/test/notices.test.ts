@@ -83,6 +83,15 @@ describe('every FAIL is visible, with its evidence and a dispute path, at every 
     }
   })
 
+  it('a can\'t-tell verdict is surfaced and held as INSUFFICIENT_DATA, the verdict\'s own word (ABSTAIN is no longer printed)', () => {
+    const v = verify({ invoice_number: 'INV-1' }, { now: FIXED_NOW })
+    expect(v.outcome).toBe('INSUFFICIENT_DATA')
+    const rec = renderActionNotice(actionNotice(v, 'record'))
+    expect(rec).toMatch(/^\*\*INSUFFICIENT_DATA: surfaced, not held\*\* · rung `record`.*the checks could not decide \(INSUFFICIENT_DATA: can't tell\)/)
+    expect(renderActionNotice(actionNotice(v, 'gate'))).toMatch(/^\*\*HELD for a person\*\* · rung `gate`.*could not decide \(INSUFFICIENT_DATA: can't tell\)/)
+    for (const level of VOICE_LADDER) expect(renderActionNotice(actionNotice(v, level))).not.toContain('ABSTAIN')
+  })
+
   it('renders per rung: record surfaces a notice, advise surfaces in-flow, gate and autonomy hold; the findings are always there', () => {
     const v = verify(broken, { now: FIXED_NOW })
     const rec = renderActionNotice(actionNotice(v, 'record'))

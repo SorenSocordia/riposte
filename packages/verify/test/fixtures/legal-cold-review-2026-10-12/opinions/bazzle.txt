@@ -1,0 +1,17 @@
+GREEN TREE FINANCIAL CORP. v. BAZZLE et al.
+539 U.S. 444 (2003)
+CERTIORARI TO THE SUPREME COURT OF SOUTH CAROLINA
+No. 02-634. Argued April 22, 2003. Decided June 23, 2003.
+
+JUSTICE BREYER announced the judgment of the Court and delivered an opinion, in which JUSTICE SCALIA, JUSTICE SOUTER, and JUSTICE GINSBURG join.
+This case concerns contracts between a commercial lender and its customers, each of which contains a clause providing for arbitration of all contract-related disputes. The Supreme Court of South Carolina held (1) that the arbitration clauses are silent as to whether arbitration might take the form of class arbitration, and (2) that, in that circumstance, South Carolina law interprets the contracts as permitting class arbitration. We granted certiorari to determine whether this holding is consistent with the Federal Arbitration Act.
+I
+The parties entered into contracts that provided for arbitration of all disputes arising from or relating to the contract. The arbitrator awarded the class $10,935,000 in statutory damages, along with attorney's fees.
+II
+The question here, whether the contracts forbid class arbitration, does not fall into this narrow exception. It concerns neither the validity of the arbitration clause nor its applicability to the underlying dispute between the parties. Arbitrators are well situated to answer that question. Given these considerations, along with the arbitration contracts' sweeping language concerning the scope of the questions committed to arbitration, this matter of contract interpretation should be for the arbitrator, not the courts, to decide.
+
+JUSTICE STEVENS, concurring in the judgment and dissenting in part.
+The parties have not identified any prejudice that they suffered as a result of the fact that a judge, rather than an arbitrator, decided the class-arbitration question.
+
+CHIEF JUSTICE REHNQUIST, with whom JUSTICE O'CONNOR and JUSTICE KENNEDY join, dissenting.
+I would hold that the Federal Arbitration Act preempts the South Carolina Supreme Court's decision. The parties' agreement as to how the arbitrator should be selected is much more than a procedural matter; it is a provision of central importance.

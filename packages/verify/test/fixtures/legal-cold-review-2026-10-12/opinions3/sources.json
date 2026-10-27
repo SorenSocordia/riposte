@@ -1,0 +1,34 @@
+{
+  "601 U.S. 1": {
+    "file": "desig-A.txt",
+    "source": "judge probe: designation style A"
+  },
+  "602 U.S. 1": {
+    "file": "desig-B.txt",
+    "source": "judge probe: designation style B"
+  },
+  "603 U.S. 1": {
+    "file": "desig-C.txt",
+    "source": "judge probe: designation style C"
+  },
+  "604 U.S. 1": {
+    "file": "desig-D.txt",
+    "source": "judge probe: designation style D"
+  },
+  "605 U.S. 1": {
+    "file": "desig-E.txt",
+    "source": "judge probe: designation style E"
+  },
+  "606 U.S. 1": {
+    "file": "desig-F.txt",
+    "source": "judge probe: designation style F"
+  },
+  "607 U.S. 1": {
+    "file": "desig-G.txt",
+    "source": "judge probe: designation style G"
+  },
+  "608 U.S. 1": {
+    "file": "desig-H.txt",
+    "source": "judge probe: designation style H"
+  }
+}

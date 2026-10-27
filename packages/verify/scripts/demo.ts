@@ -19,11 +19,12 @@ const NOW = () => new Date('2026-09-23T00:00:00Z')
 
 // ---- Beat 1 fixtures: a brief citing a real opinion, one quote accurate, one fabricated ----
 const OPINIONS: OpinionSources = {
-  Twombly: 'To survive a motion to dismiss, a complaint must state a claim to relief that is plausible on its face.',
+  // engine 0.6.0 checks a quotation only against a text that names its cite: the caption line a reporter prints
+  Twombly: 'Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007)\nTo survive a motion to dismiss, a complaint must state a claim to relief that is plausible on its face.',
 }
 const BRIEF: Citation[] = [
   { id: 'p3n1', case_name: 'Twombly', cite: '550 U.S. 544', quote: 'plausible on its face' },      // ✓ verbatim
-  { id: 'p3n2', case_name: 'Twombly', cite: '550 U.S. 544', quote: 'probable on its face' },        // ✗ misquote
+  { id: 'p3n2', case_name: 'Twombly', cite: '550 U.S. 544', quote: 'a claim to relief that is probable on its face' }, // ✗ misquote
   { id: 'p4n1', case_name: 'Ghost v. Nowhere', cite: '1 F.4th 1', quote: 'the statute is void' },   // ⚠ no opinion supplied
 ]
 

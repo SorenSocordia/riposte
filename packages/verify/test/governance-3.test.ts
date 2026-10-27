@@ -1,5 +1,5 @@
 /**
- * GOVERNANCE-3 (2026-09-29): RULESET_SUCCESSION, a governing policy at a chain position (P-S4-C), and the governed no-effect
+ * 2026-09-29: RULESET_SUCCESSION, a governing policy at a chain position (P-S4-C), and the governed no-effect
  * list in the ledger (the report says why a grant the declared policy does not admit is pending).
  *
  * D-RULESET-BUMP: a new ruleset version is a new workflow, and a grant does not carry over by itself. A person carries it with

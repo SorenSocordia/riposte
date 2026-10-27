@@ -2,24 +2,28 @@
  * OpenAPI 3.1 description of the HTTP surface. Served at GET /v1/openapi.json. Kept deliberately compact — the verdict
  * schema's source of truth is `src/verdict/schema.ts` / `docs/VERDICT-SCHEMA-v0.md`; this documents the endpoints so an
  * SDK generator or an API console can consume them. The transport (serve.ts) caps every request body (413; 4 MiB by
- * default, 32 MiB for /v1/twin, /v1/opinion and /v1/reconcile) and answers a request slower than its deadlines with 408.
+ * default, `verify serve --max-body` to set it, and 32 MiB for /v1/twin, /v1/opinion, /v1/reconcile and /v1/succession/replay)
+ * and answers a request slower than its deadlines with 408.
+ * Under `verify serve` every POST is checked in a worker under a time and heap budget (budget.ts, 2026-10-06): past it the answer
+ * is 413 with x-verify-exit 2, and past the queue 503.
  */
 
 import { ENGINE_VERSION } from '../version.js'
+import { MAX_CITE_CHARS } from '../legal/cite-bound.js'
 
 const verdictRef = { type: 'object', description: 'The Verdict proof object — see docs/VERDICT-SCHEMA-v0.md.' }
 const jsonBody = (required: string[], props: Record<string, unknown>) => ({
   required: true,
   content: { 'application/json': { schema: { type: 'object', required, properties: props } } },
 })
-const verdictResponse = { '200': { description: 'A Verdict.', content: { 'application/json': { schema: verdictRef } } }, '400': { description: 'Bad request.' }, '413': { description: 'The body is over the transport cap (4 MiB by default).' } }
+const verdictResponse = { '200': { description: 'A Verdict.', content: { 'application/json': { schema: verdictRef } } }, '400': { description: 'Bad request.' }, '413': { description: "The body is over the transport cap (4 MiB by default), or, under `verify serve`, the check ran past the service's budget: \"input too large to check within the service's budget; run it with the command line\", with x-verify-gate INSUFFICIENT_DATA and x-verify-exit 2. Never a verdict." }, '503': { description: 'The service is checking as many requests as it holds (Retry-After: 1). Nothing was checked.' } }
 
 export const OPENAPI = {
   openapi: '3.1.0',
   info: {
     title: 'Verify — deterministic document & action verification',
     version: ENGINE_VERSION,
-    description: 'Verify already-extracted document data and proposed agent actions. PASS / FAIL / INSUFFICIENT_DATA with a replayable proof. Never guesses.',
+    description: 'Verify already-extracted document data and proposed agent actions. PASS / FAIL / INSUFFICIENT_DATA with a replayable proof. A figure that does not read as exactly one number is not guessed: a lone "1,500" or "1.500" with no declared number_locale, a document that writes figures in both number formats ("1,500.00" beside "1.500,00") or in two scripts of digits, and a stray no-break space each leave the checks that need that figure at INSUFFICIENT_DATA, with the reason. Every request body must be sent with Content-Type: application/json, as UTF-8 (else 415; a charset other than utf-8 is 415, "send UTF-8"), and a server started with `verify serve` answers only a Host header naming localhost, 127.0.0.1, ::1, the address it is bound to, or a name given with --allow-host (else 421; a request with no Host header is 400). A JSON number that cannot be represented exactly (9007199254740993 reads as 9007199254740992) is refused with a 400 naming its path: write amounts as strings with two decimals. A body nested more than 256 levels deep is refused with a 400 ("nesting too deep, limit 256").',
   },
   paths: {
     '/v1/health': { get: { summary: 'Health + engine version.', responses: { '200': { description: 'ok' } } } },
@@ -34,7 +38,7 @@ export const OPENAPI = {
     '/v1/verify/declared': {
       post: {
         summary: 'Verify a document under a DECLARATIVE (JSON) ruleset — any document type, any language, no code.',
-        requestBody: jsonBody(['extraction', 'ruleset'], { extraction: { type: 'object' }, ruleset: { type: 'object' } }),
+        requestBody: jsonBody(['extraction', 'ruleset'], { extraction: { type: 'object' }, ruleset: { oneOf: [{ type: 'object' }, { type: 'string', description: 'A ruleset this build carries by name: peppol-en16931 (= the default for the engine: 0.3.0 under engine 0.6.0, 0.2.0 before it), peppol-en16931@0.1.0, peppol-en16931@0.2.0, peppol-en16931@0.3.0, e-invoice (= the default e-invoice ruleset).' }] } }),
         responses: verdictResponse,
       },
     },
@@ -47,14 +51,16 @@ export const OPENAPI = {
     },
     '/v1/action/check': {
       post: {
-        summary: 'Check one proposed tool call at a rung: the verify_action verdict, its notice (every FAIL / ABSTAIN with its evidence and a dispute path), and the disposition the hold adapters deliver.',
-        description: 'Dispositions: hold (a FAIL or ABSTAIN at gate / autonomy: it waits for a person) · review (a PASS at gate: a person reviews it) · surface (a FAIL or ABSTAIN at advise: shown in-flow, not held) · record (a FAIL or ABSTAIN at record: a notice, not held) · proceed (a PASS at record / advise, or at autonomy within the declared bounds). `holds` is true for hold and review. Stateless: the rung is `level` (default record, the day-1 default). Managed tier: name `workflow_id` and the rung is read from the book of record instead (the GRANT in force, else the declared settings, else record); a `level` may restate it, never change it. The verdict is recorded to the caller’s book like any other.',
+        summary: 'Check one proposed tool call at a rung: the verify_action verdict, its notice (every FAIL / INSUFFICIENT_DATA with its evidence and a dispute path), and the disposition the hold adapters deliver.',
+        description: 'Dispositions: hold (a FAIL or INSUFFICIENT_DATA at gate / autonomy: it waits for a person) · review (a PASS at gate: a person reviews it) · surface (a FAIL or INSUFFICIENT_DATA at advise: shown in-flow, not held) · record (a FAIL or INSUFFICIENT_DATA at record: a notice, not held) · proceed (a PASS at record / advise, or at autonomy within the declared bounds). `holds` is true for hold and review. Stateless: the rung is `level` (default record, the day-1 default). Managed tier: name `workflow_id` and the rung is read from the book of record instead (the GRANT in force, else the declared settings, else record); a `level` may restate it, never change it. The verdict is recorded to the caller’s book like any other.',
         requestBody: jsonBody(['action'], {
           action: { type: 'object', required: ['tool'], properties: { tool: { type: 'string' }, arguments: { type: 'object' } } },
           sources: { type: 'object', properties: {
             text: { type: 'string' }, allowed: { type: 'object' }, require: { type: 'array', items: { type: 'string' } },
             records: { type: 'array', minItems: 1, items: { type: 'object', additionalProperties: { type: ['string', 'number'] } },
-              description: 'Approved records: each one argument values approved together (e.g. one invoice\'s amount and payee account); every record names the same arguments. The arguments they name are grounded only when they all equal ONE record: a value approved for one record combined with another record\'s value FAILs (mix-and-match), and a partial tuple (a record-named argument missing) abstains. Verdicts that use records name rule action@0.1.0.' },
+              description: 'Approved records: each one argument values approved together (e.g. one invoice\'s amount and payee account); every record names the same arguments. The arguments they name are grounded only when they all equal ONE record: a value approved for one record combined with another record\'s value FAILs (mix-and-match), and a partial tuple (a record-named argument missing) is INSUFFICIENT_DATA (can’t tell). Verdicts that use records name rule action@0.1.0, or action@0.2.0 when a value matches only in another written form.' },
+            fields: { type: 'object', additionalProperties: { type: 'object', required: ['type'], properties: { type: { type: 'string', enum: ['text', 'amount', 'identifier', 'date', 'rate'] }, currency: { type: 'string', pattern: '^[A-Z]{3}$' }, case_insensitive: { type: 'boolean' }, whitespace_insensitive: { type: 'boolean' }, order: { type: 'string', enum: ['DMY', 'MDY'] }, unit: { type: 'string', enum: ['percent', 'fraction'] } } },
+              description: 'How each argument compares with its approved values (rule action@0.2.0), keyed by argument. Undeclared, a JSON number equals the same number written as a plain numeral (980.5 and "980.50"). amount: thousands separators and trailing zeros, and a currency symbol or ISO code when currency is declared. identifier: case_insensitive and whitespace_insensitive when declared. date: ISO and month-name forms, and D/M/Y or M/D/Y only in the declared order. rate: percent and fraction in the declared unit. Leading zeros, scale, sign, another record\'s value and ambiguous dates are never the same value. An invalid declaration is refused.' },
           } },
           level: { type: 'string', enum: ['record', 'advise', 'gate', 'autonomy'] },
           workflow_id: { type: 'string', description: '(managed tier) tenant/ruleset@version: read the rung from the book of record. The deployment’s declared policy governs every GRANT, whatever policy the grant names: one still pending a second signature (a tier declaring grant_signatures), at a tier the policy does not declare, or above the tier’s max_rung has no effect on it, and the response lists it in no_effect with its notice; notices says when the grant in force names another policy.' },
@@ -71,8 +77,8 @@ export const OPENAPI = {
     '/v1/verify/citations': {
       post: {
         summary: 'Cite-check: does each quotation appear verbatim in the supplied opinion text.',
-        requestBody: jsonBody(['citations'], { citations: { type: 'array', items: { type: 'object' } }, sources: { type: 'object' } }),
-        responses: verdictResponse,
+        requestBody: jsonBody(['citations'], { citations: { type: 'array', items: { type: 'object', properties: { cite: { type: 'string', maxLength: MAX_CITE_CHARS }, case_name: { type: 'string', maxLength: MAX_CITE_CHARS }, source_key: { type: 'string', maxLength: MAX_CITE_CHARS } } } }, sources: { type: 'object', propertyNames: { maxLength: MAX_CITE_CHARS } }, ruleset: { type: 'string', description: 'legal@0.5.5 (selectable from engine 0.7.2, the default from the first engine after it; see the CHANGELOG section Legal rule 0.5.5); legal@0.5.4 (the default from engine 0.7.2; docs/LEGAL.md says what it reads); legal@0.5.3 (the default under engine 0.7.1); legal@0.5.2 (the default under engines 0.6.0 and 0.7.0: it reads as legal@0.5.1 does, prints how the sentence begins beside a quotation that begins mid-sentence and answers INSUFFICIENT_DATA when those words report someone else\'s position (a party, a dissent, another court) or state a counterfactual, names a plurality, reads Westlaw PDF page headers and footers and Lexis headnote markers out, and skips a KeyCite flag when it reads the caption); legal@0.5.1 (from earlier that day: it reads as legal@0.5.0 does, and never calls a quotation that stops before its sentence ends "verbatim" (its PASS prints how the sentence continues, and a continuation that limits or negates the quoted words answers INSUFFICIENT_DATA), reads em dashes, en dashes and "--" as one dash, reads "(citation omitted)", "(cleaned up)", "(footnote omitted)" and "(internal quotation marks omitted)" for what they excuse, and reads Westlaw headnote numbers out); legal@0.5.0, which reads the sections of the text, so words found only in editorial matter such as headnotes, a synopsis or the syllabus, or in a separate opinion, answer INSUFFICIENT_DATA naming where they are, and every PASS says where it matched; it looks a citation up by its reporter citation with the pin page, case name and parenthetical read off, binds the Reporter block of a Lexis header, and answers INSUFFICIENT_DATA on every footnote-call form it does not read out; legal@0.0.1 was the default before engine 0.6.0); legal@0.4.0, which reads a quotation that begins mid-sentence for a cut-off condition or negation, reads star paging and footnote numerals out of the comparison, and reads a short form as a pin cite to a full citation the same brief gives; legal@0.3.0, which binds each text by its caption; legal@0.2.0; legal@0.1.0, which reads quotation conventions (brackets, ellipses, quotation marks, "(cleaned up)") and names the ones it relied on; or legal@0.2.0, which also refuses an alteration that changes the meaning (a swapped word, modal, negation or quantifier in a bracket; an omitted condition; inner quotation marks dropped or added).' } }),
+        responses: { ...verdictResponse, '400': { description: `Bad request; or citation text over ${MAX_CITE_CHARS} characters (a cite, case name or source key, or the key of a text), refused before anything is read or hashed, naming the bound and the length. Never a verdict.` } },
       },
     },
     '/v1/verify/quotes': {
@@ -112,8 +118,8 @@ export const OPENAPI = {
     },
     '/v1/twin': {
       post: {
-        summary: 'Structured-twin check: extracted financial-statement values against the filing’s own inline-XBRL facts (never a table re-read from the HTML). PASS / FAIL with a diagnosis / ABSTAIN with a reason.',
-        description: 'map_version 0.1.0 (default; ruleset 0.1) binds over the whole document; 0.2.0 (ruleset 0.2) binds only concepts the filing’s presentation linkbase places on a face statement (supply pre / filing_summary / schema flat, or presentation nested; without a linkbase every claim abstains NO_PRESENTATION_LINKBASE). 0.2.1 (ruleset 0.2.1, opt-in) is 0.2 plus us-gaap scope-variant concept families, the cash roll as the tie-break between disagreeing face lines (ABSTAIN AMBIGUOUS_LINE, the insufficiency AMBIGUOUS_REFERENCE, when it cannot decide), an exact power-of-ten SCALE FAIL against anchored figures, and a strict linkbase reading. It FAILED its pre-registered held-out check (2026-09-28) and every 0.2.1 result says so in map_status. The body may be up to 32 MiB (a whole filing); most routes take 4 MiB. In the managed tier the verdict is recorded to the caller’s book like any other.',
+        summary: 'Structured-twin check: extracted financial-statement values against the filing’s own inline-XBRL facts (never a table re-read from the HTML). PASS / FAIL with a diagnosis / INSUFFICIENT_DATA (can’t tell) with a reason.',
+        description: 'map_version 0.1.0 (default; ruleset 0.1) binds over the whole document; 0.2.0 (ruleset 0.2) binds only concepts the filing’s presentation linkbase places on a face statement (supply pre / filing_summary / schema flat, or presentation nested; without a linkbase every claim is INSUFFICIENT_DATA, NO_PRESENTATION_LINKBASE). 0.2.1 (ruleset 0.2.1, opt-in) is 0.2 plus us-gaap scope-variant concept families, the cash roll as the tie-break between disagreeing face lines (INSUFFICIENT_DATA AMBIGUOUS_LINE, the insufficiency AMBIGUOUS_REFERENCE, when it cannot decide), an exact power-of-ten SCALE FAIL against anchored figures, and a strict linkbase reading. It FAILED its pre-registered held-out check (2026-09-28) and every 0.2.1 result says so in map_status. The body may be up to 32 MiB (a whole filing); most routes take 4 MiB. In the managed tier the verdict is recorded to the caller’s book like any other.',
         requestBody: jsonBody(['html', 'period_end', 'claims'], {
           html: { type: 'string', description: 'The primary inline-XBRL document, as text.' },
           period_end: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
@@ -217,6 +223,19 @@ export const OPENAPI = {
         },
       },
     },
+    '/v1/replay': {
+      post: {
+        summary: 'Re-perform proof bundles (a verdict and the inputs it is bound to): MATCH, DIVERGED (naming the first field), NOT_REPERFORMED or REFUSED. Read-only.',
+        description: 'The verify replay command over HTTP (2026-10-03). Give { bundle } or { bundles: [...] } (at most 1000; each a bundle or { name, bundle }), or a bundle itself. A bundle is { verdict, inputs, options? }: what verify ap --input, the AP gate and the MCP tools hand back. The answer is { summary: { total, matched, diverged, not_reperformed, refused, cases, carried_not_checked?, carried_allowed? }, lines }, each line as the CLI prints it; for an AP proof it leads with the gate decision. A key a bundle carries beside verdict, inputs and options (or beside a signed envelope\'s four members) is not checked: the case\'s line names it ("carried, not checked: <keys>") and summary.carried_not_checked lists it by case. A bundle\'s top-level id and note are the two allowed caller keys: the line names them ("carried (allowed): id, note") and summary.carried_allowed lists them by case. The answer carries x-verify-exit, the replay\'s exit, as verify replay on a folder gives it: 0 every case matched, 1 a case diverged, 2 a case was not re-performed, 3 a case was refused (a refusal wins). The status follows the exit (2026-10-19), so a client or proxy that reads only the status never takes a forgery for a success: 409 when a case diverged (the presented verdict, or an AP field beside it, is not what its own inputs re-perform to), 422 when a case was refused, 200 when every case matched, or none diverged and some were not re-performed; the body is the same summary in every case. A request that names no bundle is 400. A bundle that states the AP gate\'s fields (decision, payable, grounding, reasons, not_checked) beside an AP verdict has them derived again from the re-performed verdict and compared: one that differs diverges, named.',
+        requestBody: jsonBody([], { bundle: { type: 'object' }, bundles: { type: 'array', items: { type: 'object' } } }),
+        responses: {
+          200: { description: 'the replay summary and one rendered line per case; x-verify-exit is 0 (every case matched) or 2 (none diverged, some were not re-performed)', headers: { 'x-verify-exit': { description: 'the replay\'s exit: 0 every case matched, 2 a case was not re-performed', schema: { type: 'string', enum: ['0', '2'] } } } },
+          409: { description: 'a case diverged: the same summary and lines; x-verify-exit is 1', headers: { 'x-verify-exit': { description: 'the replay\'s exit: 1 a case diverged', schema: { type: 'string', enum: ['1'] } } } },
+          422: { description: 'a case was refused (not a bundle, not a verdict, or refused before hashing): the same summary and lines; x-verify-exit is 3 (a refused case wins over a diverged one)', headers: { 'x-verify-exit': { description: 'the replay\'s exit: 3 a case was refused', schema: { type: 'string', enum: ['3'] } } } },
+          400: { description: 'the request names no bundle, or too many; no x-verify-exit' },
+        },
+      },
+    },
     '/v1/succession/replay': {
       post: {
         summary: 'The replay a person reviews before carrying a grant to a new ruleset version, or a signed succession’s replay re-performed. Read-only: nothing is signed or appended.',
@@ -270,7 +289,29 @@ export const OPENAPI = {
       },
     },
     '/v1/ledger/stats': { get: { summary: '(managed tier) Verdict counts + real-world overturn rate for the caller’s tenant.', responses: { '200': { description: 'LedgerStats.' }, '401': { description: 'Unauthorized.' } } } },
-    '/v1/ledger/report': { get: { summary: '(managed tier) The tenant book-of-record report (Markdown): volume, overturn, calibration, what Riposte is asking for this month (open proposals with their rulings; FAIL / ABSTAIN notices by rung), tamper-evidence.', responses: { '200': { description: 'tenant_id + markdown.' }, '401': { description: 'Unauthorized.' } } } },
+    '/v1/ledger/report': { get: { summary: '(managed tier) The tenant book-of-record report (Markdown): volume, overturn, calibration, what Riposte is asking for this month (open proposals with their rulings; FAIL / INSUFFICIENT_DATA notices by rung), tamper-evidence.', responses: { '200': { description: 'tenant_id + markdown.' }, '401': { description: 'Unauthorized.' } } } },
     '/v1/ledger/calibration': { get: { summary: '(managed tier) Per-rule human-overturn calibration + the flagged review queue.', responses: { '200': { description: 'CalibrationReport.' }, '401': { description: 'Unauthorized.' } } } },
   },
 } as const
+
+/**
+ * The routes only the managed tier serves, and only with a book of record (createService({ ledger })): the pure core answers
+ * each of them 404 with words, or does not know them at all. 2026-10-05: an outside engineer found the spec of
+ * `verify serve` advertising /v1/ledger/* routes that server answers 404, so each server now describes only what it serves.
+ */
+export const MANAGED_PATHS: readonly string[] = ['/v1/grant/cosign', '/v1/voice/{workflow}', '/v1/queue/{workflow}', '/v1/ledger/stats', '/v1/ledger/report', '/v1/ledger/calibration']
+
+/**
+ * The OpenAPI description of one server. `ledger`: the managed tier with a book of record, which serves every route in OPENAPI.
+ * Without one (the pure core, `verify serve`, or the managed tier with no ledger) MANAGED_PATHS are omitted and the description
+ * says so. Deterministic; OPENAPI lists every route.
+ */
+export function openapiFor(o: { ledger?: boolean } = {}): Omit<typeof OPENAPI, 'info' | 'paths'> & { info: { title: string; version: string; description: string }; paths: Partial<typeof OPENAPI.paths> } {
+  if (o.ledger) return OPENAPI
+  const paths = Object.fromEntries(Object.entries(OPENAPI.paths).filter(([p]) => !MANAGED_PATHS.includes(p))) as Partial<typeof OPENAPI.paths>
+  return {
+    ...OPENAPI,
+    info: { ...OPENAPI.info, description: `${OPENAPI.info.description} This server holds no book of record, so the routes that need one (${MANAGED_PATHS.join(', ')}) are not served here and not listed.` },
+    paths,
+  }
+}

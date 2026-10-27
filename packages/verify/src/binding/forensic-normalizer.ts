@@ -574,9 +574,11 @@ function parseMoney(value: unknown, toCents: boolean): NormalizedValue<number> |
         // (2026-09-28, E-INVOICE-2 finding)
         detectedLocale = 'US'
       } else {
-        // Period followed by exactly 3 digits → European thousands (1.250 with no decimal). A lone "1.250" stays
-        // thousands on purpose: refusing it as ambiguous broke real Indonesian receipts ("25.000" = 25,000 IDR).
-        // See docs/NUMERIC-HONESTY-2026-09-28.md ("Not fixed here").
+        // Period followed by exactly 3 digits → European thousands (1.250 with no decimal). This is the lenient reading,
+        // and engines before 0.6.0 keep it so their verdicts re-perform ("25.000" on an Indonesian receipt is 25,000 IDR;
+        // docs/NUMERIC-HONESTY-2026-09-28.md). Under engine 0.6.0 the built-in rulesets read every figure written as text
+        // again, strictly (rulesets/strict.ts), and a lone "1.250" or "1,250" is refused there as a thousands group or three
+        // decimals unless the extraction declares its number_locale.
         detectedLocale = 'EU'
       }
     }

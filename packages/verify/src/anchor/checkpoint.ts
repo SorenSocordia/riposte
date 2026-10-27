@@ -1,5 +1,5 @@
 /**
- * External anchoring of the book of record: signed CHECKPOINTS of the chain head (2026-09-28, anchor lane).
+ * External anchoring of the book of record: signed CHECKPOINTS of the chain head (2026-09-28).
  *
  * The hash chain (../ledger/chain.ts) makes the book tamper-EVIDENT to anyone holding an earlier copy of it. It does not stop a
  * party with write access from rewriting an old event and recomputing every hash after it: the rewritten chain verifies

@@ -1,0 +1,2018 @@
+{
+ "run": "t1-x2-b0",
+ "engine_version": "0.1.0",
+ "verify_dist_sha256": "b8dc1fb8e6c0f92b65d5b49dd4870f5b057e5e53aaafc1303bc2a77f893d49fc",
+ "legal_dist_sha256": "fec11fdcf4d7813bf377b40c4006fc1498b8a49697465752a43101125ed95247",
+ "matcher_dist_sha256": "7cc071e66e5d606eb11c2377cd184d0bd5d2136ec4b3965472e3daf700386773",
+ "manifest_sha256": "f23c549714d166e05a6cd14c62b4a180aaf992d75142aaf62719da7d61492938",
+ "reps": 5,
+ "node": "v25.2.1",
+ "rows": [
+  {
+   "contract": null,
+   "id": "KB01",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB01",
+   "locked": true,
+   "explanation": "Cogswell v. American Transit Insurance Co. is a real authority, but the quotation is not accurate. The opinion reads: \"because disputed issues of fact remain concerning the extent of the defendant’s activities in Connecticut to support jurisdiction as well\".",
+   "opinion_says": "because disputed issues of fact remain concerning the extent of the defendant’s activities in Connecticut to support jurisdiction as well",
+   "evidence_span": {
+    "start": 694,
+    "end": 831
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 282 Conn. 505 is not what the opinion says. The opinion reads: \"because disputed issues of fact remain concerning the extent of the defendant’s activities in Connecticut to support jurisdiction as well\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "d6048059ab761cb2bc5647daf5911398",
+   "quote_chars": 55,
+   "quote_words": 6,
+   "source_chars": 58697,
+   "ms_median": 0.7824,
+   "ms_runs": [
+    19.532,
+    0.782,
+    0.746,
+    0.579,
+    1.067
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB02",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB02",
+   "locked": true,
+   "explanation": "Axon Enterprise, Inc. v. FTC is a real authority, but the quotation is not accurate. The opinion reads: \"appeals. But Cochran and Axon assert a “here-and-now injury” from being subjected to an illegitimate proceeding, led by an illegitimate decisionmaker.\".",
+   "opinion_says": "appeals. But Cochran and Axon assert a “here-and-now injury” from being subjected to an illegitimate proceeding, led by an illegitimate decisionmaker.",
+   "evidence_span": {
+    "start": 8729,
+    "end": 8879
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 598 U.S. 175 is not what the opinion says. The opinion reads: \"appeals. But Cochran and Axon assert a “here-and-now injury” from being subjected to an illegitimate proceeding, led by an illegitimate decisionmaker.\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "7dd908b0b89a998482ac70feeadc9306",
+   "quote_chars": 63,
+   "quote_words": 10,
+   "source_chars": 93806,
+   "ms_median": 1.0849,
+   "ms_runs": [
+    27.879,
+    1.245,
+    1.085,
+    1.057,
+    1.071
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB03",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB03",
+   "locked": true,
+   "explanation": "McCarthy v. Madigan is a real authority, but the quotation is not accurate. The opinion reads: \"particular type of issue presented, such as the constitutionality of a statute. See, e. g., Moore v. East Cleveland,\".",
+   "opinion_says": "particular type of issue presented, such as the constitutionality of a statute. See, e. g., Moore v. East Cleveland,",
+   "evidence_span": {
+    "start": 11483,
+    "end": 11599
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 503 U.S. 140 is not what the opinion says. The opinion reads: \"particular type of issue presented, such as the constitutionality of a statute. See, e. g., Moore v. East Cleveland,\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "8bfe9efb12a0d1fb148a0663045b6f65",
+   "quote_chars": 42,
+   "quote_words": 6,
+   "source_chars": 33679,
+   "ms_median": 0.373,
+   "ms_runs": [
+    6.234,
+    0.329,
+    0.328,
+    0.373,
+    0.375
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB04",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB04",
+   "locked": true,
+   "explanation": "Babac v. Pennsylvania Milk Marketing Board is a real authority, but the quotation is not accurate. The opinion reads: \"deliberating agency business or taking official action violates Section 274 of the Sunshine Act, 65 P.S. § 271 et seq. For the reasons that follow, we find that participation\".",
+   "opinion_says": "deliberating agency business or taking official action violates Section 274 of the Sunshine Act, 65 P.S. § 271 et seq. For the reasons that follow, we find that participation",
+   "evidence_span": {
+    "start": 303,
+    "end": 477
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 531 Pa. 391, 613 A.2d 551 is not what the opinion says. The opinion reads: \"deliberating agency business or taking official action violates Section 274 of the Sunshine Act, 65 P.S. § 271 et seq. For the reasons that follow, we find that participation\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "eb4401c0970000a5eb2c2d9ecc89cd8f",
+   "quote_chars": 78,
+   "quote_words": 12,
+   "source_chars": 8721,
+   "ms_median": 0.1664,
+   "ms_runs": [
+    1.768,
+    0.166,
+    0.168,
+    0.153,
+    0.157
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB05",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB05",
+   "locked": true,
+   "explanation": "Reading Eagle Co. v. Council of City of Reading is a real authority, but the quotation is not accurate. The opinion reads: \"before the trial court concerning the April 21, 1992 City Council meeting.\n. The parties agreed during the trial court’s hearing that no violation of the Sunshine Act would be found based on the April 21 executive session.\n. Our scope of review is limited to determining whether the trial court committed\".",
+   "opinion_says": "before the trial court concerning the April 21, 1992 City Council meeting.\n. The parties agreed during the trial court’s hearing that no violation of the Sunshine Act would be found based on the April 21 executive session.\n. Our scope of review is limited to determining whether the trial court committed",
+   "evidence_span": {
+    "start": 7815,
+    "end": 8119
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 627 A.2d 305 is not what the opinion says. The opinion reads: \"before the trial court concerning the April 21, 1992 City Council meeting.\n. The parties agreed during the trial court’s hearing that no violation of the Sunshine Act would be found based on the April 21 executive session.\n. Our scope of review is limited to determining whether the trial court committed\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "5f9c97131e075e767aee76d1f8534230",
+   "quote_chars": 136,
+   "quote_words": 24,
+   "source_chars": 10637,
+   "ms_median": 0.2873,
+   "ms_runs": [
+    3.184,
+    0.287,
+    0.36,
+    0.259,
+    0.247
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB06",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB06",
+   "locked": false,
+   "explanation": "Thakkar v. Wilson Enterprises, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 458 N.E.2d 985, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "5517119dcd2e25a47ccfa795bfbfea20",
+   "quote_chars": 92,
+   "quote_words": 15,
+   "source_chars": 14288,
+   "ms_median": 0.2663,
+   "ms_runs": [
+    2.109,
+    0.299,
+    0.266,
+    0.257,
+    0.264
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB07",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB07",
+   "locked": false,
+   "explanation": "Committee for Idaho's High Desert, Inc. v. Yost: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 92 F.3d 814, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "7f823b966e86baabcf23bc150214f571",
+   "quote_chars": 73,
+   "quote_words": 9,
+   "source_chars": 40348,
+   "ms_median": 0.4474,
+   "ms_runs": [
+    6.479,
+    0.438,
+    0.447,
+    0.41,
+    0.458
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB08",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB08",
+   "locked": false,
+   "explanation": "Oakland Tribune, Inc. v. Chronicle Publishing Co.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 762 F.2d 1374, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "8c7f730257c8fee26ec3e168e3c4e0b3",
+   "quote_chars": 62,
+   "quote_words": 10,
+   "source_chars": 9720,
+   "ms_median": 0.1522,
+   "ms_runs": [
+    1.724,
+    0.152,
+    0.148,
+    0.152,
+    0.167
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB09",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB09",
+   "locked": true,
+   "explanation": "Adohr Milk Farms, Inc. v. Love is a real authority, but the quotation is not accurate. The opinion reads: \"stricken, or for a judgment on the pleadings ... on the ground that at the filing of the plaintiff's complaint on October 15, 1962, that [sic] the statute\".",
+   "opinion_says": "stricken, or for a judgment on the pleadings ... on the ground that at the filing of the plaintiff's complaint on October 15, 1962, that [sic] the statute",
+   "evidence_span": {
+    "start": 1864,
+    "end": 2018
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 255 Cal. App. 2d 366 is not what the opinion says. The opinion reads: \"stricken, or for a judgment on the pleadings ... on the ground that at the filing of the plaintiff's complaint on October 15, 1962, that [sic] the statute\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "71fb2be21bd0975edf72c27b5e171679",
+   "quote_chars": 66,
+   "quote_words": 14,
+   "source_chars": 13461,
+   "ms_median": 0.3058,
+   "ms_runs": [
+    2.625,
+    0.306,
+    0.263,
+    0.281,
+    0.425
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB10",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB10",
+   "locked": false,
+   "explanation": "Gorton v. Rance: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 52 So. 3d 351, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "fa0ab239749a2fa34fde236b1898512a",
+   "quote_chars": 99,
+   "quote_words": 19,
+   "source_chars": 37416,
+   "ms_median": 0.7386,
+   "ms_runs": [
+    10.093,
+    0.726,
+    0.681,
+    0.913,
+    0.739
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB11",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB11",
+   "locked": false,
+   "explanation": "Cornwell v. Electra Central Credit Union: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 439 F.3d 1018, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "e42e62a5d4aad01e4cbf2f8fb4b24e1e",
+   "quote_chars": 48,
+   "quote_words": 9,
+   "source_chars": 56765,
+   "ms_median": 0.9295,
+   "ms_runs": [
+    12.326,
+    0.861,
+    1.054,
+    0.93,
+    0.792
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB12",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB12",
+   "locked": false,
+   "explanation": "Walker v. City of Orem: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 451 F.3d 1139, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "4e3d17534022b20dcc7e9c1b022a14f1",
+   "quote_chars": 59,
+   "quote_words": 9,
+   "source_chars": 67398,
+   "ms_median": 0.7727,
+   "ms_runs": [
+    13.046,
+    0.867,
+    0.748,
+    0.773,
+    0.769
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB13",
+   "set": "known-bad",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB13",
+   "locked": false,
+   "explanation": "United States v. Houston: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 792 F.3d 663, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "a8a1f79c1f1e51edd2a02412fa08b18f",
+   "quote_chars": 64,
+   "quote_words": 8,
+   "source_chars": 21159,
+   "ms_median": 0.293,
+   "ms_runs": [
+    4.992,
+    0.293,
+    0.28,
+    0.306,
+    0.278
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB14",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB14",
+   "locked": false,
+   "explanation": "Kaplan v. Tuennerman: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 87 Ohio App.3d 43, 621 N.E.2d 717 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 87 Ohio App.3d 43, 621 N.E.2d 717 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "c81be45e7a7ce538d7bfc97fc9260c32",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 10089,
+   "ms_median": 0.1392,
+   "ms_runs": [
+    0.29,
+    0.139,
+    0.088,
+    0.084,
+    2.355
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB15",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB15",
+   "locked": false,
+   "explanation": "Rodriguez-Romero v. Garland: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 60 F.4th 1283, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "9ff52bf11f47fadf6bdfab5aa19fde0e",
+   "quote_chars": 22,
+   "quote_words": 2,
+   "source_chars": 37739,
+   "ms_median": 0.2555,
+   "ms_runs": [
+    5.074,
+    0.265,
+    0.256,
+    0.248,
+    0.244
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB16",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB16",
+   "locked": false,
+   "explanation": "United States v. Mateo: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 476 F.3d 179, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "ce939b7d4174d17e650fb38187f8262a",
+   "quote_chars": 97,
+   "quote_words": 14,
+   "source_chars": 7082,
+   "ms_median": 0.1307,
+   "ms_runs": [
+    1.014,
+    0.145,
+    0.131,
+    0.126,
+    0.12
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB17",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB17",
+   "locked": false,
+   "explanation": "Citizens Nat'l Bank of Paris v. Midwest Agri-Dev. Corp.: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 887 F.2d 1128 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 887 F.2d 1128 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "5ee3127d955e31c1fe91becc5928a517",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 45313,
+   "ms_median": 0.2194,
+   "ms_runs": [
+    0.286,
+    0.233,
+    0.219,
+    0.215,
+    0.213
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB18",
+   "set": "known-bad",
+   "subset": "fabricated-case",
+   "expected": "ABSTAIN",
+   "outcome": "ABSTAIN",
+   "reason": "REFERENCE_NOT_PROVIDED",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB18",
+   "locked": false,
+   "explanation": "No opinion text for Concepcion v. City of New York; cannot verify.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The text of the opinion cited as 2008 WL 5395720: without it neither existence nor quotation can be checked."
+    }
+   ],
+   "verdict_id": "37f04a032ab5d44b3663b7fcb61afee1",
+   "quote_chars": 143,
+   "quote_words": 23,
+   "source_chars": 0,
+   "ms_median": 0.0258,
+   "ms_runs": [
+    0.077,
+    0.036,
+    0.026,
+    0.026,
+    0.022
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB19",
+   "set": "known-bad",
+   "subset": "proposition",
+   "expected": "ABSTAIN (OUT_OF_RULESET_SCOPE)",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB19",
+   "locked": false,
+   "explanation": "Castaneda v. Illinois Human Rights Commission: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 132 Ill. 2d 304, 547 N.E.2d 437 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 132 Ill. 2d 304, 547 N.E.2d 437 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "f0ef0218e9ab81a5fe6a2d0069c7c5f3",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 45619,
+   "ms_median": 0.2758,
+   "ms_runs": [
+    0.276,
+    0.485,
+    0.304,
+    0.221,
+    0.218
+   ]
+  },
+  {
+   "contract": null,
+   "id": "KB20",
+   "set": "known-bad",
+   "subset": "proposition",
+   "expected": "ABSTAIN (OUT_OF_RULESET_SCOPE)",
+   "outcome": "ABSTAIN",
+   "reason": "OUT_OF_RULESET_SCOPE",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.KB20",
+   "locked": false,
+   "explanation": "James v. Dedeaux: proposition not deterministically decidable; abstaining by design.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The language of 217 So. 3d 785 that supports the proposition, quoted, so it can be checked verbatim."
+    },
+    {
+     "kind": "authority",
+     "authority": "attorney-of-record",
+     "detail": "Whether 217 So. 3d 785 stands for the proposition is a judgement the deterministic check does not make: the attorney of record decides, for this verdict only."
+    }
+   ],
+   "verdict_id": "4c4a4d177885796da63614ae46ba822f",
+   "quote_chars": 0,
+   "quote_words": 0,
+   "source_chars": 12156,
+   "ms_median": 0.0816,
+   "ms_runs": [
+    0.126,
+    0.082,
+    0.088,
+    0.076,
+    0.066
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT01",
+   "set": "control",
+   "subset": "matched-pair",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT01",
+   "locked": true,
+   "explanation": "Committee for Idaho's High Desert, Inc. v. Yost is a real authority, but the quotation is not accurate. The opinion reads: \"general, personally liable for all torts which he authorizes or directs or in which he participates, notwithstanding that he acted as an\".",
+   "opinion_says": "general, personally liable for all torts which he authorizes or directs or in which he participates, notwithstanding that he acted as an",
+   "evidence_span": {
+    "start": 29121,
+    "end": 29257
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 92 F.3d 814 is not what the opinion says. The opinion reads: \"general, personally liable for all torts which he authorizes or directs or in which he participates, notwithstanding that he acted as an\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "30c15386139e6db7999f0d61188302f7",
+   "quote_chars": 50,
+   "quote_words": 8,
+   "source_chars": 40348,
+   "ms_median": 0.38,
+   "ms_runs": [
+    5.869,
+    0.411,
+    0.38,
+    0.375,
+    0.38
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT02",
+   "set": "control",
+   "subset": "matched-pair",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT02",
+   "locked": true,
+   "explanation": "Christianson v. Colt Industries Operating Corp. is a real authority, but the quotation is not accurate. The opinion reads: \"that departed from the law of the case. Second, the law-of-the-case doctrine “merely expresses the practice of courts generally to refuse to reopen what has been decided, not a limit to their power.” Messenger v. Anderson, 225 U. S. 436, 444 (1912) (Holmes, J.) (citations- omitted). A court has the power to revisit prior decisions of its own or of a coordinate court in any circumstance, although as a rule courts should be loathe to do so in the absence of extraordinary circumstances such as where the initial decision was “clearly erroneous and would work a manifest injustice.” Arizona v. California, supra, at 618, n. 8 (citation omitted). Thus, even if the Seventh Circuit’s decision was law of the case, the Federal Circuit did not exceed its power in revisiting the jurisdictional issue, and once it concluded\".",
+   "opinion_says": "that departed from the law of the case. Second, the law-of-the-case doctrine “merely expresses the practice of courts generally to refuse to reopen what has been decided, not a limit to their power.” Messenger v. Anderson, 225 U. S. 436, 444 (1912) (Holmes, J.) (citations- omitted). A court has the power to revisit prior decisions of its own or of a coordinate court in any circumstance, although as a rule courts should be loathe to do so in the absence of extraordinary circumstances such as where the initial decision was “clearly erroneous and would work a manifest injustice.” Arizona v. California, supra, at 618, n. 8 (citation omitted). Thus, even if the Seventh Circuit’s decision was law of the case, the Federal Circuit did not exceed its power in revisiting the jurisdictional issue, and once it concluded",
+   "evidence_span": {
+    "start": 25249,
+    "end": 26068
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 486 U.S. 800 is not what the opinion says. The opinion reads: \"that departed from the law of the case. Second, the law-of-the-case doctrine “merely expresses the practice of courts generally to refuse to reopen what has been decided, not a limit to their power.” Messenger v. Anderson, 225 U. S. 436, 444 (1912) (Holmes, J.) (citations- omitted). A court has the power to revisit prior decisions of its own or of a coordinate court in any circumstance, although as a rule courts should be loathe to do so in the absence of extraordinary circumstances such as where the initial decision was “clearly erroneous and would work a manifest injustice.” Arizona v. California, supra, at 618, n. 8 (citation omitted). Thus, even if the Seventh Circuit’s decision was law of the case, the Federal Circuit did not exceed its power in revisiting the jurisdictional issue, and once it concluded\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "200d1cfe34ac8c8f4782d35afc3f55be",
+   "quote_chars": 291,
+   "quote_words": 50,
+   "source_chars": 44157,
+   "ms_median": 1.2573,
+   "ms_runs": [
+    8.359,
+    1.257,
+    1.22,
+    1.94,
+    1.245
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT03",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT03",
+   "locked": true,
+   "explanation": "W. World Media, LLC v. Ikamobile Ltd. is a real authority, but the quotation is not accurate. The opinion reads: \"foreign defendant only if the defendant’s intrastate activities meet the requirements both of [the state’s long-arm statute] and of the due process clause of the federal constitution.” Thomason v. Chem. Bank, 234 Conn. 281, 285-86, 661 A.2d 595 (1995). “[The] first inquiry must be whether our long-arm statute authorizes the exercise of jurisdiction under the particular facts of this case. Only if we find the statute to be applicable do we reach the question whether it would offend due process to assert jurisdiction.” Lombard Bros., Inc. v. Gen. Asset Mgmt. Co., 190 Conn. 245, 250, 460 A.2d 481 (1983).\nThe plaintiff contends that the court has long-arm jurisdiction over Ikamobile under\".",
+   "opinion_says": "foreign defendant only if the defendant’s intrastate activities meet the requirements both of [the state’s long-arm statute] and of the due process clause of the federal constitution.” Thomason v. Chem. Bank, 234 Conn. 281, 285-86, 661 A.2d 595 (1995). “[The] first inquiry must be whether our long-arm statute authorizes the exercise of jurisdiction under the particular facts of this case. Only if we find the statute to be applicable do we reach the question whether it would offend due process to assert jurisdiction.” Lombard Bros., Inc. v. Gen. Asset Mgmt. Co., 190 Conn. 245, 250, 460 A.2d 481 (1983).\nThe plaintiff contends that the court has long-arm jurisdiction over Ikamobile under",
+   "evidence_span": {
+    "start": 10002,
+    "end": 10695
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 809 F. Supp. 2d 26 is not what the opinion says. The opinion reads: \"foreign defendant only if the defendant’s intrastate activities meet the requirements both of [the state’s long-arm statute] and of the due process clause of the federal constitution.” Thomason v. Chem. Bank, 234 Conn. 281, 285-86, 661 A.2d 595 (1995). “[The] first inquiry must be whether our long-arm statute authorizes the exercise of jurisdiction under the particular facts of this case. Only if we find the statute to be applicable do we reach the question whether it would offend due process to assert jurisdiction.” Lombard Bros., Inc. v. Gen. Asset Mgmt. Co., 190 Conn. 245, 250, 460 A.2d 481 (1983).\nThe plaintiff contends that the court has long-arm jurisdiction over Ikamobile under\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "2997822da036103bdaac2b9bf0afaa0a",
+   "quote_chars": 293,
+   "quote_words": 45,
+   "source_chars": 19447,
+   "ms_median": 0.5466,
+   "ms_runs": [
+    2.643,
+    0.502,
+    0.547,
+    0.584,
+    0.537
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT04",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT04",
+   "locked": true,
+   "explanation": "The quotation attributed to Makarova v. United States appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 4604,
+    "end": 4689
+   },
+   "remedies": [],
+   "verdict_id": "4de9ae1360ee7a36881d926e3cb5ebdd",
+   "quote_chars": 85,
+   "quote_words": 13,
+   "source_chars": 15405,
+   "ms_median": 0.1076,
+   "ms_runs": [
+    2.647,
+    0.229,
+    0.108,
+    0.085,
+    0.081
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT05",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT05",
+   "locked": true,
+   "explanation": "CVS Pharmacy, Inc. v. City of Philadelphia is a real authority, but the quotation is not accurate. The opinion reads: \"on preliminary objections, the appellate court must apply the same standard as the trial court.\r\nPreliminary objections in the nature of a demurrer test the legal sufficiency of the complaint[.] Preliminary objections which seek the dismissal of a cause of action should be sustained\".",
+   "opinion_says": "on preliminary objections, the appellate court must apply the same standard as the trial court.\r\nPreliminary objections in the nature of a demurrer test the legal sufficiency of the complaint[.] Preliminary objections which seek the dismissal of a cause of action should be sustained",
+   "evidence_span": {
+    "start": 11698,
+    "end": 11981
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 354 A.3d 537 is not what the opinion says. The opinion reads: \"on preliminary objections, the appellate court must apply the same standard as the trial court.\r\nPreliminary objections in the nature of a demurrer test the legal sufficiency of the complaint[.] Preliminary objections which seek the dismissal of a cause of action should be sustained\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "aa36457add2c7df072c26517d5cf286e",
+   "quote_chars": 95,
+   "quote_words": 15,
+   "source_chars": 28927,
+   "ms_median": 0.3861,
+   "ms_runs": [
+    4.006,
+    0.386,
+    0.39,
+    0.353,
+    0.32
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT06",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT06",
+   "locked": true,
+   "explanation": "Bell Atlantic Corp. v. Twombly is a real authority, but the quotation is not accurate. The opinion reads: \"plain statement of the claim showing that the pleader is entitled to relief,” in order to “give the defendant fair notice of what the . . . claim is and the grounds upon which it rests,” Conley v. Gibson, 355 U. S. 41, 47.\".",
+   "opinion_says": "plain statement of the claim showing that the pleader is entitled to relief,” in order to “give the defendant fair notice of what the . . . claim is and the grounds upon which it rests,” Conley v. Gibson, 355 U. S. 41, 47.",
+   "evidence_span": {
+    "start": 4582,
+    "end": 4804
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 550 U.S. 544 is not what the opinion says. The opinion reads: \"plain statement of the claim showing that the pleader is entitled to relief,” in order to “give the defendant fair notice of what the . . . claim is and the grounds upon which it rests,” Conley v. Gibson, 355 U. S. 41, 47.\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "347078d3e4a9866345d645d6fa4f46fa",
+   "quote_chars": 88,
+   "quote_words": 17,
+   "source_chars": 122082,
+   "ms_median": 1.5681,
+   "ms_runs": [
+    19.808,
+    1.568,
+    1.408,
+    1.515,
+    1.719
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT07",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT07",
+   "locked": true,
+   "explanation": "The quotation attributed to Moss v. Batesville Casket Co. appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 12224,
+    "end": 12290
+   },
+   "remedies": [],
+   "verdict_id": "9a25ed5be5e8d2384e9751909ffdf7a4",
+   "quote_chars": 66,
+   "quote_words": 12,
+   "source_chars": 41973,
+   "ms_median": 0.2227,
+   "ms_runs": [
+    5.837,
+    0.224,
+    0.209,
+    0.223,
+    0.221
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT08",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT08",
+   "locked": true,
+   "explanation": "Thompson v. Housing Authority of City of Los Angeles is a real authority, but the quotation is not accurate. The opinion reads: \"DISCUSSION\nDistrict courts have inherent power to control their dockets. In the exercise of that power they may impose sanctions including, where appropriate, default or dismissal. Link v. Wabash Railroad Co., 370 U.S. 626, 82 S.Ct. 1386, 8 L.Ed.2d 734 (1961).\".",
+   "opinion_says": "DISCUSSION\nDistrict courts have inherent power to control their dockets. In the exercise of that power they may impose sanctions including, where appropriate, default or dismissal. Link v. Wabash Railroad Co., 370 U.S. 626, 82 S.Ct. 1386, 8 L.Ed.2d 734 (1961).",
+   "evidence_span": {
+    "start": 3682,
+    "end": 3942
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 782 F.2d 829 is not what the opinion says. The opinion reads: \"DISCUSSION\nDistrict courts have inherent power to control their dockets. In the exercise of that power they may impose sanctions including, where appropriate, default or dismissal. Link v. Wabash Railroad Co., 370 U.S. 626, 82 S.Ct. 1386, 8 L.Ed.2d 734 (1961).\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "f0656dc17dd635927dee30a9078f9e23",
+   "quote_chars": 101,
+   "quote_words": 15,
+   "source_chars": 8583,
+   "ms_median": 0.1537,
+   "ms_runs": [
+    1.955,
+    0.179,
+    0.153,
+    0.148,
+    0.154
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT09",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT09",
+   "locked": true,
+   "explanation": "Garrett v. Selby Connor Maddux & Janer is a real authority, but the quotation is not accurate. The opinion reads: \"requirements[,]” Hall, 935 F.2d at 1110, the court cannot take on the responsibility of serving as the litigant’s attorney in constructing arguments and searching the record. See id. (“[W]e do not believe it is the proper function of the district court to assume\".",
+   "opinion_says": "requirements[,]” Hall, 935 F.2d at 1110, the court cannot take on the responsibility of serving as the litigant’s attorney in constructing arguments and searching the record. See id. (“[W]e do not believe it is the proper function of the district court to assume",
+   "evidence_span": {
+    "start": 10398,
+    "end": 10660
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 425 F.3d 836 is not what the opinion says. The opinion reads: \"requirements[,]” Hall, 935 F.2d at 1110, the court cannot take on the responsibility of serving as the litigant’s attorney in constructing arguments and searching the record. See id. (“[W]e do not believe it is the proper function of the district court to assume\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "00dbaf731bf72bf9e3bd5df668a91c3e",
+   "quote_chars": 86,
+   "quote_words": 12,
+   "source_chars": 14897,
+   "ms_median": 0.1857,
+   "ms_runs": [
+    2.193,
+    0.217,
+    0.167,
+    0.186,
+    0.166
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT10",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT10",
+   "locked": true,
+   "explanation": "Cooter & Gell v. Hartmarx Corp. is a real authority, but the quotation is not accurate. The opinion reads: \"filings in district court and thus, consistent with the Rules Enabling Act’s grant of authority, streamline the administration and procedure of the federal courts. See Advisory Committee Note on Rule 11, 28 U. S. C. App., p. 576. Rule 11 imposes a duty on attorneys to certify that they have conducted a reasonable inquiry and have determined that any papers filed with the court are well grounded in fact, legally tenable, and “not interposed for any improper purpose.” An attorney who signs the paper without such a substantiated belief “shall” be penalized by “an appropriate sanction.” Such a sanction may, but need not, include payment of the other parties’\".",
+   "opinion_says": "filings in district court and thus, consistent with the Rules Enabling Act’s grant of authority, streamline the administration and procedure of the federal courts. See Advisory Committee Note on Rule 11, 28 U. S. C. App., p. 576. Rule 11 imposes a duty on attorneys to certify that they have conducted a reasonable inquiry and have determined that any papers filed with the court are well grounded in fact, legally tenable, and “not interposed for any improper purpose.” An attorney who signs the paper without such a substantiated belief “shall” be penalized by “an appropriate sanction.” Such a sanction may, but need not, include payment of the other parties’",
+   "evidence_span": {
+    "start": 10654,
+    "end": 11316
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 496 U.S. 384 is not what the opinion says. The opinion reads: \"filings in district court and thus, consistent with the Rules Enabling Act’s grant of authority, streamline the administration and procedure of the federal courts. See Advisory Committee Note on Rule 11, 28 U. S. C. App., p. 576. Rule 11 imposes a duty on attorneys to certify that they have conducted a reasonable inquiry and have determined that any papers filed with the court are well grounded in fact, legally tenable, and “not interposed for any improper purpose.” An attorney who signs the paper without such a substantiated belief “shall” be penalized by “an appropriate sanction.” Such a sanction may, but need not, include payment of the other parties’\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "a252ff8eec83e7c120c7dd17789e879d",
+   "quote_chars": 232,
+   "quote_words": 38,
+   "source_chars": 52457,
+   "ms_median": 1.1219,
+   "ms_runs": [
+    8.642,
+    1.122,
+    1.113,
+    1.283,
+    1.113
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT11",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT11",
+   "locked": true,
+   "explanation": "Ashcroft v. Iqbal is a real authority, but the quotation is not accurate. The opinion reads: \"557.\r\nTo survive a motion to dismiss, a complaint must con­ tain sufficient factual matter, accepted as true, to “state a claim to relief that is plausible on its face.” Id., at 570. A claim has facial plausibility when the plaintiff pleads factual content that allows the court\".",
+   "opinion_says": "557.\r\nTo survive a motion to dismiss, a complaint must con­ tain sufficient factual matter, accepted as true, to “state a claim to relief that is plausible on its face.” Id., at 570. A claim has facial plausibility when the plaintiff pleads factual content that allows the court",
+   "evidence_span": {
+    "start": 36262,
+    "end": 36540
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 556 U.S. 662 is not what the opinion says. The opinion reads: \"557.\r\nTo survive a motion to dismiss, a complaint must con­ tain sufficient factual matter, accepted as true, to “state a claim to relief that is plausible on its face.” Id., at 570. A claim has facial plausibility when the plaintiff pleads factual content that allows the court\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "95c3fc32b6f0144e10221674a4dfec39",
+   "quote_chars": 116,
+   "quote_words": 22,
+   "source_chars": 83374,
+   "ms_median": 1.4988,
+   "ms_runs": [
+    15.022,
+    1.599,
+    1.499,
+    1.43,
+    1.364
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT12",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT12",
+   "locked": true,
+   "explanation": "Celotex Corp. v. Catrett is a real authority, but the quotation is not accurate. The opinion reads: \"2d, at 187.\nWe think that the position taken by the majority of the Court of Appeals is inconsistent with the standard for summary judgment set forth in Rule 56(c) of the Federal Rules of Civil Procedure. Under Rule 56(c), summary judgment is proper “if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to a judgment as a matter of law.” In our view, the plain language of Rule 56(c) mandates the entry of summary judgment, after adequate time for discovery and upon motion, against a party who fails to make a showing sufficient to establish the existence\".",
+   "opinion_says": "2d, at 187.\nWe think that the position taken by the majority of the Court of Appeals is inconsistent with the standard for summary judgment set forth in Rule 56(c) of the Federal Rules of Civil Procedure. Under Rule 56(c), summary judgment is proper “if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to a judgment as a matter of law.” In our view, the plain language of Rule 56(c) mandates the entry of summary judgment, after adequate time for discovery and upon motion, against a party who fails to make a showing sufficient to establish the existence",
+   "evidence_span": {
+    "start": 4947,
+    "end": 5670
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 477 U.S. 317 is not what the opinion says. The opinion reads: \"2d, at 187.\nWe think that the position taken by the majority of the Court of Appeals is inconsistent with the standard for summary judgment set forth in Rule 56(c) of the Federal Rules of Civil Procedure. Under Rule 56(c), summary judgment is proper “if the pleadings, depositions, answers to interrogatories, and admissions on file, together with the affidavits, if any, show that there is no genuine issue as to any material fact and that the moving party is entitled to a judgment as a matter of law.” In our view, the plain language of Rule 56(c) mandates the entry of summary judgment, after adequate time for discovery and upon motion, against a party who fails to make a showing sufficient to establish the existence\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "235a6f4242114df01cf01ee29a092299",
+   "quote_chars": 250,
+   "quote_words": 43,
+   "source_chars": 45036,
+   "ms_median": 1.0622,
+   "ms_runs": [
+    8.354,
+    1.137,
+    1.045,
+    1.062,
+    1.028
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT13",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT13",
+   "locked": true,
+   "explanation": "The quotation attributed to American Unites for Kids v. Rousseau appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 34971,
+    "end": 35151
+   },
+   "remedies": [],
+   "verdict_id": "1228ba8fb8264bf3fb0cca40b0585ddf",
+   "quote_chars": 180,
+   "quote_words": 28,
+   "source_chars": 105787,
+   "ms_median": 0.5468,
+   "ms_runs": [
+    17.382,
+    0.619,
+    0.547,
+    0.517,
+    0.492
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT14",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT14",
+   "locked": true,
+   "explanation": "Orellana-Recinos v. Garland is a real authority, but the quotation is not accurate. The opinion reads: \"minor role in the [applicant’s] past mistreatment or fears of future mistreatment. That is, it cannot be incidental, tangential, superficial, or subordinate to another reason for harm.” In re J-B-N-, 24 I. & N. Dec. 208, 214 (BIA 2007). Of course, a persecutor can have multiple\".",
+   "opinion_says": "minor role in the [applicant’s] past mistreatment or fears of future mistreatment. That is, it cannot be incidental, tangential, superficial, or subordinate to another reason for harm.” In re J-B-N-, 24 I. & N. Dec. 208, 214 (BIA 2007). Of course, a persecutor can have multiple",
+   "evidence_span": {
+    "start": 8346,
+    "end": 8624
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 993 F.3d 851 is not what the opinion says. The opinion reads: \"minor role in the [applicant’s] past mistreatment or fears of future mistreatment. That is, it cannot be incidental, tangential, superficial, or subordinate to another reason for harm.” In re J-B-N-, 24 I. & N. Dec. 208, 214 (BIA 2007). Of course, a persecutor can have multiple\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "8b50cf3b48c70ab89d5ccb5046c4ef7d",
+   "quote_chars": 94,
+   "quote_words": 13,
+   "source_chars": 24733,
+   "ms_median": 0.2057,
+   "ms_runs": [
+    3.549,
+    0.197,
+    0.174,
+    0.223,
+    0.206
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT15",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT15",
+   "locked": true,
+   "explanation": "The quotation attributed to Harrington v. Richter appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 30958,
+    "end": 31085
+   },
+   "remedies": [],
+   "verdict_id": "6c4e9f8d5fb1bc1204a77a32e3c93c48",
+   "quote_chars": 127,
+   "quote_words": 21,
+   "source_chars": 60170,
+   "ms_median": 0.4056,
+   "ms_runs": [
+    8.561,
+    0.388,
+    0.783,
+    0.405,
+    0.406
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT16",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT16",
+   "locked": true,
+   "explanation": "Goodyear Tire & Rubber Co. v. Haeger is a real authority, but the quotation is not accurate. The opinion reads: \"related to a litigant’s misconduct.3 We therefore granted certiorari. 579 U. S. ___ (2016).\r\nII\r\nFederal courts possess certain “inherent powers,” not conferred by rule or statute, “to manage their own affairs so as to achieve the orderly and expeditious disposition of cases.” Link v. Wabash R. Co., 370 U. S. 626, 630–631 (1962). That authority includes “the ability to fashion an appropriate sanction for conduct which abuses the judicial process.” Chambers\".",
+   "opinion_says": "related to a litigant’s misconduct.3 We therefore granted certiorari. 579 U. S. ___ (2016).\r\nII\r\nFederal courts possess certain “inherent powers,” not conferred by rule or statute, “to manage their own affairs so as to achieve the orderly and expeditious disposition of cases.” Link v. Wabash R. Co., 370 U. S. 626, 630–631 (1962). That authority includes “the ability to fashion an appropriate sanction for conduct which abuses the judicial process.” Chambers",
+   "evidence_span": {
+    "start": 15943,
+    "end": 16403
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 581 U.S. 101 is not what the opinion says. The opinion reads: \"related to a litigant’s misconduct.3 We therefore granted certiorari. 579 U. S. ___ (2016).\r\nII\r\nFederal courts possess certain “inherent powers,” not conferred by rule or statute, “to manage their own affairs so as to achieve the orderly and expeditious disposition of cases.” Link v. Wabash R. Co., 370 U. S. 626, 630–631 (1962). That authority includes “the ability to fashion an appropriate sanction for conduct which abuses the judicial process.” Chambers\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "6fed5d42b0d08ba3e9e305bb6601a85d",
+   "quote_chars": 180,
+   "quote_words": 28,
+   "source_chars": 32972,
+   "ms_median": 0.5519,
+   "ms_runs": [
+    5.836,
+    0.553,
+    0.538,
+    0.552,
+    0.509
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT17",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT17",
+   "locked": true,
+   "explanation": "The quotation attributed to In re Daphnie E. appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 37352,
+    "end": 37505
+   },
+   "remedies": [],
+   "verdict_id": "f7251b193aa29e423025b7d63027c320",
+   "quote_chars": 153,
+   "quote_words": 26,
+   "source_chars": 55166,
+   "ms_median": 0.329,
+   "ms_runs": [
+    10.639,
+    0.329,
+    0.334,
+    0.3,
+    0.324
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT18",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT18",
+   "locked": true,
+   "explanation": "Fedele v. Harris is a real authority, but the quotation is not accurate. The opinion reads: \"1391(b)(2) does not require that the most substantial part of the events giving rise to the claims occurred in the Eastern District, the Second Circuit has cautioned district courts “to take seriously the adjective ‘substantial’ ” and thus “for venue to be proper, significant events or omissions material to the plaintiffs claim must have occurred in the district in question.” Gulf Ins. Co., 417 F.3d at 357. In reviewing connections to a district, the Court is mindful of the difference between a relevant connection to the State for purposes of personal\".",
+   "opinion_says": "1391(b)(2) does not require that the most substantial part of the events giving rise to the claims occurred in the Eastern District, the Second Circuit has cautioned district courts “to take seriously the adjective ‘substantial’ ” and thus “for venue to be proper, significant events or omissions material to the plaintiffs claim must have occurred in the district in question.” Gulf Ins. Co., 417 F.3d at 357. In reviewing connections to a district, the Court is mindful of the difference between a relevant connection to the State for purposes of personal",
+   "evidence_span": {
+    "start": 19308,
+    "end": 19865
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 18 F. Supp. 3d 309 is not what the opinion says. The opinion reads: \"1391(b)(2) does not require that the most substantial part of the events giving rise to the claims occurred in the Eastern District, the Second Circuit has cautioned district courts “to take seriously the adjective ‘substantial’ ” and thus “for venue to be proper, significant events or omissions material to the plaintiffs claim must have occurred in the district in question.” Gulf Ins. Co., 417 F.3d at 357. In reviewing connections to a district, the Court is mindful of the difference between a relevant connection to the State for purposes of personal\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "857a42337efd0f2c9351e0b5b33ab962",
+   "quote_chars": 245,
+   "quote_words": 37,
+   "source_chars": 29049,
+   "ms_median": 0.7585,
+   "ms_runs": [
+    5.412,
+    0.87,
+    0.759,
+    0.758,
+    0.736
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT19",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT19",
+   "locked": true,
+   "explanation": "Keys v. Humana, Inc. is a real authority, but the quotation is not accurate. The opinion reads: \"novo. Pedreira v. Ky. Baptist Homes for Children, Inc., 579 F.3d 722, 727 (6th Cir. 2009). We must construe the complaint in the light most favorable to the plaintiff and accept all allegations as true. See Harbin-Bey v. Rutter, 420 F.3d 571, 575 (6th\".",
+   "opinion_says": "novo. Pedreira v. Ky. Baptist Homes for Children, Inc., 579 F.3d 722, 727 (6th Cir. 2009). We must construe the complaint in the light most favorable to the plaintiff and accept all allegations as true. See Harbin-Bey v. Rutter, 420 F.3d 571, 575 (6th",
+   "evidence_span": {
+    "start": 7112,
+    "end": 7363
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 684 F.3d 605 is not what the opinion says. The opinion reads: \"novo. Pedreira v. Ky. Baptist Homes for Children, Inc., 579 F.3d 722, 727 (6th Cir. 2009). We must construe the complaint in the light most favorable to the plaintiff and accept all allegations as true. See Harbin-Bey v. Rutter, 420 F.3d 571, 575 (6th\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "5b2908da75ad3b49f351a5c6f6c835dc",
+   "quote_chars": 99,
+   "quote_words": 16,
+   "source_chars": 16654,
+   "ms_median": 0.2472,
+   "ms_runs": [
+    7.479,
+    0.233,
+    0.208,
+    0.247,
+    0.498
+   ]
+  },
+  {
+   "contract": null,
+   "id": "CT20",
+   "set": "control",
+   "subset": "court-quote",
+   "expected": "PASS (court-quoted, label unaudited)",
+   "outcome": "PASS",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.CT20",
+   "locked": true,
+   "explanation": "The quotation attributed to Estes Express Lines v. United States appears verbatim in the opinion.",
+   "opinion_says": null,
+   "evidence_span": {
+    "start": 5886,
+    "end": 5992
+   },
+   "remedies": [],
+   "verdict_id": "c25fde882b4543c73e21942f3c5f558a",
+   "quote_chars": 106,
+   "quote_words": 15,
+   "source_chars": 13216,
+   "ms_median": 0.0799,
+   "ms_runs": [
+    1.657,
+    0.092,
+    0.08,
+    0.079,
+    0.075
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP01",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP01",
+   "locked": true,
+   "explanation": "Smith v. Township of Richmond is a real authority, but the quotation is not accurate. The opinion reads: \"denied his request for a declaratory judgment that the Board of Supervisors of Richmond Township had violated the Sunshine Act, 65 Pa.C.S. §§ 701-716. The trial court concluded that the Supervisors’ four closed-door meetings with the different\".",
+   "opinion_says": "denied his request for a declaratory judgment that the Board of Supervisors of Richmond Township had violated the Sunshine Act, 65 Pa.C.S. §§ 701-716. The trial court concluded that the Supervisors’ four closed-door meetings with the different",
+   "evidence_span": {
+    "start": 188,
+    "end": 431
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 54 A.3d 404 is not what the opinion says. The opinion reads: \"denied his request for a declaratory judgment that the Board of Supervisors of Richmond Township had violated the Sunshine Act, 65 Pa.C.S. §§ 701-716. The trial court concluded that the Supervisors’ four closed-door meetings with the different\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "7408c2e2d58265ab55b406efc3bcc829",
+   "quote_chars": 109,
+   "quote_words": 14,
+   "source_chars": 24749,
+   "ms_median": 0.3525,
+   "ms_runs": [
+    3.708,
+    0.359,
+    0.353,
+    0.322,
+    0.317
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP02",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP02",
+   "locked": true,
+   "explanation": "Christianson v. Colt Industries Operating Corp. is a real authority, but the quotation is not accurate. The opinion reads: \"(1984) (hereinafter Moore’s).\nColt is correct that the doctrine applies as much to the decisions of a coordinate court in the same case as to a court’s own decisions. See, e. g., Kori Corp. v. Wilco Marsh Buggies & Draglines,\".",
+   "opinion_says": "(1984) (hereinafter Moore’s).\nColt is correct that the doctrine applies as much to the decisions of a coordinate court in the same case as to a court’s own decisions. See, e. g., Kori Corp. v. Wilco Marsh Buggies & Draglines,",
+   "evidence_span": {
+    "start": 23135,
+    "end": 23360
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 486 U.S. 800 is not what the opinion says. The opinion reads: \"(1984) (hereinafter Moore’s).\nColt is correct that the doctrine applies as much to the decisions of a coordinate court in the same case as to a court’s own decisions. See, e. g., Kori Corp. v. Wilco Marsh Buggies & Draglines,\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "412d7cd5b850aa69345b6360480fa79c",
+   "quote_chars": 100,
+   "quote_words": 16,
+   "source_chars": 44157,
+   "ms_median": 0.9993,
+   "ms_runs": [
+    9.655,
+    1.009,
+    0.966,
+    0.999,
+    0.979
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP03",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP03",
+   "locked": true,
+   "explanation": "Withrow v. Larkin is a real authority, but the quotation is not accurate. The opinion reads: \"in effect became part of the prosecution and assumed an adversary position, but also because as a judge, passing on guilt or innocence, he very likely relied on “his own personal knowledge and impression\".",
+   "opinion_says": "in effect became part of the prosecution and assumed an adversary position, but also because as a judge, passing on guilt or innocence, he very likely relied on “his own personal knowledge and impression",
+   "evidence_span": {
+    "start": 18510,
+    "end": 18713
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 421 U.S. 35 is not what the opinion says. The opinion reads: \"in effect became part of the prosecution and assumed an adversary position, but also because as a judge, passing on guilt or innocence, he very likely relied on “his own personal knowledge and impression\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "0082c1e7598f8ede3189a5cdedf8e862",
+   "quote_chars": 93,
+   "quote_words": 18,
+   "source_chars": 44365,
+   "ms_median": 0.8758,
+   "ms_runs": [
+    10.108,
+    0.959,
+    0.876,
+    0.875,
+    0.864
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP04",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP04",
+   "locked": false,
+   "explanation": "Thomas v. Dillard Department Stores, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 116 F.3d 1432, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "c3c80ebb19f8c93d9bcc23be4a37cc21",
+   "quote_chars": 58,
+   "quote_words": 9,
+   "source_chars": 24767,
+   "ms_median": 0.3344,
+   "ms_runs": [
+    4.511,
+    0.334,
+    0.338,
+    0.304,
+    0.298
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP05",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP05",
+   "locked": false,
+   "explanation": "Matter of Sakow: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 97 N.Y.2d 436, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "fe824583c78ced2780372cf47e5b6dea",
+   "quote_chars": 55,
+   "quote_words": 11,
+   "source_chars": 16307,
+   "ms_median": 0.3234,
+   "ms_runs": [
+    2.805,
+    0.404,
+    0.323,
+    0.286,
+    0.273
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP06",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP06",
+   "locked": true,
+   "explanation": "Christian v. Mattel, Inc. is a real authority, but the quotation is not accurate. The opinion reads: \"an objective perspective, and (2) if the attorney has conducted “a reasonable and competent inquiry” before signing and filing it. Buster v. Greisen, 104 F.3d 1186,\".",
+   "opinion_says": "an objective perspective, and (2) if the attorney has conducted “a reasonable and competent inquiry” before signing and filing it. Buster v. Greisen, 104 F.3d 1186,",
+   "evidence_span": {
+    "start": 21662,
+    "end": 21826
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 286 F.3d 1118 is not what the opinion says. The opinion reads: \"an objective perspective, and (2) if the attorney has conducted “a reasonable and competent inquiry” before signing and filing it. Buster v. Greisen, 104 F.3d 1186,\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "2ec45e05a4febf11d9d8ab95417cc470",
+   "quote_chars": 65,
+   "quote_words": 10,
+   "source_chars": 39235,
+   "ms_median": 0.4072,
+   "ms_runs": [
+    5.902,
+    0.417,
+    0.402,
+    0.392,
+    0.407
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP07",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP07",
+   "locked": true,
+   "explanation": "Cooter & Gell v. Hartmarx Corp. is a real authority, but the quotation is not accurate. The opinion reads: \"of the reasonable expenses incurred because of the filing of the pleading, motion, or other paper, including a reasonable attorney’s fee.”\nAn interpretation of the current Rule 11 must be guided, in part, by an understanding of the deficiencies\".",
+   "opinion_says": "of the reasonable expenses incurred because of the filing of the pleading, motion, or other paper, including a reasonable attorney’s fee.”\nAn interpretation of the current Rule 11 must be guided, in part, by an understanding of the deficiencies",
+   "evidence_span": {
+    "start": 8835,
+    "end": 9079
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 496 U.S. 384 is not what the opinion says. The opinion reads: \"of the reasonable expenses incurred because of the filing of the pleading, motion, or other paper, including a reasonable attorney’s fee.”\nAn interpretation of the current Rule 11 must be guided, in part, by an understanding of the deficiencies\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "7baf7c57a379576b81874bcaa4d2dc9b",
+   "quote_chars": 107,
+   "quote_words": 16,
+   "source_chars": 52457,
+   "ms_median": 0.7316,
+   "ms_runs": [
+    7.779,
+    0.732,
+    0.727,
+    0.713,
+    1.41
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP08",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP08",
+   "locked": false,
+   "explanation": "Hudson v. Moore Business Forms, Inc.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 898 F.2d 684, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "4a78c335e948e75a1c9095f731700ab2",
+   "quote_chars": 93,
+   "quote_words": 16,
+   "source_chars": 8712,
+   "ms_median": 0.1752,
+   "ms_runs": [
+    1.17,
+    0.176,
+    0.175,
+    0.166,
+    0.156
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP09",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP09",
+   "locked": false,
+   "explanation": "Cooter & Gell v. Hartmarx Corp.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 496 U.S. 384, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "dd26e481ec6afb7feefdc7f19ed2df85",
+   "quote_chars": 31,
+   "quote_words": 7,
+   "source_chars": 52457,
+   "ms_median": 0.5228,
+   "ms_runs": [
+    0.621,
+    0.516,
+    0.513,
+    0.57,
+    0.523
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP10",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP10",
+   "locked": false,
+   "explanation": "People v. Swafford: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 762 N.W.2d 902, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "935f6e012830de654fc95737a182da65",
+   "quote_chars": 68,
+   "quote_words": 12,
+   "source_chars": 29700,
+   "ms_median": 0.4378,
+   "ms_runs": [
+    7.354,
+    0.439,
+    0.438,
+    0.436,
+    0.378
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP11",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP11",
+   "locked": false,
+   "explanation": "People v. Kennedy: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 917 N.W.2d 355, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "97927cfd2ab62ba54561899e8d3061de",
+   "quote_chars": 65,
+   "quote_words": 12,
+   "source_chars": 46106,
+   "ms_median": 0.6862,
+   "ms_runs": [
+    6.428,
+    0.645,
+    0.63,
+    0.712,
+    0.686
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP12",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP12",
+   "locked": false,
+   "explanation": "In re M.A.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 325 Ill. App. 3d 387, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "2d2c3940dc1a74e53f4b5a08df9187fd",
+   "quote_chars": 182,
+   "quote_words": 24,
+   "source_chars": 13519,
+   "ms_median": 0.3508,
+   "ms_runs": [
+    1.928,
+    0.354,
+    0.351,
+    0.338,
+    0.337
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP13",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP13",
+   "locked": true,
+   "explanation": "Martinez v. Bloomberg LP is a real authority, but the quotation is not accurate. The opinion reads: \"conveniens doctrine, whereby the\r\n\r\n6 doctrine’s usual tilt in favor of the plaintiff’s choice of forum gives way to a\r\n\r\n7 presumption in favor of\".",
+   "opinion_says": "conveniens doctrine, whereby the\r\n\r\n6 doctrine’s usual tilt in favor of the plaintiff’s choice of forum gives way to a\r\n\r\n7 presumption in favor of",
+   "evidence_span": {
+    "start": 18993,
+    "end": 19140
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 740 F.3d 211 is not what the opinion says. The opinion reads: \"conveniens doctrine, whereby the\r\n\r\n6 doctrine’s usual tilt in favor of the plaintiff’s choice of forum gives way to a\r\n\r\n7 presumption in favor of\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "460a00d44a26179f82b680fd270b16cc",
+   "quote_chars": 57,
+   "quote_words": 8,
+   "source_chars": 74049,
+   "ms_median": 0.7569,
+   "ms_runs": [
+    9.895,
+    0.797,
+    0.757,
+    0.731,
+    0.735
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP14",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP14",
+   "locked": false,
+   "explanation": "Action S.A. v. Marc Rich & Co.: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 951 F.2d 504, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "6f7125685e676822f8cc32707b712c41",
+   "quote_chars": 118,
+   "quote_words": 19,
+   "source_chars": 16171,
+   "ms_median": 0.2679,
+   "ms_runs": [
+    2.242,
+    0.284,
+    0.267,
+    0.268,
+    0.266
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP15",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP15",
+   "locked": false,
+   "explanation": "SEC v. McNulty: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 137 F.3d 732, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "ae9e44b6cd321f546e77087f9aefc207",
+   "quote_chars": 57,
+   "quote_words": 9,
+   "source_chars": 33145,
+   "ms_median": 0.4073,
+   "ms_runs": [
+    5.006,
+    0.407,
+    0.411,
+    0.407,
+    0.378
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP16",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "ABSTAIN",
+   "reason": "SPAN_NOT_FOUND",
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP16",
+   "locked": false,
+   "explanation": "Universal City Development Partners, Ltd. v. Ride & Show Engineering: quotation not located in the opinion; abstaining rather than asserting a fabrication.",
+   "opinion_says": null,
+   "evidence_span": null,
+   "remedies": [
+    {
+     "kind": "missing-operand",
+     "detail": "The complete text of 230 F.R.D. 688, or the pin cite where the passage appears. Until then the quotation is not confirmed: it may be fabricated."
+    }
+   ],
+   "verdict_id": "fb60c3b53c7e8ee7a49779bd0d2600e4",
+   "quote_chars": 37,
+   "quote_words": 7,
+   "source_chars": 35929,
+   "ms_median": 0.4398,
+   "ms_runs": [
+    5.434,
+    0.479,
+    0.438,
+    0.431,
+    0.44
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP17",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP17",
+   "locked": true,
+   "explanation": "Production Resources Group, L.L.C. v. NCT Group, Inc. is a real authority, but the quotation is not accurate. The opinion reads: \"apply is whether the discovery sought is reasonably calculated to lead to admissible evidence. The scope of permissible discovery is broad, therefore “objections to discovery requests, in general, will not be allowed unless\".",
+   "opinion_says": "apply is whether the discovery sought is reasonably calculated to lead to admissible evidence. The scope of permissible discovery is broad, therefore “objections to discovery requests, in general, will not be allowed unless",
+   "evidence_span": {
+    "start": 68372,
+    "end": 68595
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 863 A.2d 772 is not what the opinion says. The opinion reads: \"apply is whether the discovery sought is reasonably calculated to lead to admissible evidence. The scope of permissible discovery is broad, therefore “objections to discovery requests, in general, will not be allowed unless\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "666f0be1e2491ed78edccf938c1f2ab1",
+   "quote_chars": 90,
+   "quote_words": 11,
+   "source_chars": 111071,
+   "ms_median": 1.2721,
+   "ms_runs": [
+    20.398,
+    1.603,
+    1.272,
+    1.265,
+    1.261
+   ]
+  },
+  {
+   "contract": null,
+   "id": "SP18",
+   "set": "supplementary",
+   "subset": "false-quote",
+   "expected": "FAIL or ABSTAIN (never PASS)",
+   "outcome": "FAIL",
+   "reason": null,
+   "rule_id": "CITE_VERBATIM",
+   "claim_id": "cite.SP18",
+   "locked": true,
+   "explanation": "Sav-On Drug Stores, Inc. v. Superior Court is a real authority, but the quotation is not accurate. The opinion reads: \"permit certification had plaintiffs marshaled more such declarations, but argues this single declaration does not support class treatment. Defendant is mistaken. Evidence of even one credible witness “is sufficient for proof of any fact.” (Evid. Code, §\".",
+   "opinion_says": "permit certification had plaintiffs marshaled more such declarations, but argues this single declaration does not support class treatment. Defendant is mistaken. Evidence of even one credible witness “is sufficient for proof of any fact.” (Evid. Code, §",
+   "evidence_span": {
+    "start": 26047,
+    "end": 26300
+   },
+   "remedies": [
+    {
+     "kind": "recompute-with",
+     "detail": "The quotation attributed to 34 Cal. 4th 319 is not what the opinion says. The opinion reads: \"permit certification had plaintiffs marshaled more such declarations, but argues this single declaration does not support class treatment. Defendant is mistaken. Evidence of even one credible witness “is sufficient for proof of any fact.” (Evid. Code, §\". Conform the quotation to it, or cite the passage it comes from; the corrected brief is checked again."
+    }
+   ],
+   "verdict_id": "b2025a5c613db59d196cb57b1c2bf607",
+   "quote_chars": 114,
+   "quote_words": 17,
+   "source_chars": 61927,
+   "ms_median": 0.9628,
+   "ms_runs": [
+    9.259,
+    0.996,
+    0.963,
+    0.953,
+    0.95
+   ]
+  }
+ ]
+}

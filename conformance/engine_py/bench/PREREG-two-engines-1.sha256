@@ -1,0 +1,6 @@
+# two-engines-1: the preregistration, its pins and its harness, hashed before any run it governs (2026-10-20); awaiting the stamp
+cdb6cbf472883565263f1d05857aaecd3418c2a6cb7c0b1aa685256f414d3090 *PREREG-two-engines-1.md
+# body (everything above the footer line that begins "sha256 of everything above this line"): d7bc77ebdbef674fd4739d263a94efb5c70c6616c7f37c65eb96c805bdc1b9b8
+2112c87d1e3d3ef260f54c1fa1c48894777bf90c1ebb0f982ffba07ea961478e *PINS-two-engines-1.json
+98eb87217099411b2499063b7b22e618343bd174e500e99105b404d078e08076 *run-two-engines.mjs
+hashed 2026-10-20T14:38:31Z

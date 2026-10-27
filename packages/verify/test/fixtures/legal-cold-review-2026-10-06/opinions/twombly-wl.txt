@@ -1,0 +1,41 @@
+KeyCite Yellow Flag - Negative Treatment
+Distinguished by Doe v. Example Corp., 2d Cir., January 3, 2019
+127 S.Ct. 1955
+Supreme Court of the United States
+BELL ATLANTIC CORPORATION et al., Petitioners,
+v.
+William TWOMBLY et al.
+550 U.S. 544
+No. 05-1126.
+Argued Nov. 27, 2006.
+Decided May 21, 2007.
+Synopsis
+Background: Consumers brought putative class action against incumbent local exchange carriers. The Court of Appeals reversed dismissal.
+Holdings: The Supreme Court held that a bare allegation of parallel conduct is enough to state a claim under the Sherman Act.
+West Headnotes (3)
+[1] Federal Civil Procedure
+A complaint need not contain detailed factual allegations, and dismissal is disfavored whenever any set of facts could be proved.
+[2] Antitrust and Trade Regulation
+Parallel conduct alone suffices to plead an agreement.
+[3] Federal Civil Procedure
+The no set of facts standard is retired.
+Attorneys and Law Firms
+Michael K. Kellogg, Washington, D.C., for petitioners.
+Opinion
+Justice SOUTER delivered the opinion of the Court.
+*553 Liability under § 1 of the Sherman Act requires a "contract, combination . . . , or conspiracy, in restraint of trade or commerce." The question in this putative class action is whether a § 1 complaint can survive a motion to dismiss when it alleges that major telecommunications providers engaged in certain parallel conduct unfavorable to competition, absent some factual context suggesting agreement, as distinct from identical, independent action. We hold that such a complaint should be dismissed.
+Plaintiffs argue that a bare allegation of parallel conduct is sufficient to survive a motion to dismiss. We disagree.
+*555 [1] Federal Rule of Civil Procedure 8(a)(2) requires only "a short and plain statement of the claim showing that the pleader is entitled to relief," in order to "give the defendant fair notice of what the . . . claim is and the grounds upon which it rests." While a complaint attacked by a Rule 12(b)(6) motion to dismiss does not need detailed factual allegations, a plaintiff's obligation to provide the grounds of his entitlement to relief requires more than labels and conclusions, and a formulaic recitation of the elements of a cause of action will not do. Factual allegations must be enough to raise a right
+© 2026 Thomson Reuters. No claim to original U.S. Government Works. 7
+Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007)
+127 S.Ct. 1955, 167 L.Ed.2d 929, 75 USLW 4337, 2007-1 Trade Cases P 75,709
+to relief above the speculative level, on the assumption that all the allegations in the complaint are true (even if doubtful in fact).
+[2] Without more, parallel conduct does not suggest conspiracy, and a conclusory allegation of agreement at some unidentified point does not supply facts adequate to show illegality.
+*556 Asking for plausible grounds to infer an agreement does not impose a probability requirement at the pleading stage; it simply calls for enough fact to raise a reasonable expectation that discovery will reveal evidence of illegal agreement.10 And, of course, a well-pleaded complaint may proceed even if it strikes a savvy judge that actual proof of those facts is improbable, and that a recovery is very remote and unlikely.
+*562 [3] The Court of Appeals relied on the familiar statement that "a complaint should not be dismissed for failure to state a claim unless it appears beyond doubt that the plaintiff can prove no set of facts in support of his claim which would entitle him to relief." We could go on, but there is no need to pile up further citations to show that the "no set of facts" language has been questioned, criticized, and explained away long enough. *563 After puzzling the profession for 50 years, this famous observation has earned its retirement.
+*570 Here, we do not require heightened fact pleading of specifics, but only enough facts to state a claim to relief that is plausible on its face. Because the plaintiffs here have not nudged their claims across the line from conceivable to plausible, their complaint must be dismissed.
+It is so ordered.
+Justice STEVENS, with whom Justice GINSBURG joins except as to Part IV, dissenting.
+Under the relevant standard, a plaintiff need only give fair notice of the claim, and a complaint should not be dismissed unless it is clear that no relief could be granted under any set of facts. The majority's plausibility requirement is a dramatic departure from settled procedural law.
+All Citations
+550 U.S. 544, 127 S.Ct. 1955, 167 L.Ed.2d 929, 75 USLW 4337

@@ -1,5 +1,5 @@
 /**
- * Ledger hardening (wave 2, ledger lane):
+ * Ledger hardening:
  *   1. hydrate(): a reopened file ledger must rebuild exactly the state the live ledger had. A re-RECORD of a reviewed
  *      verdict keeps its review on the live ledger (record() carries it); the reopened ledger used to drop it.
  *   2. The door: `assertVerdict` at `ledger.record`. Only a well-formed VERDICT enters the book of record. COUNSEL can never
@@ -134,7 +134,7 @@ describe('the door: assertVerdict at ledger.record', () => {
     expect(openFileLedger(path).events()).toHaveLength(1)
   })
 
-  it('a legacy chain written before the door still opens (the past is immutable); a COUNSEL on it fails verification, named (R3)', () => {
+  it('a legacy chain written before the door still opens (the past is immutable); a COUNSEL on it fails verification, named', () => {
     const led = fresh()
     led.record(v, { tenant_id: 'acme' })
     const { events, payloads } = parseChainJSONL(led.chainJSONL())
@@ -145,7 +145,7 @@ describe('the door: assertVerdict at ledger.record', () => {
     const pre = new MemoryLedger({ now: () => new Date('2026-09-28T00:00:00Z') })
     ;(pre as unknown as { append: (t: string, id: string, p: unknown, ts: string) => void }).append('RECORD', smuggled.verdict_id, { type: 'RECORD', tenant_id: 'acme', recorded_at: '2026-09-28T00:00:00.000Z', retention_until: '2033-09-26T00:00:00.000Z', verdict: smuggled }, '2026-09-28T00:00:00.000Z')
     const reopened = new MemoryLedger({ seed: parseChainJSONL(pre.chainJSONL()) })
-    // R3 (security fix, 2026-09-28): was `verifyContent().ok === true`. The verdict door is re-applied on read, so a COUNSEL
+    // Security fix, 2026-09-28: was `verifyContent().ok === true`. The verdict door is re-applied on read, so a COUNSEL
     // on the book of record fails verification with a named reason. The chain still opens and keeps the record verbatim.
     expect(reopened.verifyContent()).toMatchObject({ ok: false, brokenAt: 0, reason: expect.stringMatching(/does not pass the verdict door \(COUNSEL/) })
     expect(reopened.get(smuggled.verdict_id)).toBeDefined() // retained verbatim (the past is immutable); the book says it is not a VERDICT

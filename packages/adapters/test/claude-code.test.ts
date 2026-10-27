@@ -22,12 +22,11 @@ const run = (level: string, allowed: Record<string, (string | number)[]>, over: 
 const out = (r: { stdout: string }) => (r.stdout ? JSON.parse(r.stdout) : undefined)
 
 describe('configuration: OFF by default', () => {
-  it('is off unless RIPOSTE_ACTION_HOOK says otherwise; an unknown mode stays off and says so', () => {
+  it('is off unless RIPOSTE_ACTION_HOOK says otherwise; an unknown mode is invalid (a policy error), never off', () => {
     expect(actionHookOptionsFromEnv({}).mode).toBe('off')
     const bad = actionHookOptionsFromEnv({ RIPOSTE_ACTION_HOOK: 'enforce' })
-    expect(bad.mode).toBe('off')
-    expect(bad.problems[0]).toMatch(/staying off/)
-    // D14: RIPOSTE_LEDGER (the Stop hook's book) is never an implicit home for action receipts
+    expect(bad).toMatchObject({ mode: 'invalid', modeRaw: 'enforce', problems: [] })
+    // RIPOSTE_LEDGER (the Stop hook's book) is never an implicit home for action receipts
     expect(actionHookOptionsFromEnv({ RIPOSTE_ACTION_HOOK: ' On ', RIPOSTE_ACTION_POLICY: 'p.json', RIPOSTE_LEDGER: 'l.jsonl' })).toEqual({ mode: 'on', policy: 'p.json', problems: [] })
     expect(actionHookOptionsFromEnv({ RIPOSTE_ACTION_LEDGER: 'a.jsonl', RIPOSTE_LEDGER: 'b.jsonl' }).ledger).toBe('a.jsonl')
     expect(actionHookOptionsFromEnv({ RIPOSTE_LEDGER: 'b.jsonl' }).ledger).toBeUndefined()
@@ -54,11 +53,11 @@ describe('gate and autonomy HOLD: "ask" puts the call in front of a person', () 
       expect(r.record).toMatchObject({ disposition: 'hold', decision: 'ask', would_decision: 'ask', held: true, repeat: false, level, tier: 'severe', set_by: 'controller', session_id: 'sess-1', tool_use_id: 'toolu_01' })
     })
   }
-  it('an ungrounded account number at gate is held (verify itself, since F1), not reviewed as a PASS', () => {
+  it('an ungrounded account number at gate is held (verify itself, since 2026-09-28), not reviewed as a PASS', () => {
     const r = run('gate', { amount: [500] })
     expect(r.decision).toBe('ask')
     expect(r.record?.disposition).toBe('hold')
-    expect(r.record?.guard).toBeUndefined() // verify is strict itself since F1 was fixed (09-28); the guard stays as a belt
+    expect(r.record?.guard).toBeUndefined() // verify is strict itself since 2026-09-28; the guard stays as a belt
   })
   it('PASS at gate → ask for review (a person reviews PASSes at gate)', () => {
     const r = run('gate', GROUNDED)
@@ -146,22 +145,31 @@ describe('record-only measures before it enforces', () => {
   })
 })
 
-describe('it fails open', () => {
-  it('bad input: nothing on stdout; a visible non-blocking error (exit 1) when on, silent (exit 0) in record-only; never exit 2', () => {
+// 2026-10-05: the policy's own errors no longer fail open. They fail to the safest rung (src/degraded.ts): the full
+// matrix is in test/h15-safest-rung.test.ts. What stays here is what did not change.
+describe('policy errors fail to the safest rung (the old "fails open" block, reversed by the ruling)', () => {
+  it('bad input on a declared gate policy: a typed deny when on (exit 0, never 2), nothing delivered in record-only; an undeclared tool still passes', () => {
     const policy = parseActionPolicy(POLICY_JSON('gate', WRONG))
-    for (const stdin of ['not json', '[]', JSON.stringify({ hook_event_name: 'PreToolUse' }), JSON.stringify({ tool_name: 'x', tool_input: 'nope' })]) {
+    for (const stdin of ['not json', '[]', JSON.stringify({ hook_event_name: 'PreToolUse' }), JSON.stringify({ tool_name: 'mcp__bank__transfer', tool_input: 'nope' })]) {
       const on = preToolUseHook(stdin, 'on', { policy })
       const ro = preToolUseHook(stdin, 'record-only', { policy })
-      expect([on.code, on.stdout, ro.code, ro.stdout]).toEqual([1, '', 0, ''])
-      expect(on.stderr).toMatch(/failing open/)
+      expect([on.code, on.decision, ro.code, ro.stdout, ro.decision]).toEqual([0, 'deny', 0, '', 'none'])
+      expect(JSON.parse(on.stdout).hookSpecificOutput.permissionDecisionReason).toContain('policy.bad_input')
+      expect(ro.record).toMatchObject({ governance: 'degraded', code: 'policy.bad_input', class: 'consequential', would_decision: 'deny', held: false })
     }
+    const undeclared = preToolUseHook(JSON.stringify({ tool_name: 'x', tool_input: 'nope' }), 'on', { policy })
+    expect(undeclared).toMatchObject({ code: 0, stdout: '', decision: 'none', skipped: 'not a declared action' })
+    expect(undeclared.record).toBeUndefined()
   })
-  it('a missing or invalid policy fails open, visibly when on', () => {
+  it('a missing or invalid policy: a transfer is held with the fix named; record-only delivers nothing', () => {
     const io: CliIo = { stdin: () => hookInput(), readFile: () => '{"policy_version":"nope","actions":[]}' }
-    expect(actionCli(['--hook'], { RIPOSTE_ACTION_HOOK: 'on' }, io)).toMatchObject({ code: 1, stdout: '' })
+    const missing = actionCli(['--hook'], { RIPOSTE_ACTION_HOOK: 'on' }, io)
+    expect(missing.code).toBe(0)
+    expect(JSON.parse(missing.stdout).hookSpecificOutput.permissionDecisionReason).toMatch(/policy.missing: .*Fix: set RIPOSTE_ACTION_POLICY/)
     const bad = actionCli(['--hook'], { RIPOSTE_ACTION_HOOK: 'on', RIPOSTE_ACTION_POLICY: 'p.json' }, io)
-    expect(bad).toMatchObject({ code: 1, stdout: '' })
-    expect(bad.stderr).toMatch(/invalid.*failing open/)
+    expect(bad.code).toBe(0)
+    expect(JSON.parse(bad.stdout).hookSpecificOutput).toMatchObject({ permissionDecision: 'deny' })
+    expect(bad.stderr).toMatch(/governance degraded, policy.invalid/)
     expect(actionCli(['--hook'], { RIPOSTE_ACTION_HOOK: 'record-only', RIPOSTE_ACTION_POLICY: 'p.json' }, io)).toMatchObject({ code: 0, stdout: '' })
   })
   it('a ledger that cannot be opened does not stop the hold (it falls back to asking)', () => {
@@ -201,7 +209,7 @@ describe('--check and --lint (the bridge the Python adapters use)', () => {
   })
 })
 
-describe('D14: action receipts go only where a ledger is named explicitly', () => {
+describe('action receipts go only where a ledger is named explicitly', () => {
   const NOTE = /^riposte-action: no action ledger \(set RIPOSTE_ACTION_LEDGER or --ledger\): this receipt was recorded to no file/m
   const count = (s: string, re: RegExp) => s.split('\n').filter((l) => re.test(l)).length
   const tracked = (stdin = hookInput()) => {
